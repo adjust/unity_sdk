@@ -98,7 +98,7 @@ public class AdjustIo : MonoBehaviour {
 			SetLogLevel(instance.logLevel);
 			SetEnvironment(instance.environment);
 			if(instance.eventBufferingEnabled){
-				SetEventBufferingEnabled();
+				SetEventBufferingEnabled(true);
 			}
 		#endif
 	}
