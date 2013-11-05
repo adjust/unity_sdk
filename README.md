@@ -1,5 +1,7 @@
-adjust_unity_sdk
-================
+## Summary
+
+This is the [Unity](http://unity3d.com/) SDK of AdjustIo. You can read more about AdjustIo at
+[adjust.io](http://adjust.io).
 
 Use of the Plugin
 -----------------------------
