@@ -1,5 +1,7 @@
-adjust_unity_sdk
-================
+## Summary
+
+This is the [Unity](http://unity3d.com/) SDK of AdjustIo. You can read more about AdjustIo at
+[adjust.io](http://adjust.io).
 
 Use of the Plugin
 -----------------------------
@@ -46,7 +48,7 @@ iOS Build Instructions
 2. Check the app token, log level, environment and buffering settings. 
 3. You are now ready to build using the Build or Build And Run from the Build Settings menu. 
 	- Warning: when you use File > Build and Run, the plugin may not be included correctly.
-
+4. When you notice that the plugin is not added to the Xcode project, be sure to check the file permissions on the file Assets/AdjustIo/Data/PostBuildScripts/PostBuildAdjustIoScript. You should have the execute permission on this file.
 
 License notes
 -------------
