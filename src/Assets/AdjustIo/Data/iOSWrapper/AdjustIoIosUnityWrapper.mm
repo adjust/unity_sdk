@@ -67,4 +67,8 @@ extern "C"
 			[AdjustIo setEventBufferingEnabled:NO];
 		}
 	}
+	
+	void AdjustIoSetPrefix(const char* sdkPrefix){
+		[AdjustIo setSdkPrefix:[NSString stringWithUTF8String:sdkPrefix]];
+	}
 }
