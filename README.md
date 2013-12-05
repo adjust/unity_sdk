@@ -130,7 +130,7 @@ AdjustIo.TrackRevenue(1.0, "abc123", parameters);
 
 [adjust.io]: http://adjust.io
 [dashboard]: http://adjust.io
-[releases]: https://github.com/adeven/adjust_air_sdk/releases
+[releases]: https://github.com/adeven/adjust_unity_sdk/releases
 [preferences]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/preferences.png
 [added]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/added.png
 [permissions]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/permissions.png
