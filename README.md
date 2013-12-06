@@ -134,14 +134,14 @@ parameters.Add("foo","bar");
 AdjustIo.TrackRevenue(1.0, "abc123", parameters);
 </code></pre>
 
-[import]: http://github.com/adeven/adjust_sdk/master/Resources/unity/UnityImport.png
-[settings]: http://github.com/adeven/adjust_sdk/master/Resources/unity/AdjustIoSettings.png
+[import]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityImport.png
+[settings]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/AdjustIoSettings.png
 [adjust.io]: http://adjust.io
 [dashboard]: http://adjust.io
 [releases]: https://github.com/adeven/adjust_unity_sdk/releases
 [permissions]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityPermissions.png
 [receiver]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityReceiver.png
-[metadata] : http://github.com/adeven/adjust_sdk/master/Resources/unity/UnityMetaData.png
+[metadata] : https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityMetaData.png
 
 ## License
 
