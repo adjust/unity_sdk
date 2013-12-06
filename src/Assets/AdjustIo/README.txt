@@ -14,6 +14,8 @@ archive in a folder of your choice.
 
 Open your project in the Unity Editor and navigate to Assets, Import Package. Click on Custom Package and locate the AdjustIoPlugin_..._.unityPackage file. Don't download the AndroidManifest.xml file if you already have it in your project.
 
+![][import]
+
 ### 3. Integrate AdjustIo into your app
 
 1. Add the prefab Assets/AdjustIo/AdjustIo.prefab to the first scene of the app (only to the first scene!).
@@ -21,6 +23,8 @@ Open your project in the Unity Editor and navigate to Assets, Import Package. Cl
 2. Change the app token on the AdjustIo object in your hierachy. You can find your app token on your [dashboard].
 
 3. Change the log level, environment and buffering settings to the desired settings. For more info on these settings, go to https://github.com/adeven/adjust_android_sdk/ or https://github.com/adeven/adjust_ios_sdk/ . On Android the log level is defined in AndroidManifest.xml file. 
+
+![][settings]
 
 ### 4. Adjust Android manifest
 
@@ -42,6 +46,8 @@ the `application` tag.
 ```xml
 <meta-data android:name="AdjustIoLogLevel"    android:value="info" />
 ```
+
+![][metadata]
 
 You can increase or decrease the amount of logs you see by changing the value
 of `AdjustIoLogLevel` to one of the following:
@@ -128,15 +134,14 @@ parameters.Add("foo","bar");
 AdjustIo.TrackRevenue(1.0, "abc123", parameters);
 </code></pre>
 
+[import]: http://github.com/adeven/adjust_sdk/master/Resources/unity/UnityImport.png
+[settings]: http://github.com/adeven/adjust_sdk/master/Resources/unity/AdjustIoSettings.png
 [adjust.io]: http://adjust.io
 [dashboard]: http://adjust.io
-[releases]: https://github.com/adeven/adjust_air_sdk/releases
-[preferences]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/preferences.png
-[added]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/added.png
-[permissions]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/permissions.png
-[receiver]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/receiver.png
-[xcode-logs]: https://raw.github.com/adeven/adjust_sdk/master/Resources/air/xcode-logs.png
-
+[releases]: https://github.com/adeven/adjust_unity_sdk/releases
+[permissions]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityPermissions.png
+[receiver]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityReceiver.png
+[metadata] : http://github.com/adeven/adjust_sdk/master/Resources/unity/UnityMetaData.png
 ## License
 
 The file mod_pbxproj.py is licensed under the Apache License, Version 2.0 (the "License");
