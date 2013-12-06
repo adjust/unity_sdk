@@ -49,6 +49,9 @@ public class AdjustIo : MonoBehaviour {
 	
 	[DllImport ("__Internal")]
 	private static extern void AdjustIoSetEventBufferingEnabled(bool enabled);
+	
+	[DllImport ("__Internal")]
+	private static extern void AdjustIoSetPrefix(string sdkPrefix);
 #endif
 	
 	private static void SetParameters(Dictionary<string,string> parameters){
@@ -92,7 +95,11 @@ public class AdjustIo : MonoBehaviour {
 	
 	private static void Initialize(){
 		#if UNITY_ANDROID && !UNITY_EDITOR
-			jniAdjustIo.CallStatic("onResume",jniCurrentActivity);
+			string androidEnvironment = "sandbox";
+			if(instance.environment == Environment.AIEnvironmentProduction){
+				androidEnvironment = "production";
+			}
+			jniAdjustIo.CallStatic("appDidLaunch",jniCurrentActivity,instance.appToken,androidEnvironment,instance.eventBufferingEnabled);
 		#elif UNITY_IPHONE && !UNITY_EDITOR
 			AdjustIoInit(instance.appToken);
 			SetLogLevel(instance.logLevel);
@@ -101,6 +108,7 @@ public class AdjustIo : MonoBehaviour {
 				SetEventBufferingEnabled(true);
 			}
 		#endif
+		SetPrefix();
 	}
 	
 	private static string GetLogLevelName(LogLevel logLevel){
@@ -124,7 +132,7 @@ public class AdjustIo : MonoBehaviour {
 			return;
 		}
 		#if UNITY_ANDROID && !UNITY_EDITOR
-			jniAdjustIoUnity3DHelper.CallStatic("setLogLevel",jniCurrentActivity,GetLogLevelName(logLevel));
+			//is set in the android manifest
 		#elif UNITY_IPHONE && !UNITY_EDITOR
 			AdjustIoSetLogLevel((int)logLevel);
 		#endif
@@ -135,15 +143,25 @@ public class AdjustIo : MonoBehaviour {
 			return;
 		}
 		#if UNITY_ANDROID && !UNITY_EDITOR
-			jniAdjustIoUnity3DHelper.CallStatic("setEnvironment",jniCurrentActivity,GetEnvironmentName(environment));
+			//is set in appdidlaunch
 		#elif UNITY_IPHONE && !UNITY_EDITOR
 			AdjustIoSetEnvironment((int)environment);
 		#endif
 	}
 	
 	private static void SetEventBufferingEnabled(bool bufferingEnabled){
-		#if UNITY_IPHONE && !UNITY_EDITOR
+		#if UNITY_ANDROID && !UNITY_EDITOR
+			//is set in appdidlaunch
+		#elif UNITY_IPHONE && !UNITY_EDITOR
 			AdjustIoSetEventBufferingEnabled(bufferingEnabled);
+		#endif	
+	}
+	
+	private static void SetPrefix(){
+		#if UNITY_ANDROID && !UNITY_EDITOR
+			jniAdjustIo.CallStatic("setSdkPrefix","unity2.1.0");
+		#elif UNITY_IPHONE && !UNITY_EDITOR
+			AdjustIoSetPrefix("unity2.1.0");
 		#endif	
 	}
 	
@@ -253,18 +271,19 @@ public class AdjustIo : MonoBehaviour {
 		string changes = "";
 		string[] lines = System.IO.File.ReadAllLines(Application.dataPath + "/Plugins/Android/AndroidManifest.xml");
 		for(int i = 0; i < lines.Length; i++){
-			if(lines[i].Contains("<meta-data android:name=\"AdjustIoAppToken\"")){
-				string[] parts = lines[i].Split(new string[]{"android:value"},System.StringSplitOptions.None);
-				if(parts.Length != 2){
-					return "Could not test if androidManifest was correct, please put each meta-data element on a seperate single line.";
-				}else{
-					string appToken_ = parts[1].Split('"')[1];
-					if(appToken_ != appToken){
-						lines[i] = lines[i].Replace("\"" + appToken_ + "\"","\"" + appToken + "\"");
-						changes += "changed app token from " + appToken_ + " to " + appToken + "\n";
-					}
-				}
-			}else if(lines[i].Contains("<meta-data android:name=\"AdjustIoLogLevel\"")){
+//			if(lines[i].Contains("<meta-data android:name=\"AdjustIoAppToken\"")){
+//				string[] parts = lines[i].Split(new string[]{"android:value"},System.StringSplitOptions.None);
+//				if(parts.Length != 2){
+//					return "Could not test if androidManifest was correct, please put each meta-data element on a seperate single line.";
+//				}else{
+//					string appToken_ = parts[1].Split('"')[1];
+//					if(appToken_ != appToken){
+//						lines[i] = lines[i].Replace("\"" + appToken_ + "\"","\"" + appToken + "\"");
+//						changes += "changed app token from " + appToken_ + " to " + appToken + "\n";
+//					}
+//				}
+//			}else if(lines[i].Contains("<meta-data android:name=\"AdjustIoLogLevel\"")){
+			if(lines[i].Contains("<meta-data android:name=\"AdjustIoLogLevel\"")){
 				string[] parts = lines[i].Split(new string[]{"android:value"},System.StringSplitOptions.None);
 				if(parts.Length != 2){
 					return "Could not test if androidManifest was correct, please put each meta-data element on a seperate single line.";
@@ -276,31 +295,32 @@ public class AdjustIo : MonoBehaviour {
 						changes += "changed log level from " + logLevel_ + " to " + logLevelName + "\n";
 					}
 				}
-			}else if(lines[i].Contains("<meta-data android:name=\"AdjustIoEnvironment\"")){
-				string[] parts = lines[i].Split(new string[]{"android:value"},System.StringSplitOptions.None);
-				if(parts.Length != 2){
-					return "Could not test if androidManifest was correct, please put each meta-data element on a seperate single line.";
-				}else{
-					string environment_ = parts[1].Split('"')[1];
-					string environmentName = GetEnvironmentName(environment);
-					if(!environment_.Equals(environmentName,System.StringComparison.InvariantCultureIgnoreCase)){
-						lines[i] = lines[i].Replace("\"" + environment_ + "\"","\"" + environmentName + "\"");
-						changes += "changed environment from " + environment_ + " to " + environmentName + "\n";
-					}
-				}
-			}else if(lines[i].Contains("<meta-data android:name=\"AdjustIoEventBuffering\"")){
-				string[] parts = lines[i].Split(new string[]{"android:value"},System.StringSplitOptions.None);
-				if(parts.Length != 2){
-					return "Could not test if androidManifest was correct, please put each meta-data element on a seperate, single line.";
-				}else{
-					string eventBufferingEnabled_ = parts[1].Split('"')[1];
-					string eventBufferingEnabledName = GetEventBufferingEnabledName(eventBufferingEnabled);
-					if(!eventBufferingEnabled_.Equals(eventBufferingEnabledName,System.StringComparison.InvariantCultureIgnoreCase)){
-						lines[i] = lines[i].Replace("\"" + eventBufferingEnabled_ + "\"","\"" + eventBufferingEnabledName + "\"");
-						changes += "changed eventBufferingEnbaled from " + eventBufferingEnabled_ + " to " + eventBufferingEnabledName + "\n";
-					}
-				}
 			}
+//			}else if(lines[i].Contains("<meta-data android:name=\"AdjustIoEnvironment\"")){
+//				string[] parts = lines[i].Split(new string[]{"android:value"},System.StringSplitOptions.None);
+//				if(parts.Length != 2){
+//					return "Could not test if androidManifest was correct, please put each meta-data element on a seperate single line.";
+//				}else{
+//					string environment_ = parts[1].Split('"')[1];
+//					string environmentName = GetEnvironmentName(environment);
+//					if(!environment_.Equals(environmentName,System.StringComparison.InvariantCultureIgnoreCase)){
+//						lines[i] = lines[i].Replace("\"" + environment_ + "\"","\"" + environmentName + "\"");
+//						changes += "changed environment from " + environment_ + " to " + environmentName + "\n";
+//					}
+//				}
+//			}else if(lines[i].Contains("<meta-data android:name=\"AdjustIoEventBuffering\"")){
+//				string[] parts = lines[i].Split(new string[]{"android:value"},System.StringSplitOptions.None);
+//				if(parts.Length != 2){
+//					return "Could not test if androidManifest was correct, please put each meta-data element on a seperate, single line.";
+//				}else{
+//					string eventBufferingEnabled_ = parts[1].Split('"')[1];
+//					string eventBufferingEnabledName = GetEventBufferingEnabledName(eventBufferingEnabled);
+//					if(!eventBufferingEnabled_.Equals(eventBufferingEnabledName,System.StringComparison.InvariantCultureIgnoreCase)){
+//						lines[i] = lines[i].Replace("\"" + eventBufferingEnabled_ + "\"","\"" + eventBufferingEnabledName + "\"");
+//						changes += "changed eventBufferingEnbaled from " + eventBufferingEnabled_ + " to " + eventBufferingEnabledName + "\n";
+//					}
+//				}
+//			}
 		}
 		if(changes != ""){
 			System.IO.File.WriteAllLines(Application.dataPath + "/Plugins/Android/AndroidManifest.xml",lines);
