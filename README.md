@@ -142,6 +142,7 @@ AdjustIo.TrackRevenue(1.0, "abc123", parameters);
 [permissions]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityPermissions.png
 [receiver]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityReceiver.png
 [metadata] : http://github.com/adeven/adjust_sdk/master/Resources/unity/UnityMetaData.png
+
 ## License
 
 The file mod_pbxproj.py is licensed under the Apache License, Version 2.0 (the "License");
