@@ -20,8 +20,8 @@ public class AdjustIoPostprocessBuildPlayer : MonoBehaviour {
 #elif UNITY_IPHONE
 		Process proc = new Process();
 		proc.EnableRaisingEvents=false; 
-		proc.StartInfo.FileName = Application.dataPath + "/AdjustIo/Data/PostBuildScripts/PostBuildAdjustIoScript";
-		proc.StartInfo.Arguments = "'" + pathToBuiltProject + "'";
+		proc.StartInfo.FileName = "perl";
+		proc.StartInfo.Arguments =  Application.dataPath + "/AdjustIo/Data/PostBuildScripts/PostBuildAdjustIoScript"+ " " + "'" + pathToBuiltProject + "'";
 		proc.Start();
 		proc.WaitForExit();
 		UnityEngine.Debug.Log("AdjustIo build log file: " + System.IO.Directory.GetCurrentDirectory() + "/AdjustIoBuildLogFile.txt");
