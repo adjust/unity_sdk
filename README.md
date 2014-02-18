@@ -1,7 +1,6 @@
 ## Summary
 
-This is the [Unity](http://unity3d.com/) SDK of adjust™. You can read more about adjust™ at
-[adjust.io](http://adjust.io).
+This is the [Unity](http://unity3d.com/) SDK of adjust.io™. You can read more about adjust.io™ at [adjust.io](http://adjust.io).
 
 ## Basic Installation
 
