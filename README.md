@@ -1,77 +1,79 @@
 ## Summary
 
-This is the [Unity](http://unity3d.com/) SDK of adjust.io™. You can read more about adjust.io™ at [adjust.io](http://adjust.io).
+This is the Unity3d SDK of adjust.io™. You can read more about adjust.io™ at [adjust.io].
 
 ## Basic Installation
 
+These are the minimal steps required to integrate the adjust SDK into your
+Unity3d project.
+
 ### 1. Get the SDK
 
-Download the latest version from our [releases page][releases]. Extract the
-archive in a folder of your choice.
+Download the latest version from our [releases page][releases]. Download the
+unityPaackge in a folder of your choice.
 
 ### 2. Add it to your project
 
-Open your project in the Unity Editor and navigate to Assets, Import Package. Click on Custom Package and locate the AdjustIoPlugin_..._.unityPackage file. Don't download the AndroidManifest.xml file if you already have it in your project.
+Open your project in the Unity Editor and navigate to Assets, Import Package. Click on Custom Package and select the downloaded unityPackage file.
 
 ![][import]
 
 ### 3. Integrate adjust into your app
 
-1. Add the prefab Assets/AdjustIo/AdjustIo.prefab to the first scene of the app (only to the first scene!).
+Add the prefab located at `Assets/Adjust.prefab` to the first scene. 
 
-2. Change the app token on the AdjustIo object in your hierachy. You can find your app token on your [dashboard].
+There are two ways of setting up the adjust SDK: by changing the parameters of `Adjust (Script)` in the inspector of the `GameObject` and ticking `Start on Awake` or programmatically invoking the method `Adjust.appDidLaunch` with the respective parameters.
 
-3. Change the log level, environment and buffering settings to the desired settings. For more info on these settings, go to https://github.com/adeven/adjust_android_sdk/ or https://github.com/adeven/adjust_ios_sdk/ . On Android the log level is defined in AndroidManifest.xml file. 
-
-![][settings]
-
-### 4. Adjust Android manifest
-
-Ignore this step if you imported the AndroidManifest.xml file from this package.
-
-1. Add or uncomment the ```<uses-permission>``` tags for ```INTERNET``` and ```ACCESS_WIFI_STATE``` if they aren't present already:
-
-![][permissions]
-
-2. Add broadcast receiver:
-
-![][receiver]
-
-3. Add AdjustIo settings
-
-Still in the `AndroidManifest.xml`, add the following `meta-data` tags inside
-the `application` tag.
-
-```xml
-<meta-data android:name="AdjustIoLogLevel"    android:value="info" />
-```
-
-![][metadata]
+Replace `{YourAppToken}` with your App Token. You can find in your [dashboard].
 
 You can increase or decrease the amount of logs you see by changing the value
-of `AdjustIoLogLevel` to one of the following:
+of `Log Level` to one of the following:
 
-- `verbose` - enable all logging
-- `debug` - enable more logging
-- `info` - the default
-- `warn` - disable info logging
-- `error` - disable warnings as well
-- `assert` - disable errors as well
+- `Verbose` - enable all logging
+- `Debug` - enable more logging
+- `Info` - the default
+- `Warn` - disable info logging
+- `Error` - disable warnings as well
+- `Assert` - disable errors as well
+
+Depending on whether or not you build your app for testing or for production
+you must change `Environment` with one of these values:
+
+```
+    'Sandbox'
+    'Production'
+```
+
+**Important:** This value should be set to `Sandbox` if and only if you or
+someone else is testing your app. Make sure to set the environment to
+`Production` just before you publish the app. Set it back to `Sandbox` when you
+start testing it again.
+
+We use this environment to distinguish between real traffic and artificial
+traffic from test devices. It is very important that you keep this value
+meaningful at all times! Especially if you are tracking revenue.
+
+If you want to use the values located in the Unity editor at the start of the scene, tick 
+the box `Start On Awake`. If you wish to launch the adjust SDK at another time leave the box unticked 
+and call the method `Adjust.appDidLaunch` with the respective parameters.
+
+For an example of scene with a button menu with these options, open the scente located at 
+`Assets/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/ExampleGUI/ExampleGUI.cs`.
 
 ## Additional features
 
 Once you integrated the adjust SDK into your project, you can take advantage
 of the following features.
 
-### Add tracking of custom events.
+### 4. Add tracking of custom events.
 
 You can tell adjust about every event you want. Suppose you want to track
 every tap on a button. You would have to create a new Event Token in your
 [dashboard]. Let's say that Event Token is `abc123`. In your button's
 click handler method you could then add the following line to track the click:
 
-```actionscript
-AdjustIo.TrackEvent("abc123");
+```cs
+Adjust.TrackEvent("abc123");
 ```
 
 You can also register a callback URL for that event in your [dashboard] and we
@@ -84,33 +86,37 @@ For example, suppose you have registered the URL
 `http://www.adjust.com/callback` for your event with Event Token `abc123` and
 execute the following lines:
 
-<pre><code>
+```cs
 Dictionary<string,string> parameters = new Dictionary<string, string>();
 parameters.Add("key","value");
 parameters.Add("foo","bar");
 
-AdjustIo.TrackEvent("abc123", parameters);
-</code></pre>
+Adjust.TrackEvent("abc123", parameters);
+```
 
 In that case we would track the event and send a request to:
 
-    http://www.adjust.com/callback?key=value&foo=bar
+```
+http://www.adjust.com/callback?key=value&foo=bar
+```
 
 It should be mentioned that we support a variety of placeholders like `{idfa}`
-that can be used as parameter values. In the resulting callback this
-placeholder would be replaced with the ID for Advertisers of the current
-device. Also note that we don't store any of your custom parameters, but only
-append them to your callbacks. If you haven't registered a callback for an
-event, these parameters won't even be read.
+for iOS or `{android_id}` for Android that can be used as parameter values.  In
+the resulting callback the `{idfa}` placeholder would be replaced with the ID
+for Advertisers of the current device for iOS and the `{android_id}` would be
+replaced with the AndroidID of the current device for Android. Also note that
+we don't store any of your custom parameters, but only append them to your
+callbacks.  If you haven't registered a callback for an event, these parameters
+won't even be read.
 
-### Add tracking of revenue
+### 5. Add tracking of revenue
 
 If your users can generate revenue by clicking on advertisements or making
 in-app purchases you can track those revenues. If, for example, a click is
 worth one cent, you could make the following call to track that revenue:
 
-```actionscript
-AdjustIo.TrackRevenue(1.0);
+```cs
+Adjust.TrackRevenue(1.0);
 ```
 
 The parameter is supposed to be in cents and will get rounded to one decimal
@@ -118,39 +124,65 @@ point. If you want to differentiate between different kinds of revenue you can
 get different Event Tokens for each kind. Again, you need to create those Event
 Tokens in your [dashboard]. In that case you would make a call like this:
 
-```actionscript
-AdjustIo.TrackRevenue(1.0, "abc123");
+```cs
+Adjust.TrackRevenue(1.0, "abc123");
 ```
 
 Again, you can register a callback and provide a dictionary of named
 parameters, just like it worked with normal events.
 
-<pre><code>
+```cs
 Dictionary<string,string> parameters = new Dictionary<string, string>();
 parameters.Add("key","value");
 parameters.Add("foo","bar");
 
-AdjustIo.TrackRevenue(1.0, "abc123", parameters);
-</code></pre>
+Adjust.TrackRevenue(1.0, "abc123", parameters);
+```
 
-[import]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityImport.png
-[settings]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/AdjustIoSettings.png
+### 6. Receive delegate callbacks
+
+Every time your app tries to track a session, an event or some revenue, you can
+be notified about the success of that operation and receive additional
+information about the current install. Follow these steps to implement a
+delegate to this event.
+
+1. Create a method with the signature of the delegate `Action<ResponseData>`.
+
+2. After calling the launch of the adjust SDK, call the `Adjust.SetResponseDelegate` 
+with the previously created method. It is also be possible to use a lambda with the same signature.
+
+The delegate method will get called every time any activity was tracked or
+failed to track. Within the delegate method you have access to the
+`responseData` parameter. Here is a quick summary of its attributes:
+
+- `ActivityKind activityKind` indicates what kind of activity was tracked. It has
+one of these values:
+
+```
+Session
+Event
+Revenue
+```
+
+- `bool success` indicates whether or not the tracking attempt was
+  successful.
+- `bool willRetry` is true when the request failed, but will be retried.
+- `string error` an error message when the activity failed to track or
+  the response could not be parsed. Is `null` otherwise.
+- `string trackerToken` the tracker token of the current install. Is `null` if
+  request failed or response could not be parsed.
+- `string trackerName` the tracker name of the current install. Is `null` if
+  request failed or response could not be parsed.
+
 [adjust.io]: http://adjust.io
 [dashboard]: http://adjust.io
-[releases]: https://github.com/adeven/adjust_unity_sdk/releases
-[permissions]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityPermissions.png
-[receiver]: https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityReceiver.png
-[metadata] : https://raw.github.com/adeven/adjust_sdk/master/Resources/unity/UnityMetaData.png
+[releases]: https://github.com/adjust/adjust_unity_sdk/releases
 
 ## License
 
-The file mod_pbxproj.py is licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-
 The adjust-sdk is licensed under the MIT License.
 
-Copyright (c) 2012-2013 adeven GmbH,
+Copyright (c) 2012-2014 adeven GmbH,
 http://www.adeven.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
