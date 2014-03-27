@@ -16,15 +16,12 @@ unityPaackge in a folder of your choice.
 
 Open your project in the Unity Editor and navigate to Assets, Import Package. Click on Custom Package and select the downloaded unityPackage file.
 
-![][import]
-
 ### 3. Integrate adjust into your app
 
 Add the prefab located at `Assets/Adjust.prefab` to the first scene. 
 
-There are two ways of setting up the adjust SDK: by changing the parameters of `Adjust (Script)` in the inspector of the `GameObject` and ticking `Start on Awake` or programmatically invoking the method `Adjust.appDidLaunch` with the respective parameters.
-
-Replace `{YourAppToken}` with your App Token. You can find in your [dashboard].
+In the Inspector menu of the added prefab, replace `{YourAppToken}` with your App Token. 
+You can find in your [dashboard].
 
 You can increase or decrease the amount of logs you see by changing the value
 of `Log Level` to one of the following:
@@ -52,6 +49,10 @@ start testing it again.
 We use this environment to distinguish between real traffic and artificial
 traffic from test devices. It is very important that you keep this value
 meaningful at all times! Especially if you are tracking revenue.
+
+If your app makes heavy use of event tracking, you might want to delay some
+HTTP requests in order to send them in one batch every minute. You can enable
+event buffering by ticking the box for `Event Buffering`.
 
 If you want to use the values located in the Unity editor at the start of the scene, tick 
 the box `Start On Awake`. If you wish to launch the adjust SDK at another time leave the box unticked 
@@ -151,6 +152,9 @@ delegate to this event.
 2. After calling the launch of the adjust SDK, call the `Adjust.SetResponseDelegate` 
 with the previously created method. It is also be possible to use a lambda with the same signature.
 
+3. If instead of using the `Adjust.prefab`, the `Adjust.cs` script was added to another `GameObject`.
+Don't forget to pass the name of that `GameObject` as the second parameter of `Adjust.SetResponseDelegate`.
+
 The delegate method will get called every time any activity was tracked or
 failed to track. Within the delegate method you have access to the
 `responseData` parameter. Here is a quick summary of its attributes:
@@ -173,6 +177,18 @@ Revenue
   request failed or response could not be parsed.
 - `string trackerName` the tracker name of the current install. Is `null` if
   request failed or response could not be parsed.
+
+## Possible problems
+
+The `Unity3d` iOS generated project is not compatible with the adjust SDK out of the box.
+If you have problems building the iOS project, follow this steps:
+
+1. Enable Objective-C Exceptions. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `exceptions`. There should be an `Enable Objective-C Exceptions` or `GCC_ENABLE_OBJC_EXCEPTIONS` option. Change it from `No` to `Yes`.
+
+2. Disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
+
+3. Enable ARC. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `automatic`. There should be an `Enable Objective-C Exceptions` or `GCC_ENABLE_OBJC_EXCEPTIONS` option. Change it from `No` to `Yes`.
+Click the `Build Phases` tab and open the `Compile Sources` drop down. Add the compile flag `-fno-objc-arc` to all `.mm` files from the `Unity3d` platform. These files should be `main.mm` plus all between `iPhone_View.mm` and `DeviceSettings.mm` list.
 
 [adjust.io]: http://adjust.io
 [dashboard]: http://adjust.io
