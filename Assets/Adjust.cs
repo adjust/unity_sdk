@@ -13,10 +13,10 @@ public class Adjust : MonoBehaviour {
 	public Util.LogLevel logLevel = Util.LogLevel.Info;
 	public Util.Environment environment = Util.Environment.Sandbox;
 	public bool eventBuffering = false;
-	public bool startOnAwake = false;
+	public bool startManually = false;
 
 	void Awake() {
-		if (this.startOnAwake) {
+		if (!this.startManually) {
 			Adjust.appDidLaunch(this.appToken, this.environment, this.logLevel, this.eventBuffering);
 		}
 	}
