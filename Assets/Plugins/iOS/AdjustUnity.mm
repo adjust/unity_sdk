@@ -1,10 +1,11 @@
 #import "NSString+AIAdditions.h"
 #import "AIAdjustFactory.h"
-#import "Adjust.h"
+#import "AdjustUnity.h"
 
 @implementation AdjustUnity
 
-static char *AdjustSceneName = nil;
+static char *adjustSceneName = nil;
+static id<AdjustDelegate> adjustUnityInstance = nil;
 
 - (id) init {
     self = [super init];
@@ -19,11 +20,7 @@ static char *AdjustSceneName = nil;
                                                      encoding:NSUTF8StringEncoding];
     const char * cResponseData= [sResponseData UTF8String];
 
-    UnitySendMessage(AdjustSceneName, "getNativeMessage", cResponseData);
-}
-
-- (void)setResponseDelegate {
-    [Adjust setDelegate:self];
+    UnitySendMessage(adjustSceneName, "getNativeMessage", cResponseData);
 }
 
 @end
@@ -102,7 +99,8 @@ extern "C"
     }
 
     void _AdjustSetResponseDelegate(const char* sceneName) {
-        AdjustSceneName = strdup(sceneName);
-        [[[AdjustUnity alloc] init] setResponseDelegate];
+        adjustSceneName = strdup(sceneName);
+        adjustUnityInstance = [[AdjustUnity alloc] init];
+        [Adjust setDelegate:adjustUnityInstance];
     }
 }
