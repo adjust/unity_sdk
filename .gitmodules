@@ -1,0 +1,6 @@
+[submodule "Assets/Plugins/iOS/src/Adjust"]
+	path = Assets/Plugins/iOS/src/Adjust
+	url = git@github.com:adjust/ios_sdk.git
+[submodule "Assets/Plugins/Android/src/Adjust"]
+	path = Assets/Plugins/Android/src/Adjust
+	url = git@github.com:adjust/android_sdk.git
