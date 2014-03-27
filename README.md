@@ -10,18 +10,24 @@ Unity3d project.
 ### 1. Get the SDK
 
 Download the latest version from our [releases page][releases]. Download the
-unityPaackge in a folder of your choice.
+unityPackge in a folder of your choice.
 
 ### 2. Add it to your project
 
-Open your project in the Unity Editor and navigate to Assets, Import Package. Click on Custom Package and select the downloaded unityPackage file.
+Open your project in the Unity Editor and navigate to `Assets → Import Package → Custom Package` and select the downloaded unityPackage file.
+
+![][import_package]
+
 
 ### 3. Integrate adjust into your app
 
 Add the prefab located at `Assets/Adjust.prefab` to the first scene. 
 
-In the Inspector menu of the added prefab, replace `{YourAppToken}` with your App Token. 
-You can find in your [dashboard].
+Edit the parameters of the Adjust script in the Inspector menu of the added prefab.
+
+![][adjust_editor]
+
+Replace `{YourAppToken}` with your App Token. You can find in your [dashboard].
 
 You can increase or decrease the amount of logs you see by changing the value
 of `Log Level` to one of the following:
@@ -54,11 +60,9 @@ If your app makes heavy use of event tracking, you might want to delay some
 HTTP requests in order to send them in one batch every minute. You can enable
 event buffering by ticking the box for `Event Buffering`.
 
-If you want to use the values located in the Unity editor at the start of the scene, tick 
-the box `Start On Awake`. If you wish to launch the adjust SDK at another time leave the box unticked 
-and call the method `Adjust.appDidLaunch` with the respective parameters.
+If you don't want to start the adjust SDK at the `Awake` event of the game, untick the box `Start On Awake`. Call the method `Adjust.appDidLaunch` with the respective parameters to start the adjust SDK instead.
 
-For an example of scene with a button menu with these options, open the scente located at 
+For an example of scene with of a button menu with these options and others, open the example scene located at 
 `Assets/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/ExampleGUI/ExampleGUI.cs`.
 
 ## Additional features
@@ -168,6 +172,15 @@ Event
 Revenue
 ```
 
+- `string activityKindString` human readable version of the activity kind.
+Possible values:
+
+```
+session
+event
+revenue
+```
+
 - `bool success` indicates whether or not the tracking attempt was
   successful.
 - `bool willRetry` is true when the request failed, but will be retried.
@@ -177,6 +190,29 @@ Revenue
   request failed or response could not be parsed.
 - `string trackerName` the tracker name of the current install. Is `null` if
   request failed or response could not be parsed.
+
+```cs
+using com.adjust.sdk;
+
+public class ExampleGUI : MonoBehaviour {
+{
+	void OnGUI () {
+    {
+        if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height),
+		                "callback")) {
+			Adjust.setResponseDelegate(responseDelegate);
+		}
+    }
+    
+    public void responseDelegate (ResponseData responseData)
+	{
+		Debug.Log ("activitykind " + responseData.activityKindString);
+		Debug.Log ("trackerName " + responseData.trackerName);
+		//...
+	}
+}
+```
+
 
 ## Possible problems
 
@@ -193,6 +229,9 @@ Click the `Build Phases` tab and open the `Compile Sources` drop down. Add the c
 [adjust.io]: http://adjust.io
 [dashboard]: http://adjust.io
 [releases]: https://github.com/adjust/adjust_unity_sdk/releases
+[import_package]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/01_import_package.png
+[adjust_editor]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/02_adjust_editor.png
+
 
 ## License
 
