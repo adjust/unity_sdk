@@ -60,7 +60,7 @@ If your app makes heavy use of event tracking, you might want to delay some
 HTTP requests in order to send them in one batch every minute. You can enable
 event buffering by ticking the box for `Event Buffering`.
 
-If you don't want to start the adjust SDK at the `Awake` event of the game, untick the box `Start On Awake`. Call the method `Adjust.appDidLaunch` with the respective parameters to start the adjust SDK instead.
+If you don't want to start the adjust SDK at the `Awake` event of the game, tick the box `Start Manually`. Call the method `Adjust.appDidLaunch` with the respective parameters to start the adjust SDK instead.
 
 For an example of scene with of a button menu with these options and others, open the example scene located at 
 `Assets/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/ExampleGUI/ExampleGUI.cs`.
