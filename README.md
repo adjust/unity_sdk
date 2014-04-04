@@ -65,12 +65,54 @@ If you don't want to start the adjust SDK at the `Awake` event of the game, tick
 For an example of scene with of a button menu with these options and others, open the example scene located at 
 `Assets/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/ExampleGUI/ExampleGUI.cs`.
 
+### 4. Build scripts
+
+To facilitate the build process we integrated build scripts for both Android and iOS. The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `python 2.7` installed to work.
+
+#### iOS 
+
+The iOS build script is located at `Assets/Editor/AdjustPostBuildiOS`. It changes the Unity3d iOS generated project in
+the following ways: 
+
+1. Adds the adSupport framework to the project. It is needed for the adjust SDK, consult the adjust 
+[iOS][ios] page for more details.
+
+2. Adds the compilation flag `-fobjc-arc` to the adjust project files in the project. This allows the adjust `ARC` based project to work with the `non-ARC` Unity3d iOS project.
+
+3. Enables the flag `GCC_ENABLE_OBJC_EXCEPTIONS`, to allow the adjust SDK to use objective-c exceptions.
+
+After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity3d project with log 
+messages of the script run.
+
+#### Android
+
+The android build script is located at `Assets/Editor/AdjustPostBuildAndroid`. It changes the `AndroidManifest.xml` file 
+located at `Assets/Plugins/Android/`. The problem with this approach is that, the manifest file used for the Android 
+package was the one before the build process ended. 
+
+To mitigate this, simply run the build again, using the manifest created or changed by the previous run, or click on the menu `Adjust → Fix AndroidManifest.xml` so the script can run before the build process. Either way, it is only necessary to do this step once, as long the manifest file remains compatible with the adjust SDK.
+
+![][menu_android]
+
+If there is not a `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest
+file `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
+
+1. Adds a broadcast receiver. For more details consult the adjust [Android][android] page for more details.
+
+2. Adds the permission to connect to the internet.
+
+3. Adds the permission to access information about Wi-Fi networks.
+
+After running, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity3d project with log 
+messages of the script run.
+
+
 ## Additional features
 
 Once you integrated the adjust SDK into your project, you can take advantage
 of the following features.
 
-### 4. Add tracking of custom events.
+### 5. Add tracking of custom events.
 
 You can tell adjust about every event you want. Suppose you want to track
 every tap on a button. You would have to create a new Event Token in your
@@ -114,7 +156,7 @@ we don't store any of your custom parameters, but only append them to your
 callbacks.  If you haven't registered a callback for an event, these parameters
 won't even be read.
 
-### 5. Add tracking of revenue
+### 6. Add tracking of revenue
 
 If your users can generate revenue by clicking on advertisements or making
 in-app purchases you can track those revenues. If, for example, a click is
@@ -144,7 +186,7 @@ parameters.Add("foo","bar");
 Adjust.TrackRevenue(1.0, "abc123", parameters);
 ```
 
-### 6. Receive delegate callbacks
+### 7. Receive delegate callbacks
 
 Every time your app tries to track a session, an event or some revenue, you can
 be notified about the success of that operation and receive additional
@@ -216,24 +258,26 @@ public class ExampleGUI : MonoBehaviour {
 
 ## Possible problems
 
-The `Unity3d` iOS generated project is not compatible with the adjust SDK out of the box.
-If you have problems building the iOS project, follow this steps:
+Even with the iOS post build script it is possible that the project is not ready to run out of the box.
 
-1. Enable Objective-C Exceptions. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `exceptions`. There should be an `Enable Objective-C Exceptions` or `GCC_ENABLE_OBJC_EXCEPTIONS` option. Change it from `No` to `Yes`.
+If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
 
-2. Disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
-
-3. Enable ARC. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `automatic`. There should be an `Enable Objective-C Exceptions` or `GCC_ENABLE_OBJC_EXCEPTIONS` option. Change it from `No` to `Yes`.
-Click the `Build Phases` tab and open the `Compile Sources` drop down. Add the compile flag `-fno-objc-arc` to all `.mm` files from the `Unity3d` platform. These files should be `main.mm` plus all between `iPhone_View.mm` and `DeviceSettings.mm` list.
 
 [adjust.io]: http://adjust.io
 [dashboard]: http://adjust.io
 [releases]: https://github.com/adjust/adjust_unity_sdk/releases
 [import_package]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/01_import_package.png
 [adjust_editor]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/02_adjust_editor.png
+[menu_android]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/03_menu_android.png
+[ios]: https://github.com/adjust/ios_sdk
+[android]: https://github.com/adjust/ios_sdk
 
 
 ## License
+
+The file mod_pbxproj.py is licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 The adjust-sdk is licensed under the MIT License.
 
