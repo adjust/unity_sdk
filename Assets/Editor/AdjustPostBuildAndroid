@@ -84,18 +84,21 @@ def edit_manifest(Log, manifest_file, check_dic):
 
         for app_element in manifest_xml.getElementsByTagName("application"):
             app_element.appendChild(receiver_xml.documentElement)
+        Log("added adjust install referrer receiver")
 
     # add the internet permission to the manifest element
     if not check_dic["has_internet_permission"]:
         ip_element = manifest_xml.createElement("uses-permission")
         ip_element.setAttribute("android:name", "android.permission.INTERNET")
         manifest_xml.documentElement.appendChild(ip_element)
+        Log("added internet permission")
 
     # add the access wifi state permission to the manifest element
     if not check_dic["has_wifi_permission"]:
         ip_element = manifest_xml.createElement("uses-permission")
         ip_element.setAttribute("android:name", "android.permission.ACCESS_WIFI_STATE")
         manifest_xml.documentElement.appendChild(ip_element)
+        Log("added access wifi permission")
 
     #Log(manifest_xml.toxml())
     return manifest_xml
@@ -107,11 +110,11 @@ def check_manifest(Log, manifest_file):
     
     has_adjust_receiver = has_element_attr(manifest_xml,
             "receiver", "android:name", "com.adjust.sdk.ReferrerReceiver")
-    Log("has adjust receiver?: {0}", has_adjust_receiver)
+    Log("has adjust install referrer receiver?: {0}", has_adjust_receiver)
 
     has_internet_permission = has_element_attr(manifest_xml,
             "uses-permission", "android:name", "android.permission.INTERNET")
-    Log("has internet_permission?: {0}", has_internet_permission)
+    Log("has internet permission?: {0}", has_internet_permission)
     
     has_wifi_permission = has_element_attr(manifest_xml,
             "uses-permission", "android:name", "android.permission.ACCESS_WIFI_STATE")

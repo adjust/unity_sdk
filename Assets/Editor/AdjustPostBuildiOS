@@ -55,6 +55,7 @@ def edit_unity_xcode_project(Log, unity_xcode_project_path, adFramework_path):
     
     # add adFramework to unity
     unity_XcodeProject.add_file_if_doesnt_exist(adFramework_path, tree="SDKROOT", create_build_files=True,weak=True)
+    Log("added adSupport framework")
 
     # regex for adjust sdk files
     re_adjust_files = re.compile(r"AI.*\.m|.*\+AI.*\.m|Adjust\.m|AdjustUnity\.mm")
@@ -68,17 +69,18 @@ def edit_unity_xcode_project(Log, unity_xcode_project_path, adFramework_path):
         path = obj.get('path')
         fileref = obj.get('fileRef')
 
-        Log("key: {0}, name: {1}, isa: {2}, path: {3}, fileref: {4}", key, name, isa, path, fileref)
+        #Log("key: {0}, name: {1}, isa: {2}, path: {3}, fileref: {4}", key, name, isa, path, fileref)
 
         #check if file reference match any adjust file
         adjust_file_match = re_adjust_files.match(name if name else "")
         if (adjust_file_match):
-            Log("file match, group: {0}", adjust_file_match.group())
+            #Log("file match, group: {0}", adjust_file_match.group())
             # get the build file, from the file reference id
             build_files = unity_XcodeProject.get_build_files(key)
             for build_file in build_files:
                 # add the ARC compiler flag to the adjust file if doesn't exist
                 build_file.add_compiler_flag('-fobjc-arc')
+                Log("added ARC flag to file {0}", name)
 
     # save changes
     unity_XcodeProject.saveFormat3_2()
@@ -90,9 +92,9 @@ def rewrite_unity_xcode_project(Log, unity_xcode_project_path):
     with open(unity_xcode_project_path) as upf:
         for line in upf:
             if re_objc_excep.match(line):
-                Log("matched line: {0}", re_objc_excep.match(line).group())
+                #Log("matched line: {0}", re_objc_excep.match(line).group())
                 line = line.replace("NO","YES")
-                Log("changed line: {0}", line)
+                Log("Objective-c exceptions enabled")
             unity_xcode_lines.append(line)
     with open(unity_xcode_project_path, "w+") as upf:
         upf.writelines(unity_xcode_lines)
