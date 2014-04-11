@@ -32,3 +32,8 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
+# ==================== #
+# Adjust SDK generated #
+# ==================== #
+*.pyc*
+AndroidManifest.xml*
