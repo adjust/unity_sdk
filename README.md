@@ -238,7 +238,7 @@ using com.adjust.sdk;
 
 public class ExampleGUI : MonoBehaviour {
 {
-	void OnGUI () {
+    void OnGUI () {
     {
         if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height),
 		                "callback")) {
@@ -255,6 +255,18 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
+### 8. Disable tracking
+
+You can disable the adjust SDK from tracking by invoking the method `setEnabled` 
+with the enabled parameter as `false`. This setting is remembered between sessions, but it can only
+be activated after the first session.
+
+```cs
+Adjust.setEnabled(enabled: false);
+```
+
+You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible
+to activate the adjust SDK by invoking `setEnabled` with the enabled parameter as `true`.
 
 ## Possible problems
 
