@@ -103,4 +103,9 @@ extern "C"
         adjustUnityInstance = [[AdjustUnity alloc] init];
         [Adjust setDelegate:adjustUnityInstance];
     }
+
+    void _AdjustSetEnabled(int enabled) {
+        BOOL bEnabled = (BOOL) enabled;
+        [Adjust setEnabled:bEnabled];
+    }
 }

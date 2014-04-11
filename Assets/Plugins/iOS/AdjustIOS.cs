@@ -26,6 +26,9 @@ namespace com.adjust.sdk {
 		[DllImport ("__Internal")]
 		private static extern void _AdjustSetResponseDelegate (string sceneName);
 
+		[DllImport ("__Internal")]
+		private static extern void _AdjustSetEnabled (int enabled);
+
 		public AdjustIOS() { }
 
 		public void appDidLaunch(string appToken, Util.Environment environment, Util.LogLevel logLevel, bool eventBuffering) {
@@ -51,6 +54,9 @@ namespace com.adjust.sdk {
 		}
 		public void setResponseDelegate(string sceneName) {
 			_AdjustSetResponseDelegate (sceneName);
+		}
+		public void setEnabled(bool enabled) {
+			_AdjustSetEnabled (Convert.ToInt32 (enabled));
 		}
 
 		private string ConvertDicToJson (Dictionary<string, string> dictionary) {
