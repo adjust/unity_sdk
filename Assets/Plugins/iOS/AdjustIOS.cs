@@ -29,6 +29,9 @@ namespace com.adjust.sdk {
 		[DllImport ("__Internal")]
 		private static extern void _AdjustSetEnabled (int enabled);
 
+		[DllImport ("__Internal")]
+		private static extern int _AdjustIsEnabled ();
+
 		public AdjustIOS() { }
 
 		public void appDidLaunch(string appToken, Util.Environment environment, Util.LogLevel logLevel, bool eventBuffering) {
@@ -57,6 +60,10 @@ namespace com.adjust.sdk {
 		}
 		public void setEnabled(bool enabled) {
 			_AdjustSetEnabled (Convert.ToInt32 (enabled));
+		}
+		public bool isEnabled() {
+			var iIsEnabled = _AdjustIsEnabled ();
+			return Convert.ToBoolean (iIsEnabled);
 		}
 
 		private string ConvertDicToJson (Dictionary<string, string> dictionary) {

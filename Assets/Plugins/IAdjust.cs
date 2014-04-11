@@ -12,5 +12,6 @@ namespace com.adjust.sdk
 		void onResume();
 		void setResponseDelegate(string sceneName);
 		void setEnabled(bool enabled);
+		bool isEnabled();
 	}
 }

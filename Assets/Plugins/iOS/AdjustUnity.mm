@@ -108,4 +108,10 @@ extern "C"
         BOOL bEnabled = (BOOL) enabled;
         [Adjust setEnabled:bEnabled];
     }
+
+    int _AdjustIsEnabled() {
+        BOOL isEnabled = [Adjust isEnabled];
+        int iIsEnabled = (int) isEnabled;
+        return iIsEnabled;
+    }
 }
