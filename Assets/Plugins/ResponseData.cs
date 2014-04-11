@@ -10,6 +10,7 @@ namespace com.adjust.sdk
 		}
 
 		public ActivityKind activityKind { get; private set; }
+		public string activityKindString { get; private set; }
 		public bool success { get; private set; }
 		public bool willRetry { get; private set; }
 		public string error { get; private set; }
@@ -20,6 +21,7 @@ namespace com.adjust.sdk
 			var jsonNode = JSON.Parse (jsonString);
 
 			activityKind = ParseActivityKind(jsonNode["activityKind"].Value);
+			activityKindString = activityKind.ToString ().ToLower ();
 			success = jsonNode ["success"].AsBool;
 			willRetry = jsonNode ["willRetry"].AsBool;
 			error = jsonNode ["error"].Value;
