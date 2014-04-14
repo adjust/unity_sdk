@@ -91,7 +91,9 @@ namespace com.adjust.sdk {
 			AndroidJavaObject javaDic = new AndroidJavaObject("java.util.HashMap", dictonary.Count);
 
 			foreach (var pair in dictonary) {
-				javaDic.Call<string>("put", pair.Key, pair.Value);
+				if (pair.Value != null) {
+					javaDic.Call<string>("put", pair.Key, pair.Value);
+				}
 			}
 
 			return javaDic;

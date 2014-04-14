@@ -56,7 +56,11 @@ namespace com.adjust.sdk {
 			_AdjustOnResume ();
 		}
 		public void setResponseDelegate(string sceneName) {
-			_AdjustSetResponseDelegate (sceneName);
+			//_AdjustSetResponseDelegate (sceneName);
+			Debug.Log ("adjust: converting 'null' value dic");
+			var nullValueDic = ConvertDicToJson(new Dictionary<string, string>(){
+				{ "stuff", null }});
+			Debug.Log ("adjust: converted 'null' value dic");
 		}
 		public void setEnabled(bool enabled) {
 			_AdjustSetEnabled (Convert.ToInt32 (enabled));
