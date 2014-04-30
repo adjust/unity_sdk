@@ -7,9 +7,14 @@ using System.Diagnostics;
 public class AdjustEditor : MonoBehaviour {
 
 	static string iOSBuildPath = "";
+	static bool isEnabled = true;
 
 	[PostProcessBuild]
 	public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
+		if (!isEnabled) {
+			return;
+		}
+
 		var exitCode = RunPostBuildScript (preBuild: false, pathToBuiltProject: pathToBuiltProject);
 
 		if (exitCode == -1) {
@@ -60,6 +65,15 @@ public class AdjustEditor : MonoBehaviour {
 		#else
 		EditorUtility.DisplayDialog("Adjust", "Option only valid for the Android platform.", "OK");
 		#endif
+	}
+
+	[MenuItem("Adjust/Change post processing status")]
+	static void ChangePostProcessingStatus() {
+		isEnabled = !isEnabled;
+		EditorUtility.DisplayDialog("Adjust",
+		                            "The post processing for adjust is now " +
+		                                (isEnabled ? "enabled." : "disabled."),
+		                            "OK");
 	}
 
 	static int RunPostBuildScript (bool preBuild, string pathToBuiltProject = "") {
