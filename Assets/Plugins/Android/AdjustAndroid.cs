@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace com.adjust.sdk {
 #if UNITY_ANDROID
@@ -51,9 +52,34 @@ namespace com.adjust.sdk {
 			ajcAdjust.CallStatic("onResume", ajoCurrentActivity);
 		}
 
-		public void setResponseDelegate(string sceneName) 
-		{
+		public void setResponseDelegate(string sceneName) {
 			ajcAdjustUnity.CallStatic ("setResponseDelegate", sceneName);
+		}
+
+		public void setEnabled(bool enabled) {
+			ajcAdjust.CallStatic ("setEnabled", ConvertBoolToJava(enabled));
+		}
+
+		public bool isEnabled() {
+			var ajo = ajcAdjust.CallStatic<AndroidJavaObject> ("isEnabled");
+			return ConvertBoolFromJava (ajo) ?? false;
+		}
+
+		private AndroidJavaObject ConvertBoolToJava(bool value) {
+			AndroidJavaObject javaBool = new AndroidJavaObject ("java.lang.Boolean", value.ToString ().ToLower ());
+			return javaBool;
+		}
+
+		private bool? ConvertBoolFromJava(AndroidJavaObject ajo) {
+			if (ajo == null) {
+				return null;
+			}
+			var sBool = ajo.Call<string>("toString");
+			try {
+				return Convert.ToBoolean (sBool);
+			} catch (FormatException) {
+				return null;
+			}
 		}
 
 		private AndroidJavaObject ConvertDicToJava(Dictionary<string, string> dictonary)
@@ -65,7 +91,9 @@ namespace com.adjust.sdk {
 			AndroidJavaObject javaDic = new AndroidJavaObject("java.util.HashMap", dictonary.Count);
 
 			foreach (var pair in dictonary) {
-				javaDic.Call<string>("put", pair.Key, pair.Value);
+				if (pair.Value != null) {
+					javaDic.Call<string>("put", pair.Key, pair.Value);
+				}
 			}
 
 			return javaDic;

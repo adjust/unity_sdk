@@ -5,12 +5,14 @@ using com.adjust.sdk;
 
 public class ExampleGUI : MonoBehaviour {
 
-	private int nr_buttons = 4;
+	private int nr_buttons = 5;
+	private static bool isEnabled = false;
 
 	void OnGUI () {
 		if (GUI.Button (new Rect (0, Screen.height * 0 / nr_buttons, Screen.width, Screen.height / nr_buttons),
 		                "manual launch")) {
 			Adjust.appDidLaunch("querty123456", Util.Environment.Sandbox, Util.LogLevel.Verbose, false);
+			isEnabled = true;
 		}
 
 		if (GUI.Button (new Rect (0, Screen.height * 1 / nr_buttons, Screen.width, Screen.height / nr_buttons),
@@ -38,6 +40,13 @@ public class ExampleGUI : MonoBehaviour {
 		if (GUI.Button (new Rect (0, Screen.height * 3 / nr_buttons, Screen.width, Screen.height / nr_buttons),
 		                "callback")) {
 			Adjust.setResponseDelegate(responseDelegate);
+		}
+
+		var switch_sdk = isEnabled ? "disable sdk" : "enable sdk";
+		if (GUI.Button (new Rect (0, Screen.height * 4 / nr_buttons, Screen.width, Screen.height / nr_buttons),
+		                switch_sdk)) {
+			isEnabled = !Adjust.isEnabled();
+			Adjust.setEnabled(isEnabled);
 		}
 	}
 

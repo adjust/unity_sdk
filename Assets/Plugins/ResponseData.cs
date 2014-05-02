@@ -6,10 +6,11 @@ namespace com.adjust.sdk
 	public class ResponseData
 	{
 		public enum ActivityKind {
-			UNKNOWN, SESSION, EVENT, REVENUE
+			UNKNOWN, SESSION, EVENT, REVENUE, REATTRIBUTION
 		}
 
 		public ActivityKind activityKind { get; private set; }
+		public string activityKindString { get; private set; }
 		public bool success { get; private set; }
 		public bool willRetry { get; private set; }
 		public string error { get; private set; }
@@ -20,6 +21,7 @@ namespace com.adjust.sdk
 			var jsonNode = JSON.Parse (jsonString);
 
 			activityKind = ParseActivityKind(jsonNode["activityKind"].Value);
+			activityKindString = activityKind.ToString ().ToLower ();
 			success = jsonNode ["success"].AsBool;
 			willRetry = jsonNode ["willRetry"].AsBool;
 			error = jsonNode ["error"].Value;
@@ -35,6 +37,8 @@ namespace com.adjust.sdk
 				return ActivityKind.EVENT;
 			else if ("revenue" == sActivityKind)
 				return ActivityKind.REVENUE;
+			else if ("reattribution" == sActivityKind)
+				return ActivityKind.REATTRIBUTION;
 			else 
 				return ActivityKind.UNKNOWN;
 		}

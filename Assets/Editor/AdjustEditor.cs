@@ -6,8 +6,15 @@ using System.Diagnostics;
 
 public class AdjustEditor : MonoBehaviour {
 
+	static string iOSBuildPath = "";
+	static bool isEnabled = true;
+
 	[PostProcessBuild]
 	public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
+		if (!isEnabled) {
+			return;
+		}
+
 		var exitCode = RunPostBuildScript (preBuild: false, pathToBuiltProject: pathToBuiltProject);
 
 		if (exitCode == -1) {
@@ -43,6 +50,32 @@ public class AdjustEditor : MonoBehaviour {
 		#endif
 	}
 
+	[MenuItem("Adjust/Set iOS build path")]
+	static void SetiOSBuildPath() {
+		#if UNITY_IOS
+		AdjustEditor.iOSBuildPath = EditorUtility.OpenFolderPanel(
+			title: "iOs build path",
+			folder: EditorUserBuildSettings.GetBuildLocation(BuildTarget.iPhone),
+			defaultName: "");
+		if (AdjustEditor.iOSBuildPath == "") {
+			UnityEngine.Debug.Log("iOS build path reset to default path");
+		} else {
+			UnityEngine.Debug.Log(string.Format("iOS build path: {0}", AdjustEditor.iOSBuildPath));
+		}
+		#else
+		EditorUtility.DisplayDialog("Adjust", "Option only valid for the Android platform.", "OK");
+		#endif
+	}
+
+	[MenuItem("Adjust/Change post processing status")]
+	static void ChangePostProcessingStatus() {
+		isEnabled = !isEnabled;
+		EditorUtility.DisplayDialog("Adjust",
+		                            "The post processing for adjust is now " +
+		                                (isEnabled ? "enabled." : "disabled."),
+		                            "OK");
+	}
+
 	static int RunPostBuildScript (bool preBuild, string pathToBuiltProject = "") {
 		string pathToScript = null;
 		string arguments = null;
@@ -54,7 +87,11 @@ public class AdjustEditor : MonoBehaviour {
 			arguments = "--pre-build " + arguments;
 		#elif UNITY_IOS
 		pathToScript = "/Editor/AdjustPostBuildiOS";
-		arguments = pathToBuiltProject;
+		if (AdjustEditor.iOSBuildPath == "") {
+			arguments = pathToBuiltProject;
+		} else {
+			arguments = AdjustEditor.iOSBuildPath;
+		}
 		#else
 		return -1;
 		#endif

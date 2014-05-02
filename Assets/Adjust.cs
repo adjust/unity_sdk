@@ -80,6 +80,22 @@ public class Adjust : MonoBehaviour {
 		Adjust.instance.setResponseDelegate (sceneName);
 	}
 
+	public static void setEnabled(bool enabled) {
+		if (Adjust.instance == null) {
+			Debug.Log(Adjust.errorMessage);
+			return;
+		}
+		Adjust.instance.setEnabled(enabled);
+	}
+
+	public static bool isEnabled() {
+		if (Adjust.instance == null) {
+			Debug.Log(Adjust.errorMessage);
+			return false;
+		}
+		return Adjust.instance.isEnabled ();
+	}
+
 	public void getNativeMessage (string sResponseData) {
 		if (Adjust.instance == null) {
 			Debug.Log(Adjust.errorMessage);
@@ -93,5 +109,4 @@ public class Adjust : MonoBehaviour {
 		var responseData = new ResponseData (sResponseData);
 		Adjust.responseDelegate (responseData);
 	}
-
 }

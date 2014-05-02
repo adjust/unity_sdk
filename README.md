@@ -69,6 +69,9 @@ For an example of scene with of a button menu with these options and others, ope
 
 To facilitate the build process we integrated build scripts for both Android and iOS. The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `python 2.7` installed to work.
 
+It's possible to disable the post processing by clicking on the menu `Adjust → Change post processing status`.
+Press the same button to re-enable it.
+
 #### iOS 
 
 The iOS build script is located at `Assets/Editor/AdjustPostBuildiOS`. It changes the Unity3d iOS generated project in
@@ -80,6 +83,9 @@ the following ways:
 2. Adds the compilation flag `-fobjc-arc` to the adjust project files in the project. This allows the adjust `ARC` based project to work with the `non-ARC` Unity3d iOS project.
 
 3. Enables the flag `GCC_ENABLE_OBJC_EXCEPTIONS`, to allow the adjust SDK to use objective-c exceptions.
+
+If you have a custom build that puts the Unity3d iOS generated project in a different location,
+inform the script by clicking on the menu `Adjust → Set iOS build path` and choosing the build path of the iOS project.
 
 After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity3d project with log 
 messages of the script run.
@@ -238,7 +244,7 @@ using com.adjust.sdk;
 
 public class ExampleGUI : MonoBehaviour {
 {
-	void OnGUI () {
+    void OnGUI () {
     {
         if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height),
 		                "callback")) {
@@ -255,6 +261,18 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
+### 8. Disable tracking
+
+You can disable the adjust SDK from tracking by invoking the method `setEnabled` 
+with the enabled parameter as `false`. This setting is remembered between sessions, but it can only
+be activated after the first session.
+
+```cs
+Adjust.setEnabled(enabled: false);
+```
+
+You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible
+to activate the adjust SDK by invoking `setEnabled` with the enabled parameter as `true`.
 
 ## Possible problems
 
