@@ -7,17 +7,21 @@ namespace AdjustUnityWP
 {
     public class AdjustWP
     {
-        public static void AppDidLaunch(string appToken, string sLogLevel, string sEnvironment)
+        public static void AppDidLaunch(string appToken, string sEnvironment, string sdkPrefix, string sLogLevel, bool eventBuffering)
         {
             Adjust.AppDidLaunch(appToken);
-            var logLevel = AdjustSdk.ActivityKindUtil.FromString(sLogLevel);
-            Adjust.SetLogLevel((LogLevel)logLevel);
 
             if ("sandbox" == sEnvironment)
                 Adjust.SetEnvironment(AdjustEnvironment.Sandbox);
-
             if ("production" == sEnvironment)
                 Adjust.SetEnvironment(AdjustEnvironment.Production);
+
+            Adjust.SetSdkPrefix(sdkPrefix);
+
+            var logLevel = AdjustSdk.ActivityKindUtil.FromString(sLogLevel);
+            Adjust.SetLogLevel((LogLevel)logLevel);
+
+            Adjust.SetEventBufferingEnabled(eventBuffering);
         }
 
         public static void AppDidActivate()

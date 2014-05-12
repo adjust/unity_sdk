@@ -9,7 +9,7 @@ namespace com.adjust.sdk {
 	public class AdjustIOS : IAdjust {
 
 		[DllImport ("__Internal")]
-		private static extern void _AdjustLauchApp(string appToken, string environment, int logLevel, int eventBuffering);
+		private static extern void _AdjustLauchApp(string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering);
 
 		[DllImport ("__Internal")]
 		private static extern void _AdjustTrackEvent(string eventToken, string jsonParameters);
@@ -34,10 +34,10 @@ namespace com.adjust.sdk {
 
 		public AdjustIOS() { }
 
-		public void appDidLaunch(string appToken, Util.Environment environment, Util.LogLevel logLevel, bool eventBuffering) {
+		public void appDidLaunch(string appToken, Util.Environment environment, string sdkPrefix, Util.LogLevel logLevel, bool eventBuffering) {
 			string sEnvironment = environment.ToString ().ToLower ();
 
-			_AdjustLauchApp(appToken, sEnvironment, (int)logLevel, Convert.ToInt32(eventBuffering));
+			_AdjustLauchApp(appToken, sEnvironment, sdkPrefix, (int)logLevel, Convert.ToInt32(eventBuffering));
 		}
 		public void trackEvent (string eventToken, Dictionary<string,string> parameters = null) {
 			string sJsonParameters = ConvertDicToJson(parameters);
@@ -57,6 +57,8 @@ namespace com.adjust.sdk {
 		}
 		public void setResponseDelegate(string sceneName) {
 			_AdjustSetResponseDelegate (sceneName);
+		}
+		public void setResponseDelegateString(Action<string> responseDelegate) {
 		}
 		public void setEnabled(bool enabled) {
 			_AdjustSetEnabled (Convert.ToInt32 (enabled));

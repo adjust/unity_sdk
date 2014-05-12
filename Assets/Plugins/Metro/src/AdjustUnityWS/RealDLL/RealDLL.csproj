@@ -109,8 +109,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AdjustWS">
-      <HintPath>..\packages\Adjust.3.3.1\lib\netcore45\AdjustWS.dll</HintPath>
+    <Reference Include="AdjustWS, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Adjust.3.3.2\lib\netcore45\AdjustWS.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\win8\Microsoft.Threading.Tasks.dll</HintPath>
@@ -133,8 +134,9 @@
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\win8\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="WindowsPcl">
-      <HintPath>..\packages\Adjust.3.3.1\lib\netcore45\WindowsPcl.dll</HintPath>
+    <Reference Include="WindowsPcl, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Adjust.3.3.2\lib\netcore45\WindowsPcl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">

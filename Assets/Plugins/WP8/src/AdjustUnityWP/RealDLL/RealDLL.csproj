@@ -90,8 +90,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AdjustWP">
-      <HintPath>..\packages\Adjust.3.3.1\lib\wp8\AdjustWP.dll</HintPath>
+    <Reference Include="AdjustWP, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Adjust.3.3.2\lib\wp8\AdjustWP.dll</HintPath>
     </Reference>
     <Reference Include="Md5.WP7">
       <HintPath>..\packages\Md5.WP7.1.0.3\lib\wp7\Md5.WP7.dll</HintPath>
@@ -123,8 +124,9 @@
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="WindowsPcl">
-      <HintPath>..\packages\Adjust.3.3.1\lib\wp8\WindowsPcl.dll</HintPath>
+    <Reference Include="WindowsPcl, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Adjust.3.3.2\lib\wp8\WindowsPcl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

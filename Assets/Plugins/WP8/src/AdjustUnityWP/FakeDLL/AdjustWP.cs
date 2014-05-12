@@ -5,7 +5,7 @@ namespace AdjustUnityWP
 {
     public class AdjustWP
     {
-        public static void AppDidLaunch(string appToken, string sLogLevel, string sEnvironment) { }
+        public static void AppDidLaunch(string appToken, string sEnvironment, string sdkPrefix, string sLogLevel, bool eventBuffering) { }
 
         public static void AppDidActivate() { }
 

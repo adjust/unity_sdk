@@ -49,9 +49,10 @@ NSDictionary* ConvertParameters (const char* cJsonParameters)
 
 extern "C"
 {
-    void _AdjustLauchApp(const char* appToken, const char* environment, int logLevel, int eventBuffering) {
+    void _AdjustLauchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering) {
         NSString* sAppToken = [NSString stringWithUTF8String: appToken];
         NSString* sEnvironment = [NSString stringWithUTF8String: environment];
+        NSString* sSdkPrefix = [NSString stringWithUTF8String: sdkPrefix];
         AILogLevel eLogLevel = (AILogLevel)logLevel;
         BOOL bEventBuffering = (BOOL) eventBuffering;
 
@@ -59,7 +60,7 @@ extern "C"
         [Adjust appDidLaunch:sAppToken];
         [Adjust setEnvironment:sEnvironment];
         [Adjust setLogLevel:eLogLevel];
-        [Adjust setSdkPrefix:@"unity3.0.0"];
+        [Adjust setSdkPrefix:sSdkPrefix];
     }
 
     void _AdjustTrackEvent(const char* eventToken, const char* cJsonParameters) {

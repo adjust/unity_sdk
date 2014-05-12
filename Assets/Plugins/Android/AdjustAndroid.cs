@@ -18,7 +18,7 @@ namespace com.adjust.sdk {
 			ajoCurrentActivity = ajcUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
 		}
 
-		public void appDidLaunch(string appToken, Util.Environment environment, Util.LogLevel logLevel, bool eventBuffering) {
+		public void appDidLaunch(string appToken, Util.Environment environment, string sdkPrefix, Util.LogLevel logLevel, bool eventBuffering) {
 
 			string sEnvironment = environment.ToString ().ToLower ();
 			string sLogLevel = logLevel.ToString ().ToLower ();
@@ -29,7 +29,7 @@ namespace com.adjust.sdk {
 	            sEnvironment,
                 sLogLevel,
 	     		eventBuffering);
-			ajcAdjust.CallStatic("setSdkPrefix","unity3.0.0");
+			ajcAdjust.CallStatic("setSdkPrefix",sdkPrefix);
 
 			onResume ();
 		}
@@ -55,6 +55,8 @@ namespace com.adjust.sdk {
 		public void setResponseDelegate(string sceneName) {
 			ajcAdjustUnity.CallStatic ("setResponseDelegate", sceneName);
 		}
+
+		public void setResponseDelegateString(Action<string> responseDelegate) { }
 
 		public void setEnabled(bool enabled) {
 			ajcAdjust.CallStatic ("setEnabled", ConvertBoolToJava(enabled));
