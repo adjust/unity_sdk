@@ -54,6 +54,7 @@ public class ExampleGUI : MonoBehaviour {
 	{
 		Debug.Log ("activitykind " + responseData.activityKind.ToString ());
 		Debug.Log ("trackerName " + responseData.trackerName);
+		Debug.Log ("error " + responseData.error);
 	}
 
 }

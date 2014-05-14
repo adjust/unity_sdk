@@ -14,6 +14,7 @@ public class Adjust : MonoBehaviour {
 	public Util.Environment environment = Util.Environment.Sandbox;
 	public bool eventBuffering = false;
 	public bool startManually = false;
+	public const string sdkPrefix = "unity3.2.1";
 
 	void Awake() {
 		if (!this.startManually) {
@@ -42,14 +43,18 @@ public class Adjust : MonoBehaviour {
 		Adjust.instance = new AdjustAndroid();
 #elif UNITY_IOS
 		Adjust.instance = new AdjustIOS();
+#elif UNITY_WP8
+		Adjust.instance = new AdjustWP8();
+#elif UNITY_METRO
+		Adjust.instance = new AdjustMetro();
 #endif
 
 		if (Adjust.instance == null) {
-			Debug.Log("adjust: SDK can only be used in Android or iOS");
+			Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps");
 			return;
 		}
 
-		Adjust.instance.appDidLaunch (appToken, environment, logLevel, eventBuffering);
+		Adjust.instance.appDidLaunch (appToken, environment, sdkPrefix , logLevel, eventBuffering);
 	}
 
 	public static void trackEvent(string eventToken, Dictionary<string,string> parameters = null) {
@@ -78,6 +83,7 @@ public class Adjust : MonoBehaviour {
 
 		Adjust.responseDelegate = responseDelegate;
 		Adjust.instance.setResponseDelegate (sceneName);
+		Adjust.instance.setResponseDelegateString (runResponseDelegate);
 	}
 
 	public static void setEnabled(bool enabled) {
@@ -97,16 +103,20 @@ public class Adjust : MonoBehaviour {
 	}
 
 	public void getNativeMessage (string sResponseData) {
-		if (Adjust.instance == null) {
+		Adjust.runResponseDelegate (sResponseData);
+	}
+
+	public static void runResponseDelegate(string sResponseData) {
+		if (instance == null) {
 			Debug.Log(Adjust.errorMessage);
 			return;
 		}
-		if (Adjust.responseDelegate == null) {
+		if (responseDelegate == null) {
 			Debug.Log("adjust: response delegate not set to receive callbacks");
 			return;
 		}
 
 		var responseData = new ResponseData (sResponseData);
-		Adjust.responseDelegate (responseData);
+		responseDelegate (responseData);
 	}
 }
