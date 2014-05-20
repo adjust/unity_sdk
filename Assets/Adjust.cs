@@ -14,7 +14,7 @@ public class Adjust : MonoBehaviour {
 	public Util.Environment environment = Util.Environment.Sandbox;
 	public bool eventBuffering = false;
 	public bool startManually = false;
-	public const string sdkPrefix = "unity3.2.1";
+	public const string sdkPrefix = "unity3.2.2";
 
 	void Awake() {
 		if (!this.startManually) {

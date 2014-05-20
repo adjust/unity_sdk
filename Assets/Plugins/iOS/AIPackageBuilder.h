@@ -22,6 +22,8 @@
 @property (nonatomic, copy) NSString *clientSdk;
 @property (nonatomic, copy) NSString *uuid;
 @property (nonatomic, assign) BOOL trackingEnabled;
+@property (nonatomic, assign) BOOL isIad;
+@property (nonatomic, copy) NSString *vendorId;
 
 // sessions
 @property (nonatomic, assign) int sessionCount;
@@ -37,8 +39,13 @@
 @property (nonatomic, copy)   NSDictionary *callbackParameters;
 @property (nonatomic, assign) double amountInCents;
 
+// reattributions
+@property (nonatomic, copy) NSDictionary* deeplinkParameters;
+
+
 - (AIActivityPackage *)buildSessionPackage;
 - (AIActivityPackage *)buildEventPackage;
 - (AIActivityPackage *)buildRevenuePackage;
+- (AIActivityPackage *)buildReattributionPackage;
 
 @end
