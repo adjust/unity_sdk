@@ -1,6 +1,6 @@
 ## Summary
 
-This is the Unity3d SDK of adjust.io™. It supports iOS, Android, Windows Phone 8 and Windows Store App targets. You can read more about adjust.io™ at [adjust.io].
+This is the Unity3d SDK of adjust™. It supports iOS, Android, Windows Phone 8 and Windows Store App targets. You can read more about adjust™ at [adjust.com].
 
 ## Basic Installation
 
@@ -288,8 +288,8 @@ Even with the post build script it is possible that the project is not ready to 
 
 If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
 
-[adjust.io]: http://adjust.io
-[dashboard]: http://adjust.io
+[adjust.com]: http://adjust.com
+[dashboard]: http://adjust.com
 [releases]: https://github.com/adjust/adjust_unity_sdk/releases
 [import_package]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/01_import_package.png
 [adjust_editor]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/02_adjust_editor.png
@@ -305,8 +305,8 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
 
 The adjust-sdk is licensed under the MIT License.
 
-Copyright (c) 2012-2014 adeven GmbH,
-http://www.adeven.com
+Copyright (c) 2012-2014 adjust GmbH,
+http://www.adjust.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
