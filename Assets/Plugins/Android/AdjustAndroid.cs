@@ -18,7 +18,7 @@ namespace com.adjust.sdk {
 			ajoCurrentActivity = ajcUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
 		}
 
-		public void appDidLaunch(string appToken, Util.Environment environment, string sdkPrefix, Util.LogLevel logLevel, bool eventBuffering) {
+		public void appDidLaunch(string appToken, AdjustUtil.AdjustEnvironment environment, string sdkPrefix, AdjustUtil.LogLevel logLevel, bool eventBuffering) {
 
 			string sEnvironment = environment.ToString ().ToLower ();
 			string sLogLevel = logLevel.ToString ().ToLower ();

@@ -34,7 +34,7 @@ namespace com.adjust.sdk {
 
 		public AdjustIOS() { }
 
-		public void appDidLaunch(string appToken, Util.Environment environment, string sdkPrefix, Util.LogLevel logLevel, bool eventBuffering) {
+		public void appDidLaunch(string appToken, AdjustUtil.AdjustEnvironment environment, string sdkPrefix, AdjustUtil.LogLevel logLevel, bool eventBuffering) {
 			string sEnvironment = environment.ToString ().ToLower ();
 
 			_AdjustLauchApp(appToken, sEnvironment, sdkPrefix, (int)logLevel, Convert.ToInt32(eventBuffering));

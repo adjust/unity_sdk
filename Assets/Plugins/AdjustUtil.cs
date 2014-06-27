@@ -1,5 +1,5 @@
 ﻿namespace com.adjust.sdk {
-	public class Util {
+	public class AdjustUtil {
 		public enum LogLevel {
 			Verbose = 1,
 			Debug,
@@ -9,7 +9,7 @@
 			Assert
 		}
 
-		public enum Environment {
+		public enum AdjustEnvironment {
 			Sandbox,
 			Production
 		}

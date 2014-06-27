@@ -10,8 +10,8 @@ public class Adjust : MonoBehaviour {
 	private static Action<ResponseData> responseDelegate = null;
 
 	public string appToken = "{Your App Token}";
-	public Util.LogLevel logLevel = Util.LogLevel.Info;
-	public Util.Environment environment = Util.Environment.Sandbox;
+	public AdjustUtil.LogLevel logLevel = AdjustUtil.LogLevel.Info;
+	public AdjustUtil.AdjustEnvironment environment = AdjustUtil.AdjustEnvironment.Sandbox;
 	public bool eventBuffering = false;
 	public bool startManually = false;
 	public const string sdkPrefix = "unity3.2.3";
@@ -34,7 +34,7 @@ public class Adjust : MonoBehaviour {
 		}
 	}
 
-	public static void appDidLaunch(string appToken, Util.Environment environment, Util.LogLevel logLevel, bool eventBuffering) {
+	public static void appDidLaunch(string appToken, AdjustUtil.AdjustEnvironment environment, AdjustUtil.LogLevel logLevel, bool eventBuffering) {
 		if (Adjust.instance != null) {
 			Debug.Log("adjust: warning, SDK already started. Restarting");
 		}

@@ -11,7 +11,7 @@ public class ExampleGUI : MonoBehaviour {
 	void OnGUI () {
 		if (GUI.Button (new Rect (0, Screen.height * 0 / nr_buttons, Screen.width, Screen.height / nr_buttons),
 		                "manual launch")) {
-			Adjust.appDidLaunch("querty123456", Util.Environment.Sandbox, Util.LogLevel.Verbose, false);
+			Adjust.appDidLaunch("querty123456", AdjustUtil.AdjustEnvironment.Sandbox, AdjustUtil.LogLevel.Verbose, false);
 			isEnabled = true;
 		}
 

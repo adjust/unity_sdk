@@ -5,7 +5,7 @@ namespace com.adjust.sdk
 {
 	public interface IAdjust
 	{
-	 	void appDidLaunch (string appToken, Util.Environment environment, string sdkPrefix, Util.LogLevel logLevel, bool eventBuffering);
+		void appDidLaunch (string appToken, AdjustUtil.AdjustEnvironment environment, string sdkPrefix, AdjustUtil.LogLevel logLevel, bool eventBuffering);
 		void trackEvent (string eventToken, Dictionary<string,string> parameters = null);
 		void trackRevenue (double cents, string eventToken = null, Dictionary<string,string> parameters = null);
 		void onPause ();
