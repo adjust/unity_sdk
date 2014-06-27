@@ -261,7 +261,7 @@ public class ExampleGUI : MonoBehaviour {
     
     public void responseDelegate (ResponseData responseData)
 	{
-		Debug.Log ("activitykind " + responseData.activityKindString);
+		Debug.Log ("activityKind " + responseData.activityKindString);
 		Debug.Log ("trackerName " + responseData.trackerName);
 		//...
 	}

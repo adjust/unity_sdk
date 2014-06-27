@@ -1,5 +1,6 @@
 using System;
 using SimpleJSON;
+using UnityEngine;
 
 namespace com.adjust.sdk
 {
@@ -9,24 +10,67 @@ namespace com.adjust.sdk
 			UNKNOWN, SESSION, EVENT, REVENUE, REATTRIBUTION
 		}
 
-		public ActivityKind activityKind { get; private set; }
+		public ActivityKind? activityKind { get; private set; }
 		public string activityKindString { get; private set; }
-		public bool success { get; private set; }
-		public bool willRetry { get; private set; }
+		public bool? success { get; private set; }
+		public bool? willRetry { get; private set; }
 		public string error { get; private set; }
 		public string trackerToken { get; private set; }
 		public string trackerName { get; private set; }
+		public string network { get; private set; }
+		public string campaign { get; private set; }
+		public string adgroup { get; private set; }
+		public string creative { get; private set; }
 
 		public ResponseData(string jsonString) {
 			var jsonNode = JSON.Parse (jsonString);
 
-			activityKind = ParseActivityKind(jsonNode["activityKind"].Value);
+			if (jsonNode == null) {
+				return;
+			}
+
+			activityKind = ParseActivityKind(getJsonString (jsonNode, "activityKind"));
 			activityKindString = activityKind.ToString ().ToLower ();
-			success = jsonNode ["success"].AsBool;
-			willRetry = jsonNode ["willRetry"].AsBool;
-			error = jsonNode ["error"].Value;
-			trackerName = jsonNode ["trackerName"].Value;
-			trackerToken = jsonNode ["trackerToken"].Value;
+
+			success = getJsonBool(jsonNode, "success");
+			willRetry = getJsonBool(jsonNode, "willRetry");
+
+			error = getJsonString(jsonNode, "error");
+			trackerName = getJsonString(jsonNode, "trackerName");
+			trackerToken = getJsonString(jsonNode, "trackerToken");
+			network = getJsonString(jsonNode, "network");
+			campaign = getJsonString(jsonNode, "campaign");
+			adgroup = getJsonString(jsonNode, "adgroup");
+			creative = getJsonString(jsonNode, "creative");
+		}
+
+		private String getJsonString(JSONNode node, string key) {
+			var jsonValue = getJsonValue (node, key);
+
+			if (jsonValue == null)
+				return null;
+
+			return jsonValue.Value;
+		}
+
+		private bool? getJsonBool(JSONNode node, string key) {
+			var jsonValue = getJsonValue (node, key);
+
+			if (jsonValue == null)
+				return null;
+
+			return jsonValue.AsBool;
+		}
+
+		private JSONNode getJsonValue(JSONNode node, string key) {
+			if (node == null)
+				return null;
+
+			var nodeValue = node [key];
+			if (nodeValue.GetType() == typeof(JSONLazyCreator))
+				return null;
+
+			return nodeValue;
 		}
 
 		private ActivityKind ParseActivityKind(string sActivityKind) 
