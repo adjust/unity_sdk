@@ -121,7 +121,7 @@ public class AdjustEditor : MonoBehaviour {
 			#if UNITY_ANDROID
 			logFile = projectPath + "/AdjustPostBuildAndroidLog.txt";
 			#elif UNITY_IOS
-			logFile = projectPath + "/AdjustPostBuiliOSLog.txt";
+			logFile = projectPath + "/AdjustPostBuildiOSLog.txt";
 			#else
 			return null;
 			#endif
