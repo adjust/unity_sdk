@@ -21,7 +21,7 @@ Open your project in the Unity Editor and navigate to `Assets → Import Package
 
 ### 3. Integrate adjust into your app
 
-Add the prefab located at `Assets/Adjust.prefab` to the first scene. 
+Add the prefab located at `Assets/Adjust.prefab` to the first scene.
 
 Edit the parameters of the Adjust script in the Inspector menu of the added prefab.
 
@@ -62,7 +62,7 @@ event buffering by ticking the box for `Event Buffering`.
 
 If you don't want to start the adjust SDK at the `Awake` event of the game, tick the box `Start Manually`. Call the method `Adjust.appDidLaunch` with the respective parameters to start the adjust SDK instead.
 
-For an example of scene with of a button menu with these options and others, open the example scene located at 
+For an example of scene with of a button menu with these options and others, open the example scene located at
 `Assets/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/ExampleGUI/ExampleGUI.cs`.
 
 #### Windows Store Apps
@@ -80,12 +80,12 @@ To facilitate the build process we integrated build scripts for both Android and
 It's possible to disable the post processing by clicking on the menu `Adjust → Change post processing status`.
 Press the same button to re-enable it.
 
-#### iOS 
+#### iOS
 
 The iOS build script is located at `Assets/Editor/AdjustPostBuildiOS`. It changes the Unity3d iOS generated project in
-the following ways: 
+the following ways:
 
-1. Adds the adSupport framework to the project. It is needed for the adjust SDK, consult the adjust 
+1. Adds the adSupport framework to the project. It is needed for the adjust SDK, consult the adjust
 [iOS][ios] page for more details.
 
 2. Adds the compilation flag `-fobjc-arc` to the adjust project files in the project. This allows the adjust `ARC` based project to work with the `non-ARC` Unity3d iOS project.
@@ -95,14 +95,14 @@ the following ways:
 If you have a custom build that puts the Unity3d iOS generated project in a different location,
 inform the script by clicking on the menu `Adjust → Set iOS build path` and choosing the build path of the iOS project.
 
-After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity3d project with log 
+After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity3d project with log
 messages of the script run.
 
 #### Android
 
-The android build script is located at `Assets/Editor/AdjustPostBuildAndroid`. It changes the `AndroidManifest.xml` file 
-located at `Assets/Plugins/Android/`. The problem with this approach is that, the manifest file used for the Android 
-package was the one before the build process ended. 
+The android build script is located at `Assets/Editor/AdjustPostBuildAndroid`. It changes the `AndroidManifest.xml` file
+located at `Assets/Plugins/Android/`. The problem with this approach is that, the manifest file used for the Android
+package was the one before the build process ended.
 
 To mitigate this, simply run the build again, using the manifest created or changed by the previous run, or click on the menu `Adjust → Fix AndroidManifest.xml` so the script can run before the build process. Either way, it is only necessary to do this step once, as long the manifest file remains compatible with the adjust SDK.
 
@@ -117,7 +117,7 @@ file `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` f
 
 3. Adds the permission to access information about Wi-Fi networks.
 
-After running, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity3d project with log 
+After running, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity3d project with log
 messages of the script run.
 
 ## Additional features
@@ -208,7 +208,7 @@ delegate to this event.
 
 1. Create a method with the signature of the delegate `Action<ResponseData>`.
 
-2. After calling the launch of the adjust SDK, call the `Adjust.SetResponseDelegate` 
+2. After calling the launch of the adjust SDK, call the `Adjust.SetResponseDelegate`
 with the previously created method. It is also be possible to use a lambda with the same signature.
 
 3. If instead of using the `Adjust.prefab`, the `Adjust.cs` script was added to another `GameObject`.
@@ -258,7 +258,7 @@ public class ExampleGUI : MonoBehaviour {
 			Adjust.setResponseDelegate(responseDelegate);
 		}
     }
-    
+
     public void responseDelegate (ResponseData responseData)
 	{
 		Debug.Log ("activityKind " + responseData.activityKindString);
@@ -270,7 +270,7 @@ public class ExampleGUI : MonoBehaviour {
 
 ### 8. Disable tracking
 
-You can disable the adjust SDK from tracking by invoking the method `setEnabled` 
+You can disable the adjust SDK from tracking by invoking the method `setEnabled`
 with the enabled parameter as `false`. This setting is remembered between sessions, but it can only
 be activated after the first session.
 
