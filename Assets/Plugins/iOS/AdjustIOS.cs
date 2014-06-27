@@ -9,7 +9,7 @@ namespace com.adjust.sdk {
 	public class AdjustIOS : IAdjust {
 
 		[DllImport ("__Internal")]
-		private static extern void _AdjustLauchApp(string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering);
+		private static extern void _AdjustLaunchApp(string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering);
 
 		[DllImport ("__Internal")]
 		private static extern void _AdjustTrackEvent(string eventToken, string jsonParameters);
@@ -37,7 +37,7 @@ namespace com.adjust.sdk {
 		public void appDidLaunch(string appToken, AdjustUtil.AdjustEnvironment environment, string sdkPrefix, AdjustUtil.LogLevel logLevel, bool eventBuffering) {
 			string sEnvironment = environment.ToString ().ToLower ();
 
-			_AdjustLauchApp(appToken, sEnvironment, sdkPrefix, (int)logLevel, Convert.ToInt32(eventBuffering));
+			_AdjustLaunchApp(appToken, sEnvironment, sdkPrefix, (int)logLevel, Convert.ToInt32(eventBuffering));
 		}
 		public void trackEvent (string eventToken, Dictionary<string,string> parameters = null) {
 			string sJsonParameters = ConvertDicToJson(parameters);

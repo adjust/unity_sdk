@@ -49,7 +49,7 @@ NSDictionary* ConvertParameters (const char* cJsonParameters)
 
 extern "C"
 {
-    void _AdjustLauchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering) {
+    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering) {
         NSString* sAppToken = [NSString stringWithUTF8String: appToken];
         NSString* sEnvironment = [NSString stringWithUTF8String: environment];
         NSString* sSdkPrefix = [NSString stringWithUTF8String: sdkPrefix];
