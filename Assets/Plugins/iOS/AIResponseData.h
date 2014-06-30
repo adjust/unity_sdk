@@ -3,7 +3,7 @@
 //  Adjust
 //
 //  Created by Christian Wellenbrock on 07.02.14.
-//  Copyright (c) 2014 adeven. All rights reserved.
+//  Copyright (c) 2014 adjust GmbH. All rights reserved.
 //
 
 #import "AIActivityKind.h"
@@ -44,6 +44,19 @@
 
 // tracker name of current device
 @property (nonatomic, copy) NSString *trackerName;
+
+// tracker network
+@property (nonatomic, copy) NSString *network;
+
+// tracker campaign
+@property (nonatomic, copy) NSString *campaign;
+
+// tracker adgroup
+@property (nonatomic, copy) NSString *adgroup;
+
+// tracker creative
+@property (nonatomic, copy) NSString *creative;
+
 
 // returns human readable version of activityKind
 // (session, event, revenue), see above

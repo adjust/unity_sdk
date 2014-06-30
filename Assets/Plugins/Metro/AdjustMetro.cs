@@ -7,7 +7,7 @@ namespace com.adjust.sdk {
 	
 	public class AdjustMetro : IAdjust {
 		
-		public void appDidLaunch (string appToken, Util.Environment environment, string sdkPrefix, Util.LogLevel logLevel, bool eventBuffering)
+		public void appDidLaunch (string appToken, AdjustUtil.AdjustEnvironment environment, string sdkPrefix, AdjustUtil.LogLevel logLevel, bool eventBuffering)
 		{
 			string sEnvironment = environment.ToString ().ToLower ();
 			string sLogLevel = logLevel.ToString ().ToLower ();

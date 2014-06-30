@@ -11,7 +11,7 @@ public class ExampleGUI : MonoBehaviour {
 	void OnGUI () {
 		if (GUI.Button (new Rect (0, Screen.height * 0 / nr_buttons, Screen.width, Screen.height / nr_buttons),
 		                "manual launch")) {
-			Adjust.appDidLaunch("querty123456", Util.Environment.Sandbox, Util.LogLevel.Verbose, false);
+			Adjust.appDidLaunch("querty123456", AdjustUtil.AdjustEnvironment.Sandbox, AdjustUtil.LogLevel.Verbose, false);
 			isEnabled = true;
 		}
 
@@ -52,9 +52,27 @@ public class ExampleGUI : MonoBehaviour {
 
 	public void responseDelegate (ResponseData responseData)
 	{
-		Debug.Log ("activitykind " + responseData.activityKind.ToString ());
-		Debug.Log ("trackerName " + responseData.trackerName);
-		Debug.Log ("error " + responseData.error);
+
+		Debug.Log ("Was success? " + responseData.success);
+		Debug.Log ("Will retry? " + responseData.willRetry);
+
+		if (!string.IsNullOrEmpty (responseData.activityKindString))
+			Debug.Log ("activityKind " + responseData.activityKindString);
+		if (responseData.trackerName != null)
+			Debug.Log ("trackerName " + responseData.trackerName);
+		if (responseData.trackerToken != null)
+			Debug.Log ("trackerToken " + responseData.trackerToken);
+		if (responseData.network != null)
+			Debug.Log ("network " + responseData.network);
+		if (responseData.campaign != null)
+			Debug.Log ("campaign " + responseData.campaign);
+		if (responseData.adgroup != null)
+			Debug.Log ("adgroup " + responseData.adgroup);
+		if (responseData.creative != null)
+			Debug.Log ("creative " + responseData.creative);
+		if (responseData.error != null)
+			Debug.Log ("error " + responseData.error);
+
 	}
 
 }

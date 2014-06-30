@@ -3,7 +3,7 @@
 //  Adjust
 //
 //  Created by Christian Wellenbrock on 2013-07-05.
-//  Copyright (c) 2013 adeven. All rights reserved.
+//  Copyright (c) 2013 adjust GmbH. All rights reserved.
 //
 
 #import "AIUtil.h"
@@ -14,7 +14,7 @@
 #include <sys/xattr.h>
 
 static NSString * const kBaseUrl   = @"https://app.adjust.io";
-static NSString * const kClientSdk = @"ios3.3.3";
+static NSString * const kClientSdk = @"ios3.3.4";
 
 static NSString * const kDateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'Z";
 static NSDateFormatter * dateFormat;
