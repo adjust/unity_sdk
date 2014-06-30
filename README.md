@@ -206,6 +206,8 @@ be notified about the success of that operation and receive additional
 information about the current install. Follow these steps to implement a
 delegate to this event.
 
+Please make sure to consider [applicable attribution data policies.][attribution_data]
+
 1. Create a method with the signature of the delegate `Action<ResponseData>`.
 
 2. After calling the launch of the adjust SDK, call the `Adjust.SetResponseDelegate` 
@@ -296,6 +298,7 @@ If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPho
 [menu_android]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/03_menu_android.png
 [ios]: https://github.com/adjust/ios_sdk
 [android]: https://github.com/adjust/ios_sdk
+[attribution_data]: https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
 
 ## License
 
