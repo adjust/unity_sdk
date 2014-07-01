@@ -290,6 +290,10 @@ Even with the post build script it is possible that the project is not ready to 
 
 If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
 
+### Build scripts
+
+The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case, use the `chmod` tool in both `Assets/Editor/AdjustPostBuildiOS` and `Assets/Editor/AdjustPostBuildAndroid` to add execute privileges.
+
 [adjust.com]: http://adjust.com
 [dashboard]: http://adjust.com
 [releases]: https://github.com/adjust/adjust_unity_sdk/releases
