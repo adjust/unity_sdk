@@ -223,20 +223,22 @@ failed to track. Within the delegate method you have access to the
 - `ActivityKind activityKind` indicates what kind of activity was tracked. It has
 one of these values:
 
-```
-Session
-Event
-Revenue
-```
+	```
+	ActivityKind.SESSION
+	ActivityKind.EVENT
+	ActivityKind.REVENUE
+	ActivityKind.REATTRIBUTION
+	```
 
 - `string activityKindString` human readable version of the activity kind.
 Possible values:
 
-```
-session
-event
-revenue
-```
+	```
+	session
+	event
+	revenue
+	reattribution
+	```
 
 - `bool success` indicates whether or not the tracking attempt was
   successful.
@@ -247,6 +249,14 @@ revenue
   request failed or response could not be parsed.
 - `string trackerName` the tracker name of the current install. Is `null` if
   request failed or response could not be parsed.
+- `string network` the network grouping level of the current install. Is `null` if
+  request failed, unavailable or response could not be parsed.
+- `string campaign` the campaign grouping level of the current install. Is `null` if
+  request failed, unavailable or response could not be parsed.
+- `string adgroup` the ad group grouping level of the current install. Is `null` if
+  request failed, unavailable or response could not be parsed.
+- `string creative` the creative grouping level of the current install. Is `null` if
+  request failed, unavailable or response could not be parsed.
 
 ```cs
 using com.adjust.sdk;
