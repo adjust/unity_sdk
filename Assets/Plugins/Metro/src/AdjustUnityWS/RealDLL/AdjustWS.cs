@@ -22,6 +22,7 @@ namespace AdjustUnityWS
             Adjust.SetLogLevel((LogLevel)logLevel);
 
             Adjust.SetEventBufferingEnabled(eventBuffering);
+            Adjust.SetLogDelegate(msg => System.Diagnostics.Debug.WriteLine(msg)); 
         }
 
         public static void AppDidActivate()
