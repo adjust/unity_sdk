@@ -150,7 +150,7 @@ def LogInput(writeObject):
     return Log
 
 def parse_input(Log, parser):
-    args = parser.parse_args()
+    args = parser.parse_known_args()
     assets_path = args.assets_path
 
     android_plugin_path = os.path.join(assets_path, "Plugins/Android/")
