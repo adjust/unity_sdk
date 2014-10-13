@@ -40,7 +40,7 @@ NSDictionary* ConvertParameters (const char* cJsonParameters)
         parameters = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
     }
     if (error != nil) {
-        NSString *errorMessage = [NSString stringWithFormat:@"Failed to parse json response: %@, (%@)", sJsonParameters.aiTrim, [error localizedDescription]];
+        NSString *errorMessage = [NSString stringWithFormat:@"Failed to parse json parameters: %@, (%@)", sJsonParameters.aiTrim, [error localizedDescription]];
         [AIAdjustFactory.logger error:errorMessage];
     }
 
