@@ -148,3 +148,6 @@ Thumbs.db
 *.pyc*
 AndroidManifest.xml*
 MetroTestCertificate.pfx*
+src/
+src.meta
+ProjectSettings/
