@@ -39,7 +39,7 @@ def LogInput(writeObject):
     return Log
 
 def get_paths(Log, parser, xcode_sdk_path):
-    args = parser.parse_known_args()
+    args, ignored_args = parser.parse_known_args()
     ios_project_path = args.ios_project_path
 
     unity_xcode_project_path = ios_project_path + "/Unity-iPhone.xcodeproj/project.pbxproj"
