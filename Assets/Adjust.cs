@@ -39,13 +39,13 @@ public class Adjust : MonoBehaviour {
 			Debug.Log("adjust: warning, SDK already started. Restarting");
 		}
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
 		Adjust.instance = new AdjustAndroid();
-#elif UNITY_IOS
+#elif UNITY_IOS && !UNITY_EDITOR
 		Adjust.instance = new AdjustIOS();
-#elif UNITY_WP8
+#elif UNITY_WP8 && !UNITY_EDITOR
 		Adjust.instance = new AdjustWP8();
-#elif UNITY_METRO
+#elif UNITY_METRO && !UNITY_EDITOR
 		Adjust.instance = new AdjustMetro();
 #endif
 
