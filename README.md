@@ -133,7 +133,7 @@ every tap on a button. You would have to create a new Event Token in your
 click handler method you could then add the following line to track the click:
 
 ```cs
-Adjust.TrackEvent("abc123");
+Adjust.trackEvent("abc123");
 ```
 
 You can also register a callback URL for that event in your [dashboard] and we
@@ -151,7 +151,7 @@ Dictionary<string,string> parameters = new Dictionary<string, string>();
 parameters.Add("key","value");
 parameters.Add("foo","bar");
 
-Adjust.TrackEvent("abc123", parameters);
+Adjust.trackEvent("abc123", parameters);
 ```
 
 In that case we would track the event and send a request to:
@@ -176,7 +176,7 @@ in-app purchases you can track those revenues. If, for example, a click is
 worth one cent, you could make the following call to track that revenue:
 
 ```cs
-Adjust.TrackRevenue(1.0);
+Adjust.trackRevenue(1.0);
 ```
 
 The parameter is supposed to be in cents and will get rounded to one decimal
@@ -185,7 +185,7 @@ get different Event Tokens for each kind. Again, you need to create those Event
 Tokens in your [dashboard]. In that case you would make a call like this:
 
 ```cs
-Adjust.TrackRevenue(1.0, "abc123");
+Adjust.trackRevenue(1.0, "abc123");
 ```
 
 Again, you can register a callback and provide a dictionary of named
@@ -196,7 +196,7 @@ Dictionary<string,string> parameters = new Dictionary<string, string>();
 parameters.Add("key","value");
 parameters.Add("foo","bar");
 
-Adjust.TrackRevenue(1.0, "abc123", parameters);
+Adjust.trackRevenue(1.0, "abc123", parameters);
 ```
 
 ### 7. Receive delegate callbacks
@@ -210,11 +210,11 @@ Please make sure to consider [applicable attribution data policies.][attribution
 
 1. Create a method with the signature of the delegate `Action<ResponseData>`.
 
-2. After calling the launch of the adjust SDK, call the `Adjust.SetResponseDelegate`
+2. After calling the launch of the adjust SDK, call the `Adjust.setResponseDelegate`
 with the previously created method. It is also be possible to use a lambda with the same signature.
 
 3. If instead of using the `Adjust.prefab`, the `Adjust.cs` script was added to another `GameObject`.
-Don't forget to pass the name of that `GameObject` as the second parameter of `Adjust.SetResponseDelegate`.
+Don't forget to pass the name of that `GameObject` as the second parameter of `Adjust.setResponseDelegate`.
 
 The delegate method will get called every time any activity was tracked or
 failed to track. Within the delegate method you have access to the
