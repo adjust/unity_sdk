@@ -36,7 +36,8 @@ public class Adjust : MonoBehaviour {
 
 	public static void appDidLaunch(string appToken, AdjustUtil.AdjustEnvironment environment, AdjustUtil.LogLevel logLevel, bool eventBuffering) {
 		if (Adjust.instance != null) {
-			Debug.Log("adjust: warning, SDK already started. Restarting");
+			Debug.Log("adjust: error, SDK already started.");
+			return;
 		}
 
 #if UNITY_EDITOR
