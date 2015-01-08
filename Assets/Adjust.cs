@@ -14,7 +14,7 @@ public class Adjust : MonoBehaviour {
 	public AdjustUtil.AdjustEnvironment environment = AdjustUtil.AdjustEnvironment.Sandbox;
 	public bool eventBuffering = false;
 	public bool startManually = false;
-	public const string sdkPrefix = "unity3.4.3";
+	public const string sdkPrefix = "unity3.4.4";
 
 	void Awake() {
 		if (!this.startManually) {
@@ -36,10 +36,13 @@ public class Adjust : MonoBehaviour {
 
 	public static void appDidLaunch(string appToken, AdjustUtil.AdjustEnvironment environment, AdjustUtil.LogLevel logLevel, bool eventBuffering) {
 		if (Adjust.instance != null) {
-			Debug.Log("adjust: warning, SDK already started. Restarting");
+			Debug.Log("adjust: error, SDK already started.");
+			return;
 		}
 
-#if UNITY_ANDROID
+#if UNITY_EDITOR
+		Adjust.instance = null;
+#elif UNITY_ANDROID
 		Adjust.instance = new AdjustAndroid();
 #elif UNITY_IOS
 		Adjust.instance = new AdjustIOS();

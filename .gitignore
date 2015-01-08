@@ -151,3 +151,9 @@ MetroTestCertificate.pfx*
 src/
 src.meta
 ProjectSettings/
+
+# ==================== #
+# Unity Project necessary
+# ==================== #
+Assembly-CSharp*
+unity_sdk*.sln
