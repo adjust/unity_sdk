@@ -21,7 +21,7 @@ def main():
         LogFunc = LogInput(fileLog)
         
         # get the path of the android plugin folder
-        android_plugin_path, pre_build = parse_input(LogFunc, parser)
+        android_plugin_path, adjust_android_path, pre_build = parse_input(LogFunc, parser)
 
         # try to open an existing manifest file
         try:
@@ -40,7 +40,7 @@ def main():
                         LogFunc("Android manifest used in unity did not " + \
                                 "had all the changes adjust SDK needs. " + \
                                 "Please build again the package.")
-                    edited_xml = edit_manifest(LogFunc, mf, check_dic)
+                    edited_xml = edit_manifest(LogFunc, mf, check_dic, android_plugin_path)
             # write changed xml
             if edited_xml:
                 with open(manifest_path,'w+') as mf:
@@ -54,7 +54,7 @@ def main():
                     LogFunc("Used default Android manifest file from " + \
                             "unity. Please build again the package to " +
                             "include the changes for adjust SDK")
-                copy_adjust_manifest(LogFunc, android_plugin_path)
+                copy_adjust_manifest(LogFunc, android_plugin_path, adjust_android_path)
                 exit_code = 1
             else:
                 LogFunc(ioe)
@@ -64,7 +64,7 @@ def main():
     # exit with return code for unity
     sys.exit(exit_code)
 
-def edit_manifest(Log, manifest_file, check_dic):
+def edit_manifest(Log, manifest_file, check_dic, android_plugin_path):
     manifest_xml = check_dic["manifest_xml"]
 
     # add the adjust install referrer to the application element
@@ -72,7 +72,7 @@ def edit_manifest(Log, manifest_file, check_dic):
         receiver_string = """<?xml version="1.0" ?>
         <receiver
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:name="com.adjust.sdk.ReferrerReceiver"
+            android:name="com.adjust.sdk.AdjustReferrerReceiver"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
@@ -93,12 +93,18 @@ def edit_manifest(Log, manifest_file, check_dic):
         manifest_xml.documentElement.appendChild(ip_element)
         Log("added internet permission")
 
+    # if google play services are not included
     # add the access wifi state permission to the manifest element
-    if not check_dic["has_wifi_permission"]:
-        ip_element = manifest_xml.createElement("uses-permission")
-        ip_element.setAttribute("android:name", "android.permission.ACCESS_WIFI_STATE")
-        manifest_xml.documentElement.appendChild(ip_element)
-        Log("added access wifi permission")
+    # if google play services are included
+    # don't add
+    google_play_services_path = os.path.join(android_plugin_path + "google-play-services_lib")
+
+    if not os.path.isdir(google_play_services_path):
+        if not check_dic["has_wifi_permission"]:
+            ip_element = manifest_xml.createElement("uses-permission")
+            ip_element.setAttribute("android:name", "android.permission.ACCESS_WIFI_STATE")
+            manifest_xml.documentElement.appendChild(ip_element)
+            Log("added access wifi permission")
 
     #Log(manifest_xml.toxml())
     return manifest_xml
@@ -109,7 +115,7 @@ def check_manifest(Log, manifest_file):
     #Log(manifest_xml.toxml())
     
     has_adjust_receiver = has_element_attr(manifest_xml,
-            "receiver", "android:name", "com.adjust.sdk.ReferrerReceiver")
+            "receiver", "android:name", "com.adjust.sdk.AdjustReferrerReceiver")
     Log("has adjust install referrer receiver?: {0}", has_adjust_receiver)
 
     has_internet_permission = has_element_attr(manifest_xml,
@@ -132,9 +138,13 @@ def has_element_attr(xml_dom, tag_name, attr_name, attr_value):
             return True
     return False
 
-def copy_adjust_manifest(Log, android_plugin_path):
-    adjust_manifest_path = os.path.join(android_plugin_path, "AdjustAndroidManifest.xml")
+def copy_adjust_manifest(Log, android_plugin_path, adjust_android_path):
+    adjust_manifest_path = os.path.join(adjust_android_path, "AdjustAndroidManifest.xml")
     new_manifest_path = os.path.join(android_plugin_path, "AndroidManifest.xml")
+
+    if not os.path.exists(android_plugin_path):
+        os.makedirs(android_plugin_path)
+
     try:
         shutil.copyfile(adjust_manifest_path, new_manifest_path)
     except Exception as e:
@@ -154,9 +164,12 @@ def parse_input(Log, parser):
     assets_path = args.assets_path
 
     android_plugin_path = os.path.join(assets_path, "Plugins/Android/")
-    Log("Android plugin path: {0}", android_plugin_path)
+    adjust_android_path = os.path.join(assets_path, "Adjust/Android/");
 
-    return android_plugin_path, args.pre_build
+    Log("Android plugin path: {0}", android_plugin_path)
+    Log("Android adjust path: {0}", adjust_android_path)
+
+    return android_plugin_path, adjust_android_path, args.pre_build
 
 if __name__ == "__main__":
     main()
