@@ -29,7 +29,7 @@ def main():
 
         # change the Xcode project directly
         #  allow objective-c exceptions
-        rewrite_unity_xcode_project(LogFunc, unity_xcode_project_path)
+        # rewrite_unity_xcode_project(LogFunc, unity_xcode_project_path)
     sys.exit(0)
 
 def LogInput(writeObject):
@@ -54,38 +54,42 @@ def edit_unity_xcode_project(Log, unity_xcode_project_path, framework_path):
     # load unity iOS pbxproj project file
     unity_XcodeProject = XcodeProject.Load(unity_xcode_project_path)
     
-    # add adSupport framework to unity
+    # add adSupport framework to unity if it's not already there
     unity_XcodeProject.add_file_if_doesnt_exist(framework_path + "AdSupport.framework", tree="SDKROOT", create_build_files=True,weak=True)
     Log("added adSupport framework")
 
-    # add iAd framework to unity
+    # add iAd framework to unity if it's not already there
     unity_XcodeProject.add_file_if_doesnt_exist(framework_path + "iAd.framework", tree="SDKROOT", create_build_files=True,weak=True)
     Log("added iAd framework")
 
+    # don't do anything with ARC at the moment
     # regex for adjust sdk files
-    re_adjust_files = re.compile(r"AI.*\.m|.*\+AI.*\.m|Adjust\.m|AdjustUnity\.mm")
-
+    # re_adjust_files = re.compile(r"AI.*\.m|.*\+AI.*\.m|Adjust\.m|AdjustUnity\.mm")
+    # 
+    # 
     # iterate all objects in the unity Xcode iOS project file
-    for key in unity_XcodeProject.get_ids():
-        obj = unity_XcodeProject.get_obj(key)
-        
-        name = obj.get('name')
-        isa = obj.get('isa')
-        path = obj.get('path')
-        fileref = obj.get('fileRef')
+    # for key in unity_XcodeProject.get_ids():
+    #     obj = unity_XcodeProject.get_obj(key)
+    #     
+    #     name = obj.get('name')
+    #     isa = obj.get('isa')
+    #     path = obj.get('path')
+    #     fileref = obj.get('fileRef')
+    # 
+    #     #Log("key: {0}, name: {1}, isa: {2}, path: {3}, fileref: {4}", key, name, isa, path, fileref)
+    # 
+    #     #check if file reference match any adjust file
+    #     adjust_file_match = re_adjust_files.match(name if name else "")
+    #     if (adjust_file_match):
+    #         #Log("file match, group: {0}", adjust_file_match.group())
+    #         # get the build file, from the file reference id
+    #         build_files = unity_XcodeProject.get_build_files(key)
+    #         for build_file in build_files:
+    #             # add the ARC compiler flag to the adjust file if doesn't exist
+    #             build_file.add_compiler_flag('-fobjc-arc')
+    #             Log("added ARC flag to file {0}", name)
 
-        #Log("key: {0}, name: {1}, isa: {2}, path: {3}, fileref: {4}", key, name, isa, path, fileref)
-
-        #check if file reference match any adjust file
-        adjust_file_match = re_adjust_files.match(name if name else "")
-        if (adjust_file_match):
-            #Log("file match, group: {0}", adjust_file_match.group())
-            # get the build file, from the file reference id
-            build_files = unity_XcodeProject.get_build_files(key)
-            for build_file in build_files:
-                # add the ARC compiler flag to the adjust file if doesn't exist
-                build_file.add_compiler_flag('-fobjc-arc')
-                Log("added ARC flag to file {0}", name)
+    unity_XcodeProject.add_other_ldflags('-all_load')
 
     # save changes
     unity_XcodeProject.saveFormat3_2()

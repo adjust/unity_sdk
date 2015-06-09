@@ -1,16 +1,19 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEditor.Callbacks;
-using UnityEditor;
+﻿using System.Collections;
 using System.Diagnostics;
 
-public class AdjustEditor : MonoBehaviour {
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.Callbacks;
 
+public class AdjustEditor : MonoBehaviour
+{
 	static string iOSBuildPath = "";
 	static bool isEnabled = true;
+	static bool isAdjusted = false;
 
 	[PostProcessBuild]
-	public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
+	public static void OnPostprocessBuild (BuildTarget target, string pathToBuiltProject)
+	{
 		if (!isEnabled) {
 			return;
 		}
@@ -20,17 +23,20 @@ public class AdjustEditor : MonoBehaviour {
 		if (exitCode == -1) {
 			return;
 		}
+
 		if (exitCode != 0) {
-			var errorMessage = GenerateErrorScriptMessage(exitCode);
+			var errorMessage = GenerateErrorScriptMessage (exitCode);
 
 			UnityEngine.Debug.LogError ("adjust: " + errorMessage);
 		}
 	}
 
-	[MenuItem("Adjust/Fix AndroidManifest.xml")]
-	static void FixAndroidManifest() {
+	[MenuItem("Assets/Adjust/Fix AndroidManifest.xml")]
+	static void FixAndroidManifest ()
+	{
 		#if UNITY_ANDROID
 		var exitCode = RunPostBuildScript (preBuild: true);
+
 		if (exitCode == 1) {
 			EditorUtility.DisplayDialog("Adjust", 
 			                            string.Format("AndroidManifest.xml changed or created at {0}/Plugins/Android/ .",Application.dataPath),
@@ -46,47 +52,55 @@ public class AdjustEditor : MonoBehaviour {
 			
 		}
 		#else
-		EditorUtility.DisplayDialog("Adjust", "Option only valid for the Android platform.", "OK");
+		EditorUtility.DisplayDialog ("Adjust", "Option only valid for the Android platform.", "OK");
 		#endif
 	}
 
-	[MenuItem("Adjust/Set iOS build path")]
-	static void SetiOSBuildPath() {
+	[MenuItem("Assets/Adjust/Set iOS build path")]
+	static void SetiOSBuildPath ()
+	{
 		#if UNITY_IOS
 		AdjustEditor.iOSBuildPath = EditorUtility.OpenFolderPanel(
 			title: "iOs build path",
-			folder: EditorUserBuildSettings.GetBuildLocation(BuildTarget.iPhone),
+			folder: EditorUserBuildSettings.GetBuildLocation(BuildTarget.iOS),
 			defaultName: "");
+		
 		if (AdjustEditor.iOSBuildPath == "") {
 			UnityEngine.Debug.Log("iOS build path reset to default path");
 		} else {
 			UnityEngine.Debug.Log(string.Format("iOS build path: {0}", AdjustEditor.iOSBuildPath));
 		}
 		#else
-		EditorUtility.DisplayDialog("Adjust", "Option only valid for the Android platform.", "OK");
+		EditorUtility.DisplayDialog ("Adjust", "Option only valid for the Android platform.", "OK");
 		#endif
 	}
 
-	[MenuItem("Adjust/Change post processing status")]
-	static void ChangePostProcessingStatus() {
+	[MenuItem("Assets/Adjust/Change post processing status")]
+	static void ChangePostProcessingStatus ()
+	{
 		isEnabled = !isEnabled;
-		EditorUtility.DisplayDialog("Adjust",
+
+		EditorUtility.DisplayDialog ("Adjust",
 		                            "The post processing for adjust is now " +
-		                                (isEnabled ? "enabled." : "disabled."),
+			(isEnabled ? "enabled." : "disabled."),
 		                            "OK");
 	}
 
-	static int RunPostBuildScript (bool preBuild, string pathToBuiltProject = "") {
+	static int RunPostBuildScript (bool preBuild, string pathToBuiltProject = "")
+	{
 		string pathToScript = null;
 		string arguments = null;
 
 		#if UNITY_ANDROID
 		pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid";
 		arguments = "\"" + Application.dataPath + "\"";
-		if (preBuild)
+		
+		if (preBuild) {
 			arguments = "--pre-build " + arguments;
+		}
 		#elif UNITY_IOS
 		pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS";
+		
 		if (AdjustEditor.iOSBuildPath == "") {
 			arguments = "\"" + pathToBuiltProject + "\"";
 		} else {
@@ -96,16 +110,18 @@ public class AdjustEditor : MonoBehaviour {
 		return -1;
 		#endif
 
-		Process proc = new Process();
-		proc.EnableRaisingEvents=false; 
+		Process proc = new Process ();
+		proc.EnableRaisingEvents = false; 
 		proc.StartInfo.FileName = Application.dataPath + pathToScript;
 		proc.StartInfo.Arguments = arguments;
-		proc.Start();
-		proc.WaitForExit();
+		proc.Start ();
+		proc.WaitForExit ();
+		
 		return proc.ExitCode;
 	}
 
-	static string GenerateErrorScriptMessage(int exitCode) {
+	static string GenerateErrorScriptMessage (int exitCode)
+	{
 		#if UNITY_ANDROID
 		if (exitCode == 1) {
 			return "The AndroidManifest.xml file was only changed or created after building the package. " +
@@ -118,6 +134,7 @@ public class AdjustEditor : MonoBehaviour {
 				" Please check the Adjust log file for more information at {0}";
 			string projectPath = Application.dataPath.Substring (0, Application.dataPath.Length - 7);
 			string logFile = null;
+			
 			#if UNITY_ANDROID
 			logFile = projectPath + "/AdjustPostBuildAndroidLog.txt";
 			#elif UNITY_IOS
@@ -125,7 +142,7 @@ public class AdjustEditor : MonoBehaviour {
 			#else
 			return null;
 			#endif
-			return string.Format(message, logFile);
+			return string.Format (message, logFile);
 		} 
 
 		return null;
