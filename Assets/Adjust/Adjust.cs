@@ -7,7 +7,7 @@ namespace com.adjust.sdk
 {
 	public class Adjust : MonoBehaviour
 	{
-		private const string sdkPrefix = "unity4.0.0";
+		private const string sdkPrefix = "unity4.0.1";
 		private const string errorMessage = "adjust: SDK not started. Start it manually using the 'appDidLaunch' method.";
 
 		private static IAdjust instance = null;
