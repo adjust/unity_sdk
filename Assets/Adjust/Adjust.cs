@@ -7,7 +7,6 @@ namespace com.adjust.sdk
 {
 	public class Adjust : MonoBehaviour
 	{
-		private const string sdkPrefix = "unity4.0.1";
 		private const string errorMessage = "adjust: SDK not started. Start it manually using the 'appDidLaunch' method.";
 
 		private static IAdjust instance = null;
@@ -39,7 +38,8 @@ namespace com.adjust.sdk
 			}
 		}
 
-		void OnApplicationPause(bool pauseStatus) {
+		void OnApplicationPause(bool pauseStatus) 
+		{
 			if (Adjust.instance == null) {
 				return;
 			}
@@ -82,7 +82,6 @@ namespace com.adjust.sdk
 				return;
 			}
 
-			adjustConfig.setSdkPrefix(Adjust.sdkPrefix);
 			Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate ();
 
 			Adjust.instance.start (adjustConfig);
@@ -103,7 +102,8 @@ namespace com.adjust.sdk
 			Adjust.instance.trackEvent (adjustEvent);
 		}
 
-		public static void setEnabled(bool enabled) {
+		public static void setEnabled(bool enabled) 
+		{
 			if (Adjust.instance == null) {
 				Debug.Log(Adjust.errorMessage);
 				return;
@@ -112,7 +112,8 @@ namespace com.adjust.sdk
 			Adjust.instance.setEnabled(enabled);
 		}
 		
-		public static bool isEnabled() {
+		public static bool isEnabled() 
+		{
 			if (Adjust.instance == null) {
 				Debug.Log(Adjust.errorMessage);
 				return false;
@@ -121,7 +122,8 @@ namespace com.adjust.sdk
 			return Adjust.instance.isEnabled();
 		}
 		
-		public static void setOfflineMode(bool enabled) {
+		public static void setOfflineMode(bool enabled) 
+		{
 			if (Adjust.instance == null) {
 				Debug.Log(Adjust.errorMessage);
 				return;

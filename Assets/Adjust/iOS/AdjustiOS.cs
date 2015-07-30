@@ -37,8 +37,9 @@ namespace com.adjust.sdk
 
 		public void start (AdjustConfig adjustConfig)
 		{
+			string sdkPrefix = "unity4.0.2";
+
 			string appToken = adjustConfig .appToken;
-			string sdkPrefix = adjustConfig.sdkPrefix;
 			string sceneName = adjustConfig.sceneName;
 			string environment = adjustConfig.environment.ToString ().ToLower ();
 

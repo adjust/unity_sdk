@@ -80,9 +80,13 @@ namespace com.adjust.sdk
 				ajoAdjustConfig.Call ("setOnAttributionChangedListener", onAttributionChangedListener);
 			}
 
-			ajoAdjustConfig.Call ("setSdkPrefix", adjustConfig.sdkPrefix);
+			ajoAdjustConfig.Call ("setSdkPrefix", "unity4.0.2");
 			
 			ajcAdjust.CallStatic ("onCreate", ajoAdjustConfig);
+
+			if (adjustConfig.startAutomatically == true) {
+				ajcAdjust.CallStatic ("onResume");
+			}
 		}
 
 		public void trackEvent (AdjustEvent adjustEvent)
@@ -119,11 +123,12 @@ namespace com.adjust.sdk
 			return ajcAdjust.CallStatic<bool> ("isEnabled");
 		}
 
-		public void setEnabled(bool enabled) {
+		public void setEnabled (bool enabled) 
+		{
 			ajcAdjust.CallStatic ("setEnabled", enabled);
 		}
 
-		public void setOfflineMode(bool enabled)
+		public void setOfflineMode (bool enabled)
 		{
 			ajcAdjust.CallStatic ("setOfflineMode", enabled);
 		}
