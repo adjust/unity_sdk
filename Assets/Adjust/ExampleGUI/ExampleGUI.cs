@@ -25,7 +25,7 @@ public class ExampleGUI : MonoBehaviour
 
 		if (GUI.Button (new Rect (0, Screen.height * 0 / nr_buttons, Screen.width, Screen.height / nr_buttons), txtManualLaunch)) {
 			if (!string.Equals(txtManualLaunch, "SDK Launched", StringComparison.OrdinalIgnoreCase)) {
-				AdjustConfig adjustConfig = new AdjustConfig ("rb4g27fje5ej", AdjustEnvironment.Sandbox);
+				AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken}", AdjustEnvironment.Sandbox);
 				adjustConfig.setStartAutomatically(true);
 				adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
 				adjustConfig.setAttributionChangedDelegate (this.attributionChangedDelegate);
@@ -38,20 +38,20 @@ public class ExampleGUI : MonoBehaviour
 		}
 		
 		if (GUI.Button (new Rect (0, Screen.height * 1 / nr_buttons, Screen.width, Screen.height / nr_buttons), "Track Simple Event")) {
-			AdjustEvent adjustEvent = new AdjustEvent ("uqg17r");
+			AdjustEvent adjustEvent = new AdjustEvent ("{YourEventToken}");
 			
 			Adjust.trackEvent (adjustEvent);
 		}
 		
 		if (GUI.Button (new Rect (0, Screen.height * 2 / nr_buttons, Screen.width, Screen.height / nr_buttons), "Track Revenue Event")) {
-			AdjustEvent adjustEvent = new AdjustEvent ("71iltz");
+			AdjustEvent adjustEvent = new AdjustEvent ("{YourEventToken}");
 			adjustEvent.setRevenue (0.25, "EUR");
 			
 			Adjust.trackEvent (adjustEvent);
 		}
 		
 		if (GUI.Button (new Rect (0, Screen.height * 3 / nr_buttons, Screen.width, Screen.height / nr_buttons), "Track Callback Event")) {
-			AdjustEvent adjustEvent = new AdjustEvent ("1ziip1");
+			AdjustEvent adjustEvent = new AdjustEvent ("{YourEventToken}");
 			
 			adjustEvent.addCallbackParameter ("key", "value");
 			adjustEvent.addCallbackParameter ("foo", "bar");
@@ -60,7 +60,7 @@ public class ExampleGUI : MonoBehaviour
 		}
 		
 		if (GUI.Button (new Rect (0, Screen.height * 4 / nr_buttons, Screen.width, Screen.height / nr_buttons), "Track Partner Event")) {
-			AdjustEvent adjustEvent = new AdjustEvent ("9s4lqn");
+			AdjustEvent adjustEvent = new AdjustEvent ("{YourEventToken}");
 			
 			adjustEvent.addPartnerParameter ("key", "value");
 			adjustEvent.addPartnerParameter ("foo", "bar");
