@@ -7,7 +7,7 @@ namespace com.adjust.sdk
 {
 	public class Adjust : MonoBehaviour
 	{
-		private const string errorMessage = "adjust: SDK not started. Start it manually using the 'appDidLaunch' method.";
+		private const string errorMessage = "adjust: SDK not started. Start it manually using the 'start' method.";
 
 		private static IAdjust instance = null;
 		private static Action<AdjustAttribution> attributionChangedDelegate = null;
