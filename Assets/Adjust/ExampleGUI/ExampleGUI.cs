@@ -26,6 +26,7 @@ public class ExampleGUI : MonoBehaviour
 		if (GUI.Button (new Rect (0, Screen.height * 0 / nr_buttons, Screen.width, Screen.height / nr_buttons), txtManualLaunch)) {
 			if (!string.Equals(txtManualLaunch, "SDK Launched", StringComparison.OrdinalIgnoreCase)) {
 				AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken}", AdjustEnvironment.Sandbox);
+				adjustConfig.setStartAutomatically(true);
 				adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
 				adjustConfig.setAttributionChangedDelegate (this.attributionChangedDelegate);
 				

@@ -1,22 +1,22 @@
-## Migrate your adjust SDK for Unity3d to 4.0.1 from 3.4.4
+## Migrate your adjust SDK for Unity3d to 4.0.2 from 3.4.4
 
-N.B. At the moment, SDK 4.0.1 for Unity supports Android and iOS, but not Windows. If you are planning to release your Unity app on Windows, please migrate to 4.0.1 only when we add full support for Windows.
+N.B. At the moment, SDK 4.0.2 for Unity supports Android and iOS, but not Windows. If you are planning to release your Unity app on Windows, please migrate to 4.0.2 only when we add full support for Windows.
 
 ### Migration procedure
 
-Starting from version 4.0.1, the structure of this repository is adjusted to Unity 5. All files which are part of the
+Starting from version 4.0.2, the structure of this repository is adjusted to Unity 5. All files which are part of the
 adjust SDK are now moved to the `Assets/Adjust` folder, since Unity 5 allows that native files can now be placed 
 outside of `Assets/Plugins` folder. This is done so that adjust files are no longer mixed with files you may be 
 keeping in `Assets/Plugins` folder.
 
 For migration purposes, we have prepared two Unity packages:
 
-  * `Adjust_v4.0.1_Unity_4.unitypackage` (for Unity 4 users)
-  * `Adjust_v4.0.1_Unity_5.unitypackage` (for Unity 5 users)
+  * `Adjust_v4.0.2_Unity_4.unitypackage` (for Unity 4 users)
+  * `Adjust_v4.0.2_Unity_5.unitypackage` (for Unity 5 users)
   
 and the adjust SDK uninstall script written in Python (`adjust_uninstall.py`).
 
-Migration to version 4.0.1 of our SDK requires the following steps:
+Migration to version 4.0.2 of our SDK requires the following steps:
 
 1. Copy the `adjust_uninstall.py` script to your root Unity project directory and run it. This script should
 delete all adjust source files from the previous SDK version you had.
