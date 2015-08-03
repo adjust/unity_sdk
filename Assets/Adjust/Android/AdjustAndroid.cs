@@ -10,6 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
 	public class AdjustAndroid : IAdjust
 	{
+		private const string sdkPrefix = "unity4.0.2";
 		private AndroidJavaClass ajcAdjust;
 		private AndroidJavaObject ajoCurrentActivity;
 		private AttributionChangeListener onAttributionChangedListener;
@@ -80,7 +81,7 @@ namespace com.adjust.sdk
 				ajoAdjustConfig.Call ("setOnAttributionChangedListener", onAttributionChangedListener);
 			}
 
-			ajoAdjustConfig.Call ("setSdkPrefix", "unity4.0.2");
+			ajoAdjustConfig.Call ("setSdkPrefix", sdkPrefix);
 			
 			ajcAdjust.CallStatic ("onCreate", ajoAdjustConfig);
 
