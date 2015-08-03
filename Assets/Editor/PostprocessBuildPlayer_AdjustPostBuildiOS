@@ -89,7 +89,7 @@ def edit_unity_xcode_project(Log, unity_xcode_project_path, framework_path):
     #             build_file.add_compiler_flag('-fobjc-arc')
     #             Log("added ARC flag to file {0}", name)
 
-    unity_XcodeProject.add_other_ldflags('-all_load')
+    unity_XcodeProject.add_other_ldflags('-ObjC')
 
     # save changes
     unity_XcodeProject.saveFormat3_2()
