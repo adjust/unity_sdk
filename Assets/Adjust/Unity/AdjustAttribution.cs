@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using SimpleJSON;
 
 namespace com.adjust.sdk
@@ -54,6 +54,7 @@ namespace com.adjust.sdk
 			campaign = TryGetValue (dicAttributionData, "campaign");
 			adgroup = TryGetValue (dicAttributionData, "adgroup");
 			creative = TryGetValue (dicAttributionData, "creative");
+			clickLabel = TryGetValue (dicAttributionData, "clickLabel");
 		}
 
 		private static string TryGetValue(Dictionary<string, string> dic, string key)
