@@ -3,7 +3,6 @@ using System.Collections;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
-//using UnityEngine.UI;
 using com.adjust.sdk;
 
 public class ExampleGUI : MonoBehaviour
