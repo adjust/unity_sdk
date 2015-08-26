@@ -9,4 +9,6 @@ build:
 
 copy: build
 	cp $(SRCDIR)/Adjust.a $(LIBOUTDIR); \
-	rm $(SRCDIR)/Adjust.a
+	cp $(SRCDIR)/Headers/* $(LIBOUTDIR); \
+	rm $(SRCDIR)/Adjust.a; \
+	rm -rf $(SRCDIR)/Headers
