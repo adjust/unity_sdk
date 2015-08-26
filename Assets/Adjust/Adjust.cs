@@ -25,29 +25,31 @@ namespace com.adjust.sdk
 
 		void Awake ()
 		{
+			DontDestroyOnLoad (transform.gameObject);
+
 			if (!this.startManually) {
 				AdjustConfig adjustConfig = new AdjustConfig (this.appToken, this.environment);
 				adjustConfig.setLogLevel (this.logLevel);
 				adjustConfig.setEventBufferingEnabled (eventBuffering);
 
 				if (printAttribution) {
-					adjustConfig.setAttributionChangedDelegate(responseDelegate);
+					adjustConfig.setAttributionChangedDelegate (responseDelegate);
 				}
 
 				Adjust.start (adjustConfig);
 			}
 		}
 
-		void OnApplicationPause(bool pauseStatus) 
+		void OnApplicationPause (bool pauseStatus) 
 		{
 			if (Adjust.instance == null) {
 				return;
 			}
 			
 			if (pauseStatus) {
-				Adjust.instance.onPause();
+				Adjust.instance.onPause ();
 			} else {
-				Adjust.instance.onResume();
+				Adjust.instance.onResume ();
 			}
 		}
 
@@ -70,9 +72,9 @@ namespace com.adjust.sdk
 			#if UNITY_EDITOR
 				Adjust.instance = null;
 			#elif UNITY_IOS
-				Adjust.instance = new AdjustiOS();
+				Adjust.instance = new AdjustiOS ();
 			#elif UNITY_ANDROID
-				Adjust.instance = new AdjustAndroid();
+				Adjust.instance = new AdjustAndroid ();
 			#else
 				Adjust.instance = null;
 			#endif
@@ -102,34 +104,54 @@ namespace com.adjust.sdk
 			Adjust.instance.trackEvent (adjustEvent);
 		}
 
-		public static void setEnabled(bool enabled) 
+		public static void setEnabled (bool enabled) 
 		{
 			if (Adjust.instance == null) {
-				Debug.Log(Adjust.errorMessage);
+				Debug.Log (Adjust.errorMessage);
 				return;
 			}
 
-			Adjust.instance.setEnabled(enabled);
+			Adjust.instance.setEnabled (enabled);
 		}
 		
-		public static bool isEnabled() 
+		public static bool isEnabled () 
 		{
 			if (Adjust.instance == null) {
-				Debug.Log(Adjust.errorMessage);
+				Debug.Log (Adjust.errorMessage);
 				return false;
 			}
 
-			return Adjust.instance.isEnabled();
+			return Adjust.instance.isEnabled ();
 		}
 		
-		public static void setOfflineMode(bool enabled) 
+		public static void setOfflineMode (bool enabled) 
 		{
 			if (Adjust.instance == null) {
-				Debug.Log(Adjust.errorMessage);
+				Debug.Log (Adjust.errorMessage);
 				return;
 			}
 
-			Adjust.instance.setOfflineMode(enabled);
+			Adjust.instance.setOfflineMode (enabled);
+		}
+
+		public static void setDeviceToken (string deviceToken)
+		{
+			if (Adjust.instance == null) {
+				Debug.Log (Adjust.errorMessage);
+				return;
+			}
+
+			Adjust.instance.setDeviceToken (deviceToken);
+		}
+
+		public static void setReferrer (string referrer)
+		{
+			if (Adjust.instance == null) {
+				Debug.Log (Adjust.errorMessage);
+				return;
+			}
+
+			Adjust.instance.setReferrer (referrer);
 		}
 
 		#endregion
@@ -147,6 +169,7 @@ namespace com.adjust.sdk
 				Debug.Log (Adjust.errorMessage);
 				return;
 			}
+
 			if (Adjust.attributionChangedDelegate == null) {
 				Debug.Log ("adjust: Attribution changed delegate was not set.");
 				return;
@@ -161,7 +184,7 @@ namespace com.adjust.sdk
 		#region Private & helper methods
 
 		// Our delegate for detecting attribution changes if choosen not to start manually.
-		private void responseDelegate(AdjustAttribution responseData)
+		private void responseDelegate (AdjustAttribution responseData)
 		{
 			Debug.Log ("Attribution changed!");
 
@@ -187,6 +210,10 @@ namespace com.adjust.sdk
 
 			if (responseData.creative != null) {
 				Debug.Log ("creative " + responseData.creative);
+			}
+
+			if (responseData.clickLabel != null) {
+				Debug.Log ("clickLabel" + responseData.clickLabel);
 			}
 		}
 
