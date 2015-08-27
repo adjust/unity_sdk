@@ -13,9 +13,17 @@ namespace com.adjust.sdk
 		internal List<string> partnerList;
 		internal List<string> callbackList;
 
+		// iOS specific members
+		internal string receipt;
+		internal string transactionId;
+
+		internal bool isReceiptSet;
+
 		public AdjustEvent(string eventToken)
 		{
 			this.eventToken = eventToken;
+
+			this.isReceiptSet = false;
 		}
 
 		public void setRevenue(double amount, string currency)
@@ -42,6 +50,19 @@ namespace com.adjust.sdk
 
 			partnerList.Add(key);
 			partnerList.Add(value);
+		}
+
+		// iOS specific methods
+		public void setTransactionId(string transactionId)
+		{
+			this.transactionId = transactionId;
+		}
+
+		public void setReceipt(string receipt, string transactionId)
+		{
+			this.receipt = receipt;
+			this.transactionId = transactionId;
+			this.isReceiptSet = true;
 		}
 	}
 }

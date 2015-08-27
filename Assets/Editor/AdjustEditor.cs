@@ -92,14 +92,14 @@ public class AdjustEditor : MonoBehaviour
 		string arguments = null;
 
 		#if UNITY_ANDROID
-		pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid";
+		pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py";
 		arguments = "\"" + Application.dataPath + "\"";
 		
 		if (preBuild) {
 			arguments = "--pre-build " + arguments;
 		}
 		#elif UNITY_IOS
-		pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS";
+		pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py";
 		
 		if (AdjustEditor.iOSBuildPath == "") {
 			arguments = "\"" + pathToBuiltProject + "\"";
