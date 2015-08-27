@@ -99,12 +99,12 @@ Press the same button to re-enable it.
 
 #### iOS
 
-The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS`. It changes the Unity3d iOS generated project in the following ways:
+The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity3d iOS generated project in the following ways:
 
 1. Adds the iAd and AdSupport frameworks to the project. This is required by the adjust SDK - check out the adjust
 [iOS][ios] page for more details.
 
-2. Adds the other linker flag `-all_load`. This allows the adjust Objective-C categories to be recognized during the build time.
+2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during the build time.
 
 If you have a custom build that puts the Unity3d iOS generated project in a different location,
 inform the script by clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS project.
@@ -113,7 +113,7 @@ After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the
 
 #### Android
 
-The android build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid`. It changes the `AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The problem with this approach is that, the manifest file used for the Android package was the one before the build process ended.
+The android build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`. It changes the `AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The problem with this approach is that, the manifest file used for the Android package was the one before the build process ended.
 
 To mitigate this, simply run the build again, using the manifest created or changed by the previous run, or click on the menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build process. Either way, it is only necessary to do this step once, as long the manifest file remains compatible with the adjust SDK.
 
@@ -153,6 +153,38 @@ If your users can generate revenue by tapping on advertisements or making in-app
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent ("abc123");
 adjustEvent.setRevenue (0.01, "EUR");
+Adjust.trackEvent (adjustEvent);
+```
+
+#### iOS
+
+##### <a id="deduplication"></a> Revenue deduplication
+
+You can also pass in an optional transaction ID to avoid tracking duplicate revenues. The last ten transaction 
+IDs are remembered and revenue events with duplicate transaction IDs are skipped. This is especially useful for 
+in-app purchase tracking. See an example below.
+
+If you want to track in-app purchases, please make sure to call `trackEvent` only if the transaction is finished
+and item is purchased. That way you can avoid tracking revenue that is not actually being generated.
+
+```cs
+AdjustEvent adjustEvent = new AdjustEvent ("abc123");
+adjustEvent.setRevenue (0.01, "EUR");
+adjustEvent.setTransactionId ("transactionIdentifier");
+Adjust.trackEvent (adjustEvent);
+```
+
+##### Receipt verification
+
+If you track in-app purchases, you can also attach the receipt to the tracked event. In that case our servers 
+will verify that receipt with Apple and discard the event if the verification failed. To make this work, you 
+also need to send us the transaction ID of the purchase. The transaction ID will also be used for SDK side 
+deduplication as explained [above](#deduplication):
+
+```cs
+AdjustEvent adjustEvent = new AdjustEvent ("abc123");
+adjustEvent.setRevenue (0.01, "EUR");
+adjustEvent.setReceipt ("receipt", "transactionId");
 Adjust.trackEvent (adjustEvent);
 ```
 
@@ -302,7 +334,7 @@ If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPho
 
 ### Build scripts
 
-The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case, use the `chmod` tool in both `Assets/Editor/AdjustPostBuildiOS` and `Assets/Editor/AdjustPostBuildAndroid` to add execute privileges.
+The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case, use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py` and `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py` to add execute privileges.
 
 [adjust.com]: http://adjust.com
 [dashboard]: http://adjust.com
