@@ -62,7 +62,7 @@ public class AdjustEditor : MonoBehaviour
 		#if UNITY_IOS
 		AdjustEditor.iOSBuildPath = EditorUtility.OpenFolderPanel(
 			title: "iOs build path",
-			folder: EditorUserBuildSettings.GetBuildLocation(BuildTarget.iOS),
+			folder: EditorUserBuildSettings.GetBuildLocation(BuildTarget.iPhone),
 			defaultName: "");
 		
 		if (AdjustEditor.iOSBuildPath == "") {
