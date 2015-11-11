@@ -1,6 +1,6 @@
 MVNDIR = ./sdk/Adjust
 JARINDIR = ./sdk/Adjust/target
-JAROUTDIR = ../../Assets/Adjust/Android
+JAROUTDIR = ../../Assets/Plugins/Android
 
 default: copy
 

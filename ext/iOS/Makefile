@@ -1,5 +1,5 @@
 SRCDIR = ./sdk
-LIBOUTDIR = ../../Assets/Adjust/iOS
+LIBOUTDIR = ../../Assets/Plugins/iOS
 
 default: copy
 
