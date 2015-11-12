@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
 	public class AdjustAndroid : IAdjust
 	{
-		private const string sdkPrefix = "unity4.0.3";
+		private const string sdkPrefix = "unity4.0.4";
 		private AndroidJavaClass ajcAdjust;
 		private AndroidJavaObject ajoCurrentActivity;
 		private AttributionChangeListener onAttributionChangedListener;
@@ -84,11 +84,11 @@ namespace com.adjust.sdk
 
 			ajoAdjustConfig.Call ("setSdkPrefix", sdkPrefix);
 			
+			// Since INSTALL_REFERRER is not triggering SDK initialisation, call onResume after onCreate.
+			// OnApplicationPause doesn't get called first time the scene loads, so call to onResume is needed.
+			
 			ajcAdjust.CallStatic ("onCreate", ajoAdjustConfig);
-
-			if (adjustConfig.startAutomatically == true) {
-				ajcAdjust.CallStatic ("onResume");
-			}
+			ajcAdjust.CallStatic ("onResume");
 		}
 
 		public void trackEvent (AdjustEvent adjustEvent)
