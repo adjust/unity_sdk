@@ -41,6 +41,34 @@ namespace com.adjust.sdk
 			clickLabel = getJsonString (jsonNode, "clickLabel");
 		}
 		
+
+		public AdjustAttribution (Dictionary<string, string> dicAttributionData)
+		{
+			if (dicAttributionData == null) {
+				return;
+			}
+
+			trackerName = TryGetValue (dicAttributionData, "trackerName");
+			trackerToken = TryGetValue (dicAttributionData, "trackerToken");
+			network = TryGetValue (dicAttributionData, "network");
+			campaign = TryGetValue (dicAttributionData, "campaign");
+			adgroup = TryGetValue (dicAttributionData, "adgroup");
+			creative = TryGetValue (dicAttributionData, "creative");
+		}
+
+		private static string TryGetValue(Dictionary<string, string> dic, string key)
+		{
+			string value;
+			if (dic.TryGetValue(key, out value))
+			{
+				return value;
+			} 
+			else
+			{
+				return null;
+			}
+		}
+				
 		private String getJsonString (JSONNode node, string key)
 		{
 			var jsonValue = getJsonValue (node, key);
