@@ -9,7 +9,7 @@ namespace com.adjust.sdk
 {
 	public class AdjustMetro : IAdjust
 	{
-		private const string sdkPrefix = "unity4.0.2";
+		private const string sdkPrefix = "unity4.1.0";
 
 		public bool isEnabled()
 		{
