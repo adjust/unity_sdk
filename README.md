@@ -1,6 +1,6 @@
 ## Summary
 
-This is the Unity3d SDK of adjust™. It supports iOS and Android targets. You can read more about adjust™ at [adjust.com].
+This is the Unity3d SDK of adjust™. It supports iOS, Android, Windows 8.1 and Windows phone 8.1 targets. You can read more about adjust™ at [adjust.com].
 
 ## Basic Installation
 

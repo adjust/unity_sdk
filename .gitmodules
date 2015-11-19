@@ -4,3 +4,6 @@
 [submodule "ext/iOS/sdk"]
 	path = ext/iOS/sdk
 	url = git@github.com:adjust/ios_sdk.git
+[submodule "ext/Windows/sdk"]
+	path = ext/Windows/sdk
+	url = https://github.com/adjust/windows_sdk.git

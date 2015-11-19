@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
 	public class AdjustAndroid : IAdjust
 	{
-		private const string sdkPrefix = "unity4.0.4";
+		private const string sdkPrefix = "unity4.1.0";
 		private AndroidJavaClass ajcAdjust;
 		private AndroidJavaObject ajoCurrentActivity;
 		private AttributionChangeListener onAttributionChangedListener;
