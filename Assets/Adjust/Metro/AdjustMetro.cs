@@ -54,6 +54,8 @@ namespace com.adjust.sdk
 				sdkPrefix: sdkPrefix,
 				attributionChangedDic: attributionChangedDictionary
 			);
+            
+            UnityEngine.WSA.Application.windowActivated += Application_windowActivated;
 		}
 		public void trackEvent (AdjustEvent adjustEvent)
 		{
@@ -69,6 +71,18 @@ namespace com.adjust.sdk
 		public void setDeviceToken (string deviceToken) {}
 		// Android specific methods
 		public void setReferrer (string referrer) {}
+        
+        private static void Application_windowActivated(UnityEngine.WSA.WindowActivationState state)
+		{
+			if (state == UnityEngine.WSA.WindowActivationState.Deactivated)
+			{
+				AdjustWS.ApplicationDeactivated();
+			}
+			else
+			{
+				AdjustWS.ApplicationActivated();
+			}
+		}
 	}
 }
 #endif
