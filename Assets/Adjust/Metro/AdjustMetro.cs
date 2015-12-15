@@ -52,7 +52,8 @@ namespace com.adjust.sdk
 				defaultTracker: adjustConfig.defaultTracker,
 				eventBufferingEnabled: adjustConfig.eventBufferingEnabled,
 				sdkPrefix: sdkPrefix,
-				attributionChangedDic: attributionChangedDictionary
+				attributionChangedDic: attributionChangedDictionary,
+                logDelegate: adjustConfig.logDelegate
 			);
 		}
 		public void trackEvent (AdjustEvent adjustEvent)
