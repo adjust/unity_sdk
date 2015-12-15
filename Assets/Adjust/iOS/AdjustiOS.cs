@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
 	public class AdjustiOS : IAdjust
 	{
-		private const string sdkPrefix = "unity4.1.0";
+		private const string sdkPrefix = "unity4.1.1";
 
 		#region External methods
 
