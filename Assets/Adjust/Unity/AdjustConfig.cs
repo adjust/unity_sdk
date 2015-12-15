@@ -20,7 +20,10 @@ namespace com.adjust.sdk
 		// Android specific members
 		internal string processName;
 
-		public AdjustConfig (string appToken, AdjustEnvironment environment)
+        // Windows specific members
+        internal Action<String> logDelegate;
+
+        public AdjustConfig (string appToken, AdjustEnvironment environment)
 		{
 			this.sceneName = "";
 			this.appToken = appToken;
@@ -66,5 +69,10 @@ namespace com.adjust.sdk
 		{
 			this.processName = processName;
 		}
+
+        public void setLogDelegate(Action<String> logDelegate)
+        {
+            this.logDelegate = logDelegate;
+        }
 	}
 }
