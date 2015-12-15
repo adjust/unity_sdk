@@ -20,17 +20,17 @@ namespace AdjustUnityWP
             }
         }
 
-        public static void ApplicationLaunching(string appToken, string environment, string logLevelString, string defaultTracker, bool? eventBufferingEnabled, string sdkPrefix, Action<Dictionary<string, string>> attributionChangedDic)
+        public static void ApplicationLaunching(string appToken, string environment, string logLevelString, string defaultTracker, bool? eventBufferingEnabled, string sdkPrefix, Action<Dictionary<string, string>> attributionChangedDic, Action<String> logDelegate)
         {
             LogLevel logLevel;
             if (Enum.TryParse(logLevelString, out logLevel))
             {
-                Adjust.SetupLogging(logDelegate: msg => System.Diagnostics.Debug.WriteLine(msg),
+                Adjust.SetupLogging(logDelegate: logDelegate,
                     logLevel: logLevel);
             }
             else
             {
-                Adjust.SetupLogging(logDelegate: msg => System.Diagnostics.Debug.WriteLine(msg));
+                Adjust.SetupLogging(logDelegate: logDelegate);
             }
 
             var config = new AdjustConfig(appToken, environment);

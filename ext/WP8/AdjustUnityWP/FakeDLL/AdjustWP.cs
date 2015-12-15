@@ -5,7 +5,7 @@ namespace AdjustUnityWP
 {
     public class AdjustWP
     {
-        public static void ApplicationLaunching(string appToken, string environment, string logLevelString, string defaultTracker, bool? eventBufferingEnabled, string sdkPrefix, Action<Dictionary<string, string>> attributionChangedDic) { }
+        public static void ApplicationLaunching(string appToken, string environment, string logLevelString, string defaultTracker, bool? eventBufferingEnabled, string sdkPrefix, Action<Dictionary<string, string>> attributionChangedDic, Action<String> logDelegate) { }
 
         public static void TrackEvent(string eventToken, double? revenue, string currency, List<string> callbackList, List<string> partnerList) { }
 
