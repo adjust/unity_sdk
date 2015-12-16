@@ -1,3 +1,21 @@
+### Version 4.1.1 (__th December 2015)
+#### Added
+- Postbuild scripts for Android and iOS now exist in two versions: one for OSX and one for Windows
+
+#### Changed
+- `setMacMd5TrackingEnabled` method is **removed** from the `AdjustConfig` object.
+- Adjust prefab `Start Manually` option is now **TRUE** by default (uncheck it if you want prefab to be loaded automatically with settings you set in Unity Editor).
+- Adjust prefab `Print Attribution` option is now **TRUE** by default.
+- Native iOS SDK updated to version **4.5.0**.
+- Native Android SDK updated to version **4.1.5**.
+
+#### Fixed
+- If `Adjust.instance` is already initialized, re-trying to initialize it (if you have chosen to initialize SDK automatically) won't happen anymore in `Awake` method.
+- WACK doesn't fail anymore on `AdjustUnityWS.dll`.
+- Unix users shouldn't face post build scripts execution anymore.
+
+---
+
 ### Version 4.1.0 (19th November 2015)
 #### Added
 - Windows 8.1 target.
