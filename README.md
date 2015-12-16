@@ -18,7 +18,6 @@ Open your project in the Unity Editor and navigate to `Assets → Import Package
 
 ![][import_package]
 
-
 ### 3. Integrate adjust into your app
 
 Add the prefab located at `Assets/Adjust/Adjust.prefab` to the first scene.
@@ -38,6 +37,21 @@ of `Log Level` to one of the following:
 - `Warn` - disable info logging
 - `Error` - disable warnings as well
 - `Assert` - disable errors as well
+
+If your target is windows based, to see the compiled logs from our library in `released` mode, it is
+necessary to redirect the log output to your app while it's being tested in `debug` mode.
+
+Call the method `setLogDelegate` in the `AdjustConfig` instance before starting the sdk.
+
+```cs
+//...
+adjustConfig.setLogDelegate(msg => System.Diagnostics.Debug.WriteLine(msg));
+//...
+Adjust.start (adjustConfig);
+```
+
+You can increase or decrease the amount of logs you see in tests by setting the
+second argument of the `SetupLogging` method, `logLevel`, with one of the following values:
 
 Depending on whether or not you build your app for testing or for production
 you must change `Environment` with one of these values:
@@ -88,7 +102,6 @@ of Android SDK from [official page][android_sdk_download]. By downloading this, 
 version of the Android SDK which doesn't include the Android SDK Tools. There are more detailed instructions 
 on how to download these in the readme file provided by Google, called `SDK Readme.txt`, which is placed in 
 Android SDK folder.
-
 
 ### 5. Build scripts
 
