@@ -15,7 +15,7 @@ namespace com.adjust.sdk
 		#region External methods
 
 		[DllImport ("__Internal")]
-		private static extern void _AdjustLaunchApp (string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering, int macMd5TrackingEnabled, string sceneName);
+		private static extern void _AdjustLaunchApp (string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering, string sceneName);
 
 		[DllImport ("__Internal")]
 		private static extern void _AdjustTrackEvent (string eventToken, double revenue, string currency, string receipt, string transactionId, int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
@@ -48,9 +48,8 @@ namespace com.adjust.sdk
 
 			int logLevel = convertLogLevel (adjustConfig.logLevel);
 			int eventBufferingEnabled = convertBool (adjustConfig.eventBufferingEnabled);
-			int macMd5TrackingEnabled = convertBool (adjustConfig.macMd5TrackingEnabled);
 
-			_AdjustLaunchApp (appToken, environment, sdkPrefix, logLevel, eventBufferingEnabled, macMd5TrackingEnabled, sceneName);
+			_AdjustLaunchApp (appToken, environment, sdkPrefix, logLevel, eventBufferingEnabled, sceneName);
 		}
 
 		public void trackEvent (AdjustEvent adjustEvent)
