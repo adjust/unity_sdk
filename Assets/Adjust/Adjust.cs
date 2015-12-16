@@ -25,7 +25,7 @@ namespace com.adjust.sdk
 
 		void Awake ()
 		{
-			if (Adjust.instance == null) {
+			if (Adjust.instance != null) {
 				return;
 			}
 
