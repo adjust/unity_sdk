@@ -14,18 +14,17 @@ namespace com.adjust.sdk
 		internal AdjustEnvironment environment;
 		internal Action<AdjustAttribution> attributionChangedDelegate;
 
-		// iOS specific members
-		internal bool macMd5TrackingEnabled;
-
 		// Android specific members
 		internal string processName;
 
-		public AdjustConfig (string appToken, AdjustEnvironment environment)
+        // Windows specific members
+        internal Action<String> logDelegate;
+
+        public AdjustConfig (string appToken, AdjustEnvironment environment)
 		{
 			this.sceneName = "";
 			this.appToken = appToken;
 			this.environment = environment;
-			this.macMd5TrackingEnabled = false;
 			this.processName = "";
 		}
 
@@ -55,16 +54,15 @@ namespace com.adjust.sdk
 			return this.attributionChangedDelegate;
 		}
 
-		// iOS specific methods
-		public void setMacMd5TrackingEnabled (bool macMd5TrackingEnabled)
-		{
-			this.macMd5TrackingEnabled = macMd5TrackingEnabled;
-		}
-
 		// Android specific methods
 		public void setProcessName (string processName)
 		{
 			this.processName = processName;
 		}
+
+        public void setLogDelegate(Action<String> logDelegate)
+        {
+            this.logDelegate = logDelegate;
+        }
 	}
 }

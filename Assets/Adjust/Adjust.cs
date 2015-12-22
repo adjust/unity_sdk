@@ -12,9 +12,9 @@ namespace com.adjust.sdk
 		private static IAdjust instance = null;
 		private static Action<AdjustAttribution> attributionChangedDelegate = null;
 
-		public bool startManually = false;
+		public bool startManually = true;
 		public bool eventBuffering = false;
-		public bool printAttribution = false;
+		public bool printAttribution = true;
 
 		public string appToken = "{Your App Token}";
 
@@ -25,6 +25,10 @@ namespace com.adjust.sdk
 
 		void Awake ()
 		{
+			if (Adjust.instance != null) {
+				return;
+			}
+
 			DontDestroyOnLoad (transform.gameObject);
 
 			if (!this.startManually) {
@@ -40,7 +44,7 @@ namespace com.adjust.sdk
 			}
 		}
 
-		void OnApplicationPause (bool pauseStatus) 
+		void OnApplicationPause (bool pauseStatus)
 		{
 			if (Adjust.instance == null) {
 				return;
@@ -70,7 +74,7 @@ namespace com.adjust.sdk
 			}
 
 			#if UNITY_EDITOR
-				Adjust.instance = null;
+			Adjust.instance = null;
 			#elif UNITY_IOS
 				Adjust.instance = new AdjustiOS ();
 			#elif UNITY_ANDROID
@@ -108,7 +112,7 @@ namespace com.adjust.sdk
 			Adjust.instance.trackEvent (adjustEvent);
 		}
 
-		public static void setEnabled (bool enabled) 
+		public static void setEnabled (bool enabled)
 		{
 			if (Adjust.instance == null) {
 				Debug.Log (Adjust.errorMessage);
@@ -117,8 +121,8 @@ namespace com.adjust.sdk
 
 			Adjust.instance.setEnabled (enabled);
 		}
-		
-		public static bool isEnabled () 
+
+		public static bool isEnabled ()
 		{
 			if (Adjust.instance == null) {
 				Debug.Log (Adjust.errorMessage);
@@ -127,8 +131,8 @@ namespace com.adjust.sdk
 
 			return Adjust.instance.isEnabled ();
 		}
-		
-		public static void setOfflineMode (bool enabled) 
+
+		public static void setOfflineMode (bool enabled)
 		{
 			if (Adjust.instance == null) {
 				Debug.Log (Adjust.errorMessage);
