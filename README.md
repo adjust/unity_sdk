@@ -45,7 +45,7 @@ Call the method `setLogDelegate` in the `AdjustConfig` instance before starting 
 
 ```cs
 //...
-adjustConfig.setLogDelegate(msg => System.Diagnostics.Debug.WriteLine(msg));
+adjustConfig.setLogDelegate(msg => Debug.Log(msg));
 //...
 Adjust.start (adjustConfig);
 ```
