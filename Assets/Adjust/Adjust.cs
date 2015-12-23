@@ -12,9 +12,9 @@ namespace com.adjust.sdk
 		private static IAdjust instance = null;
 		private static Action<AdjustAttribution> attributionChangedDelegate = null;
 
-		public bool startManually = false;
+		public bool startManually = true;
 		public bool eventBuffering = false;
-		public bool printAttribution = false;
+		public bool printAttribution = true;
 
 		public string appToken = "{Your App Token}";
 
@@ -25,6 +25,10 @@ namespace com.adjust.sdk
 
 		void Awake ()
 		{
+			if (Adjust.instance != null) {
+  				return;
+  			}
+  			
 			DontDestroyOnLoad (transform.gameObject);
 
 			if (!this.startManually) {
