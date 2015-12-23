@@ -1,4 +1,7 @@
 ### Version 4.1.1 (23rd December 2015)
+### Added
+- Changelog is now added to the repository.
+
 #### Changed
 - Adjust prefab `Start Manually` option is now **TRUE** by default (uncheck it if you want Adjust.prefab to be loaded automatically with settings you set in Unity Editor).
 - Adjust prefab `Print Attribution` option is now **TRUE** by default.
