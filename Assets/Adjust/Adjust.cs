@@ -25,6 +25,10 @@ namespace com.adjust.sdk
 
 		void Awake ()
 		{
+			if (Adjust.instance != null) {
+  				return;
+  			}
+  			
 			DontDestroyOnLoad (transform.gameObject);
 
 			if (!this.startManually) {
