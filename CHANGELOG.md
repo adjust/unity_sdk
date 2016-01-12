@@ -3,6 +3,7 @@
 - Support for iOS iAd v3.
 
 #### Changed
+- MAC MD5 tracking feature for iOS platform is now completely removed.
 - Native iOS SDK updated to version **4.5.0**.
 - Native Android SDK updated to version **4.2.1**.
 
