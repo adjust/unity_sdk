@@ -1,3 +1,13 @@
+### Version 4.1.2 (xxth January 2016)
+### Added
+- Support for iOS iAd v3.
+
+#### Changed
+- Native iOS SDK updated to version **4.5.0**.
+- Native Android SDK updated to version **4.2.1**.
+
+---
+
 ### Version 4.1.1 (23rd December 2015)
 ### Added
 - Changelog is now added to the repository.
