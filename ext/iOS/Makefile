@@ -5,10 +5,10 @@ default: copy
 
 build:	
 	cd $(SRCDIR); \
-	xcodebuild -target framework -configuration Release
+	xcodebuild -target AdjustStatic -configuration Release
 
 copy: build
-	cp $(SRCDIR)/Adjust.a $(LIBOUTDIR); \
+	cp $(SRCDIR)/AdjustSdk.a $(LIBOUTDIR); \
 	cp $(SRCDIR)/Headers/* $(LIBOUTDIR); \
-	rm $(SRCDIR)/Adjust.a; \
+	rm $(SRCDIR)/AdjustSdk.a; \
 	rm -rf $(SRCDIR)/Headers
