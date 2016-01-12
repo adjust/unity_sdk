@@ -54,7 +54,7 @@ NSArray* ConvertArrayParameters (const char* cStringJsonArrayParameters) {
 
 extern "C"
 {
-    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering, int macMd5TrackingEnabled, const char* sceneName) {
+    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering, const char* sceneName) {
         NSString *stringSdkPrefix = [NSString stringWithUTF8String:sdkPrefix];
         NSString *stringAppToken = [NSString stringWithUTF8String:appToken];
         NSString *stringEnvironment = [NSString stringWithUTF8String:environment];
@@ -74,17 +74,13 @@ extern "C"
             [adjustConfig setEventBufferingEnabled:(BOOL)eventBuffering];
         }
 
-        if (macMd5TrackingEnabled != -1) {
-            [adjustConfig setMacMd5TrackingEnabled:(BOOL)macMd5TrackingEnabled];
-        }
-
         if (sceneName != NULL && [stringSceneName length] > 0) {
             adjustSceneName = strdup(sceneName);
             adjustUnityInstance = [[AdjustUnity alloc] init];
             [adjustConfig setDelegate:(id)adjustUnityInstance];
         }
 
-        NSLog(@"%@, %@, %@, %d, %d, %d, %@", stringAppToken, stringEnvironment, stringSdkPrefix, logLevel, eventBuffering, macMd5TrackingEnabled, stringSceneName);
+        NSLog(@"%@, %@, %@, %d, %d, %@", stringAppToken, stringEnvironment, stringSdkPrefix, logLevel, eventBuffering, stringSceneName);
 
         // Launch adjust instance.
         [Adjust appDidLaunch:adjustConfig];
