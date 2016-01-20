@@ -1,4 +1,4 @@
-### Version 4.1.2 (xxth January 2016)
+### Version 4.1.2 (20th January 2016)
 ### Added
 - Support for iOS iAd v3.
 
