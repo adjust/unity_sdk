@@ -47,7 +47,7 @@ namespace com.adjust.sdk
 		{
 			string appToken = adjustConfig .appToken;
 			string sceneName = adjustConfig.sceneName;
-			string environment = adjustConfig.environment.ToString ().ToLower ();
+			string environment = adjustConfig.environment.lowercaseToString ();
 
 			int logLevel = convertLogLevel (adjustConfig.logLevel);
 			int eventBufferingEnabled = convertBool (adjustConfig.eventBufferingEnabled);

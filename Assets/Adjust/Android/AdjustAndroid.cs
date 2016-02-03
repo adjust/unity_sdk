@@ -70,7 +70,7 @@ namespace com.adjust.sdk
 			AndroidJavaObject ajoAdjustConfig = new AndroidJavaObject ("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
 
 			if (adjustConfig.logLevel != null) {
-				AndroidJavaObject ajoLogLevel = new AndroidJavaClass ("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject> (adjustConfig.logLevel.ToString().ToUpper());
+				AndroidJavaObject ajoLogLevel = new AndroidJavaClass ("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject> (adjustConfig.logLevel.uppercaseToString());
 
 				if (ajoLogLevel != null) {
 					ajoAdjustConfig.Call ("setLogLevel", ajoLogLevel);

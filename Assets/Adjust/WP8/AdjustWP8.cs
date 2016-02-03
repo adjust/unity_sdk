@@ -36,7 +36,7 @@ namespace com.adjust.sdk
 			string logLevelString = null;
 			if (adjustConfig.logLevel != null) 
 			{
-				logLevelString = adjustConfig.logLevel.ToString();
+				logLevelString = adjustConfig.logLevel.lowercaseToString();
 			}
 
 			Action<Dictionary<string, string>> attributionChangedDictionary = null;
@@ -45,10 +45,12 @@ namespace com.adjust.sdk
 				attributionChangedDictionary = (attributionDictionary) => Adjust.runAttributionChangedDictionary(attributionDictionary);
 			}
 
+			string environment = adjustConfig.environment.lowercaseToString ();
+
 			AdjustWP.ApplicationLaunching (
 				appToken: adjustConfig.appToken,
 				logLevelString: logLevelString,
-				environment: adjustConfig.environment.ToString ().ToLower (),
+				environment: environment,
 				defaultTracker: adjustConfig.defaultTracker,
 				eventBufferingEnabled: adjustConfig.eventBufferingEnabled,
 				sdkPrefix: sdkPrefix,
