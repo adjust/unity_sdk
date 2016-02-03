@@ -32,6 +32,9 @@ namespace com.adjust.sdk
 		[DllImport ("__Internal")]
 		private static extern void _AdjustSetDeviceToken (string deviceToken);
 
+		[DllImport ("__Internal")]
+		private static extern string _AdjustGetIdfa ();
+
 		#endregion
 
 		public AdjustiOS ()
@@ -94,15 +97,19 @@ namespace com.adjust.sdk
 			_AdjustSetOfflineMode (convertBool (enabled));
 		}
 
+		// iOS specific methods
 		public void setDeviceToken(string deviceToken)
 		{
 			_AdjustSetDeviceToken (deviceToken);
 		}
 
-		public void setReferrer(string referrer)
+		public string getIdfa()
 		{
-
+			return _AdjustGetIdfa ();
 		}
+
+		// Android specific methods
+		public void setReferrer(string referrer) { }
 
 		#endregion
 

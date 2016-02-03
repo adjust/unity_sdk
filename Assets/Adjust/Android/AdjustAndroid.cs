@@ -135,14 +135,19 @@ namespace com.adjust.sdk
 			ajcAdjust.CallStatic ("setOfflineMode", enabled);
 		}
 
+		// Android specific methods
 		public void setReferrer(string referrer)
 		{
 			ajcAdjust.CallStatic ("setReferrer", referrer);
 		}
 
+		// iOS specific methods
 		public void setDeviceToken(string deviceToken)
-		{
+		{ }
 
+		public string getIdfa()
+		{
+			return null;
 		}
 
 		#endregion

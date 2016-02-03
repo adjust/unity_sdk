@@ -16,6 +16,7 @@ namespace com.adjust.sdk
 
 		// iOS specific methods
 		void setDeviceToken (string deviceToken);
+		string getIdfa ();
 
 		// Android specific methods
 		void setReferrer (string referrer);

@@ -66,8 +66,14 @@ namespace com.adjust.sdk
 				partnerList: adjustEvent.partnerList
 			);
 		}
-        // iOS specific methods
+		// iOS specific methods
 		public void setDeviceToken (string deviceToken) {}
+
+		public string getIdfa()
+		{
+			return null;
+		}
+
 		// Android specific methods
 		public void setReferrer (string referrer) {}
 	}
