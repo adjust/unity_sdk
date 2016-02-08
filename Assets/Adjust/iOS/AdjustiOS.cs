@@ -111,6 +111,9 @@ namespace com.adjust.sdk
 		// Android specific methods
 		public void setReferrer(string referrer) { }
 
+		public void getGoogleAdId (Action<string> onDeviceIdsRead) { }
+
+
 		#endregion
 
 		#region Private and helper methods

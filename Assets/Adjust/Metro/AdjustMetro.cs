@@ -69,7 +69,7 @@ namespace com.adjust.sdk
 			);
 		}
 		// iOS specific methods
-		public void setDeviceToken (string deviceToken) {}
+		public void setDeviceToken (string deviceToken) { }
 
 		public string getIdfa()
 		{
@@ -77,7 +77,9 @@ namespace com.adjust.sdk
 		}
 
 		// Android specific methods
-		public void setReferrer (string referrer) {}
+		public void setReferrer (string referrer) { }
+
+		public void getGoogleAdId (Action<string> onDeviceIdsRead) { }
 	}
 }
 #endif

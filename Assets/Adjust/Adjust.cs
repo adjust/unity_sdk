@@ -161,7 +161,7 @@ namespace com.adjust.sdk
 			}
 
 			return Adjust.instance.getIdfa ();
-		}	
+		}
 
 		// Android specific methods
 		public static void setReferrer (string referrer)
@@ -172,7 +172,18 @@ namespace com.adjust.sdk
 			}
 
 			Adjust.instance.setReferrer (referrer);
-		}	
+		}
+
+		public static void getGoogleAdId (Action<string> onDeviceIdsRead)
+		{
+			if (Adjust.instance == null) {
+				Debug.Log (Adjust.errorMessage);
+				return;
+			}
+
+			Adjust.instance.getGoogleAdId (onDeviceIdsRead);
+		}
+
 
 		#endregion
 

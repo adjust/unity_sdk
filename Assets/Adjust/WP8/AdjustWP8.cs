@@ -70,8 +70,16 @@ namespace com.adjust.sdk
 		}
         // iOS specific methods
         public void setDeviceToken(string deviceToken) { }
-        // Android specific methods
-        public void setReferrer(string referrer) { }
+
+		public string getIdfa()
+		{
+			return null;
+		}
+
+		// Android specific methods
+		public void setReferrer (string referrer) { }
+
+		public void getGoogleAdId (Action<string> onDeviceIdsRead) { }
 	}
 }
 #endif

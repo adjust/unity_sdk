@@ -42,6 +42,28 @@ namespace com.adjust.sdk
 			}
 		}
 
+		private class DeviceIdsReadListener : AndroidJavaProxy
+		{
+			private Action<string> onPlayAdIdReadCallback;
+
+			public DeviceIdsReadListener (Action<string> pCallback) : base("com.adjust.sdk.OnDeviceIdsRead")
+			{
+				this.onPlayAdIdReadCallback = pCallback;
+			}
+			public void onGoogleAdIdRead(string playAdId)
+			{
+				if (onPlayAdIdReadCallback == null) {
+					return;
+				}
+				if (playAdId == null) {
+					return;
+				}
+
+				this.onPlayAdIdReadCallback(playAdId);
+			}
+
+		}
+
 		public AdjustAndroid ()
 		{
 			ajcAdjust = new AndroidJavaClass ("com.adjust.sdk.Adjust");
@@ -69,8 +91,8 @@ namespace com.adjust.sdk
 
 			AndroidJavaObject ajoAdjustConfig = new AndroidJavaObject ("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
 
-			if (adjustConfig.logLevel != null) {
-				AndroidJavaObject ajoLogLevel = new AndroidJavaClass ("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject> (adjustConfig.logLevel.uppercaseToString());
+			if (adjustConfig.logLevel.HasValue) {
+				AndroidJavaObject ajoLogLevel = new AndroidJavaClass ("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject> (adjustConfig.logLevel.Value.uppercaseToString());
 
 				if (ajoLogLevel != null) {
 					ajoAdjustConfig.Call ("setLogLevel", ajoLogLevel);
@@ -139,6 +161,13 @@ namespace com.adjust.sdk
 		public void setReferrer(string referrer)
 		{
 			ajcAdjust.CallStatic ("setReferrer", referrer);
+		}
+
+		public void getGoogleAdId (Action<string> onDeviceIdsRead)
+		{
+			DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
+
+			ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
 		}
 
 		// iOS specific methods
