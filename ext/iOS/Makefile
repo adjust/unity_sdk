@@ -1,5 +1,6 @@
 SRCDIR = ./sdk
 LIBOUTDIR = ../../Assets/Adjust/iOS
+STATICFRAMEWORK = $(SRCDIR)/Frameworks/Static/AdjustSdk.framework
 
 default: copy
 
@@ -8,7 +9,5 @@ build:
 	xcodebuild -target AdjustStatic -configuration Release
 
 copy: build
-	cp $(SRCDIR)/AdjustSdk.a $(LIBOUTDIR); \
-	cp $(SRCDIR)/Headers/* $(LIBOUTDIR); \
-	rm $(SRCDIR)/AdjustSdk.a; \
-	rm -rf $(SRCDIR)/Headers
+	cp $(STATICFRAMEWORK)/Versions/A/AdjustSdk $(LIBOUTDIR)/AdjustSdk.a; \
+	cp $(STATICFRAMEWORK)/Versions/A/Headers/* $(LIBOUTDIR);
