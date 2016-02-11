@@ -56,9 +56,6 @@ namespace com.adjust.sdk
 				if (onPlayAdIdReadCallback == null) {
 					return;
 				}
-				if (playAdId == null) {
-					return;
-				}
 
 				this.onPlayAdIdReadCallback(playAdId);
 			}
@@ -67,6 +64,9 @@ namespace com.adjust.sdk
 			public void onGoogleAdIdRead(AndroidJavaObject ajo)
 			{
 				if (ajo == null) {
+					string adId = null;
+					this.onGoogleAdIdRead(adId);
+
 					return;
 				}
 
