@@ -141,7 +141,8 @@ namespace com.adjust.sdk
 
 			Adjust.instance.setOfflineMode (enabled);
 		}
-
+		
+		// iOS specific methods
 		public static void setDeviceToken (string deviceToken)
 		{
 			if (Adjust.instance == null) {
@@ -152,6 +153,17 @@ namespace com.adjust.sdk
 			Adjust.instance.setDeviceToken (deviceToken);
 		}
 
+		public static string getIdfa ()
+		{
+			if (Adjust.instance == null) {
+				Debug.Log (Adjust.errorMessage);
+				return null;
+			}
+
+			return Adjust.instance.getIdfa ();
+		}
+
+		// Android specific methods
 		public static void setReferrer (string referrer)
 		{
 			if (Adjust.instance == null) {
@@ -161,6 +173,17 @@ namespace com.adjust.sdk
 
 			Adjust.instance.setReferrer (referrer);
 		}
+
+		public static void getGoogleAdId (Action<string> onDeviceIdsRead)
+		{
+			if (Adjust.instance == null) {
+				Debug.Log (Adjust.errorMessage);
+				return;
+			}
+
+			Adjust.instance.getGoogleAdId (onDeviceIdsRead);
+		}
+
 
 		#endregion
 

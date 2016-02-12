@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
 	public class AdjustAndroid : IAdjust
 	{
-		private const string sdkPrefix = "unity4.1.2";
+		private const string sdkPrefix = "unity4.1.3";
 		private AndroidJavaClass ajcAdjust;
 		private AndroidJavaObject ajoCurrentActivity;
 		private AttributionChangeListener onAttributionChangedListener;
@@ -42,6 +42,38 @@ namespace com.adjust.sdk
 			}
 		}
 
+		private class DeviceIdsReadListener : AndroidJavaProxy
+		{
+			private Action<string> onPlayAdIdReadCallback;
+
+			public DeviceIdsReadListener (Action<string> pCallback) : base("com.adjust.sdk.OnDeviceIdsRead")
+			{
+				this.onPlayAdIdReadCallback = pCallback;
+			}
+
+			public void onGoogleAdIdRead(string playAdId)
+			{
+				if (onPlayAdIdReadCallback == null) {
+					return;
+				}
+
+				this.onPlayAdIdReadCallback(playAdId);
+			}
+
+			// null object
+			public void onGoogleAdIdRead(AndroidJavaObject ajo)
+			{
+				if (ajo == null) {
+					string adId = null;
+					this.onGoogleAdIdRead(adId);
+
+					return;
+				}
+
+				this.onGoogleAdIdRead(ajo.Call<string> ("toString"));
+			}
+		}
+
 		public AdjustAndroid ()
 		{
 			ajcAdjust = new AndroidJavaClass ("com.adjust.sdk.Adjust");
@@ -69,8 +101,8 @@ namespace com.adjust.sdk
 
 			AndroidJavaObject ajoAdjustConfig = new AndroidJavaObject ("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
 
-			if (adjustConfig.logLevel != null) {
-				AndroidJavaObject ajoLogLevel = new AndroidJavaClass ("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject> (adjustConfig.logLevel.ToString().ToUpper());
+			if (adjustConfig.logLevel.HasValue) {
+				AndroidJavaObject ajoLogLevel = new AndroidJavaClass ("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject> (adjustConfig.logLevel.Value.uppercaseToString());
 
 				if (ajoLogLevel != null) {
 					ajoAdjustConfig.Call ("setLogLevel", ajoLogLevel);
@@ -135,14 +167,26 @@ namespace com.adjust.sdk
 			ajcAdjust.CallStatic ("setOfflineMode", enabled);
 		}
 
+		// Android specific methods
 		public void setReferrer(string referrer)
 		{
 			ajcAdjust.CallStatic ("setReferrer", referrer);
 		}
 
-		public void setDeviceToken(string deviceToken)
+		public void getGoogleAdId (Action<string> onDeviceIdsRead)
 		{
+			DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
 
+			ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
+		}
+
+		// iOS specific methods
+		public void setDeviceToken(string deviceToken)
+		{ }
+
+		public string getIdfa()
+		{
+			return null;
 		}
 
 		#endregion

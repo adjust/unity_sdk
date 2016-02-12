@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
 	public class AdjustiOS : IAdjust
 	{
-		private const string sdkPrefix = "unity4.1.2";
+		private const string sdkPrefix = "unity4.1.3";
 
 		#region External methods
 
@@ -32,6 +32,9 @@ namespace com.adjust.sdk
 		[DllImport ("__Internal")]
 		private static extern void _AdjustSetDeviceToken (string deviceToken);
 
+		[DllImport ("__Internal")]
+		private static extern string _AdjustGetIdfa ();
+
 		#endregion
 
 		public AdjustiOS ()
@@ -44,7 +47,7 @@ namespace com.adjust.sdk
 		{
 			string appToken = adjustConfig .appToken;
 			string sceneName = adjustConfig.sceneName;
-			string environment = adjustConfig.environment.ToString ().ToLower ();
+			string environment = adjustConfig.environment.lowercaseToString ();
 
 			int logLevel = convertLogLevel (adjustConfig.logLevel);
 			int eventBufferingEnabled = convertBool (adjustConfig.eventBufferingEnabled);
@@ -94,15 +97,22 @@ namespace com.adjust.sdk
 			_AdjustSetOfflineMode (convertBool (enabled));
 		}
 
+		// iOS specific methods
 		public void setDeviceToken(string deviceToken)
 		{
 			_AdjustSetDeviceToken (deviceToken);
 		}
 
-		public void setReferrer(string referrer)
+		public string getIdfa()
 		{
-
+			return _AdjustGetIdfa ();
 		}
+
+		// Android specific methods
+		public void setReferrer(string referrer) { }
+
+		public void getGoogleAdId (Action<string> onDeviceIdsRead) { }
+
 
 		#endregion
 
