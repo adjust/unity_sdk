@@ -338,6 +338,31 @@ Unlike disabling tracking, this setting is *not remembered*
 bettween sessions. This means that the SDK is in online mode whenever it is started,
 even if the app was terminated in offline mode.
 
+### 12. Device id's
+
+Certains services such as Google Analytics, require that Device and Client IDs must first coordinate in order to prevent duplicate reporting.
+
+#### Android
+
+To obtain the device identifier Google Advertising Id, there is a restriction that it can only be read in a background thread. 
+By calling the function `getGoogleAdId` with a `Action<string>` delegate, it will make sure that it will work in any situation:
+
+```cs
+Adjust.getGoogleAdId((string googleAdId) => {
+    // ...
+});
+```
+
+Inside the method `onGoogleAdIdRead` of the `OnDeviceIdsRead` instance you will have access to Google Advertising Id as the variable `googleAdId`.
+
+#### iOS
+
+To obtain the device identifier idfa, call the function `idfa`:
+
+```cs
+Adjust.getIdfa ()
+```
+
 ## Troubleshooting
 
 ### iOS
@@ -348,6 +373,7 @@ If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPho
 ### Build scripts
 
 The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case, use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py` and `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py` to add execute privileges.
+
 
 [adjust.com]: http://adjust.com
 [dashboard]: http://adjust.com
