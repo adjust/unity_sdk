@@ -338,14 +338,14 @@ Unlike disabling tracking, this setting is *not remembered*
 bettween sessions. This means that the SDK is in online mode whenever it is started,
 even if the app was terminated in offline mode.
 
-### 12. Device id's
+### 12. Device IDS
 
-Certains services such as Google Analytics, require that Device and Client IDs must first coordinate in order to prevent duplicate reporting.
+Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate reporting. 
 
 #### Android
 
-To obtain the device identifier Google Advertising Id, there is a restriction that it can only be read in a background thread. 
-By calling the function `getGoogleAdId` with a `Action<string>` delegate, it will make sure that it will work in any situation:
+If you need to obtain the Google Advertising ID, There is a restriction that only allows it to be read in a background thread. 
+If you call the function `getGoogleAdId` with a `Action<string>` delegate, it will work in any situation:
 
 ```cs
 Adjust.getGoogleAdId((string googleAdId) => {
@@ -353,11 +353,11 @@ Adjust.getGoogleAdId((string googleAdId) => {
 });
 ```
 
-Inside the method `onGoogleAdIdRead` of the `OnDeviceIdsRead` instance you will have access to Google Advertising Id as the variable `googleAdId`.
+Inside the method `onGoogleAdIdRead` of the `OnDeviceIdsRead` instance, you will have access to the Google Advertising ID as the variable `googleAdId`.
 
 #### iOS
 
-To obtain the device identifier idfa, call the function `idfa`:
+To obtain the IDFA, call the function `idfa`:
 
 ```cs
 Adjust.getIdfa ()
