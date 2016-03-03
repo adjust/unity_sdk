@@ -357,7 +357,7 @@ Inside the method `onGoogleAdIdRead` of the `OnDeviceIdsRead` instance, you will
 
 #### iOS
 
-To obtain the IDFA, call the function `idfa`:
+To obtain the IDFA, call the function `getIdfa`:
 
 ```cs
 Adjust.getIdfa ()
