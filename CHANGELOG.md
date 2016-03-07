@@ -1,3 +1,15 @@
+### Version 4.1.3 (12th February 2016)
+### Added
+- `Bitcode` support for iOS framework.
+- `getIdfa` method for getting `IDFA` on iOS device.
+- `getGoogleAdId` method for getting Google `Play Services Ad Id` on Android device.
+
+#### Changed
+- Native iOS SDK updated to version **4.5.4**.
+- Native Android SDK updated to version **4.2.3**.
+
+---
+
 ### Version 4.1.2 (20th January 2016)
 ### Added
 - Support for iOS iAd v3.
