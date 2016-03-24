@@ -9,7 +9,7 @@ namespace com.adjust.sdk
 {
 	public class AdjustWP8 : IAdjust
 	{
-		private const string sdkPrefix = "unity4.1.3";
+		private const string sdkPrefix = "unity4.6.0";
 
 		public bool isEnabled()
 		{
