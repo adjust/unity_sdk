@@ -1,25 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using SimpleJSON;
 
 namespace com.adjust.sdk
 {
 	public class AdjustAttribution
 	{
-		public string trackerToken { get; set; }
-
-		public string trackerName { get; set; }
-
+		#region Properties
 		public string network { get; set; }
-
-		public string campaign { get; set; }
-
 		public string adgroup { get; set; }
-
+		public string campaign { get; set; }
 		public string creative { get; set; }
-
 		public string clickLabel { get; set; }
+		public string trackerName { get; set; }
+		public string trackerToken { get; set; }
+		#endregion
 
+		#region Constructors
 		public AdjustAttribution ()
 		{
 		}
@@ -28,23 +26,24 @@ namespace com.adjust.sdk
 		{
 			var jsonNode = JSON.Parse (jsonString);
 			
-			if (jsonNode == null) {
+			if (jsonNode == null)
+			{
 				return;
 			}
 
-			trackerName = getJsonString (jsonNode, "trackerName");
-			trackerToken = getJsonString (jsonNode, "trackerToken");
-			network = getJsonString (jsonNode, "network");
-			campaign = getJsonString (jsonNode, "campaign");
-			adgroup = getJsonString (jsonNode, "adgroup");
-			creative = getJsonString (jsonNode, "creative");
-			clickLabel = getJsonString (jsonNode, "clickLabel");
+			trackerName = AdjustUtils.GetJsonString (jsonNode, "trackerName");
+			trackerToken = AdjustUtils.GetJsonString (jsonNode, "trackerToken");
+			network = AdjustUtils.GetJsonString (jsonNode, "network");
+			campaign = AdjustUtils.GetJsonString (jsonNode, "campaign");
+			adgroup = AdjustUtils.GetJsonString (jsonNode, "adgroup");
+			creative = AdjustUtils.GetJsonString (jsonNode, "creative");
+			clickLabel = AdjustUtils.GetJsonString (jsonNode, "clickLabel");
 		}
-		
 
 		public AdjustAttribution (Dictionary<string, string> dicAttributionData)
 		{
-			if (dicAttributionData == null) {
+			if (dicAttributionData == null)
+			{
 				return;
 			}
 
@@ -56,11 +55,14 @@ namespace com.adjust.sdk
 			creative = TryGetValue (dicAttributionData, "creative");
 			clickLabel = TryGetValue (dicAttributionData, "clickLabel");
 		}
+		#endregion
 
-		private static string TryGetValue(Dictionary<string, string> dic, string key)
+		#region Private & helper methods
+		private static string TryGetValue (Dictionary<string, string> dic, string key)
 		{
 			string value;
-			if (dic.TryGetValue(key, out value))
+
+			if (dic.TryGetValue (key, out value))
 			{
 				return value;
 			} 
@@ -69,31 +71,6 @@ namespace com.adjust.sdk
 				return null;
 			}
 		}
-				
-		private String getJsonString (JSONNode node, string key)
-		{
-			var jsonValue = getJsonValue (node, key);
-			
-			if (jsonValue == null) {
-				return null;
-			}
-			
-			return jsonValue.Value;
-		}
-		
-		private JSONNode getJsonValue (JSONNode node, string key)
-		{
-			if (node == null) {
-				return null;
-			}
-			
-			var nodeValue = node[key];
-
-			if (nodeValue.GetType () == typeof(JSONLazyCreator)) {
-				return null;
-			}
-			
-			return nodeValue;
-		}
+		#endregion
 	}
 }

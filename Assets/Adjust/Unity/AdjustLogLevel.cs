@@ -9,9 +9,10 @@
 		Error,
 		Assert
 	}
+
 	public static class AdjustLogLevelExtension
 	{
-		public static string lowercaseToString(this AdjustLogLevel AdjustLogLevel)
+		public static string lowercaseToString (this AdjustLogLevel AdjustLogLevel)
 		{
 			switch (AdjustLogLevel)
 			{
@@ -32,7 +33,7 @@
 			}
 		}
 
-		public static string uppercaseToString(this AdjustLogLevel AdjustLogLevel)
+		public static string uppercaseToString (this AdjustLogLevel AdjustLogLevel)
 		{
 			switch (AdjustLogLevel)
 			{
@@ -52,7 +53,5 @@
 					return "unknown";
 			}
 		}
-
 	}
-
 }

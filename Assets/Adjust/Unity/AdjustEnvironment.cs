@@ -8,7 +8,7 @@
 
 	public static class AdjustEnvironmentExtension
 	{
-		public static string lowercaseToString(this AdjustEnvironment adjustEnvironment)
+		public static string lowercaseToString (this AdjustEnvironment adjustEnvironment)
 		{
 			switch (adjustEnvironment)
 			{

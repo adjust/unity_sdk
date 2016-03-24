@@ -5,6 +5,7 @@ namespace com.adjust.sdk
 {
 	public class AdjustEvent
 	{
+		#region Fields
 		internal double? revenue;
 
 		internal string currency;
@@ -18,38 +19,43 @@ namespace com.adjust.sdk
 		internal string transactionId;
 
 		internal bool isReceiptSet;
+		#endregion
 
-		public AdjustEvent(string eventToken)
+		#region Constructors
+		public AdjustEvent (string eventToken)
 		{
 			this.eventToken = eventToken;
-
 			this.isReceiptSet = false;
 		}
+		#endregion
 
-		public void setRevenue(double amount, string currency)
+		#region Public methods
+		public void setRevenue (double amount, string currency)
 		{
 			this.revenue = amount;
 			this.currency = currency;
 		}
 
-		public void addCallbackParameter(string key, string value)
+		public void addCallbackParameter (string key, string value)
 		{
-			if (callbackList == null) {
-				callbackList = new List<string>();
+			if (callbackList == null)
+			{
+				callbackList = new List<string> ();
 			}
 
-			callbackList.Add(key);
-			callbackList.Add(value);
+			callbackList.Add (key);
+			callbackList.Add (value);
 		}
 
-		public void addPartnerParameter(string key, string value)
+		public void addPartnerParameter (string key, string value)
 		{
-			if (partnerList == null) {
-				partnerList = new List<string>();
+			if (partnerList == null)
+			{
+				partnerList = new List<string> ();
 			}
 
-			partnerList.Add(key);
-			partnerList.Add(value);
+			partnerList.Add (key);
+			partnerList.Add (value);
 		}
 
 		// iOS specific methods
@@ -58,11 +64,12 @@ namespace com.adjust.sdk
 			this.transactionId = transactionId;
 		}
 
-		public void setReceipt(string receipt, string transactionId)
+		public void setReceipt (string receipt, string transactionId)
 		{
 			this.receipt = receipt;
 			this.transactionId = transactionId;
 			this.isReceiptSet = true;
 		}
+		#endregion
 	}
 }
