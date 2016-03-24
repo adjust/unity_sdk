@@ -1,46 +1,46 @@
 ### Version 4.1.3 (12th February 2016)
 ### Added
-- `Bitcode` support for iOS framework.
-- `getIdfa` method for getting `IDFA` on iOS device.
-- `getGoogleAdId` method for getting Google `Play Services Ad Id` on Android device.
+- Added `Bitcode` support for iOS framework.
+- Added `getIdfa` method for getting `IDFA` on iOS device.
+- Added `getGoogleAdId` method for getting Google `Play Services Ad Id` on Android device.
 
 #### Changed
-- Native iOS SDK updated to version **4.5.4**.
-- Native Android SDK updated to version **4.2.3**.
+- Updated Native iOS SDK to version **4.5.4**.
+- Updated Native Android SDK to version **4.2.3**.
 
 ---
 
 ### Version 4.1.2 (20th January 2016)
 ### Added
-- Support for iOS iAd v3.
+- Added support for iOS iAd v3.
 
 #### Changed
-- MAC MD5 tracking feature for iOS platform is now completely removed.
-- Native iOS SDK updated to version **4.5.0**.
-- Native Android SDK updated to version **4.2.1**.
+- Removed MAC MD5 tracking feature for iOS platform completely.
+- Changed Native iOS SDK updated to version **4.5.0**.
+- Changed Native Android SDK updated to version **4.2.1**.
 
 ---
 
 ### Version 4.1.1 (23rd December 2015)
 ### Added
-- Changelog is now added to the repository.
+- Added Changelog to the repository.
 
 #### Changed
-- Adjust prefab `Start Manually` option is now **TRUE** by default (uncheck it if you want Adjust.prefab to be loaded automatically with settings you set in Unity Editor).
-- Adjust prefab `Print Attribution` option is now **TRUE** by default.
+- Made Adjust prefab `Start Manually` option **TRUE** by default (uncheck it if you want Adjust.prefab to be loaded automatically with settings you set in Unity Editor).
+- Made Adjust prefab `Print Attribution` option **TRUE** by default.
 
 #### Fixed
-- If `Adjust.instance` is already initialized, re-trying to initialize it (if you have chosen to initialize SDK automatically) won't happen anymore in `Awake` method.
-- `WACK` doesn't fail anymore when validating app package in Visual Studio.
-- Users shouldn't face post build scripts execution issues anymore.
+- If `Adjust.instance` is already initialized, re-trying initialization (if you have chosen to initialize SDK automatically) will no longer happen in the `Awake` method.
+- `WACK` no longer fails when validating an app package in Visual Studio.
+- Users no longer face post build scripts execution issues.
 
 ---
 
 ### Version 4.1.0 (19th November 2015)
 #### Added
-- Windows 8.1 target.
-- Windows Phone 8.1 target.
-- Native Windows SDK version **4.0.2**.
+- Added Windows 8.1 target.
+- Added Windows Phone 8.1 target.
+- Added Native Windows SDK version **4.0.2**.
 
 ---
 
@@ -49,58 +49,58 @@
 - Handling `OnApplicationPause` not being called by Unity 5.x.x on scene load.
 
 #### Changed
-- Native iOS SDK updated to version **4.4.1**.
-- Native Android SDK updated to version **4.1.3**.
+- Updated Native iOS SDK to version **4.4.1**.
+- Updated Native Android SDK to version **4.1.3**.
 
 ---
 
 ### Version 4.0.3 (27th August 2015)
 #### Added
-- `.py` extension to scripts for better handling on different operating systems.
-- `macMd5TrackingEnabled` property to AdjustConfig for iOS.
-- `processName` property to AdjustConfig for Android.
+- Added `.py` extension to scripts for better handling on different operating systems.
+- Added `macMd5TrackingEnabled` property to AdjustConfig for iOS.
+- Added `processName` property to AdjustConfig for Android.
 - Exposing Android native `setReferrer` method.
 - Exposing iOS native `setDeviceToken` method.
 - Exposing setReceipt and `setTransactionId` methods to AdjustEvent for iOS receipt validation.
 
 #### Changed
-- Native iOS SDK updated to version **4.2.8**.
+- Updated Native iOS SDK to version **4.2.8**.
 
 ---
 
 ### Version 4.0.2 (3rd August 2015)
 #### Addded
-- `startAutomatically` field in AdjustConfig for Android platform.
+- Added `startAutomatically` field in AdjustConfig for Android platform.
 
 #### Changed
-- Updating the docs.
-- Disabling user to set SDK prefix.
-- Removing `-all_load` flag from XCode other linker flags, adding `-ObjC` instead.
-- Native iOS SDK updated to version **4.2.7**.
-- Native Android SDK updated to version **4.1.1**.
+- Updated documentation.
+- Disabled user to set SDK prefix.
+- Removed `-all_load` flag from XCode other linker flags, added `-ObjC` instead.
+- Updated Native iOS SDK to version **4.2.7**.
+- Updated Native Android SDK to version **4.1.1**.
 
 ---
 
 ### Version 4.0.1 (30th June 2015)
 #### Fixed
-- Boolean handling in JNI.
+- Fixed Boolean handling in JNI.
 
 ---
 
 ### Version 4.0.0 (9th June 2015)
 #### Added
-- Native Android and iOS SDK functionalities from version 4.
+- Added Native Android and iOS SDK functionalities from version 4.
 
 #### Changed
-- Native iOS SDK updated to version **4.2.4**.
-- Native Android SDK updated to version **4.0.6**.
+- Updated Native iOS SDK to version **4.2.4**.
+- Updated Native Android SDK to version **4.0.6**.
 - Windows target not supported for now.
 
 ---
 
 ### Version 3.4.4 (8th January 2015)
 #### Added
-- Exception for Unity editor.
+- Added exception for Unity editor.
 
 #### Fixed
 - Prevent SDK relaunch.
@@ -109,38 +109,38 @@
 
 ### Version 3.4.3 (22th December 2014)
 #### Added
-- Android SDK target changed to 21, to be compatible with Unity3d version 3.6.
+- Changed Android SDK target to 21 for compatibility with Unity3d version 3.6.
 
 #### Changed
-- Native Android SDK updated to version **3.6.2**.
+- Updated Native Android SDK to version **3.6.2**.
 
 ---
 
 ### Version 3.4.2 (14th October 2014)
 #### Changed
-- Native iOS SDK updated to version **3.4.0**.
-- Native Android SDK updated to version **3.6.1**.
+- Updated Native iOS SDK to version **3.4.0**.
+- Updated Native Android SDK to version **3.6.1**.
 
 #### Fixed
-- Postbuild scripts.
+- Fixed postbuild scripts.
 
 ---
 
 ### Version 3.4.1 (13th October 2014)
 #### Added
-- Support for `PostprocessBuildPlayer_PlayGames` script.
+- Added support for `PostprocessBuildPlayer_PlayGames` script.
 
 #### Changed
-- Native Windows SDK updated to version **3.5.0**.
+- Updated Native Windows SDK to version **3.5.0**.
 
 ---
 
 ### Version 3.4.0 (28th July 2014)
 #### Added
-- Native Android SDK now uses `Google Play Advertising Id` as default device identifier.
+- Changed default device identifier of the Native Android SDK to `Google Play Advertising Id`.
 
 #### Changed
-- Native Android SDK updated to version **3.5.0**.
+- Updated Native Android SDK to version **3.5.0**.
 
 ---
 
@@ -149,29 +149,29 @@
 - Parsing new response data fields.
 
 #### Changed
-- Renaming Util and Environment to avoid name conflicts.
-- Native iOS SDK updated to version **3.3.4**.
-- Native Android SDK updated to version **3.3.4**.
-- Native Windows SDK updated to version **3.3.1**.
+- Renamed Util and Environment to avoid name conflicts.
+- Updated Native iOS SDK to version **3.3.4**.
+- Updated Native Android SDK to version **3.3.4**.
+- Updated Native Windows SDK to version **3.3.1**.
 
 ---
 
 ### Version 3.2.3 (18th June 2014)
 #### Changed
-- Native iOS SDK updated to version **3.3.3**.
+- Updated Native iOS SDK to version **3.3.3**.
 
 ---
 
 ### Version 3.2.2 (20th May 2014)
 #### Changed
-- Native iOS SDK updated to version **3.3.1**.
+- Updated Native iOS SDK to version **3.3.1**.
 
 ---
 
 ### Version 3.2.1 (14th May 2014)
 #### Added
-- Target for Windows Phone 8.
-- Target for Windows Store Apps.
+- Added target for Windows Phone 8.
+- Added target for Windows Store Apps.
 
 ---
 
@@ -187,14 +187,14 @@
 
 ### Version 3.0.1 (4th April 2014)
 #### Added
-- Build scripts for iOS and Android.
+- Added build scripts for iOS and Android.
 
 ---
 
 ### Version 3.0.0 (27th March 2014)
 #### Added
-- Native Android and iOS SDK functionalities from version 3.
-- In-App source access.
+- Added Native Android and iOS SDK functionalities from version 3.
+- Added In-App source access.
 
 #### Changed
 - Code refactoring.
@@ -203,8 +203,8 @@
 
 ### Version 2.1.1 (5th February 2014)
 #### Changed
-- Native iOS SDK updated to version **2.2.0**.
-- Native Android SDK updated to version **2.1.6**.
+- Updated Native iOS SDK to version **2.2.0**.
+- Updated Native Android SDK to version **2.1.6**.
 
 ---
 
