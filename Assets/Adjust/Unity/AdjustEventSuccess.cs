@@ -38,6 +38,11 @@ namespace com.adjust.sdk
             
             var jsonResponseNode = jsonNode [AdjustUtils.KeyJsonResponse];
 
+            if (jsonResponseNode == null)
+            {
+                return;
+            }
+
             if (jsonResponseNode.AsObject == null)
             {
                 return;

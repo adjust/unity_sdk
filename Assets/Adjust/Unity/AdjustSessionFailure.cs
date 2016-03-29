@@ -35,7 +35,12 @@ namespace com.adjust.sdk
             WillRetry = Convert.ToBoolean (AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyWillRetry));
             
             var jsonResponseNode = jsonNode [AdjustUtils.KeyJsonResponse];
-            
+
+            if (jsonResponseNode == null)
+            {
+                return;
+            }
+
             if (jsonResponseNode.AsObject == null)
             {
                 return;
