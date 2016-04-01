@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using SimpleJSON;
-
 namespace com.adjust.sdk
 {
 	public class AdjustAttribution

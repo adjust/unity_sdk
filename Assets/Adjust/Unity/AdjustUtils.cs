@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using SimpleJSON;
 using UnityEngine;
 
 namespace com.adjust.sdk
