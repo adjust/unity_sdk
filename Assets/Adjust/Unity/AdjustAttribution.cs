@@ -29,13 +29,13 @@ namespace com.adjust.sdk
 				return;
 			}
 
-			trackerName = AdjustUtils.GetJsonString (jsonNode, "trackerName");
-			trackerToken = AdjustUtils.GetJsonString (jsonNode, "trackerToken");
-			network = AdjustUtils.GetJsonString (jsonNode, "network");
-			campaign = AdjustUtils.GetJsonString (jsonNode, "campaign");
-			adgroup = AdjustUtils.GetJsonString (jsonNode, "adgroup");
-			creative = AdjustUtils.GetJsonString (jsonNode, "creative");
-			clickLabel = AdjustUtils.GetJsonString (jsonNode, "clickLabel");
+			trackerName = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyTrackerName);
+			trackerToken = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyTrackerToken);
+			network = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyNetwork);
+			campaign = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyCampaign);
+			adgroup = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyAdgroup);
+			creative = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyCreative);
+			clickLabel = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyClickLabel);
 		}
 
 		public AdjustAttribution (Dictionary<string, string> dicAttributionData)
@@ -45,13 +45,13 @@ namespace com.adjust.sdk
 				return;
 			}
 
-			trackerName = TryGetValue (dicAttributionData, "trackerName");
-			trackerToken = TryGetValue (dicAttributionData, "trackerToken");
-			network = TryGetValue (dicAttributionData, "network");
-			campaign = TryGetValue (dicAttributionData, "campaign");
-			adgroup = TryGetValue (dicAttributionData, "adgroup");
-			creative = TryGetValue (dicAttributionData, "creative");
-			clickLabel = TryGetValue (dicAttributionData, "clickLabel");
+			trackerName = TryGetValue (dicAttributionData, AdjustUtils.KeyTrackerName);
+			trackerToken = TryGetValue (dicAttributionData, AdjustUtils.KeyTrackerToken);
+			network = TryGetValue (dicAttributionData, AdjustUtils.KeyNetwork);
+			campaign = TryGetValue (dicAttributionData, AdjustUtils.KeyCampaign);
+			adgroup = TryGetValue (dicAttributionData, AdjustUtils.KeyAdgroup);
+			creative = TryGetValue (dicAttributionData, AdjustUtils.KeyCreative);
+			clickLabel = TryGetValue (dicAttributionData, AdjustUtils.KeyClickLabel);
 		}
 		#endregion
 

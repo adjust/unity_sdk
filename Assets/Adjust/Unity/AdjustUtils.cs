@@ -10,9 +10,16 @@ namespace com.adjust.sdk
         #region Constants
         public static string KeyAdid = "adid";
 		public static string KeyMessage = "message";
+        public static string KeyNetwork = "network";
+        public static string KeyAdgroup = "adgroup";
+        public static string KeyCampaign = "campaign";
+        public static string KeyCreative = "creative";
         public static string KeyWillRetry = "willRetry";
         public static string KeyTimestamp = "timestamp";
         public static string KeyEventToken = "eventToken";
+        public static string KeyClickLabel = "clickLabel";
+        public static string KeyTrackerName = "trackerName";
+        public static string KeyTrackerToken = "trackerToken";
         public static string KeyJsonResponse = "jsonResponse";
         #endregion
 

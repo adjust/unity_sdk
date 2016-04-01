@@ -36,13 +36,13 @@ namespace com.adjust.sdk
 			{
 				AdjustAttribution adjustAttribution = new AdjustAttribution ();
 
-				adjustAttribution.trackerName = attribution.Get<string> ("trackerName");
-				adjustAttribution.trackerToken = attribution.Get<string> ("trackerToken");
-				adjustAttribution.network = attribution.Get<string> ("network");
-				adjustAttribution.campaign = attribution.Get<string> ("campaign");
-				adjustAttribution.adgroup = attribution.Get<string> ("adgroup");
-				adjustAttribution.creative = attribution.Get<string> ("creative");
-				adjustAttribution.clickLabel = attribution.Get<string> ("clickLabel");
+				adjustAttribution.trackerName = attribution.Get<string> (AdjustUtils.KeyTrackerName);
+				adjustAttribution.trackerToken = attribution.Get<string> (AdjustUtils.KeyTrackerToken);
+				adjustAttribution.network = attribution.Get<string> (AdjustUtils.KeyNetwork);
+				adjustAttribution.campaign = attribution.Get<string> (AdjustUtils.KeyCampaign);
+				adjustAttribution.adgroup = attribution.Get<string> (AdjustUtils.KeyAdgroup);
+				adjustAttribution.creative = attribution.Get<string> (AdjustUtils.KeyCreative);
+				adjustAttribution.clickLabel = attribution.Get<string> (AdjustUtils.KeyClickLabel);
 
 				if (callback != null)
 				{
