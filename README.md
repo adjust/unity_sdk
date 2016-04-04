@@ -50,9 +50,6 @@ adjustConfig.setLogDelegate(msg => Debug.Log(msg));
 Adjust.start (adjustConfig);
 ```
 
-You can increase or decrease the amount of logs you see in tests by setting the
-second argument of the `SetupLogging` method, `logLevel`, with one of the following values:
-
 Depending on whether or not you build your app for testing or for production
 you must change `Environment` with one of these values:
 
@@ -254,7 +251,7 @@ Adjust.trackEvent (adjustEvent);
 
 You can read more about special partners and these integrations in our [guide to special partners.][special-partners]
 
-### 9. Receive attribution change callback
+### 10. Receive attribution change callback
 
 You can register a callback to be notified of tracker attribution changes. Due to the different sources considered for attribution, this information can not by provided synchronously. Follow these steps to implement the optional callback in your application:
 
@@ -305,7 +302,7 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
-### 10. Disable tracking
+### 11. Disable tracking
 
 You can disable the adjust SDK from tracking by invoking the method `setEnabled`
 with the enabled parameter as `false`. This setting is remembered between sessions, but it can only
@@ -318,7 +315,7 @@ Adjust.setEnabled(false);
 You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible
 to activate the adjust SDK by invoking `setEnabled` with the `enabled` parameter set to `true`.
 
-### 11. Offline mode
+### 12. Offline mode
 
 You can put the adjust SDK in offline mode to suspend transmission to our servers, 
 while retaining tracked data to be sent later. While in offline mode, all information is saved
@@ -338,7 +335,7 @@ Unlike disabling tracking, this setting is *not remembered*
 bettween sessions. This means that the SDK is in online mode whenever it is started,
 even if the app was terminated in offline mode.
 
-### 12. Device IDS
+### 13. Device IDS
 
 Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate reporting. 
 
