@@ -11,8 +11,9 @@ using UnityEditor.Callbacks;
 public class AdjustEditor : MonoBehaviour
 {
 	static bool isEnabled = true;
+		#if UNITY_IOS
 	static string iOSBuildPath = "";
-
+		#endif
 	[PostProcessBuild]
 	public static void OnPostprocessBuild (BuildTarget target, string pathToBuiltProject)
 	{
