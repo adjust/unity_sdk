@@ -29,7 +29,11 @@ public class ExampleGUI : MonoBehaviour
             {
                 AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken}", AdjustEnvironment.Sandbox);
                 adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
-                adjustConfig.setAttributionChangedDelegate (this.AttributionChangedCallback);
+                adjustConfig.setEventSuccessDelegate (EventSuccessCallback);
+				adjustConfig.setEventFailureDelegate (EventFailureCallback);
+				adjustConfig.setSessionSuccessDelegate (SessionSuccessCallback);
+				adjustConfig.setSessionFailureDelegate (SessionFailureCallback);
+				adjustConfig.setAttributionChangedDelegate (AttributionChangedCallback);
                 
                 Adjust.start (adjustConfig);
                 isEnabled = true;
