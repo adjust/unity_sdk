@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace com.adjust.sdk
 {
-	public class AdjustUtils
-	{
+    public class AdjustUtils
+    {
         #region Constants
         public static string KeyAdid = "adid";
-		public static string KeyMessage = "message";
+        public static string KeyMessage = "message";
         public static string KeyNetwork = "network";
         public static string KeyAdgroup = "adgroup";
         public static string KeyCampaign = "campaign";
@@ -142,5 +142,5 @@ namespace com.adjust.sdk
             }
         }
         #endregion
-	}
+    }
 }

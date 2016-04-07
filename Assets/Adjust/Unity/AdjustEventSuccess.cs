@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace com.adjust.sdk
 {
-	public class AdjustEventSuccess
-	{
+    public class AdjustEventSuccess
+    {
         #region Properties
         public string Adid { get; set; }
-		public string Message { get; set; }
+        public string Message { get; set; }
         public string Timestamp { get; set; }
         public string EventToken { get; set; }
 
@@ -71,5 +71,5 @@ namespace com.adjust.sdk
             AdjustUtils.PrintJsonResponse (JsonResponse);
         }
         #endregion
-	}
+    }
 }

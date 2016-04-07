@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace com.adjust.sdk
 {
-	public class AdjustSessionSuccess
-	{
+    public class AdjustSessionSuccess
+    {
         #region Properties
         public string Adid { get; set; }
-		public string Message { get; set; }
+        public string Message { get; set; }
         public string Timestamp { get; set; }
 
         public Dictionary<string, object> JsonResponse { get; set; }
@@ -67,5 +67,5 @@ namespace com.adjust.sdk
             AdjustUtils.PrintJsonResponse (JsonResponse);
         }
         #endregion
-	}
+    }
 }

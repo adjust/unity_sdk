@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace com.adjust.sdk
 {
-	public class AdjustSessionFailure
-	{
+    public class AdjustSessionFailure
+    {
         #region Properties
         public string Adid { get; set; }
-		public string Message { get; set; }
+        public string Message { get; set; }
         public string Timestamp { get; set; }
 
         public bool WillRetry { get; set; }
@@ -69,5 +69,5 @@ namespace com.adjust.sdk
             AdjustUtils.PrintJsonResponse (JsonResponse);
         }
         #endregion
-	}
+    }
 }

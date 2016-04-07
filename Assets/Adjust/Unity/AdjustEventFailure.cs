@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace com.adjust.sdk
 {
-	public class AdjustEventFailure
-	{
+    public class AdjustEventFailure
+    {
         #region Properties
         public string Adid { get; set; }
-		public string Message { get; set; }
+        public string Message { get; set; }
         public string Timestamp { get; set; }
         public string EventToken { get; set; }
 
@@ -71,5 +71,5 @@ namespace com.adjust.sdk
             AdjustUtils.PrintJsonResponse (JsonResponse);
         }
         #endregion
-	}
+    }
 }
