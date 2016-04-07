@@ -80,25 +80,27 @@ namespace com.adjust.sdk
 
         public static void PrintJsonResponse (Dictionary<string, object> dictionary)
         {
-			if (dictionary == null) {
-				return;
-			}
+            if (dictionary == null)
+            {
+                return;
+            }
 
             foreach (KeyValuePair<string, object> pair in dictionary)
             {
-				String valueString = pair.Value as string;
+                String valueString = pair.Value as string;
 
-				if (valueString != null) {
-					Debug.Log ("Key = " + pair.Key);
-					Debug.Log ("Value = " + valueString);
-					continue;
-				}
+                if (valueString != null)
+                {
+                    Debug.Log ("Key = " + pair.Key);
+                    Debug.Log ("Value = " + valueString);
 
-				Dictionary<string, object> valueDictionary = pair.Value as Dictionary<string, object>;
+                    continue;
+                }
 
-				PrintJsonResponse (valueDictionary);
+                Dictionary<string, object> valueDictionary = pair.Value as Dictionary<string, object>;
+                PrintJsonResponse (valueDictionary);
 
-				/*
+                /*
                 Type t = pair.Value.GetType ();
                 bool isDict = t.IsGenericType && t.GetGenericTypeDefinition () == typeof(Dictionary<,>);
 
@@ -117,44 +119,49 @@ namespace com.adjust.sdk
 
         public static String GetJsonString (JSONNode node, string key)
         {
-			if (node == null)
-			{
-				return null;
-			}
-
-			// access value object and cast it to JSONData
-			var nodeValue = node [key] as JSONData;
-
-			if (nodeValue == null)
+            if (node == null)
             {
                 return null;
             }
 
-			return nodeValue.Value;
+            // access value object and cast it to JSONData
+            var nodeValue = node [key] as JSONData;
+
+            if (nodeValue == null)
+            {
+                return null;
+            }
+
+            return nodeValue.Value;
         }
 
         public static void WriteJsonResponseDictionary (JSONClass jsonObject, Dictionary<string, object> output)
         {
             foreach (KeyValuePair<string, JSONNode> pair in jsonObject)
             {
-				// try to cast value as a complex object
-				var subNode = pair.Value.AsObject;
-				var key = pair.Key;
+                // Try to cast value as a complex object.
+                var subNode = pair.Value.AsObject;
+                var key = pair.Key;
 
-				// value is not a complex object
-				if (subNode == null) {
-					var value = pair.Value.Value;
-					output.Add (key, value);
-					continue;
-				}
+                // Value is not a complex object.
+                if (subNode == null)
+                {
+                    var value = pair.Value.Value;
+                    output.Add (key, value);
 
-				// create new dictionary for complex type
-				var newSubDictionary = new Dictionary<string, object> ();
-				// save it in the current dictionary
-				output.Add (key, newSubDictionary);
-				// recursive call to fill new dictionary
-				WriteJsonResponseDictionary(subNode, newSubDictionary);
-				/*
+                    continue;
+                }
+
+                // Create new dictionary for complex type.
+                var newSubDictionary = new Dictionary<string, object> ();
+
+                // Save it in the current dictionary.
+                output.Add (key, newSubDictionary);
+                
+                // Recursive call to fill new dictionary.
+                WriteJsonResponseDictionary (subNode, newSubDictionary);
+                
+                /*
                 if (pair.Value.AsObject == null)
                 {
                     output.Add (pair.Key, pair.Value);

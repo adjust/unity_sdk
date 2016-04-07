@@ -22,238 +22,6 @@ namespace com.adjust.sdk
         private SessionTrackingSucceededListener onSessionTrackingSucceededListener;
         #endregion
 
-        #region Proxy listener classes
-        private class AttributionChangeListener : AndroidJavaProxy
-        {
-            private Action<AdjustAttribution> callback;
-
-            public AttributionChangeListener (Action<AdjustAttribution> pCallback) : base ("com.adjust.sdk.OnAttributionChangedListener")
-            {
-                this.callback = pCallback;
-            }
-
-            public void onAttributionChanged (AndroidJavaObject attribution)
-            {
-                AdjustAttribution adjustAttribution = new AdjustAttribution ();
-
-                adjustAttribution.trackerName = attribution.Get<string> (AdjustUtils.KeyTrackerName);
-                adjustAttribution.trackerToken = attribution.Get<string> (AdjustUtils.KeyTrackerToken);
-                adjustAttribution.network = attribution.Get<string> (AdjustUtils.KeyNetwork);
-                adjustAttribution.campaign = attribution.Get<string> (AdjustUtils.KeyCampaign);
-                adjustAttribution.adgroup = attribution.Get<string> (AdjustUtils.KeyAdgroup);
-                adjustAttribution.creative = attribution.Get<string> (AdjustUtils.KeyCreative);
-                adjustAttribution.clickLabel = attribution.Get<string> (AdjustUtils.KeyClickLabel);
-
-                if (callback != null)
-                {
-                    callback (adjustAttribution);
-                }
-            }
-        }
-
-        private class EventTrackingSucceededListener : AndroidJavaProxy
-        {
-            private Action<AdjustEventSuccess> callback;
-
-            public EventTrackingSucceededListener (Action<AdjustEventSuccess> pCallback) : base ("com.adjust.sdk.OnEventTrackingSucceededListener")
-            {
-                this.callback = pCallback;
-            }
-
-            public void onFinishedEventTrackingSucceeded (AndroidJavaObject eventSuccessData)
-            {
-                if (eventSuccessData == null)
-                {
-                    return;
-                }
-
-                AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess ();
-
-                adjustEventSuccess.Adid = eventSuccessData.Get<string> (AdjustUtils.KeyAdid);
-                adjustEventSuccess.Message = eventSuccessData.Get<string> (AdjustUtils.KeyMessage);
-                adjustEventSuccess.Timestamp = eventSuccessData.Get<string> (AdjustUtils.KeyTimestamp);
-                adjustEventSuccess.EventToken = eventSuccessData.Get<string> (AdjustUtils.KeyEventToken);
-
-                try 
-                {
-                    AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
-
-                    adjustEventSuccess.BuildJsonResponseFromString (jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                }
-
-                if (callback != null)
-                {
-                    callback (adjustEventSuccess);
-                }
-            }
-        }
-
-        private class EventTrackingFailedListener : AndroidJavaProxy
-        {
-            private Action<AdjustEventFailure> callback;
-
-            public EventTrackingFailedListener (Action<AdjustEventFailure> pCallback) : base ("com.adjust.sdk.OnEventTrackingFailedListener")
-            {
-                this.callback = pCallback;
-            }
-
-            public void onFinishedEventTrackingFailed (AndroidJavaObject eventFailureData)
-            {
-                if (eventFailureData == null)
-                {
-                    return;
-                }
-
-                AdjustEventFailure adjustEventFailure = new AdjustEventFailure ();
-
-                adjustEventFailure.Adid = eventFailureData.Get<string> (AdjustUtils.KeyAdid);
-                adjustEventFailure.Message = eventFailureData.Get<string> (AdjustUtils.KeyMessage);
-                adjustEventFailure.WillRetry = eventFailureData.Get<bool> (AdjustUtils.KeyWillRetry);
-                adjustEventFailure.Timestamp = eventFailureData.Get<string> (AdjustUtils.KeyTimestamp);
-                adjustEventFailure.EventToken = eventFailureData.Get<string> (AdjustUtils.KeyEventToken);
-
-                try
-                {
-                    AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
-
-                    adjustEventFailure.BuildJsonResponseFromString (jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                }
-                
-                if (callback != null)
-                {
-                    callback (adjustEventFailure);
-                }
-            }
-        }
-
-        private class SessionTrackingSucceededListener : AndroidJavaProxy
-        {
-            private Action<AdjustSessionSuccess> callback;
-
-            public SessionTrackingSucceededListener (Action<AdjustSessionSuccess> pCallback) : base ("com.adjust.sdk.OnSessionTrackingSucceededListener")
-            {
-                this.callback = pCallback;
-            }
-
-            public void onFinishedSessionTrackingSucceeded (AndroidJavaObject sessionSuccessData)
-            {
-                if (sessionSuccessData == null)
-                {
-                    return;
-                }
-
-                AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess ();
-
-                adjustSessionSuccess.Adid = sessionSuccessData.Get<string> (AdjustUtils.KeyAdid);
-                adjustSessionSuccess.Message = sessionSuccessData.Get<string> (AdjustUtils.KeyMessage);
-                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string> (AdjustUtils.KeyTimestamp);
-
-                try 
-                {
-                    AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
-
-                    adjustSessionSuccess.BuildJsonResponseFromString (jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                }
-
-                if (callback != null)
-                {
-                    callback (adjustSessionSuccess);
-                }
-            }
-        }
-
-        private class SessionTrackingFailedListener : AndroidJavaProxy
-        {
-            private Action<AdjustSessionFailure> callback;
-
-            public SessionTrackingFailedListener (Action<AdjustSessionFailure> pCallback) : base ("com.adjust.sdk.OnSessionTrackingFailedListener")
-            {
-                this.callback = pCallback;
-            }
-
-            public void onFinishedSessionTrackingFailed (AndroidJavaObject sessionFailureData)
-            {
-                if (sessionFailureData == null)
-                {
-                    return;
-                }
-
-                AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure ();
-
-                adjustSessionFailure.Adid = sessionFailureData.Get<string> (AdjustUtils.KeyAdid);
-                adjustSessionFailure.Message = sessionFailureData.Get<string> (AdjustUtils.KeyMessage);
-                adjustSessionFailure.WillRetry = sessionFailureData.Get<bool> (AdjustUtils.KeyWillRetry);
-                adjustSessionFailure.Timestamp = sessionFailureData.Get<string> (AdjustUtils.KeyTimestamp);
-
-                try
-                {
-                    AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
-
-                    adjustSessionFailure.BuildJsonResponseFromString (jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                }
-                
-                if (callback != null)
-                {
-                    callback (adjustSessionFailure);
-                }
-            }
-        }
-
-        private class DeviceIdsReadListener : AndroidJavaProxy
-        {
-            private Action<string> onPlayAdIdReadCallback;
-
-            public DeviceIdsReadListener (Action<string> pCallback) : base ("com.adjust.sdk.OnDeviceIdsRead")
-            {
-                this.onPlayAdIdReadCallback = pCallback;
-            }
-
-            public void onGoogleAdIdRead (string playAdId)
-            {
-                if (onPlayAdIdReadCallback == null)
-                {
-                    return;
-                }
-
-                this.onPlayAdIdReadCallback (playAdId);
-            }
-
-            // null object.
-            public void onGoogleAdIdRead (AndroidJavaObject ajoAdId)
-            {
-                if (ajoAdId == null)
-                {
-                    string adId = null;
-                    this.onGoogleAdIdRead (adId);
-
-                    return;
-                }
-
-                this.onGoogleAdIdRead (ajoAdId.Call<string> ("toString"));
-            }
-        }
-        #endregion
-
         #region Constructors
         public AdjustAndroid ()
         {
@@ -275,7 +43,7 @@ namespace com.adjust.sdk
             AndroidJavaObject ajoAdjustConfig = new AndroidJavaObject ("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
 
             // Check log level.
-            if (adjustConfig.logLevel.HasValue)
+            if (adjustConfig.logLevel != null)
             {
                 AndroidJavaObject ajoLogLevel = new AndroidJavaClass ("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject> (adjustConfig.logLevel.Value.uppercaseToString());
 
@@ -286,13 +54,10 @@ namespace com.adjust.sdk
             }
 
             // Check event buffering setting.
-            if (adjustConfig.eventBufferingEnabled.HasValue)
+            if (adjustConfig.eventBufferingEnabled != null)
             {
-                if (adjustConfig.eventBufferingEnabled != null)
-                {
-                    AndroidJavaObject ajoIsEnabled = new AndroidJavaObject ("java.lang.Boolean", adjustConfig.eventBufferingEnabled.Value);
-                    ajoAdjustConfig.Call ("setEventBufferingEnabled", ajoIsEnabled);
-                }
+                AndroidJavaObject ajoIsEnabled = new AndroidJavaObject ("java.lang.Boolean", adjustConfig.eventBufferingEnabled.Value);
+                ajoAdjustConfig.Call ("setEventBufferingEnabled", ajoIsEnabled);
             }
 
             // Check attribution changed delagate setting.
@@ -421,6 +186,248 @@ namespace com.adjust.sdk
         public string getIdfa ()
         {
             return null;
+        }
+        #endregion
+
+        #region Proxy listener classes
+        private class AttributionChangeListener : AndroidJavaProxy
+        {
+            private Action<AdjustAttribution> callback;
+
+            public AttributionChangeListener (Action<AdjustAttribution> pCallback) : base ("com.adjust.sdk.OnAttributionChangedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onAttributionChanged (AndroidJavaObject attribution)
+            {
+            	if (callback == null)
+                {
+                    return;
+                }
+
+                AdjustAttribution adjustAttribution = new AdjustAttribution ();
+
+                adjustAttribution.trackerName = attribution.Get<string> (AdjustUtils.KeyTrackerName);
+                adjustAttribution.trackerToken = attribution.Get<string> (AdjustUtils.KeyTrackerToken);
+                adjustAttribution.network = attribution.Get<string> (AdjustUtils.KeyNetwork);
+                adjustAttribution.campaign = attribution.Get<string> (AdjustUtils.KeyCampaign);
+                adjustAttribution.adgroup = attribution.Get<string> (AdjustUtils.KeyAdgroup);
+                adjustAttribution.creative = attribution.Get<string> (AdjustUtils.KeyCreative);
+                adjustAttribution.clickLabel = attribution.Get<string> (AdjustUtils.KeyClickLabel);
+
+                callback (adjustAttribution);
+            }
+        }
+
+        private class EventTrackingSucceededListener : AndroidJavaProxy
+        {
+            private Action<AdjustEventSuccess> callback;
+
+            public EventTrackingSucceededListener (Action<AdjustEventSuccess> pCallback) : base ("com.adjust.sdk.OnEventTrackingSucceededListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onFinishedEventTrackingSucceeded (AndroidJavaObject eventSuccessData)
+            {
+            	if (callback == null)
+                {
+                    return;
+                }
+
+                if (eventSuccessData == null)
+                {
+                    return;
+                }
+
+                AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess ();
+
+                adjustEventSuccess.Adid = eventSuccessData.Get<string> (AdjustUtils.KeyAdid);
+                adjustEventSuccess.Message = eventSuccessData.Get<string> (AdjustUtils.KeyMessage);
+                adjustEventSuccess.Timestamp = eventSuccessData.Get<string> (AdjustUtils.KeyTimestamp);
+                adjustEventSuccess.EventToken = eventSuccessData.Get<string> (AdjustUtils.KeyEventToken);
+
+                try 
+                {
+                    AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
+
+                    adjustEventSuccess.BuildJsonResponseFromString (jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                }
+
+                callback (adjustEventSuccess);
+            }
+        }
+
+        private class EventTrackingFailedListener : AndroidJavaProxy
+        {
+            private Action<AdjustEventFailure> callback;
+
+            public EventTrackingFailedListener (Action<AdjustEventFailure> pCallback) : base ("com.adjust.sdk.OnEventTrackingFailedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onFinishedEventTrackingFailed (AndroidJavaObject eventFailureData)
+            {
+            	if (callback == null)
+                {
+                    return;
+                }
+
+                if (eventFailureData == null)
+                {
+                    return;
+                }
+
+                AdjustEventFailure adjustEventFailure = new AdjustEventFailure ();
+
+                adjustEventFailure.Adid = eventFailureData.Get<string> (AdjustUtils.KeyAdid);
+                adjustEventFailure.Message = eventFailureData.Get<string> (AdjustUtils.KeyMessage);
+                adjustEventFailure.WillRetry = eventFailureData.Get<bool> (AdjustUtils.KeyWillRetry);
+                adjustEventFailure.Timestamp = eventFailureData.Get<string> (AdjustUtils.KeyTimestamp);
+                adjustEventFailure.EventToken = eventFailureData.Get<string> (AdjustUtils.KeyEventToken);
+
+                try
+                {
+                    AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
+
+                    adjustEventFailure.BuildJsonResponseFromString (jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                }
+                
+                callback (adjustEventFailure);
+            }
+        }
+
+        private class SessionTrackingSucceededListener : AndroidJavaProxy
+        {
+            private Action<AdjustSessionSuccess> callback;
+
+            public SessionTrackingSucceededListener (Action<AdjustSessionSuccess> pCallback) : base ("com.adjust.sdk.OnSessionTrackingSucceededListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onFinishedSessionTrackingSucceeded (AndroidJavaObject sessionSuccessData)
+            {
+            	if (callback == null)
+                {
+                    return;
+                }
+
+                if (sessionSuccessData == null)
+                {
+                    return;
+                }
+
+                AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess ();
+
+                adjustSessionSuccess.Adid = sessionSuccessData.Get<string> (AdjustUtils.KeyAdid);
+                adjustSessionSuccess.Message = sessionSuccessData.Get<string> (AdjustUtils.KeyMessage);
+                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string> (AdjustUtils.KeyTimestamp);
+
+                try 
+                {
+                    AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
+
+                    adjustSessionSuccess.BuildJsonResponseFromString (jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                }
+
+                callback (adjustSessionSuccess);
+            }
+        }
+
+        private class SessionTrackingFailedListener : AndroidJavaProxy
+        {
+            private Action<AdjustSessionFailure> callback;
+
+            public SessionTrackingFailedListener (Action<AdjustSessionFailure> pCallback) : base ("com.adjust.sdk.OnSessionTrackingFailedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onFinishedSessionTrackingFailed (AndroidJavaObject sessionFailureData)
+            {
+            	if (callback == null)
+                {
+                    return;
+                }
+
+                if (sessionFailureData == null)
+                {
+                    return;
+                }
+
+                AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure ();
+
+                adjustSessionFailure.Adid = sessionFailureData.Get<string> (AdjustUtils.KeyAdid);
+                adjustSessionFailure.Message = sessionFailureData.Get<string> (AdjustUtils.KeyMessage);
+                adjustSessionFailure.WillRetry = sessionFailureData.Get<bool> (AdjustUtils.KeyWillRetry);
+                adjustSessionFailure.Timestamp = sessionFailureData.Get<string> (AdjustUtils.KeyTimestamp);
+
+                try
+                {
+                    AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject> (AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string> ("toString");
+
+                    adjustSessionFailure.BuildJsonResponseFromString (jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                }
+
+                callback (adjustSessionFailure);
+            }
+        }
+
+        private class DeviceIdsReadListener : AndroidJavaProxy
+        {
+            private Action<string> onPlayAdIdReadCallback;
+
+            public DeviceIdsReadListener (Action<string> pCallback) : base ("com.adjust.sdk.OnDeviceIdsRead")
+            {
+                this.onPlayAdIdReadCallback = pCallback;
+            }
+
+            public void onGoogleAdIdRead (string playAdId)
+            {
+                if (onPlayAdIdReadCallback == null)
+                {
+                    return;
+                }
+
+                this.onPlayAdIdReadCallback (playAdId);
+            }
+
+            // null object.
+            public void onGoogleAdIdRead (AndroidJavaObject ajoAdId)
+            {
+                if (ajoAdId == null)
+                {
+                    string adId = null;
+                    this.onGoogleAdIdRead (adId);
+
+                    return;
+                }
+
+                this.onGoogleAdIdRead (ajoAdId.Call<string> ("toString"));
+            }
         }
         #endregion
     }
