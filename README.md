@@ -166,7 +166,7 @@ adjustEvent.setRevenue (0.01, "EUR");
 Adjust.trackEvent (adjustEvent);
 ```
 
-##### Receipt verification
+##### In-App Purchase verification
 
 If you want to use server side receipt verification in order to check validity of In-App Purchases
 made in your app, check out our `Unity3d purchase SDK` and read more about it in [here][unity-purchase-sdk].
