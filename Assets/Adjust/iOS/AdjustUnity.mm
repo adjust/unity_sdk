@@ -139,7 +139,7 @@ static id<AdjustDelegate> adjustUnityInstance = nil;
     }
 
     if (sessionFailureResponseData.jsonResponse != nil) {
-        [sessionFailureDataDict setObject:sessionFailureResponseData.jsonResponse forKey:@"json"];
+        [sessionFailureDataDict setObject:sessionFailureResponseData.jsonResponse forKey:@"jsonResponse"];
     }
 
     [sessionFailureDataDict setObject:(sessionFailureResponseData.willRetry == YES ? @"true" : @"false")
