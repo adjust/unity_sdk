@@ -194,8 +194,7 @@ public class ExampleGUI : MonoBehaviour
 
         if (eventSuccessData.JsonResponse != null)
         {
-            Debug.Log ("JsonResponse: ");
-            eventSuccessData.PrintJsonResponse ();
+            Debug.Log ("JsonResponse: " + eventSuccessData.GetJsonResponse ());
         }
     }
 
@@ -227,8 +226,7 @@ public class ExampleGUI : MonoBehaviour
 
         if (eventFailureData.JsonResponse != null)
         {
-            Debug.Log ("JsonResponse: ");
-            eventFailureData.PrintJsonResponse ();
+            Debug.Log ("JsonResponse: " + eventFailureData.GetJsonResponse ());
         }
     }
 
@@ -253,8 +251,7 @@ public class ExampleGUI : MonoBehaviour
 
         if (sessionSuccessData.JsonResponse != null)
         {
-            Debug.Log ("JsonResponse: ");
-            sessionSuccessData.PrintJsonResponse ();
+            Debug.Log ("JsonResponse: " + sessionSuccessData.GetJsonResponse ());
         }
     }
 
@@ -281,8 +278,7 @@ public class ExampleGUI : MonoBehaviour
 
         if (sessionFailureData.JsonResponse != null)
         {
-            Debug.Log ("JsonResponse: ");
-            sessionFailureData.PrintJsonResponse ();
+            Debug.Log ("JsonResponse: " + sessionFailureData.GetJsonResponse ());
         }
     }
 }

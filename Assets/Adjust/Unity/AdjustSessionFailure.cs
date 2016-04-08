@@ -64,9 +64,9 @@ namespace com.adjust.sdk
             AdjustUtils.WriteJsonResponseDictionary (jsonNode.AsObject, JsonResponse);
         }
         
-        public void PrintJsonResponse ()
+        public string GetJsonResponse ()
         {
-            AdjustUtils.PrintJsonResponse (JsonResponse);
+            return AdjustUtils.GetJsonResponseCompact (JsonResponse);
         }
         #endregion
     }

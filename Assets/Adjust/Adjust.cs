@@ -379,8 +379,7 @@ namespace com.adjust.sdk
 
             if (eventSuccessData.JsonResponse != null)
             {
-                Debug.Log ("JsonResponse: ");
-                eventSuccessData.PrintJsonResponse ();
+                Debug.Log ("JsonResponse: " + eventSuccessData.GetJsonResponse ());
             }
         }
 
@@ -413,8 +412,7 @@ namespace com.adjust.sdk
 
             if (eventFailureData.JsonResponse != null)
             {
-                Debug.Log ("JsonResponse: ");
-                eventFailureData.PrintJsonResponse ();
+                Debug.Log ("JsonResponse: " + eventFailureData.GetJsonResponse ());
             }
         }
 
@@ -440,8 +438,7 @@ namespace com.adjust.sdk
 
             if (sessionSuccessData.JsonResponse != null)
             {
-                Debug.Log ("JsonResponse: ");
-                sessionSuccessData.PrintJsonResponse ();
+                Debug.Log ("JsonResponse: " + sessionSuccessData.GetJsonResponse ());
             }
         }
 
@@ -469,8 +466,7 @@ namespace com.adjust.sdk
 
             if (sessionFailureData.JsonResponse != null)
             {
-                Debug.Log ("JsonResponse: ");
-                sessionFailureData.PrintJsonResponse ();
+                Debug.Log ("JsonResponse: " + sessionFailureData.GetJsonResponse ());
             }
         }
         #endregion

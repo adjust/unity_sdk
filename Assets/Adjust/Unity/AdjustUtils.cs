@@ -78,43 +78,46 @@ namespace com.adjust.sdk
             return jsonArray.ToString ();
         }
 
-        public static void PrintJsonResponse (Dictionary<string, object> dictionary)
+        public static string GetJsonResponseCompact (Dictionary<string, object> dictionary)
         {
+            string logJsonResponse = "";
+
             if (dictionary == null)
             {
-                return;
+                return logJsonResponse;
             }
-
-            foreach (KeyValuePair<string, object> pair in dictionary)
+            else
             {
-                String valueString = pair.Value as string;
+                int preLoopCounter = 0;
+                logJsonResponse += "{";
 
-                if (valueString != null)
+                foreach (KeyValuePair<string, object> pair in dictionary)
                 {
-                    Debug.Log ("Key = " + pair.Key);
-                    Debug.Log ("Value = " + valueString);
+                    String valueString = pair.Value as string;
 
-                    continue;
+                    if (valueString != null)
+                    {
+                        logJsonResponse += "\"" + pair.Key + "\"" + ":" + "\"" + valueString + "\"";
+
+                        if (++preLoopCounter < dictionary.Count)
+                        {
+                            logJsonResponse += ",";
+                        }
+
+                        continue;
+                    }
+
+                    Dictionary<string, object> valueDictionary = pair.Value as Dictionary<string, object>;
+
+                    preLoopCounter += 1;
+                    logJsonResponse += "\"" + pair.Key + "\"" + ":";
+                    logJsonResponse += GetJsonResponseCompact (valueDictionary);
                 }
 
-                Dictionary<string, object> valueDictionary = pair.Value as Dictionary<string, object>;
-                PrintJsonResponse (valueDictionary);
-
-                /*
-                Type t = pair.Value.GetType ();
-                bool isDict = t.IsGenericType && t.GetGenericTypeDefinition () == typeof(Dictionary<,>);
-
-                if (isDict == true)
-                {
-                    PrintJsonResponse ((Dictionary<string, object>)pair.Value);
-                }
-                else
-                {
-                    Debug.Log ("Key = " + pair.Key);
-                    Debug.Log ("Value = " + pair.Value);
-                }
-                */
+                logJsonResponse += "}";
             }
+
+            return logJsonResponse;
         }
 
         public static String GetJsonString (JSONNode node, string key)
@@ -124,7 +127,7 @@ namespace com.adjust.sdk
                 return null;
             }
 
-            // access value object and cast it to JSONData
+            // Access value object and cast it to JSONData.
             var nodeValue = node [key] as JSONData;
 
             if (nodeValue == null)
@@ -160,18 +163,6 @@ namespace com.adjust.sdk
                 
                 // Recursive call to fill new dictionary.
                 WriteJsonResponseDictionary (subNode, newSubDictionary);
-                
-                /*
-                if (pair.Value.AsObject == null)
-                {
-                    output.Add (pair.Key, pair.Value);
-                }
-                else
-                {
-                    output.Add (pair.Key, new Dictionary<string, object> ());
-                    WriteJsonResponseDictionary (pair.Value.AsObject, (Dictionary<string, object>)output [pair.Key]);
-                }
-                */
             }
         }
         #endregion
