@@ -97,19 +97,23 @@ namespace com.adjust.sdk
 
                     if (valueString != null)
                     {
-                        logJsonResponse += "\"" + pair.Key + "\"" + ":" + "\"" + valueString + "\"";
-
-                        if (++preLoopCounter < dictionary.Count)
+                        if (++preLoopCounter > 1)
                         {
                             logJsonResponse += ",";
                         }
+
+                        logJsonResponse += "\"" + pair.Key + "\"" + ":" + "\"" + valueString + "\"";
 
                         continue;
                     }
 
                     Dictionary<string, object> valueDictionary = pair.Value as Dictionary<string, object>;
 
-                    preLoopCounter += 1;
+                    if (++preLoopCounter > 1)
+                    {
+                        logJsonResponse += ",";
+                    }
+
                     logJsonResponse += "\"" + pair.Key + "\"" + ":";
                     logJsonResponse += GetJsonResponseCompact (valueDictionary);
                 }
