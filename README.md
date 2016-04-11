@@ -168,8 +168,7 @@ Adjust.trackEvent (adjustEvent);
 
 ##### In-App Purchase verification
 
-If you want to use server side receipt verification in order to check validity of In-App Purchases
-made in your app, check out our `Unity3d purchase SDK` and read more about it in [here][unity-purchase-sdk].
+If you want to check the validity of In-App Purchases made in your app using Purchase Verification, adjust's server side receipt verification tool, then check out our `Unity3d purchase SDK` and read more about it [here][unity-purchase-sdk].
 
 ### 8. Add callback parameters
 
@@ -279,7 +278,7 @@ public class ExampleGUI : MonoBehaviour {
 
 You can register a callback to be notified of successful and failed tracked events and/or sessions.
 
-Follow the same steps and implement the following callback function for successful tracked events:
+Follow the same steps to implement the following callback function for successful tracked events:
 
 ```cs
 // ...
