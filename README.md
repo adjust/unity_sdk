@@ -283,6 +283,7 @@ Follow the same steps and implement the following callback function for successf
 
 ```cs
 // ...
+
 AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
 adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
 adjustConfig.setEventSuccessDelegate (EventSuccessCallback);
@@ -301,6 +302,7 @@ The following callback function for failed tracked events:
 
 ```cs
 // ...
+
 AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
 adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
 adjustConfig.setEventFailureDelegate (EventFailureCallback);
@@ -319,6 +321,7 @@ For successful tracked sessions:
 
 ```cs
 // ...
+
 AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
 adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
 adjustConfig.setSessionSuccessDelegate (SessionSuccessCallback);
@@ -337,6 +340,7 @@ And for failed tracked sessions:
 
 ```cs
 // ...
+
 AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
 adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
 adjustConfig.setSessionFailureDelegate (SessionFailureCallback);
