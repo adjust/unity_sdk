@@ -1,4 +1,4 @@
-### Version 4.6.0 (8th April 2016)
+### Version 4.6.0 (xxth April 2016)
 ### Added
 - Added `setEventSuccessDelegate` method on `AdjustConfig` object for setting callback to be triggered once event is successfully tracked.
 - Added `setEventFailureDelegate` method on `AdjustConfig` object for setting callback to be triggered once event tracking failed.
