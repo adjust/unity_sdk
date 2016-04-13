@@ -2,169 +2,119 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using SimpleJSON;
 using UnityEngine;
 
 namespace com.adjust.sdk
 {
 #if UNITY_IOS
-	public class AdjustiOS : IAdjust
-	{
-		private const string sdkPrefix = "unity4.1.3";
+    public class AdjustiOS : IAdjust
+    {
+        #region Fields
+        private const string sdkPrefix = "unity4.6.0";
+        #endregion
 
-		#region External methods
+        #region External methods
+        [DllImport ("__Internal")]
+        private static extern void _AdjustLaunchApp (string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering, string sceneName);
 
-		[DllImport ("__Internal")]
-		private static extern void _AdjustLaunchApp (string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering, string sceneName);
+        [DllImport ("__Internal")]
+        private static extern void _AdjustTrackEvent (string eventToken, double revenue, string currency, string receipt, string transactionId, int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
 
-		[DllImport ("__Internal")]
-		private static extern void _AdjustTrackEvent (string eventToken, double revenue, string currency, string receipt, string transactionId, int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
+        [DllImport ("__Internal")]
+        private static extern void _AdjustSetEnabled (int enabled);
+        
+        [DllImport ("__Internal")]
+        private static extern int _AdjustIsEnabled ();
+        
+        [DllImport ("__Internal")]
+        private static extern void _AdjustSetOfflineMode (int enabled);
 
-		[DllImport ("__Internal")]
-		private static extern void _AdjustSetEnabled (int enabled);
-		
-		[DllImport ("__Internal")]
-		private static extern int _AdjustIsEnabled ();
-		
-		[DllImport ("__Internal")]
-		private static extern void _AdjustSetOfflineMode (int enabled);
+        [DllImport ("__Internal")]
+        private static extern void _AdjustSetDeviceToken (string deviceToken);
 
-		[DllImport ("__Internal")]
-		private static extern void _AdjustSetDeviceToken (string deviceToken);
+        [DllImport ("__Internal")]
+        private static extern string _AdjustGetIdfa ();
+        #endregion
 
-		[DllImport ("__Internal")]
-		private static extern string _AdjustGetIdfa ();
+        #region Constructors
+        public AdjustiOS ()
+        {
+        }
+        #endregion
 
-		#endregion
+        #region Public methods
+        public void start (AdjustConfig adjustConfig)
+        {
+            string appToken = adjustConfig.appToken;
+            string sceneName = adjustConfig.sceneName;
+            string environment = adjustConfig.environment.lowercaseToString ();
 
-		public AdjustiOS ()
-		{
-		}
+            int logLevel = AdjustUtils.ConvertLogLevel (adjustConfig.logLevel);
+            int eventBufferingEnabled = AdjustUtils.ConvertBool (adjustConfig.eventBufferingEnabled);
 
-		#region Public methods
+            _AdjustLaunchApp (appToken, environment, sdkPrefix, logLevel, eventBufferingEnabled, sceneName);
+        }
 
-		public void start (AdjustConfig adjustConfig)
-		{
-			string appToken = adjustConfig .appToken;
-			string sceneName = adjustConfig.sceneName;
-			string environment = adjustConfig.environment.lowercaseToString ();
+        public void trackEvent (AdjustEvent adjustEvent)
+        {
+            int isReceiptSet = AdjustUtils.ConvertBool (adjustEvent.isReceiptSet);
+            double revenue = AdjustUtils.ConvertDouble (adjustEvent.revenue);
 
-			int logLevel = convertLogLevel (adjustConfig.logLevel);
-			int eventBufferingEnabled = convertBool (adjustConfig.eventBufferingEnabled);
+            string eventToken = adjustEvent.eventToken;
+            string currency = adjustEvent.currency;
+            string receipt = adjustEvent.receipt;
+            string transactionId = adjustEvent.transactionId;
+            string stringJsonCallBackParameters = AdjustUtils.ConvertListToJson (adjustEvent.callbackList);
+            string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson (adjustEvent.partnerList);
+            
+            _AdjustTrackEvent (eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
+        }
 
-			_AdjustLaunchApp (appToken, environment, sdkPrefix, logLevel, eventBufferingEnabled, sceneName);
-		}
+        public void setEnabled (bool enabled)
+        {
+            _AdjustSetEnabled (AdjustUtils.ConvertBool (enabled));
+        }
 
-		public void trackEvent (AdjustEvent adjustEvent)
-		{
-			int isReceiptSet = convertBool (adjustEvent.isReceiptSet);
-			double revenue = convertDouble (adjustEvent.revenue);
+        public bool isEnabled ()
+        {
+            var iIsEnabled = _AdjustIsEnabled ();
 
-			string eventToken = adjustEvent.eventToken;
-			string currency = adjustEvent.currency;
-			string receipt = adjustEvent.receipt;
-			string transactionId = adjustEvent.transactionId;
-			string stringJsonCallBackParameters = ConvertListToJson (adjustEvent.callbackList);
-			string stringJsonPartnerParameters = ConvertListToJson (adjustEvent.partnerList);
-			
-			_AdjustTrackEvent (eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
-		}
+            return Convert.ToBoolean (iIsEnabled);
+        }
 
-		public void onPause ()
-		{
+        public void setOfflineMode (bool enabled)
+        {
+            _AdjustSetOfflineMode (AdjustUtils.ConvertBool (enabled));
+        }
 
-		}
+        // iOS specific methods
+        public void setDeviceToken(string deviceToken)
+        {
+            _AdjustSetDeviceToken (deviceToken);
+        }
 
-		public void onResume ()
-		{
+        public string getIdfa()
+        {
+            return _AdjustGetIdfa ();
+        }
 
-		}
+        // Android specific methods
+        public void onPause ()
+        {
+        }
 
-		public void setEnabled (bool enabled)
-		{
-			_AdjustSetEnabled (convertBool (enabled));
-		}
+        public void onResume ()
+        {
+        }
 
-		public bool isEnabled ()
-		{
-			var iIsEnabled = _AdjustIsEnabled ();
+        public void setReferrer(string referrer) 
+        {
+        }
 
-			return Convert.ToBoolean (iIsEnabled);
-		}
-
-		public void setOfflineMode (bool enabled)
-		{
-			_AdjustSetOfflineMode (convertBool (enabled));
-		}
-
-		// iOS specific methods
-		public void setDeviceToken(string deviceToken)
-		{
-			_AdjustSetDeviceToken (deviceToken);
-		}
-
-		public string getIdfa()
-		{
-			return _AdjustGetIdfa ();
-		}
-
-		// Android specific methods
-		public void setReferrer(string referrer) { }
-
-		public void getGoogleAdId (Action<string> onDeviceIdsRead) { }
-
-
-		#endregion
-
-		#region Private and helper methods
-
-		private int convertLogLevel (AdjustLogLevel? logLevel)
-		{
-			if (logLevel == null) {
-				return -1;
-			}
-
-			return (int)logLevel;
-		}
-
-		private int convertBool (bool? value)
-		{
-			if (value == null) {
-				return -1;
-			}
-
-			if (value.Value) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
-
-		private double convertDouble (double? value)
-		{
-			if (value == null) {
-				return -1;
-			}
-
-			return (double)value;
-		}
-
-		private string ConvertListToJson (List<String> list)
-		{
-			if (list == null) {
-				return null;
-			}
-
-			var jsonArray = new JSONArray ();
-			
-			foreach (var listItem in list) {
-				jsonArray.Add (new JSONData (listItem));
-			}
-
-			return jsonArray.ToString ();
-		}
-
-		#endregion
-	}
+        public void getGoogleAdId (Action<string> onDeviceIdsRead)
+        {
+        }
+        #endregion
+    }
 #endif
 }

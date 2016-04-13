@@ -1,3 +1,17 @@
+### Version 4.6.0 (13th April 2016)
+### Added
+- Added `setEventSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if event is successfully tracked.
+- Added `setEventFailureDelegate` method on `AdjustConfig` object for setting a callback to be triggered if event tracking failed.
+- Added `setSessionSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if session is successfully tracked.
+- Added `setSessionSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if session tracking failed.
+
+#### Changed
+- Changed `SimpleJSON` namespace from `SimpleJSON` to `com.adjust.sdk` to avoid conflicts if `SimpleJSON` is already being used in Unity3d project.
+- Updated Native iOS SDK to version **4.6.0**.
+- Updated Native Android SDK to version **4.6.0**.
+
+---
+
 ### Version 4.1.3 (12th February 2016)
 ### Added
 - Added `Bitcode` support for iOS framework.

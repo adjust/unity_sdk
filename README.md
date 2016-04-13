@@ -166,37 +166,9 @@ adjustEvent.setRevenue (0.01, "EUR");
 Adjust.trackEvent (adjustEvent);
 ```
 
-#### iOS
+##### In-App Purchase verification
 
-##### <a id="deduplication"></a> Revenue deduplication
-
-You can also pass in an optional transaction ID to avoid tracking duplicate revenues. The last ten transaction 
-IDs are remembered and revenue events with duplicate transaction IDs are skipped. This is especially useful for 
-in-app purchase tracking. See an example below.
-
-If you want to track in-app purchases, please make sure to call `trackEvent` only if the transaction is finished
-and item is purchased. That way you can avoid tracking revenue that is not actually being generated.
-
-```cs
-AdjustEvent adjustEvent = new AdjustEvent ("abc123");
-adjustEvent.setRevenue (0.01, "EUR");
-adjustEvent.setTransactionId ("transactionIdentifier");
-Adjust.trackEvent (adjustEvent);
-```
-
-##### Receipt verification
-
-If you track in-app purchases, you can also attach the receipt to the tracked event. In that case our servers 
-will verify that receipt with Apple and discard the event if the verification failed. To make this work, you 
-also need to send us the transaction ID of the purchase. The transaction ID will also be used for SDK side 
-deduplication as explained [above](#deduplication):
-
-```cs
-AdjustEvent adjustEvent = new AdjustEvent ("abc123");
-adjustEvent.setRevenue (0.01, "EUR");
-adjustEvent.setReceipt ("receipt", "transactionId");
-Adjust.trackEvent (adjustEvent);
-```
+If you want to check the validity of In-App Purchases made in your app using Purchase Verification, adjust's server side receipt verification tool, then check out our `Unity3d purchase SDK` and read more about it [here][unity-purchase-sdk].
 
 ### 8. Add callback parameters
 
@@ -302,7 +274,104 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
-### 11. Disable tracking
+### 11. Implement callbacks for tracked events and sessions
+
+You can register a callback to be notified of successful and failed tracked events and/or sessions.
+
+Follow the same steps to implement the following callback function for successful tracked events:
+
+```cs
+// ...
+
+AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
+adjustConfig.setEventSuccessDelegate (EventSuccessCallback);
+
+Adjust.start (adjustConfig);
+
+// ...
+
+public void EventSuccessCallback (AdjustEventSuccess eventSuccessData)
+{
+    // ...
+}
+```
+
+The following callback function for failed tracked events:
+
+```cs
+// ...
+
+AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
+adjustConfig.setEventFailureDelegate (EventFailureCallback);
+
+Adjust.start (adjustConfig);
+
+// ...
+
+public void EventFailureCallback (AdjustEventFailure eventFailureData)
+{
+    // ...
+}
+```
+
+For successful tracked sessions:
+
+```cs
+// ...
+
+AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
+adjustConfig.setSessionSuccessDelegate (SessionSuccessCallback);
+
+Adjust.start (adjustConfig);
+
+// ...
+
+public void SessionSuccessCallback (AdjustSessionSuccess sessionSuccessData)
+{
+    // ...
+}
+```
+
+And for failed tracked sessions:
+
+```cs
+// ...
+
+AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
+adjustConfig.setSessionFailureDelegate (SessionFailureCallback);
+
+Adjust.start (adjustConfig);
+
+// ...
+
+public void SessionFailureCallback (AdjustSessionFailure sessionFailureData)
+{
+    // ...
+}
+```
+
+The callback functions will be called after the SDK tries to send a package to the server. 
+Within the callback you have access to a response data object specifically for the callback. 
+Here is a quick summary of the session response data properties:
+
+- `string Message` the message from the server or the error logged by the SDK.
+- `string Timestamp` timestamp from the server.
+- `string Adid` a unique device identifier provided by adjust.
+- `Dictionary<string, object> JsonResponse` the JSON object with the response from the server.
+
+Both event response data objects contain:
+
+- `string EventToken` the event token, if the package tracked was an event.
+
+And both event and session failed objects also contain:
+
+- `bool WillRetry` indicates there will be an attempt to resend the package at a later time.
+
+### 12. Disable tracking
 
 You can disable the adjust SDK from tracking by invoking the method `setEnabled`
 with the enabled parameter as `false`. This setting is remembered between sessions, but it can only
@@ -315,7 +384,7 @@ Adjust.setEnabled(false);
 You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible
 to activate the adjust SDK by invoking `setEnabled` with the `enabled` parameter set to `true`.
 
-### 12. Offline mode
+### 13. Offline mode
 
 You can put the adjust SDK in offline mode to suspend transmission to our servers, 
 while retaining tracked data to be sent later. While in offline mode, all information is saved
@@ -335,7 +404,7 @@ Unlike disabling tracking, this setting is *not remembered*
 bettween sessions. This means that the SDK is in online mode whenever it is started,
 even if the app was terminated in offline mode.
 
-### 13. Device IDS
+### 14. Device IDS
 
 Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate reporting. 
 
@@ -372,17 +441,18 @@ If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPho
 The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case, use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py` and `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py` to add execute privileges.
 
 
-[adjust.com]: http://adjust.com
-[dashboard]: http://adjust.com
-[releases]: https://github.com/adjust/adjust_unity_sdk/releases
-[import_package]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
-[adjust_editor]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
-[menu_android]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
-[ios]: https://github.com/adjust/ios_sdk
-[android]: https://github.com/adjust/android_sdk
-[attribution_data]: https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
-[special-partners]: https://docs.adjust.com/en/special-partners
-[google_ad_id]: https://developer.android.com/google/play-services/id.html
+[adjust.com]:           http://adjust.com
+[dashboard]:            http://adjust.com
+[releases]:             https://github.com/adjust/adjust_unity_sdk/releases
+[import_package]:       https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
+[adjust_editor]:        https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
+[menu_android]:         https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
+[ios]:                  https://github.com/adjust/ios_sdk
+[android]:              https://github.com/adjust/android_sdk
+[attribution_data]:     https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
+[special-partners]:     https://docs.adjust.com/en/special-partners
+[unity-purchase-sdk]:   https://github.com/adjust/unity_purchase_sdk
+[google_ad_id]:         https://developer.android.com/google/play-services/id.html
 [google_play_services]: http://developer.android.com/google/play-services/setup.html
 [android_sdk_download]: https://developer.android.com/sdk/index.html#Other
 [android_sdk_location]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download.png

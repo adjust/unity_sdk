@@ -5,10 +5,10 @@
 
 @implementation AdjustUnity
 
-static char *adjustSceneName = nil;
+static char* adjustSceneName = nil;
 static id<AdjustDelegate> adjustUnityInstance = nil;
 
-- (id) init {
+- (id)init {
     self = [super init];
     return self;
 }
@@ -22,7 +22,137 @@ static id<AdjustDelegate> adjustUnityInstance = nil;
 
     const char* charArrayAttribution = [stringAttribution UTF8String];
 
-    UnitySendMessage(adjustSceneName, "getNativeMessage", charArrayAttribution);
+    UnitySendMessage(adjustSceneName, "GetNativeAttribution", charArrayAttribution);
+}
+
+- (void)adjustEventTrackingSucceeded:(ADJEventSuccess *)eventSuccessResponseData {
+    NSMutableDictionary *eventSuccessDataDict = [NSMutableDictionary dictionary];
+
+    if (eventSuccessResponseData.message != nil) {
+        [eventSuccessDataDict setObject:eventSuccessResponseData.message forKey:@"message"];
+    }
+
+    if (eventSuccessResponseData.timeStamp != nil) {
+        [eventSuccessDataDict setObject:eventSuccessResponseData.timeStamp forKey:@"timestamp"];
+    }
+
+    if (eventSuccessResponseData.adid != nil) {
+        [eventSuccessDataDict setObject:eventSuccessResponseData.adid forKey:@"adid"];
+    }
+
+    if (eventSuccessResponseData.eventToken != nil) {
+        [eventSuccessDataDict setObject:eventSuccessResponseData.eventToken forKey:@"eventToken"];
+    }
+
+    if (eventSuccessResponseData.jsonResponse != nil) {
+        [eventSuccessDataDict setObject:eventSuccessResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
+
+    NSData *dataEventSuccess = [NSJSONSerialization dataWithJSONObject:eventSuccessDataDict options:0 error:nil];
+    NSString *stringEventSuccess = [[NSString alloc] initWithBytes:[dataEventSuccess bytes]
+                                                            length:[dataEventSuccess length]
+                                                          encoding:NSUTF8StringEncoding];
+
+    const char* charArrayEventSuccess = [stringEventSuccess UTF8String];
+
+    UnitySendMessage(adjustSceneName, "GetNativeEventSuccess", charArrayEventSuccess);
+}
+
+- (void)adjustEventTrackingFailed:(ADJEventFailure *)eventFailureResponseData {
+    NSMutableDictionary *eventFailureDataDict = [NSMutableDictionary dictionary];
+
+    if (eventFailureResponseData.message != nil) {
+        [eventFailureDataDict setObject:eventFailureResponseData.message forKey:@"message"];
+    }
+
+    if (eventFailureResponseData.timeStamp != nil) {
+        [eventFailureDataDict setObject:eventFailureResponseData.timeStamp forKey:@"timestamp"];
+    }
+
+    if (eventFailureResponseData.adid != nil) {
+        [eventFailureDataDict setObject:eventFailureResponseData.adid forKey:@"adid"];
+    }
+
+    if (eventFailureResponseData.eventToken != nil) {
+        [eventFailureDataDict setObject:eventFailureResponseData.eventToken forKey:@"eventToken"];
+    }
+
+    if (eventFailureResponseData.jsonResponse != nil) {
+        [eventFailureDataDict setObject:eventFailureResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
+
+    [eventFailureDataDict setObject:(eventFailureResponseData.willRetry == YES ? @"true" : @"false")
+                             forKey:@"willRetry"];
+
+    NSData *dataEventFailure = [NSJSONSerialization dataWithJSONObject:eventFailureDataDict options:0 error:nil];
+    NSString *stringEventFailure = [[NSString alloc] initWithBytes:[dataEventFailure bytes]
+                                                            length:[dataEventFailure length]
+                                                          encoding:NSUTF8StringEncoding];
+
+    const char* charArrayEventFailure = [stringEventFailure UTF8String];
+
+    UnitySendMessage(adjustSceneName, "GetNativeEventFailure", charArrayEventFailure);
+}
+
+- (void)adjustSessionTrackingSucceeded:(ADJSessionSuccess *)sessionSuccessResponseData {
+    NSMutableDictionary *sessionSuccessDataDict = [NSMutableDictionary dictionary];
+
+    if (sessionSuccessResponseData.message != nil) {
+        [sessionSuccessDataDict setObject:sessionSuccessResponseData.message forKey:@"message"];
+    }
+
+    if (sessionSuccessResponseData.timeStamp != nil) {
+        [sessionSuccessDataDict setObject:sessionSuccessResponseData.timeStamp forKey:@"timestamp"];
+    }
+
+    if (sessionSuccessResponseData.adid != nil) {
+        [sessionSuccessDataDict setObject:sessionSuccessResponseData.adid forKey:@"adid"];
+    }
+
+    if (sessionSuccessResponseData.jsonResponse != nil) {
+        [sessionSuccessDataDict setObject:sessionSuccessResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
+
+    NSData *dataSessionSuccess = [NSJSONSerialization dataWithJSONObject:sessionSuccessDataDict options:0 error:nil];
+    NSString *stringSessionSuccess = [[NSString alloc] initWithBytes:[dataSessionSuccess bytes]
+                                                              length:[dataSessionSuccess length]
+                                                            encoding:NSUTF8StringEncoding];
+
+    const char* charArraySessionSuccess = [stringSessionSuccess UTF8String];
+
+    UnitySendMessage(adjustSceneName, "GetNativeSessionSuccess", charArraySessionSuccess);
+}
+
+- (void)adjustSessionTrackingFailed:(ADJSessionFailure *)sessionFailureResponseData {
+    NSMutableDictionary *sessionFailureDataDict = [NSMutableDictionary dictionary];
+
+    if (sessionFailureResponseData.message != nil) {
+        [sessionFailureDataDict setObject:sessionFailureResponseData.message forKey:@"message"];
+    }
+
+    if (sessionFailureResponseData.timeStamp != nil) {
+        [sessionFailureDataDict setObject:sessionFailureResponseData.timeStamp forKey:@"timestamp"];
+    }
+
+    if (sessionFailureResponseData.adid != nil) {
+        [sessionFailureDataDict setObject:sessionFailureResponseData.adid forKey:@"adid"];
+    }
+
+    if (sessionFailureResponseData.jsonResponse != nil) {
+        [sessionFailureDataDict setObject:sessionFailureResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
+
+    [sessionFailureDataDict setObject:(sessionFailureResponseData.willRetry == YES ? @"true" : @"false")
+                               forKey:@"willRetry"];
+
+    NSData *dataSessionFailure = [NSJSONSerialization dataWithJSONObject:sessionFailureDataDict options:0 error:nil];
+    NSString *stringSessionFailure = [[NSString alloc] initWithBytes:[dataSessionFailure bytes]
+                                                              length:[dataSessionFailure length]
+                                                            encoding:NSUTF8StringEncoding];
+
+    const char* charArraySessionFailure = [stringSessionFailure UTF8String];
+
+    UnitySendMessage(adjustSceneName, "GetNativeSessionFailure", charArraySessionFailure);
 }
 
 @end
@@ -33,11 +163,9 @@ NSArray* ConvertArrayParameters (const char* cStringJsonArrayParameters) {
         return nil;
     }
 
-    NSString *stringJsonArrayParameters = [NSString stringWithUTF8String:cStringJsonArrayParameters];
-
     NSError *error = nil;
     NSArray *arrayParameters = nil;
-
+    NSString *stringJsonArrayParameters = [NSString stringWithUTF8String:cStringJsonArrayParameters];
 
     if (stringJsonArrayParameters != nil) {
         NSData *dataJson = [stringJsonArrayParameters dataUsingEncoding:NSUTF8StringEncoding];
@@ -178,11 +306,9 @@ extern "C"
     }
 
     char* _AdjustGetIdfa() {
-        NSString * idfa = [Adjust idfa];
-
-        const char * idfaCString = [idfa UTF8String];
-
-        char * idfaCStringCopy = strdup(idfaCString);
+        NSString *idfa = [Adjust idfa];
+        const char* idfaCString = [idfa UTF8String];
+        char* idfaCStringCopy = strdup(idfaCString);
 
         return idfaCStringCopy;
     }
