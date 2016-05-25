@@ -67,11 +67,9 @@ We use this environment to distinguish between real traffic and artificial
 traffic from test devices. It is very important that you keep this value
 meaningful at all times! Especially if you are tracking revenue.
 
-If your app makes heavy use of event tracking, you might want to delay some
-HTTP requests in order to send them in one batch every minute. You can enable
-event buffering by ticking the box for `Event Buffering`.
-
-If you don't want to start the adjust SDK at the `Awake` event of the game, tick the box `Start Manually`. Call the method `Adjust.start` with the `AdjustConfig` object as a parameter to start the adjust SDK instead.
+If you don't want to start the adjust SDK at the `Awake` event of the game, tick the box 
+`Start Manually`. Call the method `Adjust.start` with the `AdjustConfig` object as a parameter 
+to start the adjust SDK instead.
 
 For an example of scene with of a button menu with these options and others, open the example scene located at
 `Assets/Adjust/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/Adjust/ExampleGUI/ExampleGUI.cs`.
@@ -223,9 +221,96 @@ Adjust.trackEvent (adjustEvent);
 
 You can read more about special partners and these integrations in our [guide to special partners.][special-partners]
 
-### 10. Receive attribution change callback
+### 10. Enable event buffering
 
-You can register a callback to be notified of tracker attribution changes. Due to the different sources considered for attribution, this information can not by provided synchronously. Follow these steps to implement the optional callback in your application:
+If your app makes heavy use of event tracking, you might want to delay some
+HTTP requests in order to send them in one batch every minute. You can enable
+event buffering with your `AdjustConfig` instance:
+
+```cs
+AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+
+adjustConfig.setEventBufferingEnabled (true);
+
+Adjust.start (adjustConfig);
+```
+
+### 11. Send in the background
+
+The default behaviour of the adjust SDK is to pause sending HTTP requests while the app is on the background.
+You can change this in your `AdjustConfig` instance:
+
+```csharp
+AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+
+adjustConfig.setSendInBackground (true);
+
+Adjust.start (adjustConfig);
+```
+
+### 12. Offline mode
+
+You can put the adjust SDK in offline mode to suspend transmission to our servers, 
+while retaining tracked data to be sent later. While in offline mode, all information is saved
+in a file, so be careful not to trigger too many events while in offline mode.
+
+You can activate offline mode by calling `setOfflineMode` with the parameter `true`.
+
+```cs
+Adjust.setOfflineMode(true);
+```
+
+Conversely, you can deactivate offline mode by calling `setOfflineMode` with `false`.
+When the adjust SDK is put back in online mode, all saved information is send to our servers 
+with the correct time information.
+
+Unlike disabling tracking, this setting is *not remembered*
+bettween sessions. This means that the SDK is in online mode whenever it is started,
+even if the app was terminated in offline mode.
+
+### 13. Disable tracking
+
+You can disable the adjust SDK from tracking by invoking the method `setEnabled`
+with the enabled parameter as `false`. This setting is remembered between sessions, but it can only
+be activated after the first session.
+
+```cs
+Adjust.setEnabled(false);
+```
+
+You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible
+to activate the adjust SDK by invoking `setEnabled` with the `enabled` parameter set to `true`.
+
+### 14. Device IDS
+
+Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate reporting. 
+
+#### Android
+
+If you need to obtain the Google Advertising ID, There is a restriction that only allows it to be read in a background thread. 
+If you call the function `getGoogleAdId` with a `Action<string>` delegate, it will work in any situation:
+
+```cs
+Adjust.getGoogleAdId((string googleAdId) => {
+    // ...
+});
+```
+
+Inside the method `onGoogleAdIdRead` of the `OnDeviceIdsRead` instance, you will have access to the Google Advertising ID as the variable `googleAdId`.
+
+#### iOS
+
+To obtain the IDFA, call the function `getIdfa`:
+
+```cs
+Adjust.getIdfa ()
+```
+
+### 15. Implement callback for attribution changes
+
+You can register a callback to be notified of tracker attribution changes. Due to the 
+different sources considered for attribution, this information can not by provided 
+synchronously. Follow these steps to implement the optional callback in your application:
 
 Please make sure to consider [applicable attribution data policies.][attribution_data]
 
@@ -237,9 +322,11 @@ with the previously created method. It is also be possible to use a lambda with 
 3. If instead of using the `Adjust.prefab`, the `Adjust.cs` script was added to another `GameObject`.
 Don't forget to pass the name of that `GameObject` as the second parameter of `AdjustConfig.setAttributionChangedDelegate`.
 
-As the callback is configured using the AdjustConfig instance, you should call `adjustConfig.setAttributionChangedDelegate` before calling `Adjust.start`.
+As the callback is configured using the AdjustConfig instance, you should call 
+`adjustConfig.setAttributionChangedDelegate` before calling `Adjust.start`.
 
-The callback function will get called when the SDK receives final attribution data. Within the callback function you have access to the `attribution` parameter. Here is a quick summary of its properties:
+The callback function will get called when the SDK receives final attribution data. Within 
+the callback function you have access to the `attribution` parameter. Here is a quick summary of its properties:
 
 - `string trackerToken` the tracker token of the current install.
 - `string trackerName` the tracker name of the current install.
@@ -274,7 +361,7 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
-### 11. Implement callbacks for tracked events and sessions
+### 16. Implement callbacks for tracked events and sessions
 
 You can register a callback to be notified of successful and failed tracked events and/or sessions.
 
@@ -371,63 +458,57 @@ And both event and session failed objects also contain:
 
 - `bool WillRetry` indicates there will be an attempt to resend the package at a later time.
 
-### 12. Disable tracking
+### 17. Set listener for deferred deeplinks
 
-You can disable the adjust SDK from tracking by invoking the method `setEnabled`
-with the enabled parameter as `false`. This setting is remembered between sessions, but it can only
-be activated after the first session.
+You can register a listener to be notified before a deferred deeplink is opened and decide 
+if the adjust SDK will open it. With the `AdjustConfig` instance, before starting the SDK, 
+add the deferred deeplink listener:
 
-```cs
-Adjust.setEnabled(false);
+```csharp
+AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
+
+Adjust.start (adjustConfig);
+
+// ...
+
+private void DeferredDeeplinkCallback (string deeplinkURL)
+{
+    if (deeplinkURL != null)
+    {
+        Debug.Log ("Deeplink URL: " + deeplinkURL);
+    }
+}
 ```
 
-You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible
-to activate the adjust SDK by invoking `setEnabled` with the `enabled` parameter set to `true`.
+The listener function will be called after the SDK receives a deffered deeplink from 
+ther server and before open it. Within the listener function you have access to the 
+deeplink. In addition, you have possibility to choose do you want the SDK to launch
+deferred deeplink for you or not. You can set this option on `AdjustConfig` instance:
 
-### 13. Offline mode
+```csharp
+AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
 
-You can put the adjust SDK in offline mode to suspend transmission to our servers, 
-while retaining tracked data to be sent later. While in offline mode, all information is saved
-in a file, so be careful not to trigger too many events while in offline mode.
+adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
+adjustConfig.setLaunchDeferredDeeplink (true);
+// or: adjustConfig.setLaunchDeferredDeeplink (false);
 
-You can activate offline mode by calling `setOfflineMode` with the parameter `true`.
+Adjust.start (adjustConfig);
 
-```cs
-Adjust.setOfflineMode(true);
+// ...
+
+private void DeferredDeeplinkCallback (string deeplinkURL)
+{
+    if (deeplinkURL != null)
+    {
+        Debug.Log ("Deeplink URL: " + deeplinkURL);
+    }
+}
 ```
 
-Conversely, you can deactivate offline mode by calling `setOfflineMode` with `false`.
-When the adjust SDK is put back in online mode, all saved information is send to our servers 
-with the correct time information.
-
-Unlike disabling tracking, this setting is *not remembered*
-bettween sessions. This means that the SDK is in online mode whenever it is started,
-even if the app was terminated in offline mode.
-
-### 14. Device IDS
-
-Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate reporting. 
-
-#### Android
-
-If you need to obtain the Google Advertising ID, There is a restriction that only allows it to be read in a background thread. 
-If you call the function `getGoogleAdId` with a `Action<string>` delegate, it will work in any situation:
-
-```cs
-Adjust.getGoogleAdId((string googleAdId) => {
-    // ...
-});
-```
-
-Inside the method `onGoogleAdIdRead` of the `OnDeviceIdsRead` instance, you will have access to the Google Advertising ID as the variable `googleAdId`.
-
-#### iOS
-
-To obtain the IDFA, call the function `getIdfa`:
-
-```cs
-Adjust.getIdfa ()
-```
+By default (if you don't use this option), the SDK will launch deferred deeplink.
+You could, for example, not allow the SDK open the deeplink at the moment, save it, 
+and open it yourself later.
 
 ## Troubleshooting
 
@@ -465,7 +546,7 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
 
 The adjust-sdk is licensed under the MIT License.
 
-Copyright (c) 2012-2015 adjust GmbH,
+Copyright (c) 2012-2016 adjust GmbH,
 http://www.adjust.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
