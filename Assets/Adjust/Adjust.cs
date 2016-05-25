@@ -12,6 +12,7 @@ namespace com.adjust.sdk
 
         private static IAdjust instance = null;
 
+        private static Action<string> deferredDeeplinkDelegate = null;
         private static Action<AdjustEventSuccess> eventSuccessDelegate = null;
         private static Action<AdjustEventFailure> eventFailureDelegate = null;
         private static Action<AdjustSessionSuccess> sessionSuccessDelegate = null;
@@ -21,6 +22,8 @@ namespace com.adjust.sdk
         public bool startManually = true;
         public bool eventBuffering = false;
         public bool printAttribution = true;
+        public bool sendInBackground = false;
+        public bool launchDeferredDeeplink = true;
 
         public string appToken = "{Your App Token}";
 
@@ -33,16 +36,19 @@ namespace com.adjust.sdk
         {
             if (Adjust.instance != null)
             {
-                  return;
-              }
+                return;
+            }
               
             DontDestroyOnLoad (transform.gameObject);
 
             if (!this.startManually)
             {
                 AdjustConfig adjustConfig = new AdjustConfig (this.appToken, this.environment);
+
                 adjustConfig.setLogLevel (this.logLevel);
-                adjustConfig.setEventBufferingEnabled (eventBuffering);
+                adjustConfig.setSendInBackground(this.sendInBackground);
+                adjustConfig.setEventBufferingEnabled (this.eventBuffering);
+                adjustConfig.setLaunchDeferredDeeplink (this.launchDeferredDeeplink);
 
                 if (printAttribution)
                 {
@@ -50,6 +56,7 @@ namespace com.adjust.sdk
                     adjustConfig.setEventFailureDelegate (EventFailureCallback);
                     adjustConfig.setSessionSuccessDelegate (SessionSuccessCallback);
                     adjustConfig.setSessionFailureDelegate (SessionFailureCallback);
+                    adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
                     adjustConfig.setAttributionChangedDelegate (AttributionChangedCallback);
                 }
 
@@ -114,6 +121,7 @@ namespace com.adjust.sdk
             Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate ();
             Adjust.sessionSuccessDelegate = adjustConfig.getSessionSuccessDelegate ();
             Adjust.sessionFailureDelegate = adjustConfig.getSessionFailureDelegate ();
+            Adjust.deferredDeeplinkDelegate = adjustConfig.getDeferredDeeplinkDelegate ();
             Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate ();
 
             Adjust.instance.start (adjustConfig);
@@ -307,11 +315,26 @@ namespace com.adjust.sdk
             Adjust.sessionFailureDelegate (sessionFailure);
         }
 
+        public void GetNativeDeferredDeeplink (string deeplinkURL)
+        {
+            if (instance == null)
+            {
+                Debug.Log (Adjust.errorMessage);
+                return;
+            }
+
+            if (Adjust.deferredDeeplinkDelegate == null)
+            {
+                Debug.Log ("adjust: Deferred deeplink delegate was not set.");
+                return;
+            }
+
+            Adjust.deferredDeeplinkDelegate (deeplinkURL);
+        }
         #endregion
 
         #region Private & helper methods
-
-        // Our delegate for detecting attribution changes if choosen not to start manually.
+        // Our delegate for detecting attribution changes if chosen not to start manually.
         private void AttributionChangedCallback (AdjustAttribution attributionData)
         {
             Debug.Log ("Attribution changed!");
@@ -352,7 +375,7 @@ namespace com.adjust.sdk
             }
         }
 
-        // Our delegate for detecting successful event tracking if choosen not to start manually.
+        // Our delegate for detecting successful event tracking if chosen not to start manually.
         private void EventSuccessCallback (AdjustEventSuccess eventSuccessData)
         {
             Debug.Log ("Event tracked successfully!");
@@ -383,7 +406,7 @@ namespace com.adjust.sdk
             }
         }
 
-        // Our delegate for detecting failed event tracking if choosen not to start manually.
+        // Our delegate for detecting failed event tracking if chosen not to start manually.
         private void EventFailureCallback (AdjustEventFailure eventFailureData)
         {
             Debug.Log ("Event tracking failed!");
@@ -416,7 +439,7 @@ namespace com.adjust.sdk
             }
         }
 
-        // Our delegate for detecting successful session tracking if choosen not to start manually.
+        // Our delegate for detecting successful session tracking if chosen not to start manually.
         private void SessionSuccessCallback (AdjustSessionSuccess sessionSuccessData)
         {
             Debug.Log ("Session tracked successfully!");
@@ -442,7 +465,7 @@ namespace com.adjust.sdk
             }
         }
 
-        // Our delegate for detecting failed session tracking if choosen not to start manually.
+        // Our delegate for detecting failed session tracking if chosen not to start manually.
         private void SessionFailureCallback (AdjustSessionFailure sessionFailureData)
         {
             Debug.Log ("Session tracking failed!");
@@ -467,6 +490,21 @@ namespace com.adjust.sdk
             if (sessionFailureData.JsonResponse != null)
             {
                 Debug.Log ("JsonResponse: " + sessionFailureData.GetJsonResponse ());
+            }
+        }
+
+        // Our delegate for getting deferred deep link content if chosen not to start manually.
+        private void DeferredDeeplinkCallback (string deeplinkURL)
+        {
+            Debug.Log ("Deferred deeplink reported!");
+
+            if (deeplinkURL != null)
+            {
+                Debug.Log ("Deeplink URL: " + deeplinkURL);
+            }
+            else
+            {
+                Debug.Log ("Deeplink URL is null!");
             }
         }
         #endregion

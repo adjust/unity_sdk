@@ -6,6 +6,7 @@
 @implementation AdjustUnity
 
 static char* adjustSceneName = nil;
+static BOOL launchAdjustDeferredDeeplink = YES;
 static id<AdjustDelegate> adjustUnityInstance = nil;
 
 - (id)init {
@@ -155,6 +156,15 @@ static id<AdjustDelegate> adjustUnityInstance = nil;
     UnitySendMessage(adjustSceneName, "GetNativeSessionFailure", charArraySessionFailure);
 }
 
+- (BOOL)adjustDeeplinkResponse:(NSURL *)deeplink {
+    NSString *stringDeeplink = [deeplink absoluteString];
+    const char* charDeeplink = [stringDeeplink UTF8String];
+
+    UnitySendMessage(adjustSceneName, "GetNativeDeferredDeeplink", charDeeplink);
+
+    return launchAdjustDeferredDeeplink;
+}
+
 @end
 
 // Method for converting JSON stirng parameters into NSArray object.
@@ -182,7 +192,7 @@ NSArray* ConvertArrayParameters (const char* cStringJsonArrayParameters) {
 
 extern "C"
 {
-    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering, const char* sceneName) {
+    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering, int sendInBackground, int launchDeferredDeeplink, const char* sceneName) {
         NSString *stringSdkPrefix = [NSString stringWithUTF8String:sdkPrefix];
         NSString *stringAppToken = [NSString stringWithUTF8String:appToken];
         NSString *stringEnvironment = [NSString stringWithUTF8String:environment];
@@ -202,16 +212,27 @@ extern "C"
             [adjustConfig setEventBufferingEnabled:(BOOL)eventBuffering];
         }
 
+        if (sendInBackground != -1) {
+            [adjustConfig setSendInBackground:(BOOL)sendInBackground];
+        }
+
+        if (launchDeferredDeeplink != -1) {
+            launchAdjustDeferredDeeplink = (BOOL)launchDeferredDeeplink;
+        }
+
         if (sceneName != NULL && [stringSceneName length] > 0) {
             adjustSceneName = strdup(sceneName);
             adjustUnityInstance = [[AdjustUnity alloc] init];
             [adjustConfig setDelegate:(id)adjustUnityInstance];
         }
 
-        NSLog(@"%@, %@, %@, %d, %d, %@", stringAppToken, stringEnvironment, stringSdkPrefix, logLevel, eventBuffering, stringSceneName);
+        NSLog(@"%@, %@, %@, %d, %d, %d, %d, %@", stringAppToken, stringEnvironment, stringSdkPrefix, logLevel, eventBuffering, sendInBackground, launchDeferredDeeplink, stringSceneName);
 
         // Launch adjust instance.
         [Adjust appDidLaunch:adjustConfig];
+
+        // Since v4.7.0 session is not automatically started after calling appDidLaunch, thus calling trackSubsessionStart.
+        [Adjust trackSubsessionStart];
     }
 
     void _AdjustTrackEvent(const char* eventToken, double revenue, const char* currency, const char* receipt, const char* transactionId, int isReceiptSet, const char* jsonCallbackParameters, const char* jsonPartnerParameters) {
