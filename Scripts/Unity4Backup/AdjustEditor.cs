@@ -142,7 +142,7 @@ public class AdjustEditor : MonoBehaviour
                 arguments = "--pre-build " + arguments;
             }
         }
-        else if (target == BuildTarget.iOS)
+        else if (target == BuildTarget.iPhone)
         {
             pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py";
         
@@ -192,7 +192,7 @@ public class AdjustEditor : MonoBehaviour
             {
                 logFile = projectPath + "/AdjustPostBuildAndroidLog.txt";
             }
-            else if (target == BuildTarget.iOS)
+            else if (target == BuildTarget.iPhone)
             {
                 logFile = projectPath + "/AdjustPostBuildiOSLog.txt";
             }
