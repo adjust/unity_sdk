@@ -7,7 +7,7 @@
 #### Changed
 - Changed `AdjustEditor.cs` to use `BuildTarget` values instead of #defines.
 - Updated docs.
-- Updated Native iOS SDK to version **4.7.0**.
+- Updated Native iOS SDK to version **4.8.0**.
 - Updated Native Android SDK to version **4.7.0**.
 
 ---
