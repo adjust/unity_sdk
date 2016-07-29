@@ -1,6 +1,6 @@
 ## Summary
 
-This is the Unity3d SDK of adjust™. It supports iOS, Android, Windows 8.1 and Windows phone 8.1 targets. You can read more 
+This is the Unity SDK of adjust™. It supports iOS, Android, Windows 8.1 and Windows phone 8.1 targets. You can read more 
 about adjust™ at [adjust.com].
 
 ## Table of contents
@@ -40,7 +40,7 @@ about adjust™ at [adjust.com].
 
 ## <a id="basic-integration">Basic integration
 
-These are the minimal steps required to integrate the adjust SDK into your Unity3d project.
+These are the minimal steps required to integrate the adjust SDK into your Unity project.
 
 ### <a id="sdk-get">Get the SDK
 
@@ -154,16 +154,16 @@ Press the same button to re-enable it.
 
 #### <a id="build-script-ios">iOS build script
 
-The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity3d iOS generated project in the following ways:
+The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity iOS generated project in the following ways:
 
 1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the official [iOS SDK README][ios] for more details.
 
 2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during the build time.
 
-If you have a custom build that puts the Unity3d iOS generated project in a different location, inform the script by 
+If you have a custom build that puts the Unity iOS generated project in a different location, inform the script by 
 clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS project.
 
-After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity3d project with log 
+After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity project with log 
 messages of the script run.
 
 #### <a id="build-script-android">Android build script
@@ -190,7 +190,7 @@ call to the adjust broadcast receiver like described in [Android guide][android-
 
 3. Adds the permission to access information about Wi-Fi networks.
 
-After running, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity3d project with log 
+After running, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity project with log 
 messages of the script run.
 
 ## <a id="additional-features">Additional features
@@ -242,7 +242,7 @@ Adjust.trackEvent (adjustEvent);
 #### <a id="iap-verification">In-App Purchase verification
 
 If you want to check the validity of In-App Purchases made in your app using Purchase Verification, adjust's server side 
-receipt verification tool, then check out our `Unity3d purchase SDK` and read more about it [here][unity-purchase-sdk].
+receipt verification tool, then check out our `Unity purchase SDK` and read more about it [here][unity-purchase-sdk].
 
 #### <a id="callback-parameters">Callback parameters
 
@@ -545,7 +545,7 @@ You need to set up deep linking handling in your app **on native level** - in yo
 
 #### <a id="deeplinking-standard">Standard deep linking scenario
 
-Unfortunatelly, in this scenario the information about the deep link can not be delivered to you in your Unity3d C# code. 
+Unfortunatelly, in this scenario the information about the deep link can not be delivered to you in your Unity C# code. 
 Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more information check our chapters below on how to enable deep linking for Android and iOS apps.
 
 #### <a id="deeplinking-deferred">Deferred deep linking scenario
