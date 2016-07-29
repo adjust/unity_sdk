@@ -152,7 +152,7 @@ is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `py
 It's possible to disable the post processing by clicking on the menu `Assets → Adjust → Change post processing status`.
 Press the same button to re-enable it.
 
-#### <a id="build-script-iOS">iOS build script
+#### <a id="build-script-ios">iOS build script
 
 The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity3d iOS generated project in the following ways:
 
@@ -219,7 +219,7 @@ Adjust.trackEvent (adjustEvent);
 
 #### <a id="revenue-deduplication"></a>Revenue deduplication
 
-**Note**: At the moment, this is an iOS feature only.
+**At the moment, this is an iOS feature only.**
 
 You can also add an optional transaction ID to avoid tracking duplicate revenues. The last ten transaction IDs are
 remembered, and revenue events with duplicate transaction IDs are skipped. This is especially useful for In-App Purchase
@@ -502,7 +502,7 @@ adjustConfig.setSendInBackground (true);
 Adjust.start (adjustConfig);
 ```
 
-### <a id="device-ids">Device IDS
+### <a id="device-ids">Device IDs
 
 Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate 
 reporting. 
@@ -531,7 +531,7 @@ Adjust.getIdfa ()
 
 ### <a id="deeplinking">Deep linking
 
-**Note**: Deep linking is supported only on iOS and Android platforms.
+**Deep linking is supported only on iOS and Android platforms.**
 
 If you are using the adjust tracker URL with an option to deep link into your app from the URL, the adjust SDK offers you 
 the possibility to get info about the deep link URL and its content. Since hitting the URL can happen if your user has your
@@ -597,14 +597,14 @@ To enable your apps to support deep linking, you should set up schemes for each 
 
 #### <a id="deeplinking-app-android">Deep linking handling in Android app
 
-**Note**: This should be done in native Android Studio / Eclipse project.
+**This should be done in native Android Studio / Eclipse project.**
 
 To set up your Android app to handle deep linking on native level, please follow our [guide][android-deeplinking] 
 in the official Android SDK README.
 
 #### <a id="deeplinking-app-ios">Deep linking handling in iOS app
 
-**Note**: This should be done in native Xcode project.
+**This should be done in native Xcode project.**
 
 To set up your iOS app to handle deep linking on native level, please follow our [guide][ios-deeplinking] 
 in the official iOS SDK README.
