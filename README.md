@@ -64,7 +64,7 @@ Edit the parameters of the Adjust script in the `Inspector menu` of the added pr
 
 ![][adjust_editor]
 
-You have the possibility to set up following options on the Adjust prefab:
+You have the possibility to set up the following options on the Adjust prefab:
 
 * [Start Manually](#start-manually)
 * [Event Buffering](#event-buffering)
@@ -75,7 +75,7 @@ You have the possibility to set up following options on the Adjust prefab:
 * [Log Level](#log-level)
 * [Environment](#environment)
 
-<a id="app-token">Replace `{YourAppToken}` with your App Token. You can find in your [dashboard].
+<a id="app-token">Replace `{YourAppToken}` with your actual App Token. You can find in your [dashboard].
 
 <a id="environment">Depending on whether or not you build your app for testing or for production you must change 
 `Environment` with one of these values:
@@ -158,7 +158,7 @@ The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustP
 
 1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the official [iOS SDK README][ios] for more details.
 
-2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during the build time.
+2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during build time.
 
 If you have a custom build that puts the Unity iOS generated project in a different location, inform the script by 
 clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS project.
@@ -169,8 +169,8 @@ messages of the script run.
 #### <a id="build-script-android">Android build script
 
 The Android build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`. It changes the 
-`AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The problem with this approach is that, the manifest file 
-used for the Android package was the one before the build process ended.
+`AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The problem with this approach is that the manifest file 
+used for the Android package was the same one as before the build process ended.
 
 To mitigate this, simply run the build again, using the manifest created or changed by the previous run, or click on the 
 menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build process. Either way, it is only 
@@ -181,7 +181,7 @@ necessary to do this step once, as long the manifest file remains compatible wit
 If there is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
 `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
 
-1. Adds the adjust broadcast receiver. For more details consult the official [Android SDK README][android] for more details.
+1. Adds the adjust broadcast receiver. For more details, consult the official [Android SDK README][android].
 Please, have in mind that if you are using your **own broadcast receiver** which handles `INSTALL_REFERRER` intent, you 
 don't need the adjust broadcast receiver to be added in your manifest file. Remove it, but inside your own receiver add the 
 call to the adjust broadcast receiver like described in [Android guide][android-custom-receiver].
@@ -199,7 +199,7 @@ Once you integrated the adjust SDK into your project, you can take advantage of 
 
 ### <a id="event-tracking">Event tracking
 
-You can tell adjust about any event you wish. Suppose you want to track every tap on a button. You would have to create a 
+You can tell adjust about any event you wish. Suppose you want to track every tap on a button. You would just need to create a 
 new Event Token in your [dashboard]. Let's say that Event Token is `abc123`. In your button's click handler method you could
 then add the following lines to track the click:
 
@@ -211,7 +211,7 @@ Adjust.trackEvent (adjustEvent);
 #### <a id="revenue-tracking">Revenue tracking
 
 If your users can generate revenue by tapping on advertisements or making In-App Purchases you can track those revenues with
-events. Lets say a tap is worth one Euro cent. You could then track the revenue event like this:
+events. Let's say a tap is worth one Euro cent. You could then track the revenue event like this:
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent ("abc123");
@@ -247,7 +247,7 @@ receipt verification tool, then check out our `Unity purchase SDK` and read more
 #### <a id="callback-parameters">Callback parameters
 
 You can also register a callback URL for that event in your [dashboard] and we will send a GET request to that URL whenever 
-the event gets tracked. In that case you can also put some key-value-pairs in an object and pass it to the `trackEvent` 
+the event gets tracked. In that case you can also put some key-value pairs in an object and pass it to the `trackEvent` 
 method. We will then append these named parameters to your callback URL.
 
 For example, suppose you have registered the URL `http://www.adjust.com/callback` for your event with Event Token `abc123` 
@@ -268,9 +268,9 @@ In that case we would track the event and send a request to:
 http://www.adjust.com/callback?key=value&foo=bar
 ```
 
-It should be mentioned that we support a variety of placeholders like `{idfa}` for iOS or `{android_id}` for Android that 
+It should be mentioned that we support a variety of placeholders like `{idfa}` for iOS or `{gps_adid}` for Android that 
 can be used as parameter values.  In the resulting callback the `{idfa}` placeholder would be replaced with the ID for 
-Advertisers of the current device for iOS and the `{android_id}` would be replaced with the AndroidID of the current device 
+Advertisers of the current device for iOS and the `{gps_adid}` would be replaced with the Google Play Services ID of the current device 
 for Android. Also note that we don't store any of your custom parameters, but only append them to your callbacks.  If you 
 haven't registered a callback for an event, these parameters won't even be read.
 
@@ -296,7 +296,7 @@ You can read more about special partners and these integrations in our [guide to
 ### <a id="attribution-callback">Attribution callback
 
 You can register a callback to be notified of tracker attribution changes. Due to the different sources considered for 
-attribution, this information can not by provided synchronously. Follow these steps to implement the optional callback in 
+attribution, this information cannot be provided synchronously. Follow these steps to implement the optional callback in 
 your application:
 
 Please make sure to consider [applicable attribution data policies][attribution_data].
@@ -351,7 +351,7 @@ public class ExampleGUI : MonoBehaviour {
 
 ### <a id="session-event-callbacks">Session and event callbacks
 
-You can register a callback to be notified of successful and failed tracked events and/or sessions.
+You can register a callback to be notified of successful and failed events and/or sessions.
 
 Follow the same steps to implement the following callback function for successful tracked events:
 
@@ -461,8 +461,7 @@ adjust SDK by invoking `setEnabled` with the `enabled` parameter set to `true`.
 ### <a id="offline-mode">Offline mode
 
 You can put the adjust SDK in offline mode to suspend transmission to our servers, while retaining tracked data to be sent 
-later. While in offline mode, all information is saved in a file, so be careful not to trigger too many events while in 
-offline mode.
+later. When in offline mode, all information is saved in a file, so be careful not to trigger too many events.
 
 You can activate offline mode by calling `setOfflineMode` with the parameter `true`.
 
@@ -473,7 +472,7 @@ Adjust.setOfflineMode(true);
 Conversely, you can deactivate offline mode by calling `setOfflineMode` with `false`. When the adjust SDK is put back in 
 online mode, all saved information is send to our servers with the correct time information.
 
-Unlike disabling tracking, **this setting is not remembered** bettween sessions. This means that the SDK is in online mode 
+Unlike disabling tracking, **this setting is not remembered** between sessions. This means that the SDK is in online mode 
 whenever it is started, even if the app was terminated in offline mode.
 
 ### <a id="event-buffering">Event buffering
@@ -489,11 +488,11 @@ adjustConfig.setEventBufferingEnabled (true);
 Adjust.start (adjustConfig);
 ```
 
-If nothing set, event buffering is **disabled by default**.
+If nothing is set, event buffering is **disabled by default**.
 
 ### <a id="background-tracking">Background tracking
 
-The default behaviour of the adjust SDK is to **pause sending HTTP requests while the app is on the background**. You can 
+The default behaviour of the adjust SDK is to **pause sending HTTP requests while the app is in the background**. You can 
 change this in your `AdjustConfig` instance:
 
 ```csharp
@@ -535,11 +534,7 @@ Adjust.getIdfa ()
 
 **Deep linking is supported only on iOS and Android platforms.**
 
-If you are using the adjust tracker URL with an option to deep link into your app from the URL, the adjust SDK offers you 
-the possibility to get info about the deep link URL and its content. Since hitting the URL can happen if your user has your
-app already installed (standard deep linking scenario) or if they don't have the app on their device (deferred deep linking 
-scenario), the adjust SDK offers you two methods for getting the URL content, based on the deep linking scenario that 
-happened.
+If you are using the adjust tracker URL with an option to deep link into your app from the URL, there is the possibility to get info about the deep link URL and its content. Hitting the URL can happen when the user has your app already installed (standard deep linking scenario) or if they don't have the app on their device (deferred deep linking scenario). In the standard deep linking scenario, Android platform natively offers the possibility for you to get the info about the deep link content. Deferred deep linking scenario is something which Android platform doesn't support out of box and for this case, the adjust SDK will offer you the mechanism to get the info about the deep link content.
 
 You need to set up deep linking handling in your app **on native level** - in your generated Xcode project (for iOS) and Android Studio / Eclipse project (for Android).
 
