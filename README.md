@@ -6,31 +6,36 @@ about adjust™ at [adjust.com].
 ## Table of contents
 
 * [Basic integration](#basic-integration)
-    * [Get the SDK](#sdk-get)
-    * [Add the SDK to your project](#sdk-add)
-    * [Integrate the SDK into your app](#sdk-integrate)
-    * [Adjust logging](#adjust-logging)
-    * [Google Play Services](#google-play-services)
-    * [Build scripts](#build-scripts)
-        * [iOS build script](#build-script-ios)
-        * [Android build script](#build-script-android)
+   * [Get the SDK](#sdk-get)
+   * [Add the SDK to your project](#sdk-add)
+   * [Integrate the SDK into your app](#sdk-integrate)
+   * [Adjust logging](#adjust-logging)
+   * [Google Play Services](#google-play-services)
+   * [Build scripts](#build-scripts)
+      * [iOS build script](#build-script-ios)
+      * [Android build script](#build-script-android)
 * [Additional features](#additional-features)
-    * [Event tracking](#event-tracking)
-        * [Revenue tracking](#revenue-tracking)
-        * [Revenue deduplication](#revenue-deduplication)
-        * [In-App Purchase verification](#iap-verification)
-        * [Callback parameters](#callback-parameters)
-        * [Partner parameters](#partner-parameters)
-    * [Attribution callback](#attribution-callback)
-    * [Session and event callbacks](#session-event-callbacks)
-    * [Disable tracking](#disable-tracking)
-    * [Offline mode](#offline-mode)
-    * [Device IDs](#device-ids)
-    * [Deep linking](#deeplinking)
-        * [Standard deep linking scenario](#deeplinking-standard)
-        * [Deferred deep linking scenario](#deeplinking-deferred)
-        * [Set up scheme on Android activity](#scheme-android)
-        * [Set up custom URL scheme in iOS](#scheme-ios)
+   * [Event tracking](#event-tracking)
+      * [Revenue tracking](#revenue-tracking)
+      * [Revenue deduplication](#revenue-deduplication)
+      * [In-App Purchase verification](#iap-verification)
+      * [Callback parameters](#callback-parameters)
+      * [Partner parameters](#partner-parameters)
+   * [Attribution callback](#attribution-callback)
+   * [Session and event callbacks](#session-event-callbacks)
+   * [Disable tracking](#disable-tracking)
+   * [Offline mode](#offline-mode)
+   * [Event buffering](#event-buffering)
+   * [Background tracking](#background-tracking)
+   * [Device IDs](#device-ids)
+   * [Deep linking](#deeplinking)
+      * [Standard deep linking scenario](#deeplinking-standard)
+      * [Deferred deep linking scenario](#deeplinking-deferred)
+      * [Deep linking handling in Android app](#deeplinking-app-android)
+      * [Deep linking handling in iOS app](#deeplinking-app-ios)
+* [Troubleshooting](#troubleshooting)
+   * [Debug information in iOS](#ts-debug-ios)
+   * [Build scripts fails to be executed](#ts-build-script-fail)
 * [License](#license)
 
 ## <a id="basic-integration">Basic integration
@@ -524,95 +529,132 @@ To obtain the IDFA, call the function `getIdfa`:
 Adjust.getIdfa ()
 ```
 
-### 17. Set listener for deferred deeplinks
+### <a id="deeplinking">Deep linking
 
-You can register a listener to be notified before a deferred deeplink is opened and decide 
-if the adjust SDK will open it. With the `AdjustConfig` instance, before starting the SDK, 
-add the deferred deeplink listener:
+**Note**: Deep linking is supported only on iOS and Android platforms.
 
-```csharp
-AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
-adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
+If you are using the adjust tracker URL with an option to deep link into your app from the URL, the adjust SDK offers you 
+the possibility to get info about the deep link URL and its content. Since hitting the URL can happen if your user has your
+app already installed (standard deep linking scenario) or if they don't have the app on their device (deferred deep linking 
+scenario), the adjust SDK offers you two methods for getting the URL content, based on the deep linking scenario that 
+happened.
 
-Adjust.start (adjustConfig);
+You need to set up deep linking handling in your app **on native level** - in your generated Xcode project (for iOS) and Android Studio / Eclipse project (for Android).
 
+#### <a id="deeplinking-standard">Standard deep linking scenario
+
+Unfortunatelly, in this scenario the information about the deep link can not be delivered to you in your Unity3d C# code. 
+Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more information check our chapters below on how to enable deep linking for Android and iOS apps.
+
+#### <a id="deeplinking-deferred">Deferred deep linking scenario
+
+In order to get info about the URL content in a deferred deep linking scenario, you should set a callback method on the 
+`AdjustConfig` object which will receive one `string` parameter where the content of the URL will be delivered. You 
+should set this method on the config object by calling the method `setDeferredDeeplinkDelegate`:
+
+```cs
 // ...
 
 private void DeferredDeeplinkCallback (string deeplinkURL)
 {
-    if (deeplinkURL != null)
-    {
-        Debug.Log ("Deeplink URL: " + deeplinkURL);
-    }
+   Debug.Log ("Deeplink URL: " + deeplinkURL);
+
+   // ...
 }
-```
 
-The listener function will be called after the SDK receives a deffered deeplink from 
-ther server and before open it. Within the listener function you have access to the 
-deeplink. In addition, you have possibility to choose do you want the SDK to launch
-deferred deeplink for you or not. You can set this option on `AdjustConfig` instance:
-
-```csharp
 AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
 
 adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
+
+Adjust.start (adjustConfig);
+```
+
+In deferred deep linking scenario, there is one additional setting which can be set on the `AdjustConfig` object. Once the 
+adjust SDK gets the deferred deep link info, we are offering you the possibility to choose whether our SDK should open this 
+URL or not. You can choose to set this option by calling the `setLaunchDeferredDeeplink` method on the config object:
+
+```cs
+// ...
+
+private void DeferredDeeplinkCallback (string deeplinkURL)
+{
+   Debug.Log ("Deeplink URL: " + deeplinkURL);
+
+   // ...
+}
+
+AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+
 adjustConfig.setLaunchDeferredDeeplink (true);
-// or: adjustConfig.setLaunchDeferredDeeplink (false);
+adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
 
 Adjust.start (adjustConfig);
-
-// ...
-
-private void DeferredDeeplinkCallback (string deeplinkURL)
-{
-    if (deeplinkURL != null)
-    {
-        Debug.Log ("Deeplink URL: " + deeplinkURL);
-    }
-}
 ```
 
-By default (if you don't use this option), the SDK will launch deferred deeplink.
-You could, for example, not allow the SDK open the deeplink at the moment, save it, 
-and open it yourself later.
+If nothing is set, **the adjust SDK will always try to launch the URL by default**.
 
-## Troubleshooting
+To enable your apps to support deep linking, you should set up schemes for each supported platform.
 
-### iOS
+#### <a id="deeplinking-app-android">Deep linking handling in Android app
+
+**Note**: This should be done in native Android Studio / Eclipse project.
+
+To set up your Android app to handle deep linking on native level, please follow our [guide][android-deeplinking] 
+in the official Android SDK README.
+
+#### <a id="deeplinking-app-ios">Deep linking handling in iOS app
+
+**Note**: This should be done in native Xcode project.
+
+To set up your iOS app to handle deep linking on native level, please follow our [guide][ios-deeplinking] 
+in the official iOS SDK README.
+
+## <a id="troubleshooting">Troubleshooting
+
+### <a id="ts-debug-ios">Debug information in iOS
 
 Even with the post build script it is possible that the project is not ready to run out of the box.
 
-If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
+If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab 
+and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. 
+Change it from `DWARF with dSYM File` to `DWARF`.
 
-### Build scripts
+### <a id="ts-build-script-fail">Build scripts fails to be executed
 
-The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case, use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py` and `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py` to add execute privileges.
+The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one 
+of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case,
+use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py` and 
+`Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py` to add execute privileges.
 
 
-[adjust.com]:               http://adjust.com
-[dashboard]:                http://adjust.com
-[releases]:                 https://github.com/adjust/adjust_unity_sdk/releases
-[import_package]:           https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
-[adjust_editor]:            https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
-[menu_android]:             https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
-[ios]:                      https://github.com/adjust/ios_sdk
-[android]:                  https://github.com/adjust/android_sdk
-[android-custom-receiver]:  https://github.com/adjust/android_sdk/blob/master/doc/referrer.md
-[attribution_data]:         https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
-[special-partners]:         https://docs.adjust.com/en/special-partners
-[unity-purchase-sdk]:       https://github.com/adjust/unity_purchase_sdk
-[google_ad_id]:             https://developer.android.com/google/play-services/id.html
-[google_play_services]:     http://developer.android.com/google/play-services/setup.html
-[android_sdk_download]:     https://developer.android.com/sdk/index.html#Other
-[android_sdk_location]:     https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download.png
+[dashboard]:               http://adjust.com
+[adjust.com]:              http://adjust.com
 
-## License
+[ios]:                     https://github.com/adjust/ios_sdk
+[android]:                 https://github.com/adjust/android_sdk
+[releases]:                https://github.com/adjust/adjust_unity_sdk/releases
+[google_ad_id]:            https://developer.android.com/google/play-services/id.html
+[ios-deeplinking]:         https://github.com/adjust/ios_sdk/#deeplink-reattributions
+[attribution_data]:        https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
+[special-partners]:        https://docs.adjust.com/en/special-partners
+[unity-purchase-sdk]:      https://github.com/adjust/unity_purchase_sdk
+[android-deeplinking]:     https://github.com/adjust/android_sdk#deep-linking
+[google_play_services]:    http://developer.android.com/google/play-services/setup.html
+[android_sdk_download]:    https://developer.android.com/sdk/index.html#Other
+[android-custom-receiver]: https://github.com/adjust/android_sdk/blob/master/doc/referrer.md
 
-The file mod_pbxproj.py is licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
+[menu_android]:            https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
+[adjust_editor]:           https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
+[import_package]:          https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
+[android_sdk_location]:    https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download.png
+
+## <a id="license">License
+
+The file mod_pbxproj.py is licensed under the Apache License, Version 2.0 (the "License").
+You may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
-The adjust-sdk is licensed under the MIT License.
+The adjust SDK is licensed under the MIT License.
 
 Copyright (c) 2012-2016 adjust GmbH,
 http://www.adjust.com
