@@ -156,8 +156,7 @@ Press the same button to re-enable it.
 
 The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity3d iOS generated project in the following ways:
 
-1. Adds the iAd.framework and AdSupport.framework to the project. This is required by the adjust SDK - check out the adjust
-[iOS][ios] page for more details.
+1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the official [iOS SDK README][ios] for more details.
 
 2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during the build time.
 
@@ -182,7 +181,10 @@ necessary to do this step once, as long the manifest file remains compatible wit
 If there is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
 `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
 
-1. Adds the adjust broadcast receiver. For more details consult the adjust [Android][android] page for more details. Please, have in mind that if you are using your **own broadcast receiver** which handles `INSTALL_REFERRER` intent, you don't need the adjust broadcast receiver to be added in your manifest file. Remove it, but inside your own receiver add the call to the adjust broadcast receiver like described in [Android guide][android-custom-receiver].
+1. Adds the adjust broadcast receiver. For more details consult the official [Android SDK README][android] for more details.
+Please, have in mind that if you are using your **own broadcast receiver** which handles `INSTALL_REFERRER` intent, you 
+don't need the adjust broadcast receiver to be added in your manifest file. Remove it, but inside your own receiver add the 
+call to the adjust broadcast receiver like described in [Android guide][android-custom-receiver].
 
 2. Adds the permission to connect to the internet.
 
