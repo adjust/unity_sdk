@@ -70,9 +70,9 @@ You have the possibility to set up the following options on the Adjust prefab:
 * [Event Buffering](#event-buffering)
 * [Print Attribution](#attribution-callback)
 * [Send In Background](#background-tracking)
-* [Launch Deferred Deep Link](#deferred-deeplink-callback)
+* [Launch Deferred Deep Link](#deeplinking-deferred)
 * [App Token](#app-token)
-* [Log Level](#log-level)
+* [Log Level](#adjust-logging)
 * [Environment](#environment)
 
 <a id="app-token">Replace `{YourAppToken}` with your actual App Token. You can find in your [dashboard].
@@ -156,7 +156,8 @@ Press the same button to re-enable it.
 
 The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity iOS generated project in the following ways:
 
-1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the official [iOS SDK README][ios] for more details.
+1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the 
+official [iOS SDK README][ios] for more details.
 
 2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during build time.
 
@@ -199,9 +200,9 @@ Once you integrated the adjust SDK into your project, you can take advantage of 
 
 ### <a id="event-tracking">Event tracking
 
-You can tell adjust about any event you wish. Suppose you want to track every tap on a button. You would just need to create a 
-new Event Token in your [dashboard]. Let's say that Event Token is `abc123`. In your button's click handler method you could
-then add the following lines to track the click:
+You can tell adjust about any event you wish. Suppose you want to track every tap on a button. You would just need to create
+a new Event Token in your [dashboard]. Let's say that Event Token is `abc123`. In your button's click handler method you 
+could then add the following lines to track the click:
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent ("abc123");
@@ -270,9 +271,9 @@ http://www.adjust.com/callback?key=value&foo=bar
 
 It should be mentioned that we support a variety of placeholders like `{idfa}` for iOS or `{gps_adid}` for Android that 
 can be used as parameter values.  In the resulting callback the `{idfa}` placeholder would be replaced with the ID for 
-Advertisers of the current device for iOS and the `{gps_adid}` would be replaced with the Google Play Services ID of the current device 
-for Android. Also note that we don't store any of your custom parameters, but only append them to your callbacks.  If you 
-haven't registered a callback for an event, these parameters won't even be read.
+Advertisers of the current device for iOS and the `{gps_adid}` would be replaced with the Google Play Services ID of the 
+current device for Android. Also note that we don't store any of your custom parameters, but only append them to your 
+callbacks. If you haven't registered a callback for an event, these parameters won't even be read.
 
 #### <a id="partner-parameters">Partner parameters
 
@@ -534,14 +535,21 @@ Adjust.getIdfa ()
 
 **Deep linking is supported only on iOS and Android platforms.**
 
-If you are using the adjust tracker URL with an option to deep link into your app from the URL, there is the possibility to get info about the deep link URL and its content. Hitting the URL can happen when the user has your app already installed (standard deep linking scenario) or if they don't have the app on their device (deferred deep linking scenario). In the standard deep linking scenario, Android platform natively offers the possibility for you to get the info about the deep link content. Deferred deep linking scenario is something which Android platform doesn't support out of box and for this case, the adjust SDK will offer you the mechanism to get the info about the deep link content.
+If you are using the adjust tracker URL with an option to deep link into your app from the URL, there is the possibility to 
+get info about the deep link URL and its content. Hitting the URL can happen when the user has your app already installed 
+(standard deep linking scenario) or if they don't have the app on their device (deferred deep linking scenario). In the 
+standard deep linking scenario, Android platform natively offers the possibility for you to get the info about the deep link
+content. Deferred deep linking scenario is something which Android platform doesn't support out of box and for this case, 
+the adjust SDK will offer you the mechanism to get the info about the deep link content.
 
-You need to set up deep linking handling in your app **on native level** - in your generated Xcode project (for iOS) and Android Studio / Eclipse project (for Android).
+You need to set up deep linking handling in your app **on native level** - in your generated Xcode project (for iOS) and 
+Android Studio / Eclipse project (for Android).
 
 #### <a id="deeplinking-standard">Standard deep linking scenario
 
 Unfortunatelly, in this scenario the information about the deep link can not be delivered to you in your Unity C# code. 
-Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more information check our chapters below on how to enable deep linking for Android and iOS apps.
+Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more 
+information check our chapters below on how to enable deep linking for Android and iOS apps.
 
 #### <a id="deeplinking-deferred">Deferred deep linking scenario
 
