@@ -11,9 +11,7 @@ using UnityEditor.Callbacks;
 public class AdjustEditor : MonoBehaviour
 {
     static bool isEnabled = true;
-#if UNITY_IOS
     static string iOSBuildPath = "";
-#endif
 
     [PostProcessBuild]
     public static void OnPostprocessBuild (BuildTarget target, string pathToBuiltProject)
@@ -23,7 +21,7 @@ public class AdjustEditor : MonoBehaviour
             return;
         }
 
-        var exitCode = RunPostBuildScript (preBuild: false, pathToBuiltProject: pathToBuiltProject);
+        var exitCode = RunPostBuildScript (target: target, preBuild: false, pathToBuiltProject: pathToBuiltProject);
 
         if (exitCode == -1)
         {
@@ -32,7 +30,7 @@ public class AdjustEditor : MonoBehaviour
 
         if (exitCode != 0)
         {
-            var errorMessage = GenerateErrorScriptMessage (exitCode);
+            var errorMessage = GenerateErrorScriptMessage (target, exitCode);
             UnityEngine.Debug.LogError ("adjust: " + errorMessage);
         }
     }
@@ -41,7 +39,7 @@ public class AdjustEditor : MonoBehaviour
     static void FixAndroidManifest ()
     {
 #if UNITY_ANDROID
-        var exitCode = RunPostBuildScript (preBuild: true);
+        var exitCode = RunPostBuildScript (target: BuildTarget.Android, preBuild: true);
 
         if (exitCode == 1)
         {
@@ -55,7 +53,7 @@ public class AdjustEditor : MonoBehaviour
         }
         else
         {
-            EditorUtility.DisplayDialog ("Adjust", GenerateErrorScriptMessage (exitCode), "OK");
+            EditorUtility.DisplayDialog ("Adjust", GenerateErrorScriptMessage (BuildTarget.Android, exitCode), "OK");
         }
 #else
         EditorUtility.DisplayDialog ("Adjust", "Option only valid for the Android platform.", "OK");
@@ -91,14 +89,13 @@ public class AdjustEditor : MonoBehaviour
         EditorUtility.DisplayDialog ("Adjust", "The post processing for adjust is now " + (isEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    static int RunPostBuildScript (bool preBuild, string pathToBuiltProject = "")
+    static int RunPostBuildScript (BuildTarget target, bool preBuild, string pathToBuiltProject = "")
     {
         string resultContent;
         string arguments = null;
         string pathToScript = null;
 
-        string filePath = System.IO.Path.Combine (Environment.CurrentDirectory, 
-                              @"Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py");
+        string filePath = System.IO.Path.Combine (Environment.CurrentDirectory, @"Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py");
 
         // Check if Unity is running on Windows operating system.
         // If yes - fix line endings in python scripts.
@@ -135,29 +132,33 @@ public class AdjustEditor : MonoBehaviour
             }
         }
 
-#if UNITY_ANDROID
-        pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py";
-        arguments = "\"" + Application.dataPath + "\"";
-        
-        if (preBuild)
+        if (target == BuildTarget.Android)
         {
-            arguments = "--pre-build " + arguments;
+            pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py";
+            arguments = "\"" + Application.dataPath + "\"";
+        
+            if (preBuild)
+            {
+                arguments = "--pre-build " + arguments;
+            }
         }
-
-#elif UNITY_IOS
-        pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py";
-        
-        if (AdjustEditor.iOSBuildPath == "")
+        else if (target == BuildTarget.iOS)
         {
-            arguments = "\"" + pathToBuiltProject + "\"";
+            pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py";
+        
+            if (AdjustEditor.iOSBuildPath == "")
+            {
+                arguments = "\"" + pathToBuiltProject + "\"";
+            }
+            else
+            {
+                arguments = "\"" + AdjustEditor.iOSBuildPath + "\"";
+            }
         }
         else
         {
-            arguments = "\"" + AdjustEditor.iOSBuildPath + "\"";
+            return -1;
         }
-#else
-        return -1;
-#endif
 
         Process proc = new Process ();
         proc.EnableRaisingEvents = false; 
@@ -169,30 +170,37 @@ public class AdjustEditor : MonoBehaviour
         return proc.ExitCode;
     }
 
-    static string GenerateErrorScriptMessage (int exitCode)
+    static string GenerateErrorScriptMessage (BuildTarget target, int exitCode)
     {
-#if UNITY_ANDROID
-        if (exitCode == 1)
+        if (target == BuildTarget.Android)
         {
-            return "The AndroidManifest.xml file was only changed or created after building the package. " +
-                  "PLease build again the Android Unity package so it can use the new file";
-        }  
-#endif
+            if (exitCode == 1)
+            {
+                return "The AndroidManifest.xml file was only changed or created after building the package. " +
+                        "Please build again the Android Unity package so it can use the new file";
+            }
+        }
 
         if (exitCode != 0)
         {
-            var message = "Build script exited with error." +
-                          " Please check the Adjust log file for more information at {0}";
+            var message = "Build script exited with error. " +
+                          "Please check the Adjust log file for more information at {0}";
             string projectPath = Application.dataPath.Substring (0, Application.dataPath.Length - 7);
             string logFile = null;
             
-#if UNITY_ANDROID
-            logFile = projectPath + "/AdjustPostBuildAndroidLog.txt";
-#elif UNITY_IOS
-            logFile = projectPath + "/AdjustPostBuildiOSLog.txt";
-#else
-            return null;
-#endif
+            if (target == BuildTarget.Android)
+            {
+                logFile = projectPath + "/AdjustPostBuildAndroidLog.txt";
+            }
+            else if (target == BuildTarget.iOS)
+            {
+                logFile = projectPath + "/AdjustPostBuildiOSLog.txt";
+            }
+            else
+            {
+                return null;
+            }
+
             return string.Format (message, logFile);
         } 
 

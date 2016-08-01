@@ -10,12 +10,12 @@ namespace com.adjust.sdk
     public class AdjustiOS : IAdjust
     {
         #region Fields
-        private const string sdkPrefix = "unity4.6.0";
+        private const string sdkPrefix = "unity4.7.0";
         #endregion
 
         #region External methods
         [DllImport ("__Internal")]
-        private static extern void _AdjustLaunchApp (string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering, string sceneName);
+        private static extern void _AdjustLaunchApp (string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering, int sendInBackground, int launchDeferredDeeplink, string sceneName);
 
         [DllImport ("__Internal")]
         private static extern void _AdjustTrackEvent (string eventToken, double revenue, string currency, string receipt, string transactionId, int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
@@ -50,9 +50,11 @@ namespace com.adjust.sdk
             string environment = adjustConfig.environment.lowercaseToString ();
 
             int logLevel = AdjustUtils.ConvertLogLevel (adjustConfig.logLevel);
+            int sendInBackground = AdjustUtils.ConvertBool (adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool (adjustConfig.eventBufferingEnabled);
+            int launchDeferredDeeplink = AdjustUtils.ConvertBool (adjustConfig.launchDeferredDeeplink);
 
-            _AdjustLaunchApp (appToken, environment, sdkPrefix, logLevel, eventBufferingEnabled, sceneName);
+            _AdjustLaunchApp (appToken, environment, sdkPrefix, logLevel, eventBufferingEnabled, sendInBackground, launchDeferredDeeplink, sceneName);
         }
 
         public void trackEvent (AdjustEvent adjustEvent)

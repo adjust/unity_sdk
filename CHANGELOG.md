@@ -1,3 +1,17 @@
+### Version 4.7.0 (1st August 2016)
+### Added
+- Added `setSendInBackground` method on `AdjustConfig` object for enabling/disabling tracking while app is in background.
+- Added `setLaunchDeferredDeeplink` method on `AdjustConfig` object for allowing/preventing the SDK to launch deferred deeplink.
+- Added `setDeferredDeeplinkDelegate` method on `AdjustConfig` object for setting a callback to be triggered when deferred deeplink is received.
+
+#### Changed
+- Changed `AdjustEditor.cs` to use `BuildTarget` values instead of #defines.
+- Updated docs.
+- Updated Native iOS SDK to version **4.8.0**.
+- Updated Native Android SDK to version **4.7.0**.
+
+---
+
 ### Version 4.6.0 (13th April 2016)
 ### Added
 - Added `setEventSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if event is successfully tracked.
