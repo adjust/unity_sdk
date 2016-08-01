@@ -1,4 +1,4 @@
-### Version 4.7.0 (xxth May 2016)
+### Version 4.7.0 (1st August 2016)
 ### Added
 - Added `setSendInBackground` method on `AdjustConfig` object for enabling/disabling tracking while app is in background.
 - Added `setLaunchDeferredDeeplink` method on `AdjustConfig` object for allowing/preventing the SDK to launch deferred deeplink.
