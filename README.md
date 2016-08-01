@@ -70,7 +70,7 @@ You have the possibility to set up the following options on the Adjust prefab:
 * [Event Buffering](#event-buffering)
 * [Print Attribution](#attribution-callback)
 * [Send In Background](#background-tracking)
-* [Launch Deferred Deep Link](#deeplinking-deferred)
+* [Launch Deferred Deep Link](#deeplinking-deferred-open)
 * [App Token](#app-token)
 * [Log Level](#adjust-logging)
 * [Environment](#environment)
@@ -574,9 +574,10 @@ adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
 Adjust.start (adjustConfig);
 ```
 
-In deferred deep linking scenario, there is one additional setting which can be set on the `AdjustConfig` object. Once the 
-adjust SDK gets the deferred deep link info, we are offering you the possibility to choose whether our SDK should open this 
-URL or not. You can choose to set this option by calling the `setLaunchDeferredDeeplink` method on the config object:
+<a id="deeplinking-deferred-open">In deferred deep linking scenario, there is one additional setting which can be set on the
+`AdjustConfig` object. Once the adjust SDK gets the deferred deep link info, we are offering you the possibility to choose 
+whether our SDK should open this URL or not. You can choose to set this option by calling the `setLaunchDeferredDeeplink` 
+method on the config object:
 
 ```cs
 // ...
