@@ -134,6 +134,8 @@ public class AdjustEditor : MonoBehaviour
 
         if (target == BuildTarget.Android)
         {
+            RunPostProcessTasksAndroid();
+            
             pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py";
             arguments = "\"" + Application.dataPath + "\"";
         
@@ -205,5 +207,25 @@ public class AdjustEditor : MonoBehaviour
         } 
 
         return null;
+    }
+
+    static int RunPostProcessTasksiOS ()
+    {
+
+    }
+
+    private void RunPostProcessTasksAndroid() {
+        string pathAndroidPlugins = Path.Combine(Application.dataPath, "Plugins/Android");
+        string pathAdjustManifest = Path.Combine(Application.dataPath, "Plugins/Adjust/Android/AdjustAndroidManifest.xml");
+        string pathDefaultManifest = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
+
+        int unityVersion;
+        Int32.TryParse(Application.unityVersion[0], out unityVersion);
+
+        if (unityVersion >= 5) {
+            UnityEngine.Debug.Log("Unity version higher than 5: {0}", unityVersion);
+        } else {
+            UnityEngine.Debug.Log("Unity version lower than 5: {0}", unityVersion);
+        }
     }
 }
