@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define ADJUST_NO_PYTHON
+
+using System;
 using System.IO;
 using System.Collections;
 using System.Diagnostics;
@@ -91,86 +93,98 @@ public class AdjustEditor : MonoBehaviour
 
     static int RunPostBuildScript (BuildTarget target, bool preBuild, string pathToBuiltProject = "")
     {
-        string resultContent;
-        string arguments = null;
-        string pathToScript = null;
+		if (target == BuildTarget.Android)
+		{
+#if ADJUST_NO_PYTHON
+			AdjustAndroidPostProcess proc = new AdjustAndroidPostProcess();
+			return proc.Start(Application.dataPath, preBuild);
+#else
+			string pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py";
+			ReadyPythonScript(pathToScript);
 
-        string filePath = System.IO.Path.Combine (Environment.CurrentDirectory, @"Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py");
+			string arguments = "\"" + Application.dataPath + "\"";
+			if (preBuild)
+			{
+				arguments = "--pre-build " + arguments;
+			}
 
-        // Check if Unity is running on Windows operating system.
-        // If yes - fix line endings in python scripts.
-        if (Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            UnityEngine.Debug.Log ("Windows platform");
+			return ExecutePython (pathToScript, arguments);
+#endif
+		}
+		else if (target == BuildTarget.iOS)
+		{
+			string pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py";
+			ReadyPythonScript (pathToScript);
 
-            using (System.IO.StreamReader streamReader = new System.IO.StreamReader (filePath))
-            {
-                string fileContent = streamReader.ReadToEnd ();
-                resultContent = Regex.Replace (fileContent, @"\r\n|\n\r|\n|\r", "\r\n");
-            }
+			string arguments = null;
+			if (AdjustEditor.iOSBuildPath == "")
+			{
+				arguments = "\"" + pathToBuiltProject + "\"";
+			}
+			else
+			{
+				arguments = "\"" + AdjustEditor.iOSBuildPath + "\"";
+			}
 
-            if (File.Exists (filePath))
-            {
-                File.WriteAllText (filePath, resultContent);
-            }
-        }
-        else
-        {
-            UnityEngine.Debug.Log ("Unix platform");
+			return ExecutePython (pathToScript, arguments);
+		}
+		else
+		{
+			return -1;
+		}
+	}
 
-            using (System.IO.StreamReader streamReader = new System.IO.StreamReader (filePath))
-            {
-                string replaceWith = "\n";
-                string fileContent = streamReader.ReadToEnd ();
-                
-                resultContent = fileContent.Replace ("\r\n", replaceWith);
-            }
+	/// <summary>
+	/// Update the line endings on the Python script.
+	/// </summary>
+	private static void ReadyPythonScript (string pathToScript)
+	{
+		string resultContent;
+		// Used to only ever change "Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py" which seemed off (didn't fix Cloud Build issue)
+		string filePath = Path.Combine (Environment.CurrentDirectory, "Assets" + pathToScript);
 
-            if (File.Exists (filePath))
-            {
-                File.WriteAllText (filePath, resultContent);
-            }
-        }
+		// Check if Unity is running on Windows operating system.
+		// If yes - fix line endings in python scripts.
+		if (Application.platform == RuntimePlatform.WindowsEditor)
+		{
+			UnityEngine.Debug.Log ("Windows platform");
 
-        if (target == BuildTarget.Android)
-        {
-            pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py";
-            arguments = "\"" + Application.dataPath + "\"";
-        
-            if (preBuild)
-            {
-                arguments = "--pre-build " + arguments;
-            }
-        }
-        else if (target == BuildTarget.iOS)
-        {
-            pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py";
-        
-            if (AdjustEditor.iOSBuildPath == "")
-            {
-                arguments = "\"" + pathToBuiltProject + "\"";
-            }
-            else
-            {
-                arguments = "\"" + AdjustEditor.iOSBuildPath + "\"";
-            }
-        }
-        else
-        {
-            return -1;
-        }
+			using (StreamReader streamReader = new StreamReader (filePath))
+			{
+				string fileContent = streamReader.ReadToEnd ();
+				resultContent = Regex.Replace (fileContent, @"\r\n|\n\r|\n|\r", "\r\n");
+			}
+		}
+		else
+		{
+			UnityEngine.Debug.Log ("Unix platform");
 
-        Process proc = new Process ();
-        proc.EnableRaisingEvents = false; 
-        proc.StartInfo.FileName = Application.dataPath + pathToScript;
-        proc.StartInfo.Arguments = arguments;
-        proc.Start ();
-        proc.WaitForExit ();
-        
-        return proc.ExitCode;
-    }
+			using (StreamReader streamReader = new StreamReader (filePath))
+			{
+				string fileContent = streamReader.ReadToEnd ();
+				resultContent = fileContent.Replace ("\r\n", "\n");
+			}
+		}
 
-    static string GenerateErrorScriptMessage (BuildTarget target, int exitCode)
+		if (File.Exists (filePath))
+		{
+			File.WriteAllText (filePath, resultContent);
+		}
+	}
+
+	private static int ExecutePython (string pathToScript, string arguments)
+	{
+		Process proc = new Process ();
+		proc.EnableRaisingEvents = false;
+		proc.StartInfo.FileName = Application.dataPath + pathToScript;
+		proc.StartInfo.Arguments = arguments;
+		proc.Start ();
+		proc.WaitForExit ();
+
+		return proc.ExitCode;
+	}
+
+	static string GenerateErrorScriptMessage (BuildTarget target, int exitCode)
     {
         if (target == BuildTarget.Android)
         {
