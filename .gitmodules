@@ -7,6 +7,3 @@
 [submodule "ext/Windows/sdk"]
 	path = ext/Windows/sdk
 	url = https://github.com/adjust/windows_sdk.git
-[submodule "ext/mod_pbxproj"]
-	path = ext/mod_pbxproj
-	url = git@github.com:kronenthaler/mod-pbxproj.git
