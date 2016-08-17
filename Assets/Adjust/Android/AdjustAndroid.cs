@@ -8,7 +8,7 @@ namespace com.adjust.sdk {
 #if UNITY_ANDROID
     public class AdjustAndroid : IAdjust {
         #region Fields
-        private const string sdkPrefix = "unity4.7.0";
+        private const string sdkPrefix = "unity4.7.1";
 
         private static bool launchDeferredDeeplink = true;
 
