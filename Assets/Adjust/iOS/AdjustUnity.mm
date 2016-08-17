@@ -168,7 +168,7 @@ static id<AdjustDelegate> adjustUnityInstance = nil;
 @end
 
 // Method for converting JSON stirng parameters into NSArray object.
-NSArray* ConvertArrayParameters (const char* cStringJsonArrayParameters) {
+NSArray* ConvertArrayParameters(const char* cStringJsonArrayParameters) {
     if (cStringJsonArrayParameters == NULL) {
         return nil;
     }

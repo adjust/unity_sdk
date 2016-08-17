@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace com.adjust.sdk
-{
-    public class AdjustAttribution
-    {
+namespace com.adjust.sdk {
+    public class AdjustAttribution {
         #region Properties
         public string network { get; set; }
         public string adgroup { get; set; }
@@ -16,56 +14,46 @@ namespace com.adjust.sdk
         #endregion
 
         #region Constructors
-        public AdjustAttribution ()
-        {
-        }
+        public AdjustAttribution() {}
 
-        public AdjustAttribution (string jsonString)
-        {
-            var jsonNode = JSON.Parse (jsonString);
+        public AdjustAttribution(string jsonString) {
+            var jsonNode = JSON.Parse(jsonString);
             
-            if (jsonNode == null)
-            {
+            if (jsonNode == null) {
                 return;
             }
 
-            trackerName = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyTrackerName);
-            trackerToken = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyTrackerToken);
-            network = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyNetwork);
-            campaign = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyCampaign);
-            adgroup = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyAdgroup);
-            creative = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyCreative);
-            clickLabel = AdjustUtils.GetJsonString (jsonNode, AdjustUtils.KeyClickLabel);
+            trackerName = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTrackerName);
+            trackerToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTrackerToken);
+            network = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyNetwork);
+            campaign = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCampaign);
+            adgroup = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdgroup);
+            creative = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCreative);
+            clickLabel = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyClickLabel);
         }
 
-        public AdjustAttribution (Dictionary<string, string> dicAttributionData)
-        {
-            if (dicAttributionData == null)
-            {
+        public AdjustAttribution(Dictionary<string, string> dicAttributionData) {
+            if (dicAttributionData == null) {
                 return;
             }
 
-            trackerName = TryGetValue (dicAttributionData, AdjustUtils.KeyTrackerName);
-            trackerToken = TryGetValue (dicAttributionData, AdjustUtils.KeyTrackerToken);
-            network = TryGetValue (dicAttributionData, AdjustUtils.KeyNetwork);
-            campaign = TryGetValue (dicAttributionData, AdjustUtils.KeyCampaign);
-            adgroup = TryGetValue (dicAttributionData, AdjustUtils.KeyAdgroup);
-            creative = TryGetValue (dicAttributionData, AdjustUtils.KeyCreative);
-            clickLabel = TryGetValue (dicAttributionData, AdjustUtils.KeyClickLabel);
+            trackerName = TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerName);
+            trackerToken = TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerToken);
+            network = TryGetValue(dicAttributionData, AdjustUtils.KeyNetwork);
+            campaign = TryGetValue(dicAttributionData, AdjustUtils.KeyCampaign);
+            adgroup = TryGetValue(dicAttributionData, AdjustUtils.KeyAdgroup);
+            creative = TryGetValue(dicAttributionData, AdjustUtils.KeyCreative);
+            clickLabel = TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
         }
         #endregion
 
         #region Private & helper methods
-        private static string TryGetValue (Dictionary<string, string> dic, string key)
-        {
+        private static string TryGetValue(Dictionary<string, string> dic, string key) {
             string value;
 
-            if (dic.TryGetValue (key, out value))
-            {
+            if (dic.TryGetValue(key, out value)) {
                 return value;
-            } 
-            else
-            {
+            } else {
                 return null;
             }
         }
