@@ -13,15 +13,15 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor {
     private static bool isPostProcessingEnabled = true;
 
-    [MenuItem ("Tools/adjust SDK/Check post processing permission")]
+    [MenuItem ("Tools/Adjust/Check post processing permission")]
     public static void CheckPostProcessingPermission() {
-        EditorUtility.DisplayDialog ("adjust SDK", "The post processing for adjust is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog ("adjust", "The post processing for adjust is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem ("Tools/adjust SDK/Change post processing permission")]
+    [MenuItem ("Tools/Adjust/Change post processing permission")]
     public static void ChangePostProcessingPermission() {
         isPostProcessingEnabled = !isPostProcessingEnabled;
-        EditorUtility.DisplayDialog ("adjust SDK", "The post processing for adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog ("adjust", "The post processing for adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
     [PostProcessBuild]
