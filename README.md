@@ -12,8 +12,8 @@ about adjust™ at [adjust.com].
    * [Adjust logging](#adjust-logging)
    * [Google Play Services](#google-play-services)
    * [Post build process](#post-build-process)
-      * [iOS post build tasks](#post-build-ios)
-      * [Android post build tasks](#post-build-android)
+      * [iOS post build process](#post-build-ios)
+      * [Android post build process](#post-build-android)
 * [Additional features](#additional-features)
    * [Event tracking](#event-tracking)
       * [Revenue tracking](#revenue-tracking)
@@ -146,42 +146,45 @@ provided by Google, called `SDK Readme.txt`, which is placed in Android SDK fold
 
 ### <a id="post-build-process">Post build process
 
-To facilitate the build process, post build tasks will be performed by the adjust unity package in order to enable the 
-adjust SDK to work properly. There is a difference in how these tasks are performed in `Unity 4.x.y` and `Unity 5.x.y` IDE.
+To facilitate the build process, post build process will be performed by the adjust unity package in order to enable the 
+adjust SDK to work properly. There is a difference in how this process is performed in `Unity 4.x.y` and `Unity 5.x.y`.
 
-If you are using the adjust unity package for `Unity 4.x.y`, these tasks are going to be performed by executing post 
-build Python scripts:
+If you are using the adjust unity package for `Unity 4.x.y`, this process is going to be performed by executing post build 
+Python scripts:
 
 - The iOS Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`.
 - The Android Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`.
 
-The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `Python 
-2.7` installed to work. It's possible to disable the post processing by clicking on the menu `Assets → Adjust → Change post 
-processing status`. Press the same button to re-enable it.
+The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least 
+`Python 2.7` installed to work. It's possible to disable the post processing by clicking on the menu `Assets → Adjust → 
+Change post processing status`. Press the same button to re-enable it.
 
-If you are using the adjust unity package for `Unity 5.x.y`, these tasks are going to be performed by `OnPostprocessBuild` 
-method in `AdjustEditor.cs`. In order for iOS post build tasks to be executed properly, your `Unity 5.x.y` should have `iOS 
-build support` installed.
+If you are using the adjust unity package for `Unity 5.x.y`, this process is going to be performed by `OnPostprocessBuild` 
+method in `AdjustEditor.cs`. In order for iOS post build process to be executed properly, your `Unity 5.x.y` should have 
+`iOS build support` installed.
 
-#### <a id="post-build-ios">iOS post build tasks
+After running in `Unity 4.x.y`, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity 
+project with log messages of the script run. In `Unity 5.x.y`, all log messages are written to Unity IDE console output 
+window.
 
-iOS post build tasks are performing following changes in your generated Xcode projet:
+#### <a id="post-build-ios">iOS post build process
+
+iOS post build process is performing following changes in your generated Xcode projet:
 
 1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the 
 official [iOS SDK README][ios] for more details.
-
 2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during build time.
+3. Enables `Objective-C exceptions`.
 
-If you have a custom build that puts the Unity iOS generated project in a different location, inform the script by 
-clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS project.
+If you are using `Unity 4.x.y` and if you have a custom build that puts the Unity iOS generated project in a different 
+location, inform the script by clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of 
+the iOS project.
 
-After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity project with log 
-messages of the script run.
+#### <a id="post-build-android">Android post build process
 
-#### <a id="post-build-android">Android post build tasks
+Android post build process is performing changes in `AndroidManifest.xml` file located at `Assets/Plugins/Android/`.
 
-Android post build tasks are performing changes in `AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The 
-problem with this approach with `Unity 4.x.y` is that the manifest file used for the Android package was the same one as
+The problem with this approach with `Unity 4.x.y` is that the manifest file used for the Android package was the same one as
 before the build process ended. To mitigate this, simply run the build again, using the manifest created or changed by the 
 previous run, or click on the menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build 
 process. Either way, it is only necessary to do this step once, as long the manifest file remains compatible with the adjust
@@ -189,8 +192,7 @@ SDK.
 
 ![][menu_android]
 
-Android post build tasks in `Unity 5.x.y` do not have these issues and all tasks are performed instantly after build process
-is done.
+This doesn't need to be performed for Android post build process in `Unity 5.x.y`.
 
 Android post build process initially checks for presence of `AndroidManifest.xml` file in Android plugins folder. If there 
 is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
@@ -200,14 +202,8 @@ is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy 
 Please, have in mind that if you are using your **own broadcast receiver** which handles `INSTALL_REFERRER` intent, you 
 don't need the adjust broadcast receiver to be added in your manifest file. Remove it, but inside your own receiver add the 
 call to the adjust broadcast receiver like described in [Android guide][android-custom-receiver].
-
 2. Adds the permission to connect to the internet.
-
 3. Adds the permission to access information about Wi-Fi networks.
-
-After running in `Unity 4.x.y`, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity 
-project with log messages of the script run. In `Unity 5.x.y`, all log messages are written to Unity IDE console output 
-window.
 
 ## <a id="additional-features">Additional features
 
