@@ -11,9 +11,9 @@ about adjust™ at [adjust.com].
    * [Integrate the SDK into your app](#sdk-integrate)
    * [Adjust logging](#adjust-logging)
    * [Google Play Services](#google-play-services)
-   * [Build scripts](#build-scripts)
-      * [iOS build script](#build-script-ios)
-      * [Android build script](#build-script-android)
+   * [Post build process](#post-build-process)
+      * [iOS post build tasks](#post-build-ios)
+      * [Android post build tasks](#post-build-android)
 * [Additional features](#additional-features)
    * [Event tracking](#event-tracking)
       * [Revenue tracking](#revenue-tracking)
@@ -144,17 +144,28 @@ If you are not using any tool which has Android SDK Manager, you should download
 doesn't include the Android SDK Tools. There are more detailed instructions on how to download these in the readme file 
 provided by Google, called `SDK Readme.txt`, which is placed in Android SDK folder.
 
-### <a id="build-scripts">Build scripts
+### <a id="post-build-process">Post build process
 
-To facilitate the build process we integrated build scripts for both Android and iOS. The script runs after each build and 
-is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `python 2.7` installed to work.
+To facilitate the build process, post build tasks will be performed by the adjust unity package in order to enable the 
+adjust SDK to work properly. There is a difference in how these tasks are performed in `Unity 4.x.y` and `Unity 5.x.y` IDE.
 
-It's possible to disable the post processing by clicking on the menu `Assets → Adjust → Change post processing status`.
-Press the same button to re-enable it.
+If you are using the adjust unity package for `Unity 4.x.y`, these tasks are going to be performed by executing post 
+build Python scripts:
 
-#### <a id="build-script-ios">iOS build script
+- The iOS Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`.
+- The Android Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`.
 
-The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity iOS generated project in the following ways:
+The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `Python 
+2.7` installed to work. It's possible to disable the post processing by clicking on the menu `Assets → Adjust → Change post 
+processing status`. Press the same button to re-enable it.
+
+If you are using the adjust unity package for `Unity 5.x.y`, these tasks are going to be performed by `OnPostprocessBuild` 
+method in `AdjustEditor.cs`. In order for iOS post build tasks to be executed properly, your `Unity 5.x.y` should have `iOS 
+build support` installed.
+
+#### <a id="post-build-ios">iOS post build tasks
+
+iOS post build tasks are performing following changes in your generated Xcode projet:
 
 1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the 
 official [iOS SDK README][ios] for more details.
@@ -167,19 +178,22 @@ clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the
 After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity project with log 
 messages of the script run.
 
-#### <a id="build-script-android">Android build script
+#### <a id="post-build-android">Android post build tasks
 
-The Android build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`. It changes the 
-`AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The problem with this approach is that the manifest file 
-used for the Android package was the same one as before the build process ended.
-
-To mitigate this, simply run the build again, using the manifest created or changed by the previous run, or click on the 
-menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build process. Either way, it is only 
-necessary to do this step once, as long the manifest file remains compatible with the adjust SDK.
+Android post build tasks are performing changes in `AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The 
+problem with this approach with `Unity 4.x.y` is that the manifest file used for the Android package was the same one as
+before the build process ended. To mitigate this, simply run the build again, using the manifest created or changed by the 
+previous run, or click on the menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build 
+process. Either way, it is only necessary to do this step once, as long the manifest file remains compatible with the adjust
+SDK.
 
 ![][menu_android]
 
-If there is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
+Android post build tasks in `Unity 5.x.y` do not have these issues and all tasks are performed instantly after build process
+is done.
+
+Android post build process initially checks for presence of `AndroidManifest.xml` file in Android plugins folder. If there 
+is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
 `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
 
 1. Adds the adjust broadcast receiver. For more details, consult the official [Android SDK README][android].
@@ -191,8 +205,9 @@ call to the adjust broadcast receiver like described in [Android guide][android-
 
 3. Adds the permission to access information about Wi-Fi networks.
 
-After running, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity project with log 
-messages of the script run.
+After running in `Unity 4.x.y`, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity 
+project with log messages of the script run. In `Unity 5.x.y`, all log messages are written to Unity IDE console output 
+window.
 
 ## <a id="additional-features">Additional features
 
