@@ -13,12 +13,12 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor {
     private static bool isPostProcessingEnabled = true;
 
-    [MenuItem ("Tools/Adjust/Check post processing permission")]
+    [MenuItem ("Assets/Adjust/Check post processing permission")]
     public static void CheckPostProcessingPermission() {
         EditorUtility.DisplayDialog ("adjust", "The post processing for adjust is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem ("Tools/Adjust/Change post processing permission")]
+    [MenuItem ("Assets/Adjust/Change post processing permission")]
     public static void ChangePostProcessingPermission() {
         isPostProcessingEnabled = !isPostProcessingEnabled;
         EditorUtility.DisplayDialog ("adjust", "The post processing for adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
@@ -44,67 +44,49 @@ public class AdjustEditor {
             RunPostProcessTasksAndroid();
         } else if (target == BuildTarget.iOS) {
             UnityEngine.Debug.Log("adjust: Starting to perform post build tasks for iOS platform.");
-            RunPostProcessTasksiOS(projectPath);
+            
+            string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
+
+            PBXProject xcodeProject = new PBXProject();
+            xcodeProject.ReadFromFile(xcodeProjectPath);
+
+            // The adjust SDK needs two frameworks to be added to the project:
+            // - AdSupport.framework
+            // - iAd.framework
+
+            string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
+            
+            UnityEngine.Debug.Log("adjust: Adding AdSupport.framework to Xcode project.");
+            xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
+            UnityEngine.Debug.Log("adjust: AdSupport.framework added successfully.");
+
+            UnityEngine.Debug.Log("adjust: Adding iAd.framework to Xcode project.");
+            xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
+            UnityEngine.Debug.Log("adjust: iAd.framework added successfully.");
+
+            // The adjust SDK needs to have Obj-C exceptions enabled.
+            // GCC_ENABLE_OBJC_EXCEPTIONS=YES
+
+            UnityEngine.Debug.Log("adjust: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
+            xcodeProject.AddBuildProperty(xcodeTarget, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
+
+            UnityEngine.Debug.Log("adjust: Obj-C exceptions enabled successfully.");
+
+            // The adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
+            // OTHER_LDFLAGS -ObjC
+            
+            UnityEngine.Debug.Log("adjust: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
+            xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
+
+            UnityEngine.Debug.Log("adjust: -ObjC successfully added to other linker flags.");
+
+            // Save the changes to Xcode project file.
+            xcodeProject.WriteToFile(xcodeProjectPath);
         }
     }
 
     private static void RunPostProcessTasksiOS(string projectPath) {
-        string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
-
-        PBXProject xcodeProject = new PBXProject();
-        xcodeProject.ReadFromFile(xcodeProjectPath);
-
-        // Add needed frameworks.
-        AddFrameworks(xcodeProject);
-
-        // Enable Obj-C exceptions.
-        EnableObjcExceptions(xcodeProject);
-
-        // Add other linker flags.
-        AddOtherLinkerFlags(xcodeProject);
-
-        // Save the changes to Xcode project file.
-        xcodeProject.WriteToFile(xcodeProjectPath);
-    }
-
-    private static void AddFrameworks(PBXProject xcodeProject) {
-        // The adjust SDK needs two frameworks to be added to the project:
-        // - AdSupport.framework
-        // - iAd.framework
-
-        string target = xcodeProject.TargetGuidByName("Unity-iPhone");
         
-        UnityEngine.Debug.Log("adjust: Adding AdSupport.framework to Xcode project.");
-        xcodeProject.AddFrameworkToProject(target, "AdSupport.framework", true);
-        UnityEngine.Debug.Log("adjust: AdSupport.framework added successfully.");
-
-        UnityEngine.Debug.Log("adjust: Adding iAd.framework to Xcode project.");
-        xcodeProject.AddFrameworkToProject(target, "iAd.framework", true);
-        UnityEngine.Debug.Log("adjust: iAd.framework added successfully.");
-    }
-
-    private static void EnableObjcExceptions(PBXProject xcodeProject) {
-        // The adjust SDK needs to have Obj-C exceptions enabled.
-        // GCC_ENABLE_OBJC_EXCEPTIONS=YES
-
-        string target = xcodeProject.TargetGuidByName("Unity-iPhone");
-        
-        UnityEngine.Debug.Log("adjust: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
-        xcodeProject.AddBuildProperty(target, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
-
-        UnityEngine.Debug.Log("adjust: Obj-C exceptions enabled successfully.");
-    }
-
-    private static void AddOtherLinkerFlags(PBXProject xcodeProject) {
-        // The adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
-        // OTHER_LDFLAGS -ObjC
-
-        string target = xcodeProject.TargetGuidByName("Unity-iPhone");
-        
-        UnityEngine.Debug.Log("adjust: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
-        xcodeProject.AddBuildProperty(target, "OTHER_LDFLAGS", "-ObjC");
-
-        UnityEngine.Debug.Log("adjust: -ObjC successfully added to other linker flags.");
     }
 
     private static void RunPostProcessTasksAndroid() {
