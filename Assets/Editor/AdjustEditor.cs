@@ -13,12 +13,12 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor {
     private static bool isPostProcessingEnabled = true;
 
-    [MenuItem ("Assets/Adjust/Check post processing permission")]
+    [MenuItem ("Assets/Adjust/Check post processing status")]
     public static void CheckPostProcessingPermission() {
         EditorUtility.DisplayDialog ("adjust", "The post processing for adjust is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem ("Assets/Adjust/Change post processing permission")]
+    [MenuItem ("Assets/Adjust/Change post processing status")]
     public static void ChangePostProcessingPermission() {
         isPostProcessingEnabled = !isPostProcessingEnabled;
         EditorUtility.DisplayDialog ("adjust", "The post processing for adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
