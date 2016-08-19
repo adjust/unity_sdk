@@ -21,6 +21,7 @@ namespace com.adjust.sdk {
         public bool eventBuffering = false;
         public bool printAttribution = true;
         public bool sendInBackground = false;
+        public bool makeAdWordsRequest = false;
         public bool launchDeferredDeeplink = true;
 
         public string appToken = "{Your App Token}";
@@ -38,6 +39,10 @@ namespace com.adjust.sdk {
             DontDestroyOnLoad(transform.gameObject);
 
             if (!this.startManually) {
+                if (this.makeAdWordsRequest) {
+                    Adjust.sendAdWordsRequest();
+                }
+
                 AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment);
 
                 adjustConfig.setLogLevel(this.logLevel);
@@ -155,7 +160,9 @@ namespace com.adjust.sdk {
         
         // iOS specific methods
         public static void sendAdWordsRequest() {
+#if UNITY_IOS
             AdjustiOS.sendAdWordsRequest();
+#endif
         }
 
         public static void setDeviceToken(string deviceToken) {
