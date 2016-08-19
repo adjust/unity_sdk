@@ -32,6 +32,9 @@ namespace com.adjust.sdk {
 
         [DllImport("__Internal")]
         private static extern string _AdjustGetIdfa();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustSendAdWordsRequest();
         #endregion
 
         #region Constructors
@@ -81,6 +84,10 @@ namespace com.adjust.sdk {
         }
 
         // iOS specific methods
+        public static void sendAdWordsRequest() {
+            _AdjustSendAdWordsRequest();
+        }
+
         public void setDeviceToken(string deviceToken) {
             _AdjustSetDeviceToken(deviceToken);
         }

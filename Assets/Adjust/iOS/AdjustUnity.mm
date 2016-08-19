@@ -333,4 +333,8 @@ extern "C"
 
         return idfaCStringCopy;
     }
+
+    void _AdjustSendAdWordsRequest() {
+        [Adjust sendAdWordsRequest];
+    }
 }

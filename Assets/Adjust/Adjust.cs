@@ -154,6 +154,10 @@ namespace com.adjust.sdk {
         }
         
         // iOS specific methods
+        public static void sendAdWordsRequest() {
+            AdjustiOS.sendAdWordsRequest();
+        }
+
         public static void setDeviceToken(string deviceToken) {
             if (Adjust.instance == null) {
                 Debug.Log(Adjust.errorMessage);
