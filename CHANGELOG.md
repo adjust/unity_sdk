@@ -1,4 +1,7 @@
-### Version 4.7.1 (xxth August 2016)
+### Version 4.8.0 (xxth August 2016)
+#### Added
+- Added `sendAdWordsRequest` method on `Adjust` instance to support AdWords Search and Mobile Web tracking.
+
 #### Changed
 - Removed Python post build scripts in the adjust SDK unity package for Unity 5.x.y IDE.
 - Updated docs.
