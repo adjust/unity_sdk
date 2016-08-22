@@ -148,7 +148,7 @@ provided by Google, called `SDK Readme.txt`, which is placed in Android SDK fold
 
 ### <a id="post-build-process">Post build process
 
-To facilitate the build process, post build process will be performed by the adjust unity package in order to enable the 
+To facilitate the complete build process, the post build process will be performed by the adjust unity package in order to enable the 
 adjust SDK to work properly. There is a difference in how this process is performed in `Unity 4` and `Unity 5`.
 
 If you are using the adjust unity package for `Unity 4`, this process is going to be performed by executing post build 
@@ -157,20 +157,20 @@ Python scripts:
 - The iOS Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`.
 - The Android Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`.
 
-The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least 
-`Python 2.7` installed to work. It's possible to disable the post processing by clicking on the menu `Assets → Adjust → 
+The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. This require that at least 
+`Python 2.7` is installed. It's possible to disable the post processing by clicking on the menu `Assets → Adjust → 
 Change post processing status`. Press the same button to re-enable it.
 
-If you are using the adjust unity package for `Unity 5`, this process is going to be performed by `OnPostprocessBuild`  
-method in `AdjustEditor.cs`. In order for iOS post build process to be executed properly, your `Unity 5` should have 
+If you are using the adjust unity package for `Unity 5`, this process is going to be performed by the `OnPostprocessBuild`  
+method in `AdjustEditor.cs`. In order for the iOS post build process to be executed properly, your `Unity 5` should have 
 `iOS build support` installed.
 
 After running in `Unity 4`, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity project 
-with log messages of the script run. In `Unity 5`, all log messages are written to Unity IDE console output window.
+with log messages of the script run. In `Unity 5`, all log messages are written to the Unity IDE console output window.
 
 #### <a id="post-build-ios">iOS post build process
 
-iOS post build process is performing following changes in your generated Xcode projet:
+iOS post build process is performing the following changes in your generated Xcode projet:
 
 1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the 
 official [iOS SDK README][ios] for more details.
@@ -183,19 +183,19 @@ project.
 
 #### <a id="post-build-android">Android post build process
 
-Android post build process is performing changes in `AndroidManifest.xml` file located at `Assets/Plugins/Android/`.
+The Android post build process is performing changes in the `AndroidManifest.xml` file located at `Assets/Plugins/Android/`.
 
-The problem with this approach with `Unity 4` is that the manifest file used for the Android package was the same one as
+The problem with this approach with `Unity 4` is that the manifest file that was used for the Android package was the same one as
 before the build process ended. To mitigate this, simply run the build again, using the manifest created or changed by the 
 previous run, or click on the menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build 
-process. Either way, it is only necessary to do this step once, as long the manifest file remains compatible with the adjust
+process. Either way, it is only necessary to do this step once, as long as the manifest file remains compatible with the adjust
 SDK.
 
 ![][menu_android]
 
-This doesn't need to be performed for Android post build process in `Unity 5`.
+This doesn't need to be performed for Android post the build process in `Unity 5`.
 
-Android post build process initially checks for presence of `AndroidManifest.xml` file in Android plugins folder. If there 
+The Android post build process initially checks for the presence of the `AndroidManifest.xml` file in the Android plugins folder. If there 
 is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
 `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
 
@@ -538,13 +538,13 @@ Adjust.getIdfa()
 ### <a id="adwords-tracking">AdWords Search and Mobile Web tracking
 
 If you are initialising the adjust SDK manually and want to support deterministic tracking for all AdWords web inventories, 
-you just need to call the `sendAdWordsRequest` on the `Adjust` instance **before initialising the SDK** with `start` method.
+you just need to call the `sendAdWordsRequest` on the `Adjust` instance **before initialising the SDK** with the `start` method.
 
 ```cs
 Adjust.sendAdWordsRequest();
 ```
 
-If you have checked `Start Manually` option on the adjust prefab, please check the `Make Ad Words Request` check box and the
+If you have checked the `Start Manually` option on the adjust prefab, please check the `Make Ad Words Request` check box and the
 request will be sent automatically.
 
 ### <a id="deeplinking">Deep linking
