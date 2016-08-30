@@ -1,5 +1,15 @@
+### Version 4.8.0 (xxth August 2016)
+#### Added
+- Added `sendAdWordsRequest` method on `Adjust` instance to support AdWords Search and Mobile Web tracking.
+
+#### Changed
+- Removed Python post build scripts in the adjust SDK unity package for Unity 5.x.y IDE.
+- Updated docs.
+
+---
+
 ### Version 4.7.0 (1st August 2016)
-### Added
+#### Added
 - Added `setSendInBackground` method on `AdjustConfig` object for enabling/disabling tracking while app is in background.
 - Added `setLaunchDeferredDeeplink` method on `AdjustConfig` object for allowing/preventing the SDK to launch deferred deeplink.
 - Added `setDeferredDeeplinkDelegate` method on `AdjustConfig` object for setting a callback to be triggered when deferred deeplink is received.
@@ -13,7 +23,7 @@
 ---
 
 ### Version 4.6.0 (13th April 2016)
-### Added
+#### Added
 - Added `setEventSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if event is successfully tracked.
 - Added `setEventFailureDelegate` method on `AdjustConfig` object for setting a callback to be triggered if event tracking failed.
 - Added `setSessionSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if session is successfully tracked.
@@ -27,7 +37,7 @@
 ---
 
 ### Version 4.1.3 (12th February 2016)
-### Added
+#### Added
 - Added `Bitcode` support for iOS framework.
 - Added `getIdfa` method for getting `IDFA` on iOS device.
 - Added `getGoogleAdId` method for getting Google `Play Services Ad Id` on Android device.
@@ -39,7 +49,7 @@
 ---
 
 ### Version 4.1.2 (20th January 2016)
-### Added
+#### Added
 - Added support for iOS iAd v3.
 
 #### Changed
@@ -50,7 +60,7 @@
 ---
 
 ### Version 4.1.1 (23rd December 2015)
-### Added
+#### Added
 - Added Changelog to the repository.
 
 #### Changed

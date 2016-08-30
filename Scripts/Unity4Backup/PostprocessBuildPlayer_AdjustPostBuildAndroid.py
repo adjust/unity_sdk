@@ -85,18 +85,22 @@ def edit_manifest(Log, manifest_file, check_dic, android_plugin_path):
         receiver_xml = parseString(receiver_string)
         receiver_xml.documentElement.removeAttribute("xmlns:android")
 
+        Log("Adding the adjust broadcast receiver.")
+
         for app_element in manifest_xml.getElementsByTagName("application"):
             app_element.appendChild(receiver_xml.documentElement)
         
-        Log("Successfully added the adjust install referrer receiver")
+        Log("The adjust broadcast receiver successfully added.")
 
     # Add the internet permission to the manifest element
     if not check_dic["has_internet_permission"]:
+        Log("Adding INTERNET permission to app's AndroidManifest.xml file.")
+        
         ip_element = manifest_xml.createElement("uses-permission")
         ip_element.setAttribute("android:name", "android.permission.INTERNET")
         manifest_xml.documentElement.appendChild(ip_element)
         
-        Log("Successfully added INTERNET permission")
+        Log("Successfully added INTERNET permission to app's AndroidManifest.xml file.")
 
     # If google play services are not included add the access wifi state permission to the manifest element.
     # If google play services are included - don't add.
@@ -104,11 +108,13 @@ def edit_manifest(Log, manifest_file, check_dic, android_plugin_path):
 
     if not os.path.isdir(google_play_services_path):
         if not check_dic["has_wifi_permission"]:
+            Log("Adding ACCESS_WIFI_STATE permission to app's AndroidManifest.xml file.")
+
             ip_element = manifest_xml.createElement("uses-permission")
             ip_element.setAttribute("android:name", "android.permission.ACCESS_WIFI_STATE")
             manifest_xml.documentElement.appendChild(ip_element)
             
-            Log("Successfully added ACCESS_WIFI_STATE permission")
+            Log("Successfully added ACCESS_WIFI_STATE permission to app's AndroidManifest.xml file.")
 
     # Log(manifest_xml.toxml())
     return manifest_xml
@@ -119,13 +125,13 @@ def check_manifest(Log, manifest_file):
     # Log(manifest_xml.toxml())
     
     has_adjust_receiver = has_element_attr(manifest_xml, "receiver", "android:name", "com.adjust.sdk.AdjustReferrerReceiver")
-    Log("Does manifest have adjust install referrer receiver?: {0}", has_adjust_receiver)
+    Log("Does app's AndroidManifest.xml file have the adjust broadcast receiver? {0}", has_adjust_receiver)
 
     has_internet_permission = has_element_attr(manifest_xml, "uses-permission", "android:name", "android.permission.INTERNET")
-    Log("Does manifest have INTERNET permission?: {0}", has_internet_permission)
+    Log("Does app's AndroidManifest.xml file have INTERNET permission? {0}", has_internet_permission)
     
     has_wifi_permission = has_element_attr(manifest_xml, "uses-permission", "android:name", "android.permission.ACCESS_WIFI_STATE")
-    Log("Does manifest have ACCESS_WIFI_STATE permission?: {0}", has_wifi_permission)
+    Log("Does app's AndroidManifest.xml file have ACCESS_WIFI_STATE permission? {0}", has_wifi_permission)
 
     return {"manifest_xml" : manifest_xml,
             "has_adjust_receiver" : has_adjust_receiver,

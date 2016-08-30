@@ -11,9 +11,9 @@ about adjust™ at [adjust.com].
    * [Integrate the SDK into your app](#sdk-integrate)
    * [Adjust logging](#adjust-logging)
    * [Google Play Services](#google-play-services)
-   * [Build scripts](#build-scripts)
-      * [iOS build script](#build-script-ios)
-      * [Android build script](#build-script-android)
+   * [Post build process](#post-build-process)
+      * [iOS post build process](#post-build-ios)
+      * [Android post build process](#post-build-android)
 * [Additional features](#additional-features)
    * [Event tracking](#event-tracking)
       * [Revenue tracking](#revenue-tracking)
@@ -28,6 +28,7 @@ about adjust™ at [adjust.com].
    * [Event buffering](#event-buffering)
    * [Background tracking](#background-tracking)
    * [Device IDs](#device-ids)
+   * [AdWords Search and Mobile Web tracking](#adwords-tracking)
    * [Deep linking](#deeplinking)
       * [Standard deep linking scenario](#deeplinking-standard)
       * [Deferred deep linking scenario](#deeplinking-deferred)
@@ -46,8 +47,8 @@ These are the minimal steps required to integrate the adjust SDK into your Unity
 
 Download the latest version from our [releases page][releases]. In there you will find two Unity packages:
 
-* **Adjust_vX.Y.Z_Unity_4.unitypackage** - Use this package if you are using **Unity IDE version 4**.
-* **Adjust_vX.Y.Z_Unity_5.unitypackage** - Use this package if you are using **Unity IDE version 5**.
+* **Adjust_v4.8.0_Unity_4.unitypackage** - Use this package if you are using **Unity IDE version 4**.
+* **Adjust_v4.8.0_Unity_5.unitypackage** - Use this package if you are using **Unity IDE version 5**.
 
 ### <a id="sdk-add">Add the SDK to your project
 
@@ -70,6 +71,7 @@ You have the possibility to set up the following options on the Adjust prefab:
 * [Event Buffering](#event-buffering)
 * [Print Attribution](#attribution-callback)
 * [Send In Background](#background-tracking)
+* [Make AdWords Request](#adwords-tracking)
 * [Launch Deferred Deep Link](#deeplinking-deferred-open)
 * [App Token](#app-token)
 * [Log Level](#adjust-logging)
@@ -120,7 +122,7 @@ Call the method `setLogDelegate` in the `AdjustConfig` instance before starting 
 //...
 adjustConfig.setLogDelegate(msg => Debug.Log(msg));
 //...
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 ```
 
 ### <a id="google-play-services">Google Play Services
@@ -144,55 +146,65 @@ If you are not using any tool which has Android SDK Manager, you should download
 doesn't include the Android SDK Tools. There are more detailed instructions on how to download these in the readme file 
 provided by Google, called `SDK Readme.txt`, which is placed in Android SDK folder.
 
-### <a id="build-scripts">Build scripts
+### <a id="post-build-process">Post build process
 
-To facilitate the build process we integrated build scripts for both Android and iOS. The script runs after each build and 
-is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `python 2.7` installed to work.
+To facilitate the build process, post build process will be performed by the adjust unity package in order to enable the 
+adjust SDK to work properly. There is a difference in how this process is performed in `Unity 4` and `Unity 5`.
 
-It's possible to disable the post processing by clicking on the menu `Assets → Adjust → Change post processing status`.
-Press the same button to re-enable it.
+If you are using the adjust unity package for `Unity 4`, this process is going to be performed by executing post build 
+Python scripts:
 
-#### <a id="build-script-ios">iOS build script
+- The iOS Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`.
+- The Android Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`.
 
-The iOS build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`. It changes the Unity iOS generated project in the following ways:
+The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least 
+`Python 2.7` installed to work. It's possible to disable post processing by clicking on the menu `Assets → Adjust → 
+Change post processing status`. Press the same button to re-enable it.
+
+If you are using the adjust unity package for `Unity 5`, this process is going to be performed by `OnPostprocessBuild`  
+method in `AdjustEditor.cs`. In order for iOS post build process to be executed properly, your `Unity 5` should have 
+`iOS build support` installed.
+
+After running in `Unity 4`, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity project 
+with log messages of the script run. In `Unity 5`, all log messages are written to the Unity IDE console output window.
+
+#### <a id="post-build-ios">iOS post build process
+
+iOS post build process is performing the following changes in your generated Xcode projet:
 
 1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the 
 official [iOS SDK README][ios] for more details.
-
 2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during build time.
+3. Enables `Objective-C exceptions`.
 
-If you have a custom build that puts the Unity iOS generated project in a different location, inform the script by 
-clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS project.
+If you are using `Unity 4` and if you have a custom build that puts the Unity iOS generated project in a different location,
+inform the script by clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS 
+project.
 
-After running, the script writes the log file `AdjustPostBuildiOSLog.txt` at the root of the Unity project with log 
-messages of the script run.
+#### <a id="post-build-android">Android post build process
 
-#### <a id="build-script-android">Android build script
+Android post build process is performing changes in `AndroidManifest.xml` file located at `Assets/Plugins/Android/`.
 
-The Android build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`. It changes the 
-`AndroidManifest.xml` file located at `Assets/Plugins/Android/`. The problem with this approach is that the manifest file 
-used for the Android package was the same one as before the build process ended.
-
-To mitigate this, simply run the build again, using the manifest created or changed by the previous run, or click on the 
-menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build process. Either way, it is only 
-necessary to do this step once, as long the manifest file remains compatible with the adjust SDK.
+The problem with this approach with `Unity 4` is that the manifest file used for the Android package was the same one as
+before the build process ended. To mitigate this, simply run the build again, using the manifest created or changed by the 
+previous run, or click on the menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build 
+process. Either way, it is only necessary to do this step once, as long as the manifest file remains compatible with the adjust
+SDK.
 
 ![][menu_android]
 
-If there is no `AndroidManifest.xml` file at `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
+This doesn't need to be performed for Android post build process in `Unity 5`.
+
+Android post build process initially checks for the presence of `AndroidManifest.xml` file in the Android plugins folder. If there 
+is no `AndroidManifest.xml` file in `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
 `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
 
 1. Adds the adjust broadcast receiver. For more details, consult the official [Android SDK README][android].
 Please, have in mind that if you are using your **own broadcast receiver** which handles `INSTALL_REFERRER` intent, you 
 don't need the adjust broadcast receiver to be added in your manifest file. Remove it, but inside your own receiver add the 
 call to the adjust broadcast receiver like described in [Android guide][android-custom-receiver].
-
 2. Adds the permission to connect to the internet.
-
 3. Adds the permission to access information about Wi-Fi networks.
-
-After running, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity project with log 
-messages of the script run.
 
 ## <a id="additional-features">Additional features
 
@@ -205,8 +217,8 @@ a new Event Token in your [dashboard]. Let's say that Event Token is `abc123`. I
 could then add the following lines to track the click:
 
 ```cs
-AdjustEvent adjustEvent = new AdjustEvent ("abc123");
-Adjust.trackEvent (adjustEvent);
+AdjustEvent adjustEvent = new AdjustEvent("abc123");
+Adjust.trackEvent(adjustEvent);
 ```
 
 #### <a id="revenue-tracking">Revenue tracking
@@ -215,9 +227,9 @@ If your users can generate revenue by tapping on advertisements or making In-App
 events. Let's say a tap is worth one Euro cent. You could then track the revenue event like this:
 
 ```cs
-AdjustEvent adjustEvent = new AdjustEvent ("abc123");
-adjustEvent.setRevenue (0.01, "EUR");
-Adjust.trackEvent (adjustEvent);
+AdjustEvent adjustEvent = new AdjustEvent("abc123");
+adjustEvent.setRevenue(0.01, "EUR");
+Adjust.trackEvent(adjustEvent);
 ```
 
 #### <a id="revenue-deduplication"></a>Revenue deduplication
@@ -232,12 +244,12 @@ If you want to track in-app purchases, please make sure to call the `trackEvent`
 item is purchased. That way you can avoid tracking revenue that is not actually being generated.
 
 ```cs
-AdjustEvent adjustEvent = new AdjustEvent ("abc123");
+AdjustEvent adjustEvent = new AdjustEvent("abc123");
 
-adjustEvent.setRevenue (0.01, "EUR");
-adjustEvent.setTransactionId ("transactionId");
+adjustEvent.setRevenue(0.01, "EUR");
+adjustEvent.setTransactionId("transactionId");
 
-Adjust.trackEvent (adjustEvent);
+Adjust.trackEvent(adjustEvent);
 ```
 
 #### <a id="iap-verification">In-App Purchase verification
@@ -255,12 +267,12 @@ For example, suppose you have registered the URL `http://www.adjust.com/callback
 and execute the following lines:
 
 ```cs
-AdjustEvent adjustEvent = new AdjustEvent ("abc123");
+AdjustEvent adjustEvent = new AdjustEvent("abc123");
 
-adjustEvent.addCallbackParameter ("key", "value");
-adjustEvent.addCallbackParameter ("foo", "bar");
+adjustEvent.addCallbackParameter("key", "value");
+adjustEvent.addCallbackParameter("foo", "bar");
 
-Adjust.trackEvent (adjustEvent);
+Adjust.trackEvent(adjustEvent);
 ```
 
 In that case we would track the event and send a request to:
@@ -284,12 +296,12 @@ This works similarly to the callback parameters mentioned above, but can be adde
 method on your `AdjustEvent` instance.
 
 ```cs
-AdjustEvent adjustEvent = new AdjustEvent ("abc123");
+AdjustEvent adjustEvent = new AdjustEvent("abc123");
 
-adjustEvent.addPartnerParameter ("key", "value");
-adjustEvent.addPartnerParameter ("foo", "bar");
+adjustEvent.addPartnerParameter("key", "value");
+adjustEvent.addPartnerParameter("foo", "bar");
 
-Adjust.trackEvent (adjustEvent);
+Adjust.trackEvent(adjustEvent);
 ```
 
 You can read more about special partners and these integrations in our [guide to special partners][special-partners].
@@ -328,23 +340,19 @@ access to the `attribution` parameter. Here is a quick summary of its properties
 using com.adjust.sdk;
 
 public class ExampleGUI : MonoBehaviour {
-{
-    void OnGUI () {
-    {
-        if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), "callback")) 
-        {
-            AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
-            adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
-            adjustConfig.setAttributionChangedDelegate (this.attributionChangedDelegate);
+    void OnGUI() {
+        if (GUI.Button(new Rect(0, 0, Screen.width, Screen.height), "callback")) {
+            AdjustConfig adjustConfig = new AdjustConfig("{Your App Token}", AdjustEnvironment.Sandbox);
+            adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
+            adjustConfig.setAttributionChangedDelegate(this.attributionChangedDelegate);
 
-            Adjust.start (adjustConfig);
+            Adjust.start(adjustConfig);
         }
     }
-    
-    public void attributionChangedDelegate (AdjustAttribution attribution)
-    {
-        Debug.Log ("Attribution changed");
-        
+
+    public void attributionChangedDelegate(AdjustAttribution attribution) {
+        Debug.Log("Attribution changed");
+
         // ...
     }
 }
@@ -359,16 +367,15 @@ Follow the same steps to implement the following callback function for successfu
 ```cs
 // ...
 
-AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
-adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
-adjustConfig.setEventSuccessDelegate (EventSuccessCallback);
+AdjustConfig adjustConfig = new AdjustConfig("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
+adjustConfig.setEventSuccessDelegate(EventSuccessCallback);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 
 // ...
 
-public void EventSuccessCallback (AdjustEventSuccess eventSuccessData)
-{
+public void EventSuccessCallback(AdjustEventSuccess eventSuccessData) {
     // ...
 }
 ```
@@ -378,16 +385,15 @@ The following callback function for failed tracked events:
 ```cs
 // ...
 
-AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
-adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
-adjustConfig.setEventFailureDelegate (EventFailureCallback);
+AdjustConfig adjustConfig = new AdjustConfig("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
+adjustConfig.setEventFailureDelegate(EventFailureCallback);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 
 // ...
 
-public void EventFailureCallback (AdjustEventFailure eventFailureData)
-{
+public void EventFailureCallback(AdjustEventFailure eventFailureData) {
     // ...
 }
 ```
@@ -397,16 +403,15 @@ For successful tracked sessions:
 ```cs
 // ...
 
-AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
-adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
-adjustConfig.setSessionSuccessDelegate (SessionSuccessCallback);
+AdjustConfig adjustConfig = new AdjustConfig("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
+adjustConfig.setSessionSuccessDelegate(SessionSuccessCallback);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 
 // ...
 
-public void SessionSuccessCallback (AdjustSessionSuccess sessionSuccessData)
-{
+public void SessionSuccessCallback (AdjustSessionSuccess sessionSuccessData) {
     // ...
 }
 ```
@@ -416,16 +421,15 @@ And for failed tracked sessions:
 ```cs
 // ...
 
-AdjustConfig adjustConfig = new AdjustConfig ("{Your App Token}", AdjustEnvironment.Sandbox);
-adjustConfig.setLogLevel (AdjustLogLevel.Verbose);
-adjustConfig.setSessionFailureDelegate (SessionFailureCallback);
+AdjustConfig adjustConfig = new AdjustConfig("{Your App Token}", AdjustEnvironment.Sandbox);
+adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
+adjustConfig.setSessionFailureDelegate(SessionFailureCallback);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 
 // ...
 
-public void SessionFailureCallback (AdjustSessionFailure sessionFailureData)
-{
+public void SessionFailureCallback (AdjustSessionFailure sessionFailureData) {
     // ...
 }
 ```
@@ -482,11 +486,11 @@ If your app makes heavy use of event tracking, you might want to delay some HTTP
 every minute. You can enable event buffering with your `AdjustConfig` instance:
 
 ```cs
-AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
 
-adjustConfig.setEventBufferingEnabled (true);
+adjustConfig.setEventBufferingEnabled(true);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 ```
 
 If nothing is set, event buffering is **disabled by default**.
@@ -497,11 +501,11 @@ The default behaviour of the adjust SDK is to **pause sending HTTP requests whil
 change this in your `AdjustConfig` instance:
 
 ```csharp
-AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
 
-adjustConfig.setSendInBackground (true);
+adjustConfig.setSendInBackground(true);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 ```
 
 ### <a id="device-ids">Device IDs
@@ -528,8 +532,20 @@ the variable `googleAdId`.
 To obtain the IDFA, call the function `getIdfa`:
 
 ```cs
-Adjust.getIdfa ()
+Adjust.getIdfa()
 ```
+
+### <a id="adwords-tracking">AdWords Search and Mobile Web tracking
+
+If you are initialising the adjust SDK manually and want to support deterministic tracking for all AdWords web inventories, 
+you just need to call the `sendAdWordsRequest` on the `Adjust` instance **before initialising the SDK** with the `start` method.
+
+```cs
+Adjust.sendAdWordsRequest();
+```
+
+If you have checked the `Start Manually` option on the adjust prefab, please check the `Make Ad Words Request` check box and the
+request will be sent automatically.
 
 ### <a id="deeplinking">Deep linking
 
@@ -560,18 +576,17 @@ should set this method on the config object by calling the method `setDeferredDe
 ```cs
 // ...
 
-private void DeferredDeeplinkCallback (string deeplinkURL)
-{
-   Debug.Log ("Deeplink URL: " + deeplinkURL);
+private void DeferredDeeplinkCallback(string deeplinkURL) {
+   Debug.Log("Deeplink URL: " + deeplinkURL);
 
    // ...
 }
 
-AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
 
-adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
+adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 ```
 
 <a id="deeplinking-deferred-open">In deferred deep linking scenario, there is one additional setting which can be set on the
@@ -582,19 +597,18 @@ method on the config object:
 ```cs
 // ...
 
-private void DeferredDeeplinkCallback (string deeplinkURL)
-{
+private void DeferredDeeplinkCallback(string deeplinkURL) {
    Debug.Log ("Deeplink URL: " + deeplinkURL);
 
    // ...
 }
 
-AdjustConfig adjustConfig = new AdjustConfig ("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
 
-adjustConfig.setLaunchDeferredDeeplink (true);
-adjustConfig.setDeferredDeeplinkDelegate (DeferredDeeplinkCallback);
+adjustConfig.setLaunchDeferredDeeplink(true);
+adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
 
-Adjust.start (adjustConfig);
+Adjust.start(adjustConfig);
 ```
 
 If nothing is set, **the adjust SDK will always try to launch the URL by default**.
