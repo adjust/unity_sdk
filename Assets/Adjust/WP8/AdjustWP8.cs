@@ -65,9 +65,23 @@ namespace com.adjust.sdk {
 			);
 		}
 
-        // iOS specific methods
-        public void setDeviceToken(string deviceToken) {}
+		public void sendFirstPackages() {}
 
+		public void setDeviceToken(string deviceToken) {}
+
+        public static void addSessionPartnerParameter(string key, string value) {}
+
+        public static void addSessionCallbackParameter(string key, string value) {}
+
+        public static void removeSessionPartnerParameter(string key) {}
+
+        public static void removeSessionCallbackParameter(string key) {}
+
+        public static void resetSessionPartnerParameters() {}
+
+        public static void resetSessionCallbackParameters() {}
+
+        // iOS specific methods
 		public string getIdfa() {
 			return null;
 		}

@@ -13,7 +13,7 @@ namespace com.adjust.sdk {
 
         #region External methods
         [DllImport("__Internal")]
-        private static extern void _AdjustLaunchApp(string appToken, string environment, string sdkPrefix, int logLevel, int eventBuffering, int sendInBackground, int launchDeferredDeeplink, string sceneName);
+        private static extern void _AdjustLaunchApp(string appToken, string environment, string sdkPrefix, int allowSuppressLogLevel, int logLevel, int eventBuffering, int sendInBackground, double delayStart, string userAgent, int launchDeferredDeeplink, string sceneName);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackEvent(string eventToken, double revenue, string currency, string receipt, string transactionId, int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
@@ -34,7 +34,26 @@ namespace com.adjust.sdk {
         private static extern string _AdjustGetIdfa();
 
         [DllImport("__Internal")]
-        private static extern void _AdjustSendAdWordsRequest();
+        private static extern void _AdjustSendFirstPackages();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustAddSessionPartnerParameter(string key, string value);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustAddSessionCallbackParameter(string key, string value);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustRemoveSessionPartnerParameter(string key);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustRemoveSessionCallbackParameter(string key);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustResetSessionPartnerParameters();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustResetSessionCallbackParameters();
+
         #endregion
 
         #region Constructors
@@ -45,14 +64,18 @@ namespace com.adjust.sdk {
         public void start(AdjustConfig adjustConfig) {
             string appToken = adjustConfig.appToken;
             string sceneName = adjustConfig.sceneName;
+            string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : String.Empty;
             string environment = adjustConfig.environment.lowercaseToString();
+
+            double delayStart = AdjustUtils.ConvertDouble(adjustConfig.delayStart);
 
             int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.logLevel);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool(adjustConfig.eventBufferingEnabled);
+            int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
 
-            _AdjustLaunchApp(appToken, environment, sdkPrefix, logLevel, eventBufferingEnabled, sendInBackground, launchDeferredDeeplink, sceneName);
+            _AdjustLaunchApp(appToken, environment, sdkPrefix, allowSuppressLogLevel, logLevel, eventBufferingEnabled, sendInBackground, delayStart, userAgent, launchDeferredDeeplink, sceneName);
         }
 
         public void trackEvent(AdjustEvent adjustEvent) {
@@ -83,11 +106,35 @@ namespace com.adjust.sdk {
             _AdjustSetOfflineMode(AdjustUtils.ConvertBool(enabled));
         }
 
-        // iOS specific methods
-        public static void sendAdWordsRequest() {
-            _AdjustSendAdWordsRequest();
+        public void sendFirstPackages() {
+            _AdjustSendFirstPackages();
         }
 
+        public static void addSessionPartnerParameter(string key, string value) {
+            _AdjustAddSessionPartnerParameter(key, value);
+        }
+
+        public static void addSessionCallbackParameter(string key, string value) {
+            _AdjustAddSessionCallbackParameter(key, value);
+        }
+
+        public static void removeSessionPartnerParameter(string key) {
+            _AdjustRemoveSessionPartnerParameter(key);
+        }
+
+        public static void removeSessionCallbackParameter(string key) {
+            _AdjustRemoveSessionCallbackParameter(key);
+        }
+
+        public static void resetSessionPartnerParameters() {
+            _AdjustResetSessionPartnerParameters();
+        }
+
+        public static void resetSessionCallbackParameters() {
+            _AdjustResetSessionCallbackParameters();
+        }
+
+        // iOS specific methods
         public void setDeviceToken(string deviceToken) {
             _AdjustSetDeviceToken(deviceToken);
         }

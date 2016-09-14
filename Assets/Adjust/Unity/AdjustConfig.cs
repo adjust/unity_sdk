@@ -3,12 +3,16 @@
 namespace com.adjust.sdk {
     public class AdjustConfig {
         #region Fields
+        internal double? delayStart;
+
         internal string appToken;
         internal string sceneName;
+        internal string userAgent;
         internal string defaultTracker;
 
         internal bool? sendInBackground;
         internal bool? eventBufferingEnabled;
+        internal bool? allowSuppressLogLevel;
         internal bool launchDeferredDeeplink;
 
         internal AdjustLogLevel? logLevel;
@@ -35,6 +39,14 @@ namespace com.adjust.sdk {
             this.appToken = appToken;
             this.environment = environment;
         }
+
+        public AdjustConfig(string appToken, AdjustEnvironment environment, bool allowSuppressLogLevel) {
+            this.sceneName = "";
+            this.processName = "";
+            this.appToken = appToken;
+            this.environment = environment;
+            this.allowSuppressLogLevel = allowSuppressLogLevel;
+        }
         #endregion
 
         #region Public methods
@@ -56,6 +68,14 @@ namespace com.adjust.sdk {
 
         public void setEventBufferingEnabled(bool eventBufferingEnabled) {
             this.eventBufferingEnabled = eventBufferingEnabled;
+        }
+
+        public void setDelayStart(double delayStart) {
+            this.delayStart = delayStart;
+        }
+
+        public void setUserAgent(string userAgent) {
+            this.userAgent = userAgent;
         }
 
         public void setDeferredDeeplinkDelegate(Action<string> deferredDeeplinkDelegate, string sceneName = "Adjust") {

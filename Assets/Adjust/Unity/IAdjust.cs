@@ -7,14 +7,17 @@ namespace com.adjust.sdk {
 
         void onPause();
         void onResume();
+        void sendFirstPackages();
+
         void setEnabled(bool enabled);
         void setOfflineMode(bool enabled);
+        void setDeviceToken(string deviceToken);
+
         void start(AdjustConfig adjustConfig);
         void trackEvent(AdjustEvent adjustEvent);
 
         // iOS specific methods
         string getIdfa();
-        void setDeviceToken(string deviceToken);
 
         // Android specific methods
         void setReferrer(string referrer);

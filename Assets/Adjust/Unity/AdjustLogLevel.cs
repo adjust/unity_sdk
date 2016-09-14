@@ -5,7 +5,8 @@
         Info,
         Warn,
         Error,
-        Assert
+        Assert,
+        Suppress
     }
 
     public static class AdjustLogLevelExtension {
@@ -23,6 +24,8 @@
                     return "error";
                 case AdjustLogLevel.Assert:
                     return "assert";
+                case AdjustLogLevel.Suppress:
+                    return "suppress";
                 default:
                     return "unknown";
             }
@@ -42,6 +45,8 @@
                     return "ERROR";
                 case AdjustLogLevel.Assert:
                     return "ASSERT";
+                case AdjustLogLevel.Suppress:
+                    return "SUPPRESS";
                 default:
                     return "unknown";
             }

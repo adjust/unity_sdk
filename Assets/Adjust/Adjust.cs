@@ -21,7 +21,6 @@ namespace com.adjust.sdk {
         public bool eventBuffering = false;
         public bool printAttribution = true;
         public bool sendInBackground = false;
-        public bool makeAdWordsRequest = false;
         public bool launchDeferredDeeplink = true;
 
         public string appToken = "{Your App Token}";
@@ -39,11 +38,13 @@ namespace com.adjust.sdk {
             DontDestroyOnLoad(transform.gameObject);
 
             if (!this.startManually) {
-                if (this.makeAdWordsRequest) {
-                    Adjust.sendAdWordsRequest();
-                }
+                AdjustConfig adjustConfig;
 
-                AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment);
+                if (this.logLevel != AdjustLogLevel.Suppress) {
+                    adjustConfig = new AdjustConfig(this.appToken, this.environment);
+                } else {
+                    adjustConfig = new AdjustConfig(this.appToken, this.environment, true);
+                }
 
                 adjustConfig.setLogLevel(this.logLevel);
                 adjustConfig.setSendInBackground(this.sendInBackground);
@@ -157,14 +158,107 @@ namespace com.adjust.sdk {
 
             Adjust.instance.setOfflineMode(enabled);
         }
-        
-        // iOS specific methods
-        public static void sendAdWordsRequest() {
-#if UNITY_IOS
-            AdjustiOS.sendAdWordsRequest();
-#endif
+
+        public static void sendFirstPackages() {
+            if (Adjust.instance == null) {
+                Debug.Log(Adjust.errorMessage);
+                return;
+            }
+
+            Adjust.instance.sendFirstPackages();
         }
 
+        public static void addSessionPartnerParameter(string key, string value) {
+            #if UNITY_IOS
+                AdjustiOS.addSessionPartnerParameter(key, value);
+            #elif UNITY_ANDROID
+                AdjustAndroid.addSessionPartnerParameter(key, value);
+            #elif UNITY_WP8
+                AdjustWP8.addSessionPartnerParameter(key, value);
+            #elif UNITY_METRO
+                AdjustMetro.addSessionPartnerParameter(key, value);
+            #else
+                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+                return;
+            #endif
+        }
+
+        public static void addSessionCallbackParameter(string key, string value) {
+            #if UNITY_IOS
+                AdjustiOS.addSessionCallbackParameter(key, value);
+            #elif UNITY_ANDROID
+                AdjustAndroid.addSessionCallbackParameter(key, value);
+            #elif UNITY_WP8
+                AdjustWP8.addSessionCallbackParameter(key, value);
+            #elif UNITY_METRO
+                AdjustMetro.addSessionCallbackParameter(key, value);
+            #else
+                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+                return;
+            #endif
+        }
+
+        public static void removeSessionPartnerParameter(string key) {
+            #if UNITY_IOS
+                AdjustiOS.removeSessionPartnerParameter(key);
+            #elif UNITY_ANDROID
+                AdjustAndroid.removeSessionPartnerParameter(key);
+            #elif UNITY_WP8
+                AdjustWP8.removeSessionPartnerParameter(key);
+            #elif UNITY_METRO
+                AdjustMetro.removeSessionPartnerParameter(key);
+            #else
+                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+                return;
+            #endif
+        }
+
+        public static void removeSessionCallbackParameter(string key) {
+            #if UNITY_IOS
+                AdjustiOS.removeSessionCallbackParameter(key);
+            #elif UNITY_ANDROID
+                AdjustAndroid.removeSessionCallbackParameter(key);
+            #elif UNITY_WP8
+                AdjustWP8.removeSessionCallbackParameter(key);
+            #elif UNITY_METRO
+                AdjustMetro.removeSessionCallbackParameter(key);
+            #else
+                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+                return;
+            #endif
+        }
+
+        public static void resetSessionPartnerParameters() {
+            #if UNITY_IOS
+                AdjustiOS.resetSessionPartnerParameters();
+            #elif UNITY_ANDROID
+                AdjustAndroid.resetSessionPartnerParameters();
+            #elif UNITY_WP8
+                AdjustWP8.resetSessionPartnerParameters();
+            #elif UNITY_METRO
+                AdjustMetro.resetSessionPartnerParameters();
+            #else
+                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+                return;
+            #endif
+        }
+
+        public static void resetSessionCallbackParameters() {
+            #if UNITY_IOS
+                AdjustiOS.resetSessionCallbackParameters();
+            #elif UNITY_ANDROID
+                AdjustAndroid.resetSessionCallbackParameters();
+            #elif UNITY_WP8
+                AdjustWP8.resetSessionCallbackParameters();
+            #elif UNITY_METRO
+                AdjustMetro.resetSessionCallbackParameters();
+            #else
+                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+                return;
+            #endif
+        }
+        
+        // iOS specific methods
         public static void setDeviceToken(string deviceToken) {
             if (Adjust.instance == null) {
                 Debug.Log(Adjust.errorMessage);

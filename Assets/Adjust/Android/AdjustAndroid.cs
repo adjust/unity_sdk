@@ -12,7 +12,7 @@ namespace com.adjust.sdk {
 
         private static bool launchDeferredDeeplink = true;
 
-        private AndroidJavaClass ajcAdjust;
+        private static AndroidJavaClass ajcAdjust;
         private AndroidJavaObject ajoCurrentActivity;
 
         private DeferredDeeplinkListener onDeferredDeeplinkListener;
@@ -25,7 +25,10 @@ namespace com.adjust.sdk {
 
         #region Constructors
         public AdjustAndroid() {
-            ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            if (ajcAdjust == null) {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+
             AndroidJavaClass ajcUnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
             ajoCurrentActivity = ajcUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
         }
@@ -39,7 +42,17 @@ namespace com.adjust.sdk {
                     new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_PRODUCTION");
 
             // Create adjust config object.
-            AndroidJavaObject ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
+            AndroidJavaObject ajoAdjustConfig;
+
+            // Check if suppress log leve is supported.
+            if (adjustConfig.allowSuppressLogLevel != null) {
+                AndroidJavaObject ajoAllowSuppressLogLevel = new AndroidJavaObject("java.lang.Boolean", adjustConfig.allowSuppressLogLevel.Value);
+
+                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment, ajoAllowSuppressLogLevel);
+            } else {
+                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
+            }
+             
 
             // Check if deferred deeplink should be launched by SDK.
             launchDeferredDeeplink = adjustConfig.launchDeferredDeeplink;
@@ -53,6 +66,11 @@ namespace com.adjust.sdk {
                 }
             }
 
+            // Check if user has configured the delayed start option.
+            if (adjustConfig.delayStart != null) {
+                ajoAdjustConfig.Call("setDelayStart", adjustConfig.delayStart);
+            }
+
             // Check event buffering setting.
             if (adjustConfig.eventBufferingEnabled != null) {
                 AndroidJavaObject ajoIsEnabled = new AndroidJavaObject("java.lang.Boolean", adjustConfig.eventBufferingEnabled.Value);
@@ -62,6 +80,21 @@ namespace com.adjust.sdk {
             // Check if user enabled tracking in the background.
             if (adjustConfig.sendInBackground != null) {
                 ajoAdjustConfig.Call("setSendInBackground", adjustConfig.sendInBackground.Value);
+            }
+
+            // Check if user has set user agent value.
+            if (adjustConfig.userAgent != null) {
+                ajoAdjustConfig.Call("setUserAgent", adjustConfig.userAgent);
+            }
+
+            // Check if user has set default process name.
+            if (!String.IsNullOrEmpty(adjustConfig.processName)) {
+                ajoAdjustConfig.Call("setProcessName", adjustConfig.processName);
+            }
+
+            // Check if user has set default tracker token.
+            if (adjustConfig.defaultTracker != null) {
+                ajoAdjustConfig.Call("setDefaultTracker", adjustConfig.defaultTracker);
             }
 
             // Check attribution changed delagate setting.
@@ -151,6 +184,62 @@ namespace com.adjust.sdk {
             ajcAdjust.CallStatic("setOfflineMode", enabled);
         }
 
+        public void sendFirstPackages() {
+            ajcAdjust.CallStatic("sendFirstPackages");
+        }
+
+        public void setDeviceToken(string deviceToken) {
+            ajcAdjust.CallStatic("setPushToken", deviceToken);
+        }
+
+        public static void addSessionPartnerParameter(string key, string value) {
+            if (ajcAdjust == null) {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+
+            ajcAdjust.CallStatic("addSessionPartnerParameter", key, value);
+        }
+
+        public static void addSessionCallbackParameter(string key, string value) {
+            if (ajcAdjust == null) {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+
+            ajcAdjust.CallStatic("addSessionCallbackParameter", key, value);
+        }
+
+        public static void removeSessionPartnerParameter(string key) {
+            if (ajcAdjust == null) {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+
+            ajcAdjust.CallStatic("removeSessionPartnerParameter", key);
+        }
+
+        public static void removeSessionCallbackParameter(string key) {
+            if (ajcAdjust == null) {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+
+            ajcAdjust.CallStatic("removeSessionCallbackParameter", key);
+        }
+
+        public static void resetSessionPartnerParameters() {
+            if (ajcAdjust == null) {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+
+            ajcAdjust.CallStatic("resetSessionPartnerParameters");
+        }
+
+        public static void resetSessionCallbackParameters() {
+            if (ajcAdjust == null) {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+
+            ajcAdjust.CallStatic("resetSessionCallbackParameters");
+        }
+
         // Android specific methods
         public void onPause() {
             ajcAdjust.CallStatic("onPause");
@@ -170,8 +259,6 @@ namespace com.adjust.sdk {
         }
 
         // iOS specific methods
-        public void setDeviceToken(string deviceToken) {}
-
         public string getIdfa() {
             return null;
         }
