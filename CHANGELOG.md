@@ -1,9 +1,20 @@
 ### Version 4.10.0 (xxth September 2016)
 #### Added
+- Added possibility to set session callback and partner parameters on `Adjust` instance with `addSessionCallbackParameter` and `addSessionPartnerParameter` methods.
+- Added possibility to remove session callback and partner parameters by key on `Adjust` instance with `removeSessionCallbackParameter` and `removeSessionPartnerParameter` methods.
+- Added possibility to remove all session callback and partner parameters on `Adjust` instance with `resetSessionCallbackParameters` and `resetSessionPartnerParameters` methods.
+- Added new `Suppress` log level and for it new `AdjustConfig` constructor which gets `bool` indicating whether suppress log level should be supported or not.
+- Added possibility to delay initialisation of the SDK while maybe waiting to obtain some session callback or partner parameters with `setDelayStart` method on `AdjustConfig` instance.
+- Added possibility to set user agent manually with `setUserAgent` method on `AdjustConfig` instance.
+- Added support for iOS 10.
 
 #### Changed
-- Removed Python post build scripts in the adjust SDK unity package for Unity 5.x.y IDE.
+- Deferred deep link info will now arrive as part of the attribution response and not as part of the answer to first session.
+- Removed Python post build scripts in the adjust SDK unity package for Unity 5 IDE.
+- Native SDKs stability updates and improvements.
 - Updated docs.
+- Updated Native iOS SDK to version **4.10.1**.
+- Updated Native Android SDK to version **4.10.0**.
 
 ---
 
