@@ -1,4 +1,4 @@
-### Version 4.10.0 (xxth September 2016)
+### Version 4.10.0 (15th September 2016)
 #### Added
 - Added possibility to set session callback and partner parameters on `Adjust` instance with `addSessionCallbackParameter` and `addSessionPartnerParameter` methods.
 - Added possibility to remove session callback and partner parameters by key on `Adjust` instance with `removeSessionCallbackParameter` and `removeSessionPartnerParameter` methods.
@@ -14,7 +14,7 @@
 - Native SDKs stability updates and improvements.
 - Updated docs.
 - Updated Native iOS SDK to version **4.10.1**.
-- Updated Native Android SDK to version **4.10.0**.
+- Updated Native Android SDK to version **4.10.1**.
 
 ---
 
