@@ -21,6 +21,10 @@ about adjust™ at [adjust.com].
       * [In-App Purchase verification](#iap-verification)
       * [Callback parameters](#callback-parameters)
       * [Partner parameters](#partner-parameters)
+   * [Session parameters](#session-parameters)
+      * [Session callback parameters](#session-callback-parameters)
+      * [Session partner parameters](#session-partner-parameters)
+      * [Delay start](#delay-start)
    * [Attribution callback](#attribution-callback)
    * [Session and event callbacks](#session-event-callbacks)
    * [Disable tracking](#disable-tracking)
@@ -28,7 +32,8 @@ about adjust™ at [adjust.com].
    * [Event buffering](#event-buffering)
    * [Background tracking](#background-tracking)
    * [Device IDs](#device-ids)
-   * [AdWords Search and Mobile Web tracking](#adwords-tracking)
+   * [Push token](#push-token)
+   * [Pre-installed trackers](#pre-installed-trackers)
    * [Deep linking](#deeplinking)
       * [Standard deep linking scenario](#deeplinking-standard)
       * [Deferred deep linking scenario](#deeplinking-deferred)
@@ -195,8 +200,8 @@ SDK.
 
 This doesn't need to be performed for Android post build process in `Unity 5`.
 
-Android post build process initially checks for the presence of `AndroidManifest.xml` file in the Android plugins folder. If there 
-is no `AndroidManifest.xml` file in `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
+Android post build process initially checks for the presence of `AndroidManifest.xml` file in the Android plugins folder. If
+there is no `AndroidManifest.xml` file in `Assets/Plugins/Android/` it creates a copy from our compatible manifest file 
 `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
 
 1. Adds the adjust broadcast receiver. For more details, consult the official [Android SDK README][android].
@@ -305,6 +310,96 @@ Adjust.trackEvent(adjustEvent);
 ```
 
 You can read more about special partners and these integrations in our [guide to special partners][special-partners].
+
+### <a id="session-parameters">Session parameters
+
+Some parameters are saved to be sent in every event and session of the adjust SDK. Once you have added any of these
+parameters, you don't need to add them every time, since they will be saved locally. If you add the same parameter twice,
+there will be no effect.
+
+These session parameters can be called before the adjust SDK is launched to make sure they are sent even on install. If you
+need to send them with an install, but can only obtain the needed values after launch, it's possible to
+[delay](#delay-start) the first launch of the adjust SDK to allow this behaviour.
+
+### <a id="session-callback-parameters"> Session callback parameters
+
+The same callback parameters that are registered for [events](#callback-parameters) can be also saved to be sent in every
+event or session of the adjust SDK.
+
+The session callback parameters have a similar interface of the event callback parameters. Instead of adding the key and
+it's value to an event, it's added through a call to `Adjust` method `addSessionCallbackParameter`:
+
+```cs
+Adjust.addSessionCallbackParameter("foo", "bar");
+```
+
+The session callback parameters will be merged with the callback parameters added to an event. The callback parameters
+added to an event have precedence over the session callback parameters. Meaning that, when adding a callback parameter to
+an event with the same key to one added from the session, the value that prevails is the callback parameter added to the
+event.
+
+It's possible to remove a specific session callback parameter by passing the desiring key to the method
+`removeSessionCallbackParameter`.
+
+```cs
+Adjust.removeSessionCallbackParameter("foo");
+```
+
+If you wish to remove all key and values from the session callback parameters, you can reset it with the method
+`resetSessionCallbackParameters`.
+
+```cs
+Adjust.resetSessionCallbackParameters();
+```
+
+### <a id="session-partner-parameters">Session partner parameters
+
+In the same way that there is [session callback parameters](#session-callback-parameters) that are sent every in event or
+session of the adjust SDK, there is also session partner parameters.
+
+These will be transmitted to network partners, for the integrations that have been activated in your adjust [dashboard].
+
+The session partner parameters have a similar interface to the event partner parameters. Instead of adding the key and it's
+value to an event, it's added through a call to `Adjust` method `addSessionPartnerParameter`:
+
+```cs
+Adjust.addSessionPartnerParameter("foo", "bar");
+```
+
+The session partner parameters will be merged with the partner parameters added to an event. The partner parameters added
+to an event have precedence over the session partner parameters. Meaning that, when adding a partner parameter to an event
+with the same key to one added from the session, the value that prevails is the partner parameter added to the event.
+
+It's possible to remove a specific session partner parameter by passing the desiring key to the method
+`removeSessionPartnerParameter`.
+
+```cs
+Adjust.removeSessionPartnerParameter("foo");
+```
+
+If you wish to remove all key and values from the session partner parameters, you can reset it with the method
+`resetSessionPartnerParameters`.
+
+```cs
+Adjust.resetSessionPartnerParameters();
+```
+
+### <a id="delay-start">Delay start
+
+Delaying the start of the adjust SDK allows your app some time to obtain session parameters, such as unique identifiers, to
+be send on install.
+
+Set the initial delay time in seconds with the method `setDelayStart` in the `AdjustConfig` instance:
+
+```cs
+adjustConfig.setDelayStart(5.5);
+```
+
+In this case this will make the adjust SDK not send the initial install session and any event created for 5.5 seconds.
+After this time is expired or if you call `Adjust.sendFirstPackages()` in the meanwhile, every session parameter will be
+added to the delayed install session and events and the adjust SDK will resume as usual.
+
+**The maximum delay start time of the adjust SDK is 10 seconds**.
 
 ### <a id="attribution-callback">Attribution callback
 
@@ -535,17 +630,37 @@ To obtain the IDFA, call the function `getIdfa`:
 Adjust.getIdfa()
 ```
 
-### <a id="adwords-tracking">AdWords Search and Mobile Web tracking
+### <a id="push-token">Push token
 
-If you are initialising the adjust SDK manually and want to support deterministic tracking for all AdWords web inventories, 
-you just need to call the `sendAdWordsRequest` on the `Adjust` instance **before initialising the SDK** with the `start` method.
+To send us the push notification token, please call `setDeviceToken` method on the `Adjust` instance **when you obtain your 
+app's push notification token and when ever it changes it's value**:
 
 ```cs
-Adjust.sendAdWordsRequest();
+Adjust.setDeviceToken("YourPushNotificationToken");
 ```
 
-If you have checked the `Start Manually` option on the adjust prefab, please check the `Make Ad Words Request` check box and the
-request will be sent automatically.
+### <a id="pre-installed-trackers">Pre-installed trackers
+
+If you want to use the Adjust SDK to recognize users that found your app pre-installed on their device, follow these steps.
+
+1. Create a new tracker in your [dashboard].
+2. Set the default tracker of your `AdjustConfig`:
+
+  ```cs
+  AdjustConfig adjustConfig = new AdjustConfig(appToken, environment);
+  adjustConfig.setDefaultTracker("{TrackerToken}");
+  Adjust.start(adjustConfig);
+  ```
+
+  Replace `{TrackerToken}` with the tracker token you created in step 2. Please note that the dashboard displays a tracker
+  URL (including `http://app.adjust.com/`). In your source code, you should specify only the six-character token and not
+  the entire URL.
+
+3. Build and run your app. You should see a line like the following in the log output:
+
+    ```
+    Default tracker: 'abc123'
+    ```
 
 ### <a id="deeplinking">Deep linking
 
