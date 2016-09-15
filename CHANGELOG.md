@@ -1,5 +1,25 @@
+### Version 4.10.0 (15th September 2016)
+#### Added
+- Added possibility to set session callback and partner parameters on `Adjust` instance with `addSessionCallbackParameter` and `addSessionPartnerParameter` methods.
+- Added possibility to remove session callback and partner parameters by key on `Adjust` instance with `removeSessionCallbackParameter` and `removeSessionPartnerParameter` methods.
+- Added possibility to remove all session callback and partner parameters on `Adjust` instance with `resetSessionCallbackParameters` and `resetSessionPartnerParameters` methods.
+- Added new `Suppress` log level and for it new `AdjustConfig` constructor which gets `bool` indicating whether suppress log level should be supported or not.
+- Added possibility to delay initialisation of the SDK while maybe waiting to obtain some session callback or partner parameters with `setDelayStart` method on `AdjustConfig` instance.
+- Added possibility to set user agent manually with `setUserAgent` method on `AdjustConfig` instance.
+- Added support for iOS 10.
+
+#### Changed
+- Deferred deep link info will now arrive as part of the attribution response and not as part of the answer to first session.
+- Removed Python post build scripts in the adjust SDK unity package for Unity 5 IDE.
+- Native SDKs stability updates and improvements.
+- Updated docs.
+- Updated Native iOS SDK to version **4.10.1**.
+- Updated Native Android SDK to version **4.10.1**.
+
+---
+
 ### Version 4.7.0 (1st August 2016)
-### Added
+#### Added
 - Added `setSendInBackground` method on `AdjustConfig` object for enabling/disabling tracking while app is in background.
 - Added `setLaunchDeferredDeeplink` method on `AdjustConfig` object for allowing/preventing the SDK to launch deferred deeplink.
 - Added `setDeferredDeeplinkDelegate` method on `AdjustConfig` object for setting a callback to be triggered when deferred deeplink is received.
@@ -13,7 +33,7 @@
 ---
 
 ### Version 4.6.0 (13th April 2016)
-### Added
+#### Added
 - Added `setEventSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if event is successfully tracked.
 - Added `setEventFailureDelegate` method on `AdjustConfig` object for setting a callback to be triggered if event tracking failed.
 - Added `setSessionSuccessDelegate` method on `AdjustConfig` object for setting a callback to be triggered if session is successfully tracked.
@@ -27,7 +47,7 @@
 ---
 
 ### Version 4.1.3 (12th February 2016)
-### Added
+#### Added
 - Added `Bitcode` support for iOS framework.
 - Added `getIdfa` method for getting `IDFA` on iOS device.
 - Added `getGoogleAdId` method for getting Google `Play Services Ad Id` on Android device.
@@ -39,7 +59,7 @@
 ---
 
 ### Version 4.1.2 (20th January 2016)
-### Added
+#### Added
 - Added support for iOS iAd v3.
 
 #### Changed
@@ -50,7 +70,7 @@
 ---
 
 ### Version 4.1.1 (23rd December 2015)
-### Added
+#### Added
 - Added Changelog to the repository.
 
 #### Changed

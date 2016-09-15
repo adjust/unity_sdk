@@ -8,200 +8,153 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 
-public class AdjustEditor : MonoBehaviour
-{
+public class AdjustEditor : MonoBehaviour {
     static bool isEnabled = true;
     static string iOSBuildPath = "";
 
     [PostProcessBuild]
-    public static void OnPostprocessBuild (BuildTarget target, string pathToBuiltProject)
-    {
-        if (!isEnabled)
-        {
+    public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
+        if (!isEnabled) {
             return;
         }
 
-        var exitCode = RunPostBuildScript (target: target, preBuild: false, pathToBuiltProject: pathToBuiltProject);
+        var exitCode = RunPostBuildScript(target:target, preBuild:false, pathToBuiltProject:pathToBuiltProject);
 
-        if (exitCode == -1)
-        {
+        if (exitCode == -1) {
             return;
         }
 
-        if (exitCode != 0)
-        {
-            var errorMessage = GenerateErrorScriptMessage (target, exitCode);
-            UnityEngine.Debug.LogError ("adjust: " + errorMessage);
+        if (exitCode != 0) {
+            var errorMessage = GenerateErrorScriptMessage(target, exitCode);
+            UnityEngine.Debug.LogError("adjust: " + errorMessage);
         }
     }
 
-    [MenuItem ("Assets/Adjust/Fix AndroidManifest.xml")]
-    static void FixAndroidManifest ()
-    {
+    [MenuItem("Assets/Adjust/Fix AndroidManifest.xml")]
+    static void FixAndroidManifest() {
 #if UNITY_ANDROID
-        var exitCode = RunPostBuildScript (target: BuildTarget.Android, preBuild: true);
+        var exitCode = RunPostBuildScript(target:BuildTarget.Android, preBuild:true);
 
-        if (exitCode == 1)
-        {
-            EditorUtility.DisplayDialog ("Adjust", 
-                                         string.Format("AndroidManifest.xml changed or created at {0}/Plugins/Android/ .", Application.dataPath),
-                                         "OK");
-        }
-        else if (exitCode == 0)
-        {
-            EditorUtility.DisplayDialog ("Adjust", "AndroidManifest.xml did not needed to be changed.", "OK");
-        }
-        else
-        {
-            EditorUtility.DisplayDialog ("Adjust", GenerateErrorScriptMessage (BuildTarget.Android, exitCode), "OK");
+        if (exitCode == 1) {
+            EditorUtility.DisplayDialog("Adjust", string.Format("AndroidManifest.xml changed or created at {0}/Plugins/Android/ .", Application.dataPath), "OK");
+        } else if (exitCode == 0) {
+            EditorUtility.DisplayDialog("Adjust", "AndroidManifest.xml did not needed to be changed.", "OK");
+        } else {
+            EditorUtility.DisplayDialog("Adjust", GenerateErrorScriptMessage(BuildTarget.Android, exitCode), "OK");
         }
 #else
-        EditorUtility.DisplayDialog ("Adjust", "Option only valid for the Android platform.", "OK");
+        EditorUtility.DisplayDialog("Adjust", "Option only valid for the Android platform.", "OK");
 #endif
     }
 
-    [MenuItem ("Assets/Adjust/Set iOS build path")]
-    static void SetiOSBuildPath ()
-    {
+    [MenuItem("Assets/Adjust/Set iOS build path")]
+    static void SetiOSBuildPath() {
 #if UNITY_IOS
-        AdjustEditor.iOSBuildPath = EditorUtility.OpenFolderPanel (
-            title: "iOs build path",
-            folder: EditorUserBuildSettings.GetBuildLocation (BuildTarget.iOS),
-            defaultName: "");
+        AdjustEditor.iOSBuildPath = EditorUtility.OpenFolderPanel(title:"iOS build path", folder:EditorUserBuildSettings.GetBuildLocation(BuildTarget.iPhone), defaultName:"");
         
-        if (AdjustEditor.iOSBuildPath == "")
-        {
-            UnityEngine.Debug.Log ("iOS build path reset to default path");
-        }
-        else
-        {
-            UnityEngine.Debug.Log (string.Format ("iOS build path: {0}", AdjustEditor.iOSBuildPath));
+        if (AdjustEditor.iOSBuildPath == "") {
+            UnityEngine.Debug.Log("adjust: iOS build path reset to default path.");
+        } else {
+            UnityEngine.Debug.Log(string.Format("adjust: iOS build path: {0}", AdjustEditor.iOSBuildPath));
         }
 #else
-        EditorUtility.DisplayDialog ("Adjust", "Option only valid for the Android platform.", "OK");
+        EditorUtility.DisplayDialog("Adjust", "Option only valid for the Android platform.", "OK");
 #endif
     }
 
-    [MenuItem ("Assets/Adjust/Change post processing status")]
-    static void ChangePostProcessingStatus ()
-    {
+    [MenuItem("Assets/Adjust/Change post processing status")]
+    static void ChangePostProcessingStatus() {
         isEnabled = !isEnabled;
-        EditorUtility.DisplayDialog ("Adjust", "The post processing for adjust is now " + (isEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog("Adjust", "The post processing for adjust is now " + (isEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    static int RunPostBuildScript (BuildTarget target, bool preBuild, string pathToBuiltProject = "")
-    {
+    static int RunPostBuildScript(BuildTarget target, bool preBuild, string pathToBuiltProject = "") {
         string resultContent;
         string arguments = null;
         string pathToScript = null;
 
-        string filePath = System.IO.Path.Combine (Environment.CurrentDirectory, @"Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py");
+        string filePath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py");
 
         // Check if Unity is running on Windows operating system.
         // If yes - fix line endings in python scripts.
-        if (Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            UnityEngine.Debug.Log ("Windows platform");
+        if (Application.platform == RuntimePlatform.WindowsEditor) {
+            UnityEngine.Debug.Log("adjust: Unity IDE is running on Windows platform.");
 
-            using (System.IO.StreamReader streamReader = new System.IO.StreamReader (filePath))
-            {
-                string fileContent = streamReader.ReadToEnd ();
-                resultContent = Regex.Replace (fileContent, @"\r\n|\n\r|\n|\r", "\r\n");
+            using (System.IO.StreamReader streamReader = new System.IO.StreamReader(filePath)) {
+                string fileContent = streamReader.ReadToEnd();
+                resultContent = Regex.Replace(fileContent, @"\r\n|\n\r|\n|\r", "\r\n");
             }
 
-            if (File.Exists (filePath))
-            {
-                File.WriteAllText (filePath, resultContent);
+            if (File.Exists(filePath)) {
+                File.WriteAllText(filePath, resultContent);
             }
-        }
-        else
-        {
-            UnityEngine.Debug.Log ("Unix platform");
+        } else {
+            UnityEngine.Debug.Log("adjust: Unity IDE is running on Unix platform.");
 
-            using (System.IO.StreamReader streamReader = new System.IO.StreamReader (filePath))
-            {
+            using (System.IO.StreamReader streamReader = new System.IO.StreamReader(filePath)) {
                 string replaceWith = "\n";
-                string fileContent = streamReader.ReadToEnd ();
+                string fileContent = streamReader.ReadToEnd();
                 
-                resultContent = fileContent.Replace ("\r\n", replaceWith);
+                resultContent = fileContent.Replace("\r\n", replaceWith);
             }
 
-            if (File.Exists (filePath))
-            {
-                File.WriteAllText (filePath, resultContent);
+            if (File.Exists(filePath)) {
+                File.WriteAllText(filePath, resultContent);
             }
         }
 
-        if (target == BuildTarget.Android)
-        {
+        if (target == BuildTarget.Android) {
             pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py";
             arguments = "\"" + Application.dataPath + "\"";
         
-            if (preBuild)
-            {
+            if (preBuild) {
                 arguments = "--pre-build " + arguments;
             }
-        }
-        else if (target == BuildTarget.iPhone)
-        {
+        } else if (target == BuildTarget.iPhone) {
             pathToScript = "/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py";
         
-            if (AdjustEditor.iOSBuildPath == "")
-            {
+            if (AdjustEditor.iOSBuildPath == "") {
                 arguments = "\"" + pathToBuiltProject + "\"";
-            }
-            else
-            {
+            } else {
                 arguments = "\"" + AdjustEditor.iOSBuildPath + "\"";
             }
-        }
-        else
-        {
+        } else {
             return -1;
         }
 
-        Process proc = new Process ();
+        Process proc = new Process();
         proc.EnableRaisingEvents = false; 
         proc.StartInfo.FileName = Application.dataPath + pathToScript;
         proc.StartInfo.Arguments = arguments;
-        proc.Start ();
-        proc.WaitForExit ();
+        proc.Start();
+        proc.WaitForExit();
         
         return proc.ExitCode;
     }
 
-    static string GenerateErrorScriptMessage (BuildTarget target, int exitCode)
-    {
-        if (target == BuildTarget.Android)
-        {
-            if (exitCode == 1)
-            {
+    static string GenerateErrorScriptMessage(BuildTarget target, int exitCode) {
+        if (target == BuildTarget.Android) {
+            if (exitCode == 1) {
                 return "The AndroidManifest.xml file was only changed or created after building the package. " +
-                        "Please build again the Android Unity package so it can use the new file";
+                        "Please build again the Android Unity package so it can use the new file.";
             }
         }
 
-        if (exitCode != 0)
-        {
-            var message = "Build script exited with error. " +
-                          "Please check the Adjust log file for more information at {0}";
-            string projectPath = Application.dataPath.Substring (0, Application.dataPath.Length - 7);
+        if (exitCode != 0) {
             string logFile = null;
+            string projectPath = Application.dataPath.Substring(0, Application.dataPath.Length - 7);
+            var message = "Build script exited with error. " +
+                          "Please check the Adjust log file for more information at {0}.";
             
-            if (target == BuildTarget.Android)
-            {
+            if (target == BuildTarget.Android) {
                 logFile = projectPath + "/AdjustPostBuildAndroidLog.txt";
-            }
-            else if (target == BuildTarget.iPhone)
-            {
+            } else if (target == BuildTarget.iPhone) {
                 logFile = projectPath + "/AdjustPostBuildiOSLog.txt";
-            }
-            else
-            {
+            } else {
                 return null;
             }
 
-            return string.Format (message, logFile);
+            return string.Format(message, logFile);
         } 
 
         return null;

@@ -47,7 +47,7 @@ def get_paths(Log, parser, xcode_sdk_path):
     Log("Unity3d Xcode project path: {0}", unity_xcode_project_path)
 
     framework_path = xcode_sdk_path + "/System/Library/Frameworks/"
-    Log("framework path: {0}", framework_path)
+    Log("Framework path: {0}", framework_path)
 
     return unity_xcode_project_path, framework_path
 
@@ -55,13 +55,15 @@ def edit_unity_xcode_project(Log, unity_xcode_project_path, framework_path):
     # load unity iOS pbxproj project file
     unity_XcodeProject = XcodeProject.Load(unity_xcode_project_path)
     
-    # add adSupport framework to unity if it's not already there
+    # Add adSupport framework to unity if it's not already there
+    Log("Adding AdSupport.framework to Xcode project.")
     unity_XcodeProject.add_file_if_doesnt_exist(framework_path + "AdSupport.framework", tree="SDKROOT", create_build_files=True,weak=True)
-    Log("added adSupport framework")
+    Log("AdSupport.framework successfully added.")
 
-    # add iAd framework to unity if it's not already there
+    # Add iAd framework to unity if it's not already there
+    Log("Adding iAd.framework to Xcode project.")
     unity_XcodeProject.add_file_if_doesnt_exist(framework_path + "iAd.framework", tree="SDKROOT", create_build_files=True,weak=True)
-    Log("added iAd framework")
+    Log("iAd.framework successfully added.")
 
     # Removed.
     # Don't do anything with ARC at the moment.
@@ -93,7 +95,9 @@ def edit_unity_xcode_project(Log, unity_xcode_project_path, framework_path):
     #             Log("added ARC flag to file {0}", name)
 
     # Add -ObjC to "Other Linker Flags" project settings.
+    Log("Adding -ObjC to other linker flags.")
     unity_XcodeProject.add_other_ldflags('-ObjC')
+    Log("Flag -ObjC successfully added.")
 
     # Save changes.
     unity_XcodeProject.save()
@@ -106,9 +110,9 @@ def rewrite_unity_xcode_project(Log, unity_xcode_project_path):
     with open(unity_xcode_project_path) as upf:
         for line in upf:
             if re_objc_excep.match(line):
-                #Log("matched line: {0}", re_objc_excep.match(line).group())
+                Log("Enabling Objective-C exceptions in Xcode project.")
                 line = line.replace("NO","YES")
-                Log("Objective-c exceptions enabled")
+                Log("Objective-C exceptions successfully enabled.")
             unity_xcode_lines.append(line)
     with open(unity_xcode_project_path, "w+") as upf:
         upf.writelines(unity_xcode_lines)
@@ -119,12 +123,15 @@ def get_xcode_sdk_path(Log):
     out, err = proc.communicate()
     
     if proc.returncode not in [0, 66]:
-        Log("Could not retrieve Xcode sdk path. code: {0}, err: {1}", proc.returncode, err)
+        Log("Could not retrieve Xcode SDK path.")
+        Log("code: {0}, err: {1}", proc.returncode, err)
         return None
 
     match = re.search("iPhoneOS.*?Path: (?P<sdk_path>.*?)\n", out, re.DOTALL)
     xcode_sdk_path = match.group('sdk_path') if match else None
-    Log("Xcode sdk path: {0}", xcode_sdk_path)
+    
+    Log("Xcode SDK path: {0}", xcode_sdk_path)
+    
     return xcode_sdk_path
 
 if __name__ == "__main__":

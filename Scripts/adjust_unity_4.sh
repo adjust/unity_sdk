@@ -89,9 +89,9 @@ cp ../Assets/Adjust/WP8/AdjustWP8.cs ./Unity4Assets/Adjust/WP8/
 # Editor folder #
 #################
 cp ./Unity4Backup/AdjustEditor.cs ./Unity4Assets/Editor/
-cp ../Assets/Editor/mod_pbxproj.py ./Unity4Assets/Editor/
-cp ../Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py ./Unity4Assets/Editor/
-cp ../Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py ./Unity4Assets/Editor/
+cp ./Unity4Backup/mod_pbxproj.py ./Unity4Assets/Editor/
+cp ./Unity4Backup/PostprocessBuildPlayer_AdjustPostBuildAndroid.py ./Unity4Assets/Editor/
+cp ./Unity4Backup/PostprocessBuildPlayer_AdjustPostBuildiOS.py ./Unity4Assets/Editor
 
 ##################
 # Plugins folder #

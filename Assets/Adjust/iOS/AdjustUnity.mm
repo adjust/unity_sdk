@@ -168,7 +168,7 @@ static id<AdjustDelegate> adjustUnityInstance = nil;
 @end
 
 // Method for converting JSON stirng parameters into NSArray object.
-NSArray* ConvertArrayParameters (const char* cStringJsonArrayParameters) {
+NSArray* ConvertArrayParameters(const char* cStringJsonArrayParameters) {
     if (cStringJsonArrayParameters == NULL) {
         return nil;
     }
@@ -192,14 +192,23 @@ NSArray* ConvertArrayParameters (const char* cStringJsonArrayParameters) {
 
 extern "C"
 {
-    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int logLevel, int eventBuffering, int sendInBackground, int launchDeferredDeeplink, const char* sceneName) {
+    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int allowSuppressLogLevel, int logLevel, int eventBuffering, int sendInBackground, double delayStart, const char* userAgent, int launchDeferredDeeplink, const char* sceneName) {
         NSString *stringSdkPrefix = [NSString stringWithUTF8String:sdkPrefix];
         NSString *stringAppToken = [NSString stringWithUTF8String:appToken];
         NSString *stringEnvironment = [NSString stringWithUTF8String:environment];
+        NSString *stringUserAgent = [NSString stringWithUTF8String:userAgent];
         NSString *stringSceneName = [NSString stringWithUTF8String:sceneName];
 
-        ADJConfig *adjustConfig = [ADJConfig configWithAppToken:stringAppToken
-                                                    environment:stringEnvironment];
+        ADJConfig *adjustConfig;
+
+        if (allowSuppressLogLevel != -1) {
+            adjustConfig = [ADJConfig configWithAppToken:stringAppToken
+                                             environment:stringEnvironment
+                                   allowSuppressLogLevel:(BOOL)allowSuppressLogLevel];
+        } else {
+            adjustConfig = [ADJConfig configWithAppToken:stringAppToken
+                                             environment:stringEnvironment];
+        }
 
         [adjustConfig setSdkPrefix:stringSdkPrefix];
 
@@ -216,17 +225,29 @@ extern "C"
             [adjustConfig setSendInBackground:(BOOL)sendInBackground];
         }
 
+        if (delayStart != -1) {
+            [adjustConfig setDelayStart:delayStart];
+        }
+
         if (launchDeferredDeeplink != -1) {
             launchAdjustDeferredDeeplink = (BOOL)launchDeferredDeeplink;
         }
 
-        if (sceneName != NULL && [stringSceneName length] > 0) {
-            adjustSceneName = strdup(sceneName);
-            adjustUnityInstance = [[AdjustUnity alloc] init];
-            [adjustConfig setDelegate:(id)adjustUnityInstance];
+        if (stringUserAgent != NULL) {
+            if ([stringUserAgent length] > 0) {
+                [adjustConfig setUserAgent:stringUserAgent];
+            }
         }
 
-        NSLog(@"%@, %@, %@, %d, %d, %d, %d, %@", stringAppToken, stringEnvironment, stringSdkPrefix, logLevel, eventBuffering, sendInBackground, launchDeferredDeeplink, stringSceneName);
+        if (sceneName != NULL) {
+            if ([stringSceneName length] > 0) {
+                adjustSceneName = strdup(sceneName);
+                adjustUnityInstance = [[AdjustUnity alloc] init];
+                [adjustConfig setDelegate:(id)adjustUnityInstance];
+            }
+        }
+
+        NSLog(@"%@, %@, %@, %d, %d, %d, %d, %.1f, %@, %d, %@", stringAppToken, stringEnvironment, stringSdkPrefix, allowSuppressLogLevel, logLevel, eventBuffering, sendInBackground, delayStart, stringUserAgent, launchDeferredDeeplink, stringSceneName);
 
         // Launch adjust instance.
         [Adjust appDidLaunch:adjustConfig];
@@ -332,5 +353,43 @@ extern "C"
         char* idfaCStringCopy = strdup(idfaCString);
 
         return idfaCStringCopy;
+    }
+
+    void _AdjustSendFirstPackages() {
+        [Adjust sendFirstPackages];
+    }
+
+    void _AdjustAddSessionPartnerParameter(const char* key, const char* value) {
+        NSString *stringKey = [NSString stringWithUTF8String:key];
+        NSString *stringValue = [NSString stringWithUTF8String:value];
+
+        [Adjust addSessionPartnerParameter:stringKey value:stringValue];
+    }
+
+    void _AdjustAddSessionCallbackParameter(const char* key, const char* value) {
+        NSString *stringKey = [NSString stringWithUTF8String:key];
+        NSString *stringValue = [NSString stringWithUTF8String:value];
+
+        [Adjust addSessionCallbackParameter:stringKey value:stringValue];
+    }
+
+    void _AdjustRemoveSessionPartnerParameter(const char* key) {
+        NSString *stringKey = [NSString stringWithUTF8String:key];
+
+        [Adjust removeSessionPartnerParameter:stringKey];
+    }
+
+    void _AdjustRemoveSessionCallbackParameter(const char* key) {
+        NSString *stringKey = [NSString stringWithUTF8String:key];
+
+        [Adjust removeSessionCallbackParameter:stringKey];
+    }
+
+    void _AdjustResetSessionPartnerParameters() {
+        [Adjust resetSessionPartnerParameters];
+    }
+
+    void _AdjustResetSessionCallbackParameters() {
+        [Adjust resetSessionCallbackParameters];
     }
 }
