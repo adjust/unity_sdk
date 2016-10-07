@@ -151,6 +151,16 @@ If you are not using any tool which has Android SDK Manager, you should download
 doesn't include the Android SDK Tools. There are more detailed instructions on how to download these in the readme file
 provided by Google, called `SDK Readme.txt`, which is placed in Android SDK folder.
 
+**Update**: In case you are having newer Android SDK version installed, Google has changed the structure of the Google Play 
+Services folders inside of the root SDK folder. Structure described above is changed and now it looks like this:
+
+![][android_sdk_location_new]
+
+Since now you have possibility to access separate parts of the Google Play Services library and not just the whole library 
+like before, you can add just the part of the Google Play Services library which adjust SDK needs - the basement part. Add 
+the `play-services-basement-x.y.z.aar` file to your `Assets/Plugins/Android` folder and Google Play Services needed by the 
+adjust SDK should be successfully integrated.
+
 ### <a id="post-build-process">Post build process
 
 To facilitate the build process, post build process will be performed by the adjust unity package in order to enable the
@@ -778,10 +788,11 @@ use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBui
 [android_sdk_download]:    https://developer.android.com/sdk/index.html#Other
 [android-custom-receiver]: https://github.com/adjust/android_sdk/blob/master/doc/referrer.md
 
-[menu_android]:            https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
-[adjust_editor]:           https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
-[import_package]:          https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
-[android_sdk_location]:    https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download.png
+[menu_android]:             https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
+[adjust_editor]:            https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
+[import_package]:           https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
+[android_sdk_location]:     https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download.png
+[android_sdk_location_new]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download_new.png
 
 ## <a id="license">License
 
