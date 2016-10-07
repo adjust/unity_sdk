@@ -157,9 +157,9 @@ Google Play Services folders inside of the root SDK folder. Structure described 
 ![][android_sdk_location_new]
 
 Since now you have possibility to access separate parts of the Google Play Services library and not just the whole library 
-like before, you can add just the part of the Google Play Services library which adjust SDK needs - the analytics part. Add 
-the `play-services-analytics` folder to your `Assets/Plugins/Android` folder and Google Play Services needed by the adjust SDK 
-should be successfully integrated.
+like before, you can add just the part of the Google Play Services library which adjust SDK needs - the basement part. Add 
+the `play-services-basement-x.y.z.aar` file to your `Assets/Plugins/Android` folder and Google Play Services needed by the 
+adjust SDK should be successfully integrated.
 
 ### <a id="post-build-process">Post build process
 
