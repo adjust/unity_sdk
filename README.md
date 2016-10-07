@@ -151,8 +151,8 @@ If you are not using any tool which has Android SDK Manager, you should download
 doesn't include the Android SDK Tools. There are more detailed instructions on how to download these in the readme file
 provided by Google, called `SDK Readme.txt`, which is placed in Android SDK folder.
 
-**Update**: In case you are having newer Android SDK version installed (9 and above), Google has changed the structure of the 
-Google Play Services folders inside of the root SDK folder. Structure described above is changed and now it looks like this:
+**Update**: In case you are having newer Android SDK version installed, Google has changed the structure of the Google Play 
+Services folders inside of the root SDK folder. Structure described above is changed and now it looks like this:
 
 ![][android_sdk_location_new]
 
