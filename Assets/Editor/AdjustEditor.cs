@@ -8,7 +8,9 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+#if UNITY_EDITOR_OSX
 using UnityEditor.iOS.Xcode;
+#endif
 
 public class AdjustEditor {
     private static bool isPostProcessingEnabled = true;
@@ -43,6 +45,7 @@ public class AdjustEditor {
             UnityEngine.Debug.Log("adjust: Starting to perform post build tasks for Android platform.");
             RunPostProcessTasksAndroid();
         } else if (target == BuildTarget.iOS) {
+            #if UNITY_EDITOR_OSX
             UnityEngine.Debug.Log("adjust: Starting to perform post build tasks for iOS platform.");
             
             string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
@@ -82,6 +85,7 @@ public class AdjustEditor {
 
             // Save the changes to Xcode project file.
             xcodeProject.WriteToFile(xcodeProjectPath);
+            #endif
         }
     }
 
