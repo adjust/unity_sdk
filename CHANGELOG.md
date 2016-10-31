@@ -1,4 +1,4 @@
-### Version 4.10.2 (27th October 2016)
+### Version 4.10.2 (31st October 2016)
 #### Fixed
 - Fixed wrong click label parameter name which was causing this parameter to be empty in iOS.
 
