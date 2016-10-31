@@ -15,8 +15,37 @@ static id<AdjustDelegate> adjustUnityInstance = nil;
 }
 
 - (void)adjustAttributionChanged:(ADJAttribution *)attribution {
-    NSDictionary *dicAttribution = [attribution dictionary];
-    NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dicAttribution options:0 error:nil];
+    NSMutableDictionary *attributionDic = [NSMutableDictionary dictionary];
+
+    if (nil != attribution.trackerToken) {
+        [attributionDic setObject:attribution.trackerToken forKey:@"trackerToken"];
+    }
+
+    if (nil != attribution.trackerName) {
+        [attributionDic setObject:attribution.trackerName forKey:@"trackerName"];
+    }
+
+    if (nil != attribution.network) {
+        [attributionDic setObject:attribution.network forKey:@"network"];
+    }
+
+    if (nil != attribution.campaign) {
+        [attributionDic setObject:attribution.campaign forKey:@"campaign"];
+    }
+
+    if (nil != attribution.adgroup) {
+        [attributionDic setObject:attribution.adgroup forKey:@"adgroup"];
+    }
+
+    if (nil != attribution.creative) {
+        [attributionDic setObject:attribution.creative forKey:@"creative"];
+    }
+
+    if (nil != attribution.clickLabel) {
+        [attributionDic setObject:attribution.clickLabel forKey:@"clickLabel"];
+    }
+
+    NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:attributionDic options:0 error:nil];
     NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
                                                            length:[dataAttribution length]
                                                          encoding:NSUTF8StringEncoding];
