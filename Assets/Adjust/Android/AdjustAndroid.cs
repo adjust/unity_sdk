@@ -147,7 +147,7 @@ namespace com.adjust.sdk {
         public void trackEvent(AdjustEvent adjustEvent) {
             AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.eventToken);
 
-            if (adjustEvent.revenue != null && adjustEvent.currency != null) {
+            if (adjustEvent.revenue != null) {
                 ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.revenue, adjustEvent.currency);
             }
 
@@ -167,6 +167,10 @@ namespace com.adjust.sdk {
                 
                     ajoAdjustEvent.Call("addPartnerParameter", key, value);
                 }
+            }
+
+            if (adjustEvent.transactionId != null) {
+                ajoAdjustEvent.Call("setOrderId", adjustEvent.transactionId);
             }
 
             ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
