@@ -9,9 +9,14 @@
 - Updated Native iOS SDK to version **4.10.2**.
 - Updated Native Android SDK to version **4.10.2**.
 
+#### Fixed
+- Fixed bug in network communication on Android for some Android API levels from SDK v4.10.0.
+
 ---
 
 ### Version 4.10.0 (15th September 2016)
+**SDK v4.10.0 should not be integrated in Android apps, since we noticed errors in network communication for some Android API levels.**
+
 #### Added
 - Added possibility to set session callback and partner parameters on `Adjust` instance with `addSessionCallbackParameter` and `addSessionPartnerParameter` methods.
 - Added possibility to remove session callback and partner parameters by key on `Adjust` instance with `removeSessionCallbackParameter` and `removeSessionPartnerParameter` methods.
