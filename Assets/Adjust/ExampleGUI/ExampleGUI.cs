@@ -25,7 +25,7 @@ public class ExampleGUI : MonoBehaviour {
 
         if (GUI.Button(new Rect(0, Screen.height * 0 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), txtManualLaunch)) {
             if (!string.Equals(txtManualLaunch, "SDK Launched", StringComparison.OrdinalIgnoreCase)) {
-                AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", AdjustEnvironment.Sandbox);
+                AdjustConfig adjustConfig = new AdjustConfig("2fm9gkqubvpc", AdjustEnvironment.Sandbox);
                 adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
                 adjustConfig.setLogDelegate(msg => Debug.Log(msg));
                 adjustConfig.setSendInBackground(true);
@@ -46,19 +46,19 @@ public class ExampleGUI : MonoBehaviour {
         }
         
         if (GUI.Button(new Rect(0, Screen.height * 1 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Simple Event")) {
-            AdjustEvent adjustEvent = new AdjustEvent("{YourEventToken}");
+            AdjustEvent adjustEvent = new AdjustEvent("g3mfiw");
             Adjust.trackEvent(adjustEvent);
         }
         
         if (GUI.Button(new Rect(0, Screen.height * 2 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Revenue Event")) {
-            AdjustEvent adjustEvent = new AdjustEvent("{YourEventToken}");
+            AdjustEvent adjustEvent = new AdjustEvent("a4fd35");
             adjustEvent.setRevenue(0.25, "EUR");
 
             Adjust.trackEvent(adjustEvent);
         }
         
         if (GUI.Button(new Rect(0, Screen.height * 3 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Callback Event")) {
-            AdjustEvent adjustEvent = new AdjustEvent("{YourEventToken}");
+            AdjustEvent adjustEvent = new AdjustEvent("34vgg9");
 
             adjustEvent.addCallbackParameter("key", "value");
             adjustEvent.addCallbackParameter("foo", "bar");
@@ -67,7 +67,7 @@ public class ExampleGUI : MonoBehaviour {
         }
         
         if (GUI.Button(new Rect(0, Screen.height * 4 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Partner Event")) {
-            AdjustEvent adjustEvent = new AdjustEvent("{YourEventToken}");
+            AdjustEvent adjustEvent = new AdjustEvent("w788qs");
 
             adjustEvent.addPartnerParameter("key", "value");
             adjustEvent.addPartnerParameter("foo", "bar");
