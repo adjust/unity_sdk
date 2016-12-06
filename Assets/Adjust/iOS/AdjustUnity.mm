@@ -67,13 +67,13 @@ extern "C"
             isSessionFailureCallbackImplemented || isDeferredDeeplinkCallbackImplemented) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
-                                                            eventSucceededCallback:isEventSuccessCallbackImplemented
-                                                               eventFailedCallback:isEventFailureCallbackImplemented
-                                                          sessionSucceededCallback:isSessionSuccessCallbackImplemented
-                                                             sessionFailedCallback:isSessionFailureCallbackImplemented
-                                                          deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
-                                                      shouldLaunchDeferredDeeplink:launchDeferredDeeplink
-                                                          withAdjustUnitySceneName:stringSceneName]];
+                                                          eventSucceededCallback:isEventSuccessCallbackImplemented
+                                                             eventFailedCallback:isEventFailureCallbackImplemented
+                                                        sessionSucceededCallback:isSessionSuccessCallbackImplemented
+                                                           sessionFailedCallback:isSessionFailureCallbackImplemented
+                                                        deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
+                                                    shouldLaunchDeferredDeeplink:launchDeferredDeeplink
+                                                        withAdjustUnitySceneName:stringSceneName]];
         }
 
         // Optional fields.

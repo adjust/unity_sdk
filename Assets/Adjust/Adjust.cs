@@ -40,11 +40,7 @@ namespace com.adjust.sdk {
             if (!this.startManually) {
                 AdjustConfig adjustConfig;
 
-                if (this.logLevel != AdjustLogLevel.Suppress) {
-                    adjustConfig = new AdjustConfig(this.appToken, this.environment);
-                } else {
-                    adjustConfig = new AdjustConfig(this.appToken, this.environment, true);
-                }
+                adjustConfig = new AdjustConfig(this.appToken, this.environment, (this.logLevel == AdjustLogLevel.Suppress));
 
                 adjustConfig.setLogLevel(this.logLevel);
                 adjustConfig.setSendInBackground(this.sendInBackground);
