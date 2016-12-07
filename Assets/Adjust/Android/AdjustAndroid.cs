@@ -8,7 +8,7 @@ namespace com.adjust.sdk {
 #if UNITY_ANDROID
     public class AdjustAndroid : IAdjust {
         #region Fields
-        private const string sdkPrefix = "unity4.10.2";
+        private const string sdkPrefix = "unity4.10.3";
 
         private static bool launchDeferredDeeplink = true;
 
@@ -46,20 +46,23 @@ namespace com.adjust.sdk {
 
             // Check if suppress log leve is supported.
             if (adjustConfig.allowSuppressLogLevel != null) {
-                AndroidJavaObject ajoAllowSuppressLogLevel = new AndroidJavaObject("java.lang.Boolean", adjustConfig.allowSuppressLogLevel.Value);
-
-                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment, ajoAllowSuppressLogLevel);
+                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment, adjustConfig.allowSuppressLogLevel);
             } else {
                 ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
             }
-             
 
             // Check if deferred deeplink should be launched by SDK.
             launchDeferredDeeplink = adjustConfig.launchDeferredDeeplink;
 
             // Check log level.
             if (adjustConfig.logLevel != null) {
-                AndroidJavaObject ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>(adjustConfig.logLevel.Value.uppercaseToString());
+                AndroidJavaObject ajoLogLevel;
+
+                if (adjustConfig.logLevel.Value.uppercaseToString().Equals("SUPPRESS")) {
+                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>("SUPRESS");
+                } else {
+                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>(adjustConfig.logLevel.Value.uppercaseToString());
+                }
 
                 if (ajoLogLevel != null) {
                     ajoAdjustConfig.Call("setLogLevel", ajoLogLevel);
@@ -147,7 +150,7 @@ namespace com.adjust.sdk {
         public void trackEvent(AdjustEvent adjustEvent) {
             AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.eventToken);
 
-            if (adjustEvent.revenue != null && adjustEvent.currency != null) {
+            if (adjustEvent.revenue != null) {
                 ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.revenue, adjustEvent.currency);
             }
 
@@ -167,6 +170,10 @@ namespace com.adjust.sdk {
                 
                     ajoAdjustEvent.Call("addPartnerParameter", key, value);
                 }
+            }
+
+            if (adjustEvent.transactionId != null) {
+                ajoAdjustEvent.Call("setOrderId", adjustEvent.transactionId);
             }
 
             ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
@@ -273,7 +280,7 @@ namespace com.adjust.sdk {
             }
 
             public void onAttributionChanged(AndroidJavaObject attribution) {
-            	if (callback == null) {
+                if (callback == null) {
                     return;
                 }
 
@@ -319,7 +326,7 @@ namespace com.adjust.sdk {
             }
 
             public void onFinishedEventTrackingSucceeded(AndroidJavaObject eventSuccessData) {
-            	if (callback == null) {
+                if (callback == null) {
                     return;
                 }
 
@@ -355,7 +362,7 @@ namespace com.adjust.sdk {
             }
 
             public void onFinishedEventTrackingFailed(AndroidJavaObject eventFailureData) {
-            	if (callback == null) {
+                if (callback == null) {
                     return;
                 }
 
@@ -392,7 +399,7 @@ namespace com.adjust.sdk {
             }
 
             public void onFinishedSessionTrackingSucceeded(AndroidJavaObject sessionSuccessData) {
-            	if (callback == null) {
+                if (callback == null) {
                     return;
                 }
 
@@ -427,7 +434,7 @@ namespace com.adjust.sdk {
             }
 
             public void onFinishedSessionTrackingFailed(AndroidJavaObject sessionFailureData) {
-            	if (callback == null) {
+                if (callback == null) {
                     return;
                 }
 

@@ -8,15 +8,19 @@ namespace com.adjust.sdk {
 #if UNITY_IOS
     public class AdjustiOS : IAdjust {
         #region Fields
-        private const string sdkPrefix = "unity4.10.2";
+        private const string sdkPrefix = "unity4.10.3";
         #endregion
 
         #region External methods
         [DllImport("__Internal")]
-        private static extern void _AdjustLaunchApp(string appToken, string environment, string sdkPrefix, int allowSuppressLogLevel, int logLevel, int eventBuffering, int sendInBackground, double delayStart, string userAgent, int launchDeferredDeeplink, string sceneName);
+        private static extern void _AdjustLaunchApp(string appToken, string environment, string sdkPrefix, int allowSuppressLogLevel,
+            int logLevel, int eventBuffering, int sendInBackground, double delayStart, string userAgent, int launchDeferredDeeplink,
+            string sceneName, int isAttributionCallbackImplemented, int isEventSuccessCallbackImplemented,int isEventFailureCallbackImplemented,
+            int isSessionSuccessCallbackImplemented, int isSessionFailureCallbackImplemented, int isDeferredDeeplinkCallbackImplemented);
 
         [DllImport("__Internal")]
-        private static extern void _AdjustTrackEvent(string eventToken, double revenue, string currency, string receipt, string transactionId, int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
+        private static extern void _AdjustTrackEvent(string eventToken, double revenue, string currency, string receipt, string transactionId,
+            int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetEnabled(int enabled);
@@ -75,7 +79,31 @@ namespace com.adjust.sdk {
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
 
-            _AdjustLaunchApp(appToken, environment, sdkPrefix, allowSuppressLogLevel, logLevel, eventBufferingEnabled, sendInBackground, delayStart, userAgent, launchDeferredDeeplink, sceneName);
+            int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
+            int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventSuccessDelegate() != null);
+            int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventFailureDelegate() != null);
+            int isSessionSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getSessionSuccessDelegate() != null);
+            int isSessionFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getSessionFailureDelegate() != null);
+            int isDeferredDeeplinkCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getDeferredDeeplinkDelegate() != null);
+
+            _AdjustLaunchApp(
+                appToken,
+                environment,
+                sdkPrefix,
+                allowSuppressLogLevel,
+                logLevel,
+                eventBufferingEnabled,
+                sendInBackground,
+                delayStart,
+                userAgent,
+                launchDeferredDeeplink,
+                sceneName,
+                isAttributionCallbackImplemented,
+                isEventSuccessCallbackImplemented,
+                isEventFailureCallbackImplemented,
+                isSessionSuccessCallbackImplemented,
+                isSessionFailureCallbackImplemented,
+                isDeferredDeeplinkCallbackImplemented);
         }
 
         public void trackEvent(AdjustEvent adjustEvent) {
