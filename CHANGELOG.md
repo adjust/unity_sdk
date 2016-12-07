@@ -1,3 +1,18 @@
+### Version 4.10.3 (7th December 2016)
+#### Added
+- Added method swizzling for iOS platform so that only implemented callbacks in Unity are getting implemented and called in the iOS.
+
+#### Fixed
+- Fixed the suppress log level settings on Android platform.
+- Fixed the revenue deduplication on Android platform.
+- No need anymore to have attribution callback implemented in order to get deferred deep link.
+
+#### Changed
+- Updated Native iOS SDK to version **4.10.4**.
+- Updated Native Android SDK to version **4.10.3**.
+
+---
+
 ### Version 4.10.2 (31st October 2016)
 #### Fixed
 - Fixed wrong click label parameter name which was causing this parameter to be empty in iOS.
