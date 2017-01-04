@@ -14,6 +14,14 @@ namespace com.adjust.sdk {
             return AdjustWS.IsEnabled();
         }
 
+        public string getAdid() {
+            return null;
+        }
+
+        public AdjustAttribution getAttribution() {
+            return null;
+        }
+
         public void onPause() {
             AdjustWS.ApplicationDeactivated();
         }

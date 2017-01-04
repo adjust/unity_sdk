@@ -14,6 +14,14 @@ namespace com.adjust.sdk {
 			return AdjustWP.IsEnabled();
 		}
 
+		public string getAdid() {
+            return null;
+        }
+
+        public AdjustAttribution getAttribution() {
+            return null;
+        }
+
 		public void onPause() {
 			AdjustWP.ApplicationDeactivated();
 		}

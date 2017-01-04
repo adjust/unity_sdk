@@ -121,31 +121,35 @@ public class ExampleGUI : MonoBehaviour {
         Debug.Log("Attribution changed!");
 
         if (attributionData.trackerName != null) {
-            Debug.Log("Tracker name " + attributionData.trackerName);
+            Debug.Log("Tracker name: " + attributionData.trackerName);
         }
 
         if (attributionData.trackerToken != null) {
-            Debug.Log("Tracker token " + attributionData.trackerToken);
+            Debug.Log("Tracker token: " + attributionData.trackerToken);
         }
 
         if (attributionData.network != null) {
-            Debug.Log("Network " + attributionData.network);
+            Debug.Log("Network: " + attributionData.network);
         }
 
         if (attributionData.campaign != null) {
-            Debug.Log("Campaign " + attributionData.campaign);
+            Debug.Log("Campaign: " + attributionData.campaign);
         }
 
         if (attributionData.adgroup != null) {
-            Debug.Log("Adgroup " + attributionData.adgroup);
+            Debug.Log("Adgroup: " + attributionData.adgroup);
         }
 
         if (attributionData.creative != null) {
-            Debug.Log("Creative " + attributionData.creative);
+            Debug.Log("Creative: " + attributionData.creative);
         }
 
         if (attributionData.clickLabel != null) {
-            Debug.Log("Click label " + attributionData.clickLabel);
+            Debug.Log("Click label: " + attributionData.clickLabel);
+        }
+
+        if (attributionData.adid != null) {
+            Debug.Log("ADID: " + attributionData.adid);
         }
     }
 

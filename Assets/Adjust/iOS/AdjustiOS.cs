@@ -38,6 +38,12 @@ namespace com.adjust.sdk {
         private static extern string _AdjustGetIdfa();
 
         [DllImport("__Internal")]
+        private static extern string _AdjustGetAdid();
+
+        [DllImport("__Internal")]
+        private static extern string _AdjustGetAttribution();
+
+        [DllImport("__Internal")]
         private static extern void _AdjustSendFirstPackages();
 
         [DllImport("__Internal")]
@@ -169,6 +175,18 @@ namespace com.adjust.sdk {
 
         public string getIdfa() {
             return _AdjustGetIdfa();
+        }
+
+        public string getAdid() {
+            return _AdjustGetAdid();
+        }
+
+        public AdjustAttribution getAttribution() {
+            string attributionString = _AdjustGetAttribution();
+
+            var attribution = new AdjustAttribution(attributionString);
+
+            return attribution;
         }
 
         // Android specific methods

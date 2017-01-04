@@ -199,6 +199,27 @@ namespace com.adjust.sdk {
             ajcAdjust.CallStatic("setPushToken", deviceToken);
         }
 
+        public string getAdid() {
+            return ajcAdjust.CallStatic<string>("getAdid");
+        }
+
+        public AdjustAttribution getAttribution() {
+            AndroidJavaObject ajoAttribution = ajcAdjust.CallStatic<AndroidJavaObject>("getAttribution");
+
+            AdjustAttribution adjustAttribution = new AdjustAttribution();
+
+            adjustAttribution.trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+            adjustAttribution.trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+            adjustAttribution.network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+            adjustAttribution.campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+            adjustAttribution.adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+            adjustAttribution.creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+            adjustAttribution.clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+            adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
+
+            return adjustAttribution;
+        }
+
         public static void addSessionPartnerParameter(string key, string value) {
             if (ajcAdjust == null) {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
@@ -293,6 +314,7 @@ namespace com.adjust.sdk {
                 adjustAttribution.adgroup = attribution.Get<string>(AdjustUtils.KeyAdgroup);
                 adjustAttribution.creative = attribution.Get<string>(AdjustUtils.KeyCreative);
                 adjustAttribution.clickLabel = attribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.adid = attribution.Get<string>(AdjustUtils.KeyAdid);
 
                 callback(adjustAttribution);
             }
