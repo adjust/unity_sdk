@@ -184,6 +184,10 @@ namespace com.adjust.sdk {
         public AdjustAttribution getAttribution() {
             string attributionString = _AdjustGetAttribution();
 
+            if (null == attributionString) {
+                return null;
+            }
+
             var attribution = new AdjustAttribution(attributionString);
 
             return attribution;

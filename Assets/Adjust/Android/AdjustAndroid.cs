@@ -204,20 +204,28 @@ namespace com.adjust.sdk {
         }
 
         public AdjustAttribution getAttribution() {
-            AndroidJavaObject ajoAttribution = ajcAdjust.CallStatic<AndroidJavaObject>("getAttribution");
+            try {
+                AndroidJavaObject ajoAttribution = ajcAdjust.CallStatic<AndroidJavaObject>("getAttribution");
 
-            AdjustAttribution adjustAttribution = new AdjustAttribution();
+                if (null == ajoAttribution) {
+                    return null;
+                }
 
-            adjustAttribution.trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-            adjustAttribution.trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-            adjustAttribution.network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-            adjustAttribution.campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-            adjustAttribution.adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-            adjustAttribution.creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-            adjustAttribution.clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-            adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
+                AdjustAttribution adjustAttribution = new AdjustAttribution();
 
-            return adjustAttribution;
+                adjustAttribution.trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
+
+                return adjustAttribution;
+            } catch (Exception) {}
+
+            return null;
         }
 
         public static void addSessionPartnerParameter(string key, string value) {

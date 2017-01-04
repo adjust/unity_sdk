@@ -209,7 +209,17 @@ extern "C"
 
     char* _AdjustGetIdfa() {
         NSString *idfa = [Adjust idfa];
+
+        if (nil == idfa) {
+            return NULL;
+        }
+
         const char* idfaCString = [idfa UTF8String];
+
+        if (NULL == idfaCString) {
+            return NULL;
+        }
+
         char* idfaCStringCopy = strdup(idfaCString);
 
         return idfaCStringCopy;
@@ -217,7 +227,17 @@ extern "C"
 
     char* _AdjustGetAdid() {
         NSString *adid = [Adjust adid];
+
+        if (nil == adid) {
+            return NULL;
+        }
+
         const char* adidCString = [adid UTF8String];
+
+        if (NULL == adidCString) {
+            return NULL;
+        }
+
         char* adidCStringCopy = strdup(adidCString);
 
         return adidCStringCopy;
