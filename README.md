@@ -32,6 +32,10 @@ about adjust™ at [adjust.com].
    * [Event buffering](#event-buffering)
    * [Background tracking](#background-tracking)
    * [Device IDs](#device-ids)
+      * [iOS Advertising Identifier](#di-idfa)
+      * [Google Play Services advertising identifier](#di-gps-adid)
+      * [Adjust device identifier](#di-adid)
+   * [User attribution](#user-attribution)
    * [Push token](#push-token)
    * [Pre-installed trackers](#pre-installed-trackers)
    * [Deep linking](#deeplinking)
@@ -57,8 +61,7 @@ Download the latest version from our [releases page][releases]. In there you wil
 
 ### <a id="sdk-add">Add the SDK to your project
 
-Open your project in the Unity Editor and navigate to `Assets → Import Package → Custom Package` and select the downloaded
-Unity package file.
+Open your project in the Unity Editor and navigate to `Assets → Import Package → Custom Package` and select the downloaded Unity package file.
 
 ![][import_package]
 
@@ -84,28 +87,20 @@ You have the possibility to set up the following options on the Adjust prefab:
 
 <a id="app-token">Replace `{YourAppToken}` with your actual App Token. You can find in your [dashboard].
 
-<a id="environment">Depending on whether or not you build your app for testing or for production you must change
-`Environment` with one of these values:
+<a id="environment">Depending on whether or not you build your app for testing or for production you must change `Environment` with one of these values:
 
 ```
     'Sandbox'
     'Production'
 ```
 
-**Important:** This value should be set to `Sandbox` if and only if you or someone else is testing your app. Make sure to
-set the environment to `Production` just before you publish the app. Set it back to `Sandbox` when you start testing it
-again.
+**Important:** This value should be set to `Sandbox` if and only if you or someone else is testing your app. Make sure to set the environment to `Production` just before you publish the app. Set it back to `Sandbox` when you start testing it again.
 
-We use this environment to distinguish between real traffic and artificial traffic from test devices. It is very important
-that you keep this value meaningful at all times! Especially if you are tracking revenue.
+We use this environment to distinguish between real traffic and artificial traffic from test devices. It is very important that you keep this value meaningful at all times! Especially if you are tracking revenue.
 
-<a id="start-manually">If you don't want to start the adjust SDK at the `Awake` event of the app, untick the box
-`Start Manually`. Call the method `Adjust.start` with the `AdjustConfig` object as a parameter to start the adjust SDK
-instead.
+<a id="start-manually">If you don't want to start the adjust SDK at the `Awake` event of the app, untick the box `Start Manually`. Call the method `Adjust.start` with the `AdjustConfig` object as a parameter to start the adjust SDK instead.
 
-For an example of scene with of a button menu with these options and others, open the example scene located at
-`Assets/Adjust/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at
-`Assets/Adjust/ExampleGUI/ExampleGUI.cs`.
+For an example of scene with of a button menu with these options and others, open the example scene located at `Assets/Adjust/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/Adjust/ExampleGUI/ExampleGUI.cs`.
 
 ### <a id="adjust-logging">Adjust logging
 
@@ -117,9 +112,21 @@ You can increase or decrease the amount of logs you see by changing the value of
 - `Warn` - disable info logging
 - `Error` - disable warnings as well
 - `Assert` - disable errors as well
+- `Suppress` - disable all logging
 
-If your target is Windows based, to see the compiled logs from our library in `released` mode, it is necessary to redirect
-the log output to your app while it's being tested in `debug` mode.
+In case you want all your log output to be disabled and if you are initialising the adjust SDK manually from code, beside setting the log level to suppress, you should also use  constructor for `AdjustConfig` object which gets boolean parameter indicating whether suppress log level should be supported  or not:
+
+```cs
+string appToken = "{YourAppToken}";
+string environment = AdjustEnvironment.Sandbox;
+
+AdjustConfig config = new AdjustConfig(appToken, environment, true);
+config.setLogLevel(AdjustLogLevel.Suppress);
+
+Adjust.start(config);
+```
+
+If your target is Windows based, to see the compiled logs from our library in `released` mode, it is necessary to redirect the log output to your app while it's being tested in `debug` mode.
 
 Call the method `setLogDelegate` in the `AdjustConfig` instance before starting the sdk.
 
@@ -132,92 +139,60 @@ Adjust.start(adjustConfig);
 
 ### <a id="google-play-services">Google Play Services
 
-Since August 1st, 2014, apps in the Google Play Store must use the [Google Advertising ID][google_ad_id] to uniquely
-identify devices. To allow the adjust SDK to use the Google Advertising ID, you must integrate the
-[Google Play Services][google_play_services]. If you haven't done this yet, you should copy `google-play-services_lib`
-folder into the `Assets/Plugins/Android` folder of your Unity project and after building your app, Google Play Services
-should be integrated.
+Since August 1st, 2014, apps in the Google Play Store must use the [Google Advertising ID][google_ad_id] to uniquely identify devices. To allow the adjust SDK to use the Google Advertising ID, you must integrate the [Google Play Services][google_play_services]. If you haven't done this yet, you should copy `google-play-services_lib` folder into the `Assets/Plugins/Android` folder of your Unity project and after building your app, Google Play Services should be integrated.
 
 `google-play-services_lib` is part of the Android SDK, which you may already have installed.
 
-There are two main ways to download the Android SDK. If you are using any tool which has the `Android SDK Manager`, you
-should download `Android SDK Tools`. Once installed, you can find the libraries in the
-`SDK_FOLDER/extras/google/google_play_services/libproject/` folder.
+There are two main ways to download the Android SDK. If you are using any tool which has the `Android SDK Manager`, you should download `Android SDK Tools`. Once installed, you can find the libraries in the `SDK_FOLDER/extras/google/google_play_services/libproject/` folder.
 
 ![][android_sdk_location]
 
-If you are not using any tool which has Android SDK Manager, you should download the standalone version of Android SDK from
-[official page][android_sdk_download]. By downloading this, you will have only a basic version of the Android SDK which
-doesn't include the Android SDK Tools. There are more detailed instructions on how to download these in the readme file
-provided by Google, called `SDK Readme.txt`, which is placed in Android SDK folder.
+If you are not using any tool which has Android SDK Manager, you should download the standalone version of Android SDK from [official page][android_sdk_download]. By downloading this, you will have only a basic version of the Android SDK which doesn't include the Android SDK Tools. There are more detailed instructions on how to download these in the readme file provided by Google, called `SDK Readme.txt`, which is placed in Android SDK folder.
 
-**Update**: In case you are having newer Android SDK version installed, Google has changed the structure of the Google Play 
-Services folders inside of the root SDK folder. Structure described above is changed and now it looks like this:
+**Update**: In case you are having newer Android SDK version installed, Google has changed the structure of the Google Play Services folders inside of the root SDK folder. Structure described above is changed and now it looks like this:
 
 ![][android_sdk_location_new]
 
-Since now you have possibility to access separate parts of the Google Play Services library and not just the whole library 
-like before, you can add just the part of the Google Play Services library which adjust SDK needs - the basement part. Add 
-the `play-services-basement-x.y.z.aar` file to your `Assets/Plugins/Android` folder and Google Play Services needed by the 
-adjust SDK should be successfully integrated.
+Since now you have possibility to access separate parts of the Google Play Services library and not just the whole library like before, you can add just the part of the Google Play Services library which adjust SDK needs - the basement part. Add the `play-services-basement-x.y.z.aar` file to your `Assets/Plugins/Android` folder and Google Play Services needed by the adjust SDK should be successfully integrated.
 
 ### <a id="post-build-process">Post build process
 
-To facilitate the build process, post build process will be performed by the adjust unity package in order to enable the
-adjust SDK to work properly. There is a difference in how this process is performed in `Unity 4` and `Unity 5`.
+To facilitate the build process, post build process will be performed by the adjust unity package in order to enable the adjust SDK to work properly. There is a difference in how this process is performed in `Unity 4` and `Unity 5`.
 
-If you are using the adjust unity package for `Unity 4`, this process is going to be performed by executing post build
-Python scripts:
+If you are using the adjust unity package for `Unity 4`, this process is going to be performed by executing post build Python scripts:
 
 - The iOS Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py`.
 - The Android Python build script is located at `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py`.
 
-The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least
-`Python 2.7` installed to work. It's possible to disable post processing by clicking on the menu `Assets → Adjust →
-Change post processing status`. Press the same button to re-enable it.
+The script runs after each build and is called by the file `Assets/Editor/AdjustEditor.cs`. They require at least `Python 2.7` installed to work. It's possible to disable post processing by clicking on the menu `Assets → Adjust → Change post processing status`. Press the same button to re-enable it.
 
-If you are using the adjust unity package for `Unity 5`, this process is going to be performed by `OnPostprocessBuild`
-method in `AdjustEditor.cs`. In order for iOS post build process to be executed properly, your `Unity 5` should have
-`iOS build support` installed.
+If you are using the adjust unity package for `Unity 5`, this process is going to be performed by `OnPostprocessBuild` method in `AdjustEditor.cs`. In order for iOS post build process to be executed properly, your `Unity 5` should have `iOS build support` installed.
 
-After running in `Unity 4`, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity project
-with log messages of the script run. In `Unity 5`, all log messages are written to the Unity IDE console output window.
+After running in `Unity 4`, the script writes the log file `AdjustPostBuildAndroidLog.txt` at the root of the Unity project with log messages of the script run. In `Unity 5`, all log messages are written to the Unity IDE console output window.
 
 #### <a id="post-build-ios">iOS post build process
 
 iOS post build process is performing the following changes in your generated Xcode projet:
 
-1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the
-official [iOS SDK README][ios] for more details.
+1. Adds the `iAd.framework` and `AdSupport.framework` to the project. This is required by the adjust SDK - check out the official [iOS SDK README][ios] for more details.
 2. Adds the other linker flag `-ObjC`. This allows the adjust Objective-C categories to be recognized during build time.
 3. Enables `Objective-C exceptions`.
 
-If you are using `Unity 4` and if you have a custom build that puts the Unity iOS generated project in a different location,
-inform the script by clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS
-project.
+If you are using `Unity 4` and if you have a custom build that puts the Unity iOS generated project in a different location, inform the script by clicking on the menu `Assets → Adjust → Set iOS build path` and choosing the build path of the iOS project.
 
 #### <a id="post-build-android">Android post build process
 
 Android post build process is performing changes in `AndroidManifest.xml` file located at `Assets/Plugins/Android/`.
 
-The problem with this approach with `Unity 4` is that the manifest file used for the Android package was the same one as
-before the build process ended. To mitigate this, simply run the build again, using the manifest created or changed by the
-previous run, or click on the menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build
-process. Either way, it is only necessary to do this step once, as long as the manifest file remains compatible with the adjust
-SDK.
+The problem with this approach with `Unity 4` is that the manifest file used for the Android package was the same one as before the build process ended. To mitigate this, simply run the build again, using the manifest created or changed by the previous run, or click on the menu `Assets → Adjust → Fix AndroidManifest.xml` so the script can run before the build process. Either way, it is only necessary to do this step once, as long as the manifest file remains compatible with the adjust SDK.
 
 ![][menu_android]
 
 This doesn't need to be performed for Android post build process in `Unity 5`.
 
-Android post build process initially checks for the presence of `AndroidManifest.xml` file in the Android plugins folder. If
-there is no `AndroidManifest.xml` file in `Assets/Plugins/Android/` it creates a copy from our compatible manifest file
-`AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
+Android post build process initially checks for the presence of `AndroidManifest.xml` file in the Android plugins folder. If there is no `AndroidManifest.xml` file in `Assets/Plugins/Android/` it creates a copy from our compatible manifest file `AdjustAndroidManifest.xml`. If there is already an `AndroidManifest.xml` file, it checks and changes the following:
 
-1. Adds the adjust broadcast receiver. For more details, consult the official [Android SDK README][android].
-Please, have in mind that if you are using your **own broadcast receiver** which handles `INSTALL_REFERRER` intent, you
-don't need the adjust broadcast receiver to be added in your manifest file. Remove it, but inside your own receiver add the
-call to the adjust broadcast receiver like described in [Android guide][android-custom-receiver].
+1. Adds the adjust broadcast receiver. For more details, consult the official [Android SDK README][android]. Please, have in mind that if you are using your **own broadcast receiver** which handles `INSTALL_REFERRER` intent, you don't need the adjust broadcast receiver to be added in your manifest file. Remove it, but inside your own receiver add the call to the adjust broadcast receiver like described in [Android guide][android-custom-receiver].
 2. Adds the permission to connect to the internet.
 3. Adds the permission to access information about Wi-Fi networks.
 
@@ -227,9 +202,7 @@ Once you integrated the adjust SDK into your project, you can take advantage of 
 
 ### <a id="event-tracking">Event tracking
 
-You can tell adjust about any event you wish. Suppose you want to track every tap on a button. You would just need to create
-a new Event Token in your [dashboard]. Let's say that Event Token is `abc123`. In your button's click handler method you
-could then add the following lines to track the click:
+You can tell adjust about any event you wish. Suppose you want to track every tap on a button. You would just need to create a new Event Token in your [dashboard]. Let's say that Event Token is `abc123`. In your button's click handler method you could then add the following lines to track the click:
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent("abc123");
@@ -238,8 +211,7 @@ Adjust.trackEvent(adjustEvent);
 
 #### <a id="revenue-tracking">Revenue tracking
 
-If your users can generate revenue by tapping on advertisements or making In-App Purchases you can track those revenues with
-events. Let's say a tap is worth one Euro cent. You could then track the revenue event like this:
+If your users can generate revenue by tapping on advertisements or making In-App Purchases you can track those revenues with events. Let's say a tap is worth one Euro cent. You could then track the revenue event like this:
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent("abc123");
@@ -251,12 +223,9 @@ Adjust.trackEvent(adjustEvent);
 
 **At the moment, this is an iOS feature only.**
 
-You can also add an optional transaction ID to avoid tracking duplicate revenues. The last ten transaction IDs are
-remembered, and revenue events with duplicate transaction IDs are skipped. This is especially useful for In-App Purchase
-tracking. You can see an example below.
+You can also add an optional transaction ID to avoid tracking duplicate revenues. The last ten transaction IDs are remembered, and revenue events with duplicate transaction IDs are skipped. This is especially useful for In-App Purchase tracking. You can see an example below.
 
-If you want to track in-app purchases, please make sure to call the `trackEvent` only if the transaction is finished and
-item is purchased. That way you can avoid tracking revenue that is not actually being generated.
+If you want to track in-app purchases, please make sure to call the `trackEvent` only if the transaction is finished and item is purchased. That way you can avoid tracking revenue that is not actually being generated.
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent("abc123");
@@ -269,17 +238,13 @@ Adjust.trackEvent(adjustEvent);
 
 #### <a id="iap-verification">In-App Purchase verification
 
-If you want to check the validity of In-App Purchases made in your app using Purchase Verification, adjust's server side
-receipt verification tool, then check out our `Unity purchase SDK` and read more about it [here][unity-purchase-sdk].
+If you want to check the validity of In-App Purchases made in your app using Purchase Verification, adjust's server side receipt verification tool, then check out our `Unity purchase SDK` and read more about it [here][unity-purchase-sdk].
 
 #### <a id="callback-parameters">Callback parameters
 
-You can also register a callback URL for that event in your [dashboard] and we will send a GET request to that URL whenever
-the event gets tracked. In that case you can also put some key-value pairs in an object and pass it to the `trackEvent`
-method. We will then append these named parameters to your callback URL.
+You can also register a callback URL for that event in your [dashboard] and we will send a GET request to that URL whenever the event gets tracked. In that case you can also put some key-value pairs in an object and pass it to the `trackEvent` method. We will then append these named parameters to your callback URL.
 
-For example, suppose you have registered the URL `http://www.adjust.com/callback` for your event with Event Token `abc123`
-and execute the following lines:
+For example, suppose you have registered the URL `http://www.adjust.com/callback` for your event with Event Token `abc123` and execute the following lines:
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent("abc123");
@@ -296,19 +261,13 @@ In that case we would track the event and send a request to:
 http://www.adjust.com/callback?key=value&foo=bar
 ```
 
-It should be mentioned that we support a variety of placeholders like `{idfa}` for iOS or `{gps_adid}` for Android that
-can be used as parameter values.  In the resulting callback the `{idfa}` placeholder would be replaced with the ID for
-Advertisers of the current device for iOS and the `{gps_adid}` would be replaced with the Google Play Services ID of the
-current device for Android. Also note that we don't store any of your custom parameters, but only append them to your
-callbacks. If you haven't registered a callback for an event, these parameters won't even be read.
+It should be mentioned that we support a variety of placeholders like `{idfa}` for iOS or `{gps_adid}` for Android that can be used as parameter values.  In the resulting callback the `{idfa}` placeholder would be replaced with the ID for Advertisers of the current device for iOS and the `{gps_adid}` would be replaced with the Google Play Services ID of the current device for Android. Also note that we don't store any of your custom parameters, but only append them to your callbacks. If you haven't registered a callback for an event, these parameters won't even be read.
 
 #### <a id="partner-parameters">Partner parameters
 
-You can also add parameters to be transmitted to network partners, for the integrations that have been activated in your
-adjust dashboard.
+You can also add parameters to be transmitted to network partners, for the integrations that have been activated in your adjust dashboard.
 
-This works similarly to the callback parameters mentioned above, but can be added by calling the `addPartnerParameter`
-method on your `AdjustEvent` instance.
+This works similarly to the callback parameters mentioned above, but can be added by calling the `addPartnerParameter` method on your `AdjustEvent` instance.
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent("abc123");
@@ -323,40 +282,29 @@ You can read more about special partners and these integrations in our [guide to
 
 ### <a id="session-parameters">Session parameters
 
-Some parameters are saved to be sent in every event and session of the adjust SDK. Once you have added any of these
-parameters once, you don't need to add them every time, since they will be saved locally. If you add the same parameter twice,
-there will be no effect.
+Some parameters are saved to be sent in every event and session of the adjust SDK. Once you have added any of these parameters once, you don't need to add them every time, since they will be saved locally. If you add the same parameter twice, there will be no effect.
 
-These session parameters can be called before the adjust SDK is launched to make sure they are sent even on install. If you
-need to send them with an install, but can only obtain the needed values after launch, it's possible to
-[delay](#delay-start) the first launch of the adjust SDK to allow this behaviour.
+These session parameters can be called before the adjust SDK is launched to make sure they are sent even on install. If you need to send them with an install, but can only obtain the needed values after launch, it's possible to [delay](#delay-start) the first launch of the adjust SDK to allow this behaviour.
 
 ### <a id="session-callback-parameters"> Session callback parameters
 
-The same callback parameters that are registered for [events](#callback-parameters) can also be saved to be sent in every
-event or session of the adjust SDK.
+The same callback parameters that are registered for [events](#callback-parameters) can also be saved to be sent in every event or session of the adjust SDK.
 
-The session callback parameters have a similar interface to the event callback parameters. Instead of adding the key and
-it's value to an event, it's added through a call to `Adjust` method `addSessionCallbackParameter`:
+The session callback parameters have a similar interface to the event callback parameters. Instead of adding the key and it's value to an event, it's added through a call to `Adjust` method `addSessionCallbackParameter`:
 
 ```cs
 Adjust.addSessionCallbackParameter("foo", "bar");
 ```
 
-The session callback parameters will be merged with the callback parameters added to an event. The callback parameters
-added to an event have precedence over the session callback parameters. Meaning that, when adding a callback parameter to
-an event with the same key to one added from the session, the value that prevails is the callback parameter added to the
-event.
+The session callback parameters will be merged with the callback parameters added to an event. The callback parameters added to an event have precedence over the session callback parameters. Meaning that, when adding a callback parameter to an event with the same key to one added from the session, the value that prevails is the callback parameter added to the event.
 
-It's possible to remove a specific session callback parameter by passing the desiring key to the method
-`removeSessionCallbackParameter`.
+It's possible to remove a specific session callback parameter by passing the desiring key to the method `removeSessionCallbackParameter`.
 
 ```cs
 Adjust.removeSessionCallbackParameter("foo");
 ```
 
-If you wish to remove all key and values from the session callback parameters, you can reset it with the method
-`resetSessionCallbackParameters`.
+If you wish to remove all key and values from the session callback parameters, you can reset it with the method `resetSessionCallbackParameters`.
 
 ```cs
 Adjust.resetSessionCallbackParameters();
@@ -364,31 +312,25 @@ Adjust.resetSessionCallbackParameters();
 
 ### <a id="session-partner-parameters">Session partner parameters
 
-In the same way that there are [session callback parameters](#session-callback-parameters) that are sent every in event or
-session of the adjust SDK, there is also session partner parameters.
+In the same way that there are [session callback parameters](#session-callback-parameters) that are sent every in event or session of the adjust SDK, there is also session partner parameters.
 
 These will be transmitted to network partners, for whom the integrations have been activated in your adjust [dashboard].
 
-The session partner parameters have a similar interface to the event partner parameters. Instead of adding the key and it's
-value to an event, it's added through a call to `Adjust` method `addSessionPartnerParameter`:
+The session partner parameters have a similar interface to the event partner parameters. Instead of adding the key and it's value to an event, it's added through a call to `Adjust` method `addSessionPartnerParameter`:
 
 ```cs
 Adjust.addSessionPartnerParameter("foo", "bar");
 ```
 
-The session partner parameters will be merged with the partner parameters added to an event. The partner parameters added
-to an event have precedence over the session partner parameters. Meaning that, when adding a partner parameter to an event
-with the same key to one added from the session, the value that prevails is the partner parameter added to the event.
+The session partner parameters will be merged with the partner parameters added to an event. The partner parameters added to an event have precedence over the session partner parameters. Meaning that, when adding a partner parameter to an event with the same key to one added from the session, the value that prevails is the partner parameter added to the event.
 
-It's possible to remove a specific session partner parameter by passing the desiring key to the method
-`removeSessionPartnerParameter`.
+It's possible to remove a specific session partner parameter by passing the desiring key to the method `removeSessionPartnerParameter`.
 
 ```cs
 Adjust.removeSessionPartnerParameter("foo");
 ```
 
-If you wish to remove all key and values from the session partner parameters, you can reset it with the method
-`resetSessionPartnerParameters`.
+If you wish to remove all key and values from the session partner parameters, you can reset it with the method `resetSessionPartnerParameters`.
 
 ```cs
 Adjust.resetSessionPartnerParameters();
@@ -396,8 +338,7 @@ Adjust.resetSessionPartnerParameters();
 
 ### <a id="delay-start">Delay start
 
-Delaying the start of the adjust SDK allows your app some time to obtain session parameters, such as unique identifiers, to
-be send on install.
+Delaying the start of the adjust SDK allows your app some time to obtain session parameters, such as unique identifiers, to be send on install.
 
 Set the initial delay time in seconds with the method `setDelayStart` in the `AdjustConfig` instance:
 
@@ -405,9 +346,7 @@ Set the initial delay time in seconds with the method `setDelayStart` in the `Ad
 adjustConfig.setDelayStart(5.5);
 ```
 
-In this case the adjust SDK not send the initial install session and any event created for 5.5 seconds.
-After this time is expired or if you call `Adjust.sendFirstPackages()` in the meanwhile, every session parameter will be
-added to the delayed install session and events and the adjust SDK will resume as usual.
+In this case the adjust SDK not send the initial install session and any event created for 5.5 seconds. After this time is expired or if you call `Adjust.sendFirstPackages()` in the meanwhile, every session parameter will be added to the delayed install session and events and the adjust SDK will resume as usual.
 
 **The maximum delay start time of the adjust SDK is 10 seconds**.
 
