@@ -221,9 +221,7 @@ Adjust.trackEvent(adjustEvent);
 
 #### <a id="revenue-deduplication"></a>Revenue deduplication
 
-**At the moment, this is an iOS feature only.**
-
-You can also add an optional transaction ID to avoid tracking duplicate revenues. The last ten transaction IDs are remembered, and revenue events with duplicate transaction IDs are skipped. This is especially useful for In-App Purchase tracking. You can see an example below.
+You can also add an optional transaction ID to avoid tracking duplicated revenues. The last ten transaction IDs are remembered, and revenue events with duplicated transaction IDs are skipped. This is especially useful for In-App Purchase tracking. You can see an example below.
 
 If you want to track in-app purchases, please make sure to call the `trackEvent` only if the transaction is finished and item is purchased. That way you can avoid tracking revenue that is not actually being generated.
 
@@ -290,7 +288,7 @@ These session parameters can be called before the adjust SDK is launched to make
 
 The same callback parameters that are registered for [events](#callback-parameters) can also be saved to be sent in every event or session of the adjust SDK.
 
-The session callback parameters have a similar interface to the event callback parameters. Instead of adding the key and it's value to an event, it's added through a call to `Adjust` method `addSessionCallbackParameter`:
+The session callback parameters have a similar interface to the event callback parameters. Instead of adding the key and it's value to an event, it's added through a call to `addSessionCallbackParameter` method of the `Adjust` instance.
 
 ```cs
 Adjust.addSessionCallbackParameter("foo", "bar");
@@ -298,13 +296,13 @@ Adjust.addSessionCallbackParameter("foo", "bar");
 
 The session callback parameters will be merged with the callback parameters added to an event. The callback parameters added to an event have precedence over the session callback parameters. Meaning that, when adding a callback parameter to an event with the same key to one added from the session, the value that prevails is the callback parameter added to the event.
 
-It's possible to remove a specific session callback parameter by passing the desiring key to the method `removeSessionCallbackParameter`.
+It's possible to remove a specific session callback parameter by passing the desiring key to the `removeSessionCallbackParameter` method of the `Adjust` instance.
 
 ```cs
 Adjust.removeSessionCallbackParameter("foo");
 ```
 
-If you wish to remove all key and values from the session callback parameters, you can reset it with the method `resetSessionCallbackParameters`.
+If you wish to remove all key and values from the session callback parameters, you can reset it with the method `resetSessionCallbackParameters` of the `Adjust` instance.
 
 ```cs
 Adjust.resetSessionCallbackParameters();
@@ -316,7 +314,7 @@ In the same way that there are [session callback parameters](#session-callback-p
 
 These will be transmitted to network partners, for whom the integrations have been activated in your adjust [dashboard].
 
-The session partner parameters have a similar interface to the event partner parameters. Instead of adding the key and it's value to an event, it's added through a call to `Adjust` method `addSessionPartnerParameter`:
+The session partner parameters have a similar interface to the event partner parameters. Instead of adding the key and it's value to an event, it's added through a call to `addSessionPartnerParameter` method of the `Adjust` instance.
 
 ```cs
 Adjust.addSessionPartnerParameter("foo", "bar");
@@ -324,13 +322,13 @@ Adjust.addSessionPartnerParameter("foo", "bar");
 
 The session partner parameters will be merged with the partner parameters added to an event. The partner parameters added to an event have precedence over the session partner parameters. Meaning that, when adding a partner parameter to an event with the same key to one added from the session, the value that prevails is the partner parameter added to the event.
 
-It's possible to remove a specific session partner parameter by passing the desiring key to the method `removeSessionPartnerParameter`.
+It's possible to remove a specific session partner parameter by passing the desiring key to the `removeSessionPartnerParameter` method of the `Adjust` instance.
 
 ```cs
 Adjust.removeSessionPartnerParameter("foo");
 ```
 
-If you wish to remove all key and values from the session partner parameters, you can reset it with the method `resetSessionPartnerParameters`.
+If you wish to remove all key and values from the session partner parameters, you can reset it with the `resetSessionPartnerParameters` method of the `Adjust` instance.
 
 ```cs
 Adjust.resetSessionPartnerParameters();
@@ -352,25 +350,19 @@ In this case the adjust SDK not send the initial install session and any event c
 
 ### <a id="attribution-callback">Attribution callback
 
-You can register a callback to be notified of tracker attribution changes. Due to the different sources considered for
-attribution, this information cannot be provided synchronously. Follow these steps to implement the optional callback in
-your application:
+You can register a callback to be notified of tracker attribution changes. Due to the different sources considered for attribution, this information cannot be provided synchronously. Follow these steps to implement the optional callback in your application:
 
 Please make sure to consider [applicable attribution data policies][attribution_data].
 
 1. Create a method with the signature of the delegate `Action<AdjustAttribution>`.
 
-2. After creating the `AdjustConfig` object, call the `adjustConfig.setAttributionChangedDelegate` with the previously
-created method. It is also be possible to use a lambda with the same signature.
+2. After creating the `AdjustConfig` object, call the `adjustConfig.setAttributionChangedDelegate` with the previously created method. It is also be possible to use a lambda with the same signature.
 
-3. If instead of using the `Adjust.prefab`, the `Adjust.cs` script was added to another `GameObject`. Don't forget to pass
-the name of that `GameObject` as the second parameter of `AdjustConfig.setAttributionChangedDelegate`.
+3. If instead of using the `Adjust.prefab`, the `Adjust.cs` script was added to another `GameObject`. Don't forget to pass the name of that `GameObject` as the second parameter of `AdjustConfig.setAttributionChangedDelegate`.
 
-As the callback is configured using the AdjustConfig instance, you should call `adjustConfig.setAttributionChangedDelegate`
-before calling `Adjust.start`.
+As the callback is configured using the AdjustConfig instance, you should call `adjustConfig.setAttributionChangedDelegate` before calling `Adjust.start`.
 
-The callback function will get called when the SDK receives final attribution data. Within the callback function you have
-access to the `attribution` parameter. Here is a quick summary of its properties:
+The callback function will get called when the SDK receives final attribution data. Within the callback function you have access to the `attribution` parameter. Here is a quick summary of its properties:
 
 - `string trackerToken` the tracker token of the current install.
 - `string trackerName` the tracker name of the current install.
@@ -379,6 +371,7 @@ access to the `attribution` parameter. Here is a quick summary of its properties
 - `string adgroup` the ad group grouping level of the current install.
 - `string creative` the creative grouping level of the current install.
 - `string clickLabel` the click label of the current install.
+- `string adid` the adjust device identifier.
 
 ```cs
 using com.adjust.sdk;
@@ -478,9 +471,7 @@ public void SessionFailureCallback (AdjustSessionFailure sessionFailureData) {
 }
 ```
 
-The callback functions will be called after the SDK tries to send a package to the server.
-Within the callback you have access to a response data object specifically for the callback.
-Here is a quick summary of the session response data properties:
+The callback functions will be called after the SDK tries to send a package to the server. Within the callback you have access to a response data object specifically for the callback. Here is a quick summary of the session response data properties:
 
 - `string Message` the message from the server or the error logged by the SDK.
 - `string Timestamp` timestamp from the server.
@@ -497,20 +488,17 @@ And both event and session failed objects also contain:
 
 ### <a id="disable-tracking">Disable tracking
 
-You can disable the adjust SDK from tracking by invoking the method `setEnabled` with the enabled parameter as `false`.
-**This setting is remembered between sessions**, but it can only be activated after the first session.
+You can disable the adjust SDK from tracking by invoking the method `setEnabled` with the enabled parameter as `false`. **This setting is remembered between sessions**, but it can only be activated after the first session.
 
 ```cs
 Adjust.setEnabled(false);
 ```
 
-You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible to activate the
-adjust SDK by invoking `setEnabled` with the `enabled` parameter set to `true`.
+You can verify if the adjust SDK is currently active with the method `isEnabled`. It is always possible to activate the adjust SDK by invoking `setEnabled` with the `enabled` parameter set to `true`.
 
 ### <a id="offline-mode">Offline mode
 
-You can put the adjust SDK in offline mode to suspend transmission to our servers, while retaining tracked data to be sent
-later. When in offline mode, all information is saved in a file, so be careful not to trigger too many events.
+You can put the adjust SDK in offline mode to suspend transmission to our servers, while retaining tracked data to be sent later. When in offline mode, all information is saved in a file, so be careful not to trigger too many events.
 
 You can activate offline mode by calling `setOfflineMode` with the parameter `true`.
 
@@ -518,16 +506,13 @@ You can activate offline mode by calling `setOfflineMode` with the parameter `tr
 Adjust.setOfflineMode(true);
 ```
 
-Conversely, you can deactivate offline mode by calling `setOfflineMode` with `false`. When the adjust SDK is put back in
-online mode, all saved information is send to our servers with the correct time information.
+Conversely, you can deactivate offline mode by calling `setOfflineMode` with `false`. When the adjust SDK is put back in online mode, all saved information is send to our servers with the correct time information.
 
-Unlike disabling tracking, **this setting is not remembered** between sessions. This means that the SDK is in online mode
-whenever it is started, even if the app was terminated in offline mode.
+Unlike disabling tracking, **this setting is not remembered** between sessions. This means that the SDK is in online mode whenever it is started, even if the app was terminated in offline mode.
 
 ### <a id="event-buffering">Event buffering
 
-If your app makes heavy use of event tracking, you might want to delay some HTTP requests in order to send them in one batch
-every minute. You can enable event buffering with your `AdjustConfig` instance:
+If your app makes heavy use of event tracking, you might want to delay some HTTP requests in order to send them in one batch every minute. You can enable event buffering with your `AdjustConfig` instance:
 
 ```cs
 AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
@@ -541,8 +526,7 @@ If nothing is set, event buffering is **disabled by default**.
 
 ### <a id="background-tracking">Background tracking
 
-The default behaviour of the adjust SDK is to **pause sending HTTP requests while the app is in the background**. You can
-change this in your `AdjustConfig` instance:
+The default behaviour of the adjust SDK is to **pause sending HTTP requests while the app is in the background**. You can change this in your `AdjustConfig` instance:
 
 ```csharp
 AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
@@ -554,13 +538,19 @@ Adjust.start(adjustConfig);
 
 ### <a id="device-ids">Device IDs
 
-Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate
-reporting.
+Certain services (such as Google Analytics) require you to coordinate Device and Client IDs in order to prevent duplicate reporting.
 
-#### Android
+### <a id="di-idfa">iOS Advertising Identifier
 
-If you need to obtain the Google Advertising ID, There is a restriction that only allows it to be read in a background
-thread. If you call the function `getGoogleAdId` with a `Action<string>` delegate, it will work in any situation:
+To obtain the IDFA, call the function `getIdfa` of the `Adjust` instance:
+
+```cs
+string idfa = Adjust.getIdfa()
+```
+
+### <a id="di-gps-adid">Google Play Services advertising identifier
+
+If you need to obtain the Google Advertising ID, There is a restriction that only allows it to be read in a background thread. If you call the method `getGoogleAdId` of the `Adjust` instance with a `Action<string>` delegate, it will work in any situation:
 
 ```cs
 Adjust.getGoogleAdId((string googleAdId) => {
@@ -568,21 +558,31 @@ Adjust.getGoogleAdId((string googleAdId) => {
 });
 ```
 
-Inside the method `onGoogleAdIdRead` of the `OnDeviceIdsRead` instance, you will have access to the Google Advertising ID as
-the variable `googleAdId`.
+You will have access to the Google Advertising ID as the variable `googleAdId`.
 
-#### iOS
+### <a id="di-adid"></a>Adjust device identifier
 
-To obtain the IDFA, call the function `getIdfa`:
+For each device with your app installed on it, adjust backend generates unique **adjust device identifier** (**adid**). In order to obtain this identifier, you can make a call to following method on `Adjust` instance:
 
 ```cs
-Adjust.getIdfa()
+String adid = Adjust.getAdid();
 ```
+
+**Note**: Information about **adid** is available after app installation has been tracked by the adjust backend. From that moment on, adjust SDK has information about your device **adid** and you can access it with this method. So, **it is not possible** to access **adid** value before the SDK has been initialised and installation of your app was tracked successfully.
+
+### <a id="user-attribution"></a>User attribution
+
+Like described in [attribution callback scetion](#attribution-callback), this callback get triggered providing you info about new attribution when ever it changes. In case you want to access info about your user's current attribution when ever you need it, you can make a call to following method of the `Adjust` instance:
+
+```cs
+AdjustAttribution attribution = Adjust.getAttribution();
+```
+
+**Note**: Information about current attribution is available after app installation has been tracked by the adjust backend and attribution callback has been initially triggered. From that moment on, adjust SDK has information about your user's attribution and you can access it with this method. So, **it is not possible** to access user's attribution value before the SDK has been initialised and attribution callback has been initially triggered.
 
 ### <a id="push-token">Push token
 
-To send us the push notification token, please call `setDeviceToken` method on the `Adjust` instance **when you obtain your
-app's push notification token and when ever it changes it's value**:
+To send us the push notification token, please call `setDeviceToken` method on the `Adjust` instance **when you obtain your app's push notification token and when ever it changes it's value**:
 
 ```cs
 Adjust.setDeviceToken("YourPushNotificationToken");
@@ -615,27 +615,17 @@ If you want to use the Adjust SDK to recognize users that found your app pre-ins
 
 **Deep linking is supported only on iOS and Android platforms.**
 
-If you are using the adjust tracker URL with an option to deep link into your app from the URL, there is the possibility to
-get info about the deep link URL and its content. Hitting the URL can happen when the user has your app already installed
-(standard deep linking scenario) or if they don't have the app on their device (deferred deep linking scenario). In the
-standard deep linking scenario, Android platform natively offers the possibility for you to get the info about the deep link
-content. Deferred deep linking scenario is something which Android platform doesn't support out of box and for this case,
-the adjust SDK will offer you the mechanism to get the info about the deep link content.
+If you are using the adjust tracker URL with an option to deep link into your app from the URL, there is the possibility to get info about the deep link URL and its content. Hitting the URL can happen when the user has your app already installed (standard deep linking scenario) or if they don't have the app on their device (deferred deep linking scenario). In the standard deep linking scenario, Android platform natively offers the possibility for you to get the info about the deep link content. Deferred deep linking scenario is something which Android platform doesn't support out of box and for this case, the adjust SDK will offer you the mechanism to get the info about the deep link content.
 
-You need to set up deep linking handling in your app **on native level** - in your generated Xcode project (for iOS) and
-Android Studio / Eclipse project (for Android).
+You need to set up deep linking handling in your app **on native level** - in your generated Xcode project (for iOS) and Android Studio / Eclipse project (for Android).
 
 #### <a id="deeplinking-standard">Standard deep linking scenario
 
-Unfortunatelly, in this scenario the information about the deep link can not be delivered to you in your Unity C# code.
-Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more
-information check our chapters below on how to enable deep linking for Android and iOS apps.
+Unfortunatelly, in this scenario the information about the deep link can not be delivered to you in your Unity C# code. Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more information check our chapters below on how to enable deep linking for Android and iOS apps.
 
 #### <a id="deeplinking-deferred">Deferred deep linking scenario
 
-In order to get info about the URL content in a deferred deep linking scenario, you should set a callback method on the
-`AdjustConfig` object which will receive one `string` parameter where the content of the URL will be delivered. You
-should set this method on the config object by calling the method `setDeferredDeeplinkDelegate`:
+In order to get info about the URL content in a deferred deep linking scenario, you should set a callback method on the `AdjustConfig` object which will receive one `string` parameter where the content of the URL will be delivered. You should set this method on the config object by calling the method `setDeferredDeeplinkDelegate`:
 
 ```cs
 // ...
@@ -653,10 +643,7 @@ adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
 Adjust.start(adjustConfig);
 ```
 
-<a id="deeplinking-deferred-open">In deferred deep linking scenario, there is one additional setting which can be set on the
-`AdjustConfig` object. Once the adjust SDK gets the deferred deep link info, we are offering you the possibility to choose
-whether our SDK should open this URL or not. You can choose to set this option by calling the `setLaunchDeferredDeeplink`
-method on the config object:
+<a id="deeplinking-deferred-open">In deferred deep linking scenario, there is one additional setting which can be set on the `AdjustConfig` object. Once the adjust SDK gets the deferred deep link info, we are offering you the possibility to choose whether our SDK should open this URL or not. You can choose to set this option by calling the `setLaunchDeferredDeeplink` method on the config object:
 
 ```cs
 // ...
@@ -683,15 +670,13 @@ To enable your apps to support deep linking, you should set up schemes for each 
 
 **This should be done in native Android Studio / Eclipse project.**
 
-To set up your Android app to handle deep linking on native level, please follow our [guide][android-deeplinking]
-in the official Android SDK README.
+To set up your Android app to handle deep linking on native level, please follow our [guide][android-deeplinking] in the official Android SDK README.
 
 #### <a id="deeplinking-app-ios">Deep linking handling in iOS app
 
 **This should be done in native Xcode project.**
 
-To set up your iOS app to handle deep linking on native level, please follow our [guide][ios-deeplinking]
-in the official iOS SDK README.
+To set up your iOS app to handle deep linking on native level, please follow our [guide][ios-deeplinking] in the official iOS SDK README.
 
 ## <a id="troubleshooting">Troubleshooting
 
@@ -699,16 +684,11 @@ in the official iOS SDK README.
 
 Even with the post build script it is possible that the project is not ready to run out of the box.
 
-If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab
-and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option.
-Change it from `DWARF with dSYM File` to `DWARF`.
+If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
 
 ### <a id="ts-build-script-fail">Build scripts fails to be executed
 
-The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one
-of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case,
-use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py` and
-`Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py` to add execute privileges.
+The post build scripts require execute permissions to be able to run. If the build process freezes in the end and opens one of the script files, this may be that your system is configured to not allow scripts to run by default. If this is the case, use the `chmod` tool in both `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildiOS.py` and `Assets/Editor/PostprocessBuildPlayer_AdjustPostBuildAndroid.py` to add execute privileges.
 
 
 [dashboard]:               http://adjust.com
@@ -741,7 +721,7 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
 
 The adjust SDK is licensed under the MIT License.
 
-Copyright (c) 2012-2016 adjust GmbH,
+Copyright (c) 2012-2017 adjust GmbH,
 http://www.adjust.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
