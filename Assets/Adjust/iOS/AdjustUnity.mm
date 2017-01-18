@@ -38,6 +38,14 @@ NSArray* ConvertArrayParameters(const char* cStringJsonArrayParameters) {
 
 extern "C"
 {
+    void addValueOrEmpty(NSMutableDictionary *dictionary, NSString *key, NSObject *value) {
+        if (nil != value) {
+            [dictionary setObject:[NSString stringWithFormat:@"%@", value] forKey:key];
+        } else {
+            [dictionary setObject:@"" forKey:key];
+        }
+    }
+
     void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int allowSuppressLogLevel, int logLevel, 
         int eventBuffering, int sendInBackground, double delayStart, const char* userAgent, int launchDeferredDeeplink, const char* sceneName,
         int isAttributionCallbackImplemented, int isEventSuccessCallbackImplemented, int isEventFailureCallbackImplemented,
@@ -122,7 +130,7 @@ extern "C"
         NSArray *arrayCallbackParameters = ConvertArrayParameters(jsonCallbackParameters);
 
         if (arrayCallbackParameters != nil) {
-            int count = [arrayCallbackParameters count];
+            NSUInteger count = [arrayCallbackParameters count];
 
             for (int i = 0; i < count;) {
                 NSString *key = arrayCallbackParameters[i];
@@ -138,7 +146,7 @@ extern "C"
         NSArray *arrayPartnerParameters = ConvertArrayParameters(jsonPartnerParameters);
 
         if (arrayPartnerParameters != nil) {
-            int count = [arrayPartnerParameters count];
+            NSUInteger count = [arrayPartnerParameters count];
 
             for (int i = 0; i < count;) {
                 NSString *key = arrayPartnerParameters[i];
@@ -201,10 +209,67 @@ extern "C"
 
     char* _AdjustGetIdfa() {
         NSString *idfa = [Adjust idfa];
+
+        if (nil == idfa) {
+            return NULL;
+        }
+
         const char* idfaCString = [idfa UTF8String];
+
+        if (NULL == idfaCString) {
+            return NULL;
+        }
+
         char* idfaCStringCopy = strdup(idfaCString);
 
         return idfaCStringCopy;
+    }
+
+    char* _AdjustGetAdid() {
+        NSString *adid = [Adjust adid];
+
+        if (nil == adid) {
+            return NULL;
+        }
+
+        const char* adidCString = [adid UTF8String];
+
+        if (NULL == adidCString) {
+            return NULL;
+        }
+
+        char* adidCStringCopy = strdup(adidCString);
+
+        return adidCStringCopy;
+    }
+
+    char* _AdjustGetAttribution() {
+        ADJAttribution *attribution = [Adjust attribution];
+
+        if (nil == attribution) {
+            return NULL;
+        }
+
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+
+        addValueOrEmpty(dictionary, @"trackerToken", attribution.trackerToken);
+        addValueOrEmpty(dictionary, @"trackerName", attribution.trackerName);
+        addValueOrEmpty(dictionary, @"network", attribution.network);
+        addValueOrEmpty(dictionary, @"campaign", attribution.campaign);
+        addValueOrEmpty(dictionary, @"creative", attribution.creative);
+        addValueOrEmpty(dictionary, @"adgroup", attribution.adgroup);
+        addValueOrEmpty(dictionary, @"clickLabel", attribution.clickLabel);
+        addValueOrEmpty(dictionary, @"adid", attribution.adid);
+
+        NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+        NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
+                                                               length:[dataAttribution length]
+                                                             encoding:NSUTF8StringEncoding];
+
+        const char* attributionCString = [stringAttribution UTF8String];
+        char* attributionCStringCopy = strdup(attributionCString);
+
+        return attributionCStringCopy;
     }
 
     void _AdjustSendFirstPackages() {

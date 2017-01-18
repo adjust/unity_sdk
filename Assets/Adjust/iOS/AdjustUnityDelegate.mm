@@ -87,6 +87,7 @@
     [self addValueOrEmpty:dictionary key:@"creative" value:attribution.creative];
     [self addValueOrEmpty:dictionary key:@"adgroup" value:attribution.adgroup];
     [self addValueOrEmpty:dictionary key:@"clickLabel" value:attribution.clickLabel];
+    [self addValueOrEmpty:dictionary key:@"adid" value:attribution.adid];
 
     NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
