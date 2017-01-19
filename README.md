@@ -98,7 +98,7 @@ You have the possibility to set up the following options on the Adjust prefab:
 
 We use this environment to distinguish between real traffic and artificial traffic from test devices. It is very important that you keep this value meaningful at all times! Especially if you are tracking revenue.
 
-<a id="start-manually">If you don't want the Adjust SDK to start automatically at the `Awake` event of the app, tick the box `Start Manually`. With this option selected, you will need to initialise and start the Adjust SDK from the code. Call the method `Adjust.start` with the `AdjustConfig` object as a parameter to start the Adjust SDK.
+<a id="start-manually">If you don't want the Adjust SDK to start automatically at the `Awake` event of the app, check the box `Start Manually`. With this option selected, you will need to initialize and start the Adjust SDK from the within the code. Call the method `Adjust.start` with the `AdjustConfig` object as a parameter to start the Adjust SDK.
 
 For an example of scene with of a button menu with these options and others, open the example scene located at `Assets/Adjust/ExampleGUI/ExampleGUI.unity`. The source for this scene is located at `Assets/Adjust/ExampleGUI/ExampleGUI.cs`.
 
