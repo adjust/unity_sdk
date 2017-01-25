@@ -9,7 +9,7 @@
 #### Fixed
 - Now reading push token value from activity state file when sending package.
 - Fixed memory leak by closing network session for iOS platform.
-- Fixed `TARGET_OS_TV` pre processer check for iOS platform.
+- Fixed `TARGET_OS_TV` pre processor check for iOS platform.
 - Fixed `UNITY_EDITOR_OSX` symbol usage in `AdjustEditor.cs` for Windows platform (https://github.com/adjust/unity_sdk/issues/95).
 
 #### Changed
@@ -17,7 +17,7 @@
 - Saving iAd/AdSearch details to prevent sending duplicated `sdk_click` packages for iOS platform.
 - Updated docs.
 - Updated native iOS SDK to version **4.11.0**.
-- Updated native iOS SDK to version **4.11.0**.
+- Updated native Android SDK to version **4.11.0**.
 - Native SDKs stability updates and improvements.
 
 ---
