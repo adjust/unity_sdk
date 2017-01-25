@@ -17,7 +17,7 @@
 - Saving iAd/AdSearch details to prevent sending duplicated `sdk_click` packages for iOS platform.
 - Updated docs.
 - Updated native iOS SDK to version **4.11.0**.
-- Updated native iOS SDK to version **4.11.0**.
+- Updated native Android SDK to version **4.11.0**.
 - Native SDKs stability updates and improvements.
 
 ---
