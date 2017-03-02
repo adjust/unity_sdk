@@ -1,3 +1,13 @@
+### Version 4.11.1 (xth March 2017)
+#### Fixed
+- Fixed issue of creating and destroying lots of threads on certain Android API levels (https://github.com/adjust/android_sdk/issues/265).
+
+#### Changed
+- Updated native Android SDK to version **4.11.1**.
+- Native SDKs stability updates and improvements.
+
+---
+
 ### Version 4.11.0 (18th January 2017)
 #### Added
 - Added `adid` property to the attribution callback response.
