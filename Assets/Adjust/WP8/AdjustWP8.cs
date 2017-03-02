@@ -8,7 +8,7 @@ using AdjustUnityWP;
 
 namespace com.adjust.sdk {
 	public class AdjustWP8 : IAdjust {
-		private const string sdkPrefix = "unity4.11.0";
+		private const string sdkPrefix = "unity4.11.1";
 
 		public bool isEnabled() {
 			return AdjustWP.IsEnabled();
