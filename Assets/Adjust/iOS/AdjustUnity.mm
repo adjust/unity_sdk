@@ -122,7 +122,7 @@ extern "C"
         ADJEvent *event = [ADJEvent eventWithEventToken:stringEventToken];
 
         // Optional fields.
-        if (revenue != -1 || currency != NULL) {
+        if (revenue != -1 && currency != NULL) {
             NSString *stringCurrency = [NSString stringWithUTF8String:currency];
             [event setRevenue:revenue currency:stringCurrency];
         }
