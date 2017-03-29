@@ -9,13 +9,12 @@
 - **[WIN]** Added support for Windows Phone 8.1 and Windows 10 to Unity 5 package.
 
 #### Fixed
-- **[iOS]** Fixed handling of `null` being passed as currency value for iOS platform.
 - **[iOS]** Fixed not processing of `sdk_info` package type causing logs not to print proper package name once tracked.
 - **[AND]** Fixed query string parsing.
 - **[iOS][AND]** Fixed random occurrence of attribution request being fired before session request.
+- **[iOS]** Fixed handling of `null` being passed as currency value for iOS platform (https://github.com/adjust/unity_sdk/issues/102).
 - **[AND]** Fixed issue of creating and destroying lots of threads on certain Android API levels (https://github.com/adjust/android_sdk/issues/265).
 - **[AND]** Protected `Package Manager` from throwing unexpected exceptions (https://github.com/adjust/android_sdk/issues/266).
-- **[iOS]** Fixed exception being thrown when currency is being set to `null` (https://github.com/adjust/unity_sdk/issues/102).
 
 #### Changed
 - **[AND]** Garanteed that access of `Activity Handler` to internal methods is done through it's executor.
