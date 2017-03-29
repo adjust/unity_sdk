@@ -1,12 +1,13 @@
 fileFormatVersion: 2
-guid: d0a26361db60d3345a251a900c1d6823
-timeCreated: 1439476163
+guid: 81438eed05b2e4b489f13efc94d5476a
+timeCreated: 1489655217
 licenseType: Pro
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
   executionOrder: {}
   isPreloaded: 0
+  isOverridable: 0
   platformData:
     Any:
       enabled: 0
@@ -15,7 +16,10 @@ PluginImporter:
       enabled: 0
       settings:
         DefaultValueInitialized: true
-    WindowsStoreApps:
+    iOS:
+      enabled: 1
+      settings: {}
+    tvOS:
       enabled: 1
       settings: {}
   userData: 

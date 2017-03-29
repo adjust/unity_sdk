@@ -73,7 +73,7 @@ cp ../Assets/Adjust/iOS/AdjustiOS.cs ./Unity4Assets/Adjust/iOS/
 #######################
 # Adjust/Metro folder #
 #######################
-cp ../Assets/Adjust/Metro/AdjustMetro.cs ./Unity4Assets/Adjust/Metro/
+cp ./Unity4Backup/Metro/AdjustMetro.cs ./Unity4Assets/Adjust/Metro/
 
 #######################
 # Adjust/Unity folder #
@@ -83,7 +83,7 @@ cp ../Assets/Adjust/Unity/* ./Unity4Assets/Adjust/Unity/
 #####################
 # Adjust/WP8 folder #
 #####################
-cp ../Assets/Adjust/WP8/AdjustWP8.cs ./Unity4Assets/Adjust/WP8/
+cp ./Unity4Backup/WP8/AdjustWP8.cs ./Unity4Assets/Adjust/WP8/
 
 #################
 # Editor folder #
@@ -96,8 +96,8 @@ cp ./Unity4Backup/PostprocessBuildPlayer_AdjustPostBuildiOS.py ./Unity4Assets/Ed
 ##################
 # Plugins folder #
 ##################
-cp ../Assets/Adjust/AdjustUnityWP.dll ./Unity4Assets/Plugins/
-cp ../Assets/Adjust/AdjustUnityWS.dll ./Unity4Assets/Plugins/
+cp ./Unity4Backup/AdjustUnityWP.dll ./Unity4Assets/Plugins/
+cp ./Unity4Backup/AdjustUnityWS.dll ./Unity4Assets/Plugins/
 
 ##########################
 # Plugins/Android folder #
@@ -114,12 +114,12 @@ cp ../Assets/Adjust/iOS/*.a ./Unity4Assets/Plugins/iOS/
 ########################
 # Plugins/Metro folder #
 ########################
-cp ../Assets/Adjust/Metro/*.dll ./Unity4Assets/Plugins/Metro/
+cp ./Unity4Backup/Metro/*.dll ./Unity4Assets/Plugins/Metro/
 
 ######################
 # Plugins/WP8 folder #
 ######################
-cp ../Assets/Adjust/WP8/*.dll ./Unity4Assets/Plugins/WP8/
+cp ./Unity4Backup/WP8/*.dll ./Unity4Assets/Plugins/WP8/
 
 #####################################################################################
 # Target for iOS is named "BuildTarget.iOS" in Unity 5                              #

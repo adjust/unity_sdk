@@ -1,22 +1,36 @@
 fileFormatVersion: 2
-guid: d724a2691ef780e469487c32cdd8a8ae
-timeCreated: 1439477309
+guid: 1a68e48464352474f967b47d2e54c3d9
+timeCreated: 1485878775
 licenseType: Pro
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
   executionOrder: {}
   isPreloaded: 0
+  isOverridable: 0
   platformData:
     Android:
       enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: ARMv7
     Any:
       enabled: 0
-      settings: {}
+      settings:
+        Exclude Android: 1
+        Exclude Editor: 1
+        Exclude Linux: 1
+        Exclude Linux64: 1
+        Exclude LinuxUniversal: 1
+        Exclude OSXIntel: 1
+        Exclude OSXIntel64: 1
+        Exclude OSXUniversal: 1
+        Exclude Win: 1
+        Exclude Win64: 1
+        Exclude WindowsStoreApps: 0
+        Exclude iOS: 1
+        Exclude tvOS: 1
     Editor:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
         DefaultValueInitialized: true
@@ -29,6 +43,10 @@ PluginImporter:
       enabled: 0
       settings:
         CPU: x86_64
+    LinuxUniversal:
+      enabled: 0
+      settings:
+        CPU: None
     OSXIntel:
       enabled: 0
       settings:
@@ -37,16 +55,10 @@ PluginImporter:
       enabled: 0
       settings:
         CPU: AnyCPU
-    SamsungTV:
+    OSXUniversal:
       enabled: 0
       settings:
-        STV_MODEL: STANDARD_13
-    WP8:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
-        DontProcess: False
-        PlaceholderPath: 
+        CPU: None
     Win:
       enabled: 0
       settings:
@@ -56,13 +68,19 @@ PluginImporter:
       settings:
         CPU: AnyCPU
     WindowsStoreApps:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: AnyCPU
         DontProcess: False
-        PlaceholderPath: 
-        SDK: AnySDK
+        PlaceholderPath: Assets/Adjust/AdjustUnityWS81.dll
+        SDK: SDK81
+        ScriptingBackend: AnyScriptingBackend
     iOS:
+      enabled: 0
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
+    tvOS:
       enabled: 0
       settings:
         CompileFlags: 

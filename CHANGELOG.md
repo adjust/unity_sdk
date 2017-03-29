@@ -1,3 +1,29 @@
+### Version 4.11.1 (29th March 2017)
+#### Added
+- **[iOS]** Added nullability annotations to public headers for Swift 3.0 compatibility.
+- **[iOS]** Added `BITCODE_GENERATION_MODE` to iOS framework for `Carthage` support.
+- **[iOS]** Added support for iOS 10.3.
+- **[iOS][AND]** Added connection validity checks.
+- **[iOS][AND]** Added sending of the app's install time.
+- **[iOS][AND]** Added sending of the app's update time.
+- **[WIN]** Added support for Windows Phone 8.1 and Windows 10 to Unity 5 package.
+
+#### Fixed
+- **[iOS]** Fixed not processing of `sdk_info` package type causing logs not to print proper package name once tracked.
+- **[AND]** Fixed query string parsing.
+- **[iOS][AND]** Fixed random occurrence of attribution request being fired before session request.
+- **[iOS]** Fixed handling of `null` being passed as currency value for iOS platform (https://github.com/adjust/unity_sdk/issues/102).
+- **[AND]** Fixed issue of creating and destroying lots of threads on certain Android API levels (https://github.com/adjust/android_sdk/issues/265).
+- **[AND]** Protected `Package Manager` from throwing unexpected exceptions (https://github.com/adjust/android_sdk/issues/266).
+
+#### Changed
+- **[AND]** Garanteed that access of `Activity Handler` to internal methods is done through it's executor.
+- **[iOS]** Updated native iOS SDK to version **4.11.3**.
+- **[AND]** Updated native Android SDK to version **4.11.2**.
+- **[DOC]** Introduced `[iOS]`, `[AND]`, `[WIN]` and `[DOC]` tags to `CHANGELOG` to highlight the platform the change is referring to.
+
+---
+
 ### Version 4.11.0 (18th January 2017)
 #### Added
 - Added `adid` property to the attribution callback response.
