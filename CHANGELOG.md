@@ -1,4 +1,4 @@
-### Version 4.11.1 (xxth March 2017)
+### Version 4.11.1 (29th March 2017)
 #### Added
 - **[iOS]** Added nullability annotations to public headers for Swift 3.0 compatibility.
 - **[iOS]** Added `BITCODE_GENERATION_MODE` to iOS framework for `Carthage` support.
@@ -12,14 +12,16 @@
 - **[iOS]** Fixed handling of `null` being passed as currency value for iOS platform.
 - **[iOS]** Fixed not processing of `sdk_info` package type causing logs not to print proper package name once tracked.
 - **[AND]** Fixed query string parsing.
+- **[iOS][AND]** Fixed random occurrence of attribution request being fired before session request.
 - **[AND]** Fixed issue of creating and destroying lots of threads on certain Android API levels (https://github.com/adjust/android_sdk/issues/265).
 - **[AND]** Protected `Package Manager` from throwing unexpected exceptions (https://github.com/adjust/android_sdk/issues/266).
-- **[iOS][AND]** Fixed random occurrence of attribution request being fired before session request.
+- **[iOS]** Fixed exception being thrown when currency is being set to `null` (https://github.com/adjust/unity_sdk/issues/102).
 
 #### Changed
 - **[AND]** Garanteed that access of `Activity Handler` to internal methods is done through it's executor.
-- **[iOS]** Updated native iOS SDK to version **4.11.2**.
+- **[iOS]** Updated native iOS SDK to version **4.11.3**.
 - **[AND]** Updated native Android SDK to version **4.11.2**.
+- **[DOC]** Introduced `[iOS]`, `[AND]`, `[WIN]` and `[DOC]` tags to `CHANGELOG` to highlight the platform the change is referring to.
 
 ---
 
