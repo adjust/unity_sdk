@@ -11,7 +11,7 @@ using AdjustUnityWS81;
 #endif
 namespace com.adjust.sdk {
     public class AdjustMetro : IAdjust {
-        private const string sdkPrefix = "unity4.11.0";
+        private const string sdkPrefix = "unity4.11.2";
 
         public bool isEnabled() {
 #if UNITY_WSA_10_0
