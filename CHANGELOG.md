@@ -1,3 +1,11 @@
+### Version 4.11.2 (6th March 2017)
+#### Changed
+- **[AND]** Removed connection validity checks.
+- **[AND]** Refactored native networking code.
+- **[AND]** Updated native Android SDK to version **4.11.3**.
+
+---
+
 ### Version 4.11.1 (29th March 2017)
 #### Added
 - **[iOS]** Added nullability annotations to public headers for Swift 3.0 compatibility.
