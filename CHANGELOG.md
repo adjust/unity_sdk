@@ -1,3 +1,13 @@
+### Version 4.11.3 (19th May 2017)
+#### Added
+- **[IOS][AND]** Added check if `sdk_click` package response contains attribution information.
+- **[IOS][AND]** Added sending of attributable parameters with every `sdk_click` package.
+
+#### Changed
+- **[IOS][AND]** Replaced `assert` level logs with `warn` level.
+
+---
+
 ### Version 4.11.2 (6th March 2017)
 #### Changed
 - **[AND]** Removed connection validity checks.
