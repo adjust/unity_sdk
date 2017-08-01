@@ -109,7 +109,7 @@ You can increase or decrease the amount of logs you see by changing the value of
 - `Verbose` - enable all logging
 - `Debug` - enable more logging
 - `Info` - the default
-- `Warn` - disable F  logging
+- `Warn` - disable info logging
 - `Error` - disable warnings as well
 - `Assert` - disable errors as well
 - `Suppress` - disable all logging
@@ -578,7 +578,7 @@ As described in the [attribution callback section](#attribution-callback), this 
 AdjustAttribution attribution = Adjust.getAttribution();
 ```
 
-**Note**: Information about current attribution is available after app installation has been tracked by the Adjust backend and the attribution callback has been initially triggered. From that moment on, the Adjust SDK has information about a user's attribution and you can access it with this method. So, **it is not possible** to access a user's attribution value before the SDK has been initialised and an attribution callback has been triggered.
+**Note**: Information about current attribution is available after app installation has been tracked by the Adjust backend and the attribution callback has been initially triggered. From that moment on, the Adjust SDK has information about a user's attribution and you can access it with this method. So, **it is not possible** to access a user's attribution value before the SDK has been initialized and an attribution callback has been triggered.
 
 ### <a id="push-token">Push token
 
@@ -621,11 +621,11 @@ You need to set up deep linking handling in your app **on native level** - in yo
 
 #### <a id="deeplinking-standard">Standard deep linking scenario
 
-Unfortunatelly, in this scenario the information about the deep link can not be delivered to you in your Unity C# code. Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more information check our chapters below on how to enable deep linking for Android and iOS apps.
+Unfortunately, in this scenario the information about the deep link can not be delivered to you in your Unity C# code. Once you enable your app to handle deep linking, you will get information about the deep link on native level. For more information check our chapters below on how to enable deep linking for Android and iOS apps.
 
 #### <a id="deeplinking-deferred">Deferred deep linking scenario
 
-In order to get F  about the URL content in a deferred deep linking scenario, you should set a callback method on the `AdjustConfig` object which will receive one `string` parameter where the content of the URL will be delivered. You should set this method on the config object by calling the method `setDeferredDeeplinkDelegate`:
+In order to get information about the URL content in a deferred deep linking scenario, you should set a callback method on the `AdjustConfig` object which will receive one `string` parameter where the content of the URL will be delivered. You should set this method on the config object by calling the method `setDeferredDeeplinkDelegate`:
 
 ```cs
 // ...
@@ -643,7 +643,7 @@ adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
 Adjust.start(adjustConfig);
 ```
 
-<a id="deeplinking-deferred-open">In deferred deep linking scenario, there is one additional setting which can be set on the `AdjustConfig` object. Once the Adjust SDK gets the deferred deep link F , we are offering you the possibility to choose whether our SDK should open this URL or not. You can choose to set this option by calling the `setLaunchDeferredDeeplink` method on the config object:
+<a id="deeplinking-deferred-open">In deferred deep linking scenario, there is one additional setting which can be set on the `AdjustConfig` object. Once the Adjust SDK gets the deferred deep link information, we offer you the possibility to choose whether our SDK should open this URL or not. You can choose to set this option by calling the `setLaunchDeferredDeeplink` method on the config object:
 
 ```cs
 // ...
@@ -698,14 +698,14 @@ The post build scripts require execute permissions to be able to run. If the bui
 [android]:                 https://github.com/adjust/android_sdk
 [releases]:                https://github.com/adjust/adjust_unity_sdk/releases
 [google_ad_id]:            https://developer.android.com/google/play-services/id.html
-[ios-deeplinking]:         https://github.com/adjust/ios_sdk/#deeplink-reattributions
+[ios-deeplinking]:         https://github.com/adjust/ios_sdk/#deeplinking-reattribution
 [attribution_data]:        https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
 [special-partners]:        https://docs.adjust.com/en/special-partners
 [unity-purchase-sdk]:      https://github.com/adjust/unity_purchase_sdk
 [android-deeplinking]:     https://github.com/adjust/android_sdk#deep-linking
 [google_play_services]:    http://developer.android.com/google/play-services/setup.html
 [android_sdk_download]:    https://developer.android.com/sdk/index.html#Other
-[android-custom-receiver]: https://github.com/adjust/android_sdk/blob/master/doc/referrer.md
+[android-custom-receiver]: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md
 
 [menu_android]:             https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
 [adjust_editor]:            https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
