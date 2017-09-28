@@ -1,4 +1,4 @@
-### Version 4.11.4 (xxth September 2017)
+### Version 4.11.4 (28th September 2017)
 #### Added
 - **[iOS]** Improved iOS 11 support.
 
