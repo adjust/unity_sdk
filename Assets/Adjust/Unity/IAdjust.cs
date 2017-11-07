@@ -24,5 +24,8 @@ namespace com.adjust.sdk {
         // Android specific methods
         void setReferrer(string referrer);
         void getGoogleAdId(Action<string> onDeviceIdsRead);
+
+		// Windows specific methods
+		string getWinAdid();
     }
 }

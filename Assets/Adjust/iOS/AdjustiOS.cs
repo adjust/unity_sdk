@@ -201,6 +201,11 @@ namespace com.adjust.sdk {
         public void setReferrer(string referrer) {}
 
         public void getGoogleAdId(Action<string> onDeviceIdsRead) {}
+
+		// Windows specific methods
+		public string getWinAdid() {
+			return null;
+		}
         #endregion
     }
 #endif

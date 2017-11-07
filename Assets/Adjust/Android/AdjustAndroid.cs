@@ -298,6 +298,11 @@ namespace com.adjust.sdk {
         public string getIdfa() {
             return null;
         }
+
+		// Windows specific methods
+		public string getWinAdid() {
+			return null;
+		}
         #endregion
 
         #region Proxy listener classes

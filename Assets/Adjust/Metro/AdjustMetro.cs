@@ -4,14 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+
 #if UNITY_WSA_10_0
-using AdjustUnityWS10;
+using Win10Interface;
 #elif UNITY_WINRT_8_1
-using AdjustUnityWS81;
+using Win81Interface;
 #endif
+
 namespace com.adjust.sdk {
     public class AdjustMetro : IAdjust {
         private const string sdkPrefix = "unity4.11.4";
+
+		// TODO: make AdjustWS10 & AdjusWS81 implement an interface, which can be used as an abstraction here
+		// thus leading to less compiler branching (e.g. #if, #endif, etc.)
 
         public bool isEnabled() {
 #if UNITY_WSA_10_0
@@ -22,11 +27,13 @@ namespace com.adjust.sdk {
         }
 
         public string getAdid() {
-            return null;
+			return AdjustWS10.GetAdid ();
         }
 
         public AdjustAttribution getAttribution() {
-            return null;
+			var attribution = AdjustWS10.GetAttribution ();
+			var attributionJson = JsonUtility.ToJson (attribution);
+			return new AdjustAttribution (attributionJson);
         }
 
         public void onPause() {
@@ -64,106 +71,186 @@ namespace com.adjust.sdk {
         public void start(AdjustConfig adjustConfig) {
             string logLevelString = null;
             string environment = lowercaseToString(adjustConfig.environment);
-            Action<Dictionary<string, string>> attributionChangedDictionary = null;
+            Action<Dictionary<string, string>> attributionChangedAction = null;
+			Action<Dictionary<string, string>> sessionSuccessChangedAction = null;
+			Action<Dictionary<string, string>> sessionFailureChangedAction = null;
+			Action<Dictionary<string, string>> eventSuccessChangedAction = null;
+			Action<Dictionary<string, string>> eventFailureChangedAction = null;
 
             if (adjustConfig.logLevel.HasValue) {
                 logLevelString = lowercaseToString(adjustConfig.logLevel.Value);
             }
 
             if (adjustConfig.attributionChangedDelegate != null) {
-                attributionChangedDictionary = (attributionDictionary) => Adjust.runAttributionChangedDictionary(attributionDictionary);
+				attributionChangedAction = (attributionMap) => {
+					var attributionMapJson = JsonUtility.ToJson(attributionMap);
+					Adjust.GetNativeAttribution(attributionMapJson);
+					//Adjust.RunAttributionChangedAction(attributionMap);
+				};
             }
+
+			if (adjustConfig.sessionSuccessDelegate != null) {
+				sessionSuccessChangedAction = (sessionMap) => {
+					var sessionMapJson = JsonUtility.ToJson (sessionMap);
+					Adjust.GetNativeSessionSuccess(sessionMapJson);
+					//Adjust.RunSessionSuccessChangedAction(sessionMap);
+				};
+			}
+
+			if (adjustConfig.sessionFailureDelegate != null) {
+				sessionFailureChangedAction = (sessionMap) => {
+					var sessionMapJson = JsonUtility.ToJson (sessionMap);
+					Adjust.GetNativeSessionFailure(sessionMapJson);
+					//Adjust.RunSessionFailureChangedAction (sessionMap);
+				};
+			}
+
+			if(adjustConfig.eventSuccessDelegate != null) {
+				eventSuccessChangedAction = (eventMap) => {
+					var eventMapJson = JsonUtility.ToJson(eventMap);
+					Adjust.GetNativeEventSuccess(eventMapJson);
+					//Adjust.RunEventFailureChangedAction (eventMap);
+				};
+			}
+
+			if (adjustConfig.eventFailureDelegate != null) {
+				eventFailureChangedAction = (eventMap) => {
+					var eventMapJson = JsonUtility.ToJson(eventMap);
+					Adjust.GetNativeEventFailure(eventMapJson);
+					//Adjust.RunEventFailureChangedAction (eventMap);
+				};
+			}
+
+			bool sendInBackground = false;
+			if (adjustConfig.sendInBackground.HasValue) {
+				sendInBackground = adjustConfig.sendInBackground.Value;
+			}
+
+			double delayStartSeconds = 0;
+			if (adjustConfig.delayStart.HasValue) {
+				delayStartSeconds = adjustConfig.delayStart.Value;
+			}
+
 #if UNITY_WSA_10_0
-            AdjustWS10.ApplicationLaunching(
+			AdjustWS10.ApplicationLaunching (
 #elif UNITY_WINRT_8_1
             AdjustWS81.ApplicationLaunching(
 #endif
-                appToken:adjustConfig.appToken,
-                logLevelString:logLevelString,
-                environment:environment,
-                defaultTracker:adjustConfig.defaultTracker,
-                eventBufferingEnabled:adjustConfig.eventBufferingEnabled,
-                sdkPrefix:sdkPrefix,
-                attributionChangedDic:attributionChangedDictionary,
-                logDelegate:adjustConfig.logDelegate
-            );
-        }
-
-        public static string lowercaseToString(AdjustLogLevel AdjustLogLevel)
-        {
-            switch (AdjustLogLevel)
-            {
-                case AdjustLogLevel.Verbose:
-                    return "verbose";
-                case AdjustLogLevel.Debug:
-                    return "debug";
-                case AdjustLogLevel.Info:
-                    return "info";
-                case AdjustLogLevel.Warn:
-                    return "warn";
-                case AdjustLogLevel.Error:
-                    return "error";
-                case AdjustLogLevel.Assert:
-                    return "assert";
-                case AdjustLogLevel.Suppress:
-                    return "suppress";
-                default:
-                    return "unknown";
-            }
-        }
-
-        public static string lowercaseToString(AdjustEnvironment adjustEnvironment)
-        {
-            switch (adjustEnvironment)
-            {
-                case AdjustEnvironment.Sandbox:
-                    return "sandbox";
-                case AdjustEnvironment.Production:
-                    return "production";
-                default:
-                    return "unknown";
-            }
+				appToken: adjustConfig.appToken,
+				environment: environment,
+				sdkPrefix: sdkPrefix,
+				sendInBackground: sendInBackground,
+				delayStart: delayStartSeconds,
+				userAgent: adjustConfig.userAgent,
+				defaultTracker: adjustConfig.defaultTracker,
+				eventBufferingEnabled: adjustConfig.eventBufferingEnabled,
+				launchDeferredDeeplink: adjustConfig.launchDeferredDeeplink,
+				logLevelString: logLevelString,
+				logDelegate: adjustConfig.logDelegate,
+				actionAttributionChangedData: attributionChangedAction,
+				actionSessionSuccessData: sessionSuccessChangedAction,
+				actionSessionFailureData: sessionFailureChangedAction,
+				actionEventSuccessData: eventSuccessChangedAction,
+				actionEventFailureData: eventFailureChangedAction
+			);
         }
 
         public void trackEvent(AdjustEvent adjustEvent) {
 #if UNITY_WSA_10_0
-            AdjustWS10.TrackEvent(
+			AdjustWS10.TrackEvent (
 #elif UNITY_WINRT_8_1
             AdjustWS81.TrackEvent(
 #endif
-                eventToken:adjustEvent.eventToken,
-                revenue:adjustEvent.revenue,
-                currency:adjustEvent.currency,
-                callbackList:adjustEvent.callbackList,
-                partnerList:adjustEvent.partnerList
-            );
+				eventToken: adjustEvent.eventToken,
+				revenue: adjustEvent.revenue,
+				currency: adjustEvent.currency,
+				purchaseId: null,
+				callbackList: adjustEvent.callbackList,
+				partnerList: adjustEvent.partnerList
+			);
         }
 
-        public void sendFirstPackages() {}
+        public void sendFirstPackages() {
+			AdjustWS10.SendFirstPackages ();
+		}
 
-        public void setDeviceToken(string deviceToken) {}
+        public void setDeviceToken(string deviceToken) {
+			AdjustWS10.SetDeviceToken (deviceToken);
+		}
 
-        public static void addSessionPartnerParameter(string key, string value) {}
+		public string getWinAdid() {
+			return AdjustWS10.GetWindowsAdId();
+		}
 
-        public static void addSessionCallbackParameter(string key, string value) {}
+        public static void addSessionPartnerParameter(string key, string value) {
+			AdjustWS10.AddSessionPartnerParameter (key, value);
+		}
 
-        public static void removeSessionPartnerParameter(string key) {}
+        public static void addSessionCallbackParameter(string key, string value) {
+			AdjustWS10.AddSessionCallbackParameter (key, value);
+		}
 
-        public static void removeSessionCallbackParameter(string key) {}
+        public static void removeSessionPartnerParameter(string key) {
+			AdjustWS10.RemoveSessionPartnerParameter (key);
+		}
 
-        public static void resetSessionPartnerParameters() {}
+        public static void removeSessionCallbackParameter(string key) {
+			AdjustWS10.RemoveSessionCallbackParameter (key);
+		}
 
-        public static void resetSessionCallbackParameters() {}
+        public static void resetSessionPartnerParameters() {
+			AdjustWS10.ResetSessionPartnerParameters ();
+		}
 
-        // iOS specific methods
-        public string getIdfa() {
-            return null;
-        }
+        public static void resetSessionCallbackParameters() {
+			AdjustWS10.ResetSessionCallbackParameters ();
+		}
 
-        // Android specific methods
-        public void setReferrer(string referrer) {}
+		public static string lowercaseToString(AdjustLogLevel AdjustLogLevel)
+		{
+			switch (AdjustLogLevel)
+			{
+			case AdjustLogLevel.Verbose:
+				return "verbose";
+			case AdjustLogLevel.Debug:
+				return "debug";
+			case AdjustLogLevel.Info:
+				return "info";
+			case AdjustLogLevel.Warn:
+				return "warn";
+			case AdjustLogLevel.Error:
+				return "error";
+			case AdjustLogLevel.Assert:
+				return "assert";
+			case AdjustLogLevel.Suppress:
+				return "suppress";
+			default:
+				return "unknown";
+			}
+		}
 
-        public void getGoogleAdId(Action<string> onDeviceIdsRead) {}
+		public static string lowercaseToString(AdjustEnvironment adjustEnvironment)
+		{
+			switch (adjustEnvironment)
+			{
+			case AdjustEnvironment.Sandbox:
+				return "sandbox";
+			case AdjustEnvironment.Production:
+				return "production";
+			default:
+				return "unknown";
+			}
+		}
+
+		// iOS specific methods
+		public string getIdfa() {
+			return null;
+		}
+
+		// Android specific methods
+		public void setReferrer(string referrer) {}
+
+		public void getGoogleAdId(Action<string> onDeviceIdsRead) {}
     }
 }
 #endif

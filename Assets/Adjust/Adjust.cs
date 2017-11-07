@@ -313,23 +313,86 @@ namespace com.adjust.sdk {
 
         #region Attribution callback
 
-        public static void runAttributionChangedDictionary(Dictionary<string, string> dicAttributionData)
-        {
-            if (instance == null)
-            {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-            if (Adjust.attributionChangedDelegate == null)
-            {
-                Debug.Log("adjust: Attribution changed delegate was not set.");
-                return;
-            }
-            var attribution = new AdjustAttribution(dicAttributionData);
-            Adjust.attributionChangedDelegate(attribution);
-        }
+//        public static void RunAttributionChangedAction(Dictionary<string, string> attributionData) {
+//            if (instance == null) {
+//                Debug.Log(Adjust.errorMessage);
+//                return;
+//            }
+//
+//            if (Adjust.attributionChangedDelegate == null) {
+//                Debug.Log("adjust: Attribution changed delegate was not set.");
+//                return;
+//            }
+//
+//			var attribution = new AdjustAttribution(attributionData);
+//            Adjust.attributionChangedDelegate(attribution);
+//        }
+//
+//		public static void RunSessionSuccessChangedAction(Dictionary<string, string> actionSessionSuccessData) {
+//			if (instance == null) {
+//				Debug.Log(Adjust.errorMessage);
+//				return;
+//			}
+//
+//			if (Adjust.sessionSuccessDelegate == null) {
+//				Debug.Log("adjust: Session success delegate was not set.");
+//				return;
+//			}
+//
+//			var actionSessionSuccessDataJson = JsonUtility.ToJson (actionSessionSuccessData);
+//			var sessionSussessData = new AdjustSessionSuccess(actionSessionSuccessDataJson);
+//			Adjust.sessionSuccessDelegate(sessionSussessData);
+//		}
+//
+//		public static void RunSessionFailureChangedAction(Dictionary<string, string> actionSessionFailureData) {
+//			if (instance == null) {
+//				Debug.Log(Adjust.errorMessage);
+//				return;
+//			}
+//
+//			if (Adjust.sessionFailureDelegate == null) {
+//				Debug.Log("adjust: Session failure delegate was not set.");
+//				return;
+//			}
+//
+//			var actionSessionFailureDataJson = JsonUtility.ToJson (actionSessionFailureData);
+//			var sessionFailureData = new AdjustSessionFailure(actionSessionFailureDataJson);
+//			Adjust.sessionFailureDelegate(sessionFailureData);
+//		}
+//
+//		public static void RunEventSuccessChangedAction(Dictionary<string, string> actionEventSuccessData) {
+//			if (instance == null) {
+//				Debug.Log(Adjust.errorMessage);
+//				return;
+//			}
+//
+//			if (Adjust.eventSuccessDelegate == null) {
+//				Debug.Log("adjust: Event success delegate was not set.");
+//				return;
+//			}
+//
+//			var actionEventSuccessDataJson = JsonUtility.ToJson (actionEventSuccessData);
+//			var eventSuccessData = new AdjustEventSuccess(actionEventSuccessDataJson);
+//			Adjust.eventSuccessDelegate(eventSuccessData);
+//		}
+//
+//		public static void RunEventFailureChangedAction(Dictionary<string, string> actionEventFailureData) {
+//			if (instance == null) {
+//				Debug.Log(Adjust.errorMessage);
+//				return;
+//			}
+//
+//			if (Adjust.eventFailureDelegate == null) {
+//				Debug.Log("adjust: Event failure delegate was not set.");
+//				return;
+//			}
+//
+//			var actionEventFailureDataJson = JsonUtility.ToJson (actionEventFailureData);
+//			var eventFailureData = new AdjustEventFailure (actionEventFailureDataJson);
+//			Adjust.eventFailureDelegate (eventFailureData);
+//		}
 
-        public void GetNativeAttribution(string attributionData) {
+		public static void GetNativeAttribution(string attributionData) {
             if (instance == null) {
                 Debug.Log(Adjust.errorMessage);
                 return;
@@ -344,7 +407,7 @@ namespace com.adjust.sdk {
             Adjust.attributionChangedDelegate(attribution);
         }
 
-        public void GetNativeEventSuccess(string eventSuccessData) {
+        public static void GetNativeEventSuccess(string eventSuccessData) {
             if (instance == null) {
                 Debug.Log(Adjust.errorMessage);
                 return;
@@ -359,7 +422,7 @@ namespace com.adjust.sdk {
             Adjust.eventSuccessDelegate(eventSuccess);
         }
 
-        public void GetNativeEventFailure(string eventFailureData) {
+        public static void GetNativeEventFailure(string eventFailureData) {
             if (instance == null) {
                 Debug.Log(Adjust.errorMessage);
                 return;
@@ -374,7 +437,7 @@ namespace com.adjust.sdk {
             Adjust.eventFailureDelegate(eventFailure);
         }
 
-        public void GetNativeSessionSuccess(string sessionSuccessData) {
+        public static void GetNativeSessionSuccess(string sessionSuccessData) {
             if (instance == null) {
                 Debug.Log(Adjust.errorMessage);
                 return;
@@ -389,7 +452,7 @@ namespace com.adjust.sdk {
             Adjust.sessionSuccessDelegate(sessionSuccess);
         }
 
-        public void GetNativeSessionFailure(string sessionFailureData) {
+        public static void GetNativeSessionFailure(string sessionFailureData) {
             if (instance == null) {
                 Debug.Log(Adjust.errorMessage);
                 return;
@@ -404,7 +467,7 @@ namespace com.adjust.sdk {
             Adjust.sessionFailureDelegate(sessionFailure);
         }
 
-        public void GetNativeDeferredDeeplink(string deeplinkURL) {
+        public static void GetNativeDeferredDeeplink(string deeplinkURL) {
             if (instance == null) {
                 Debug.Log(Adjust.errorMessage);
                 return;

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: f29a24c7f8821a04b948fa281beaadc0
-timeCreated: 1509723108
+guid: 64aebd589aa21cd489368a1570e09acd
+timeCreated: 1509723107
 licenseType: Free
 PluginImporter:
   serializedVersion: 2
@@ -124,8 +124,8 @@ PluginImporter:
         settings:
           CPU: AnyCPU
           DontProcess: False
-          PlaceholderPath: 
-          SDK: AnySDK
+          PlaceholderPath: Assets/Adjust/Win10Interface.dll
+          SDK: UWP
           ScriptingBackend: AnyScriptingBackend
   userData: 
   assetBundleName: 
