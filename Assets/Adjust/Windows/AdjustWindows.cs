@@ -126,27 +126,31 @@ namespace com.adjust.sdk {
 				delayStartSeconds = adjustConfig.delayStart.Value;
 			}
 
+			AdjustConfigDto adjustConfigDto = new AdjustConfigDto {
+				AppToken = adjustConfig.appToken,
+				Environment = environment,
+				SdkPrefix = sdkPrefix,
+				SendInBackground = sendInBackground,
+				DelayStart = delayStartSeconds,
+				UserAgent = adjustConfig.userAgent,
+				DefaultTracker = adjustConfig.defaultTracker,
+				EventBufferingEnabled = adjustConfig.eventBufferingEnabled,
+				LaunchDeferredDeeplink = adjustConfig.launchDeferredDeeplink,
+				LogLevelString = logLevelString,
+				LogDelegate = adjustConfig.logDelegate,
+				ActionAttributionChangedData = attributionChangedAction,
+				ActionSessionSuccessData = sessionSuccessChangedAction,
+				ActionSessionFailureData = sessionFailureChangedAction,
+				ActionEventSuccessData = eventSuccessChangedAction,
+				ActionEventFailureData = eventFailureChangedAction
+			};
+
 #if UNITY_WSA_10_0
 			AdjustWS10.ApplicationLaunching (
 #elif UNITY_WINRT_8_1
             AdjustWS81.ApplicationLaunching(
 #endif
-				appToken: adjustConfig.appToken,
-				environment: environment,
-				sdkPrefix: sdkPrefix,
-				sendInBackground: sendInBackground,
-				delayStart: delayStartSeconds,
-				userAgent: adjustConfig.userAgent,
-				defaultTracker: adjustConfig.defaultTracker,
-				eventBufferingEnabled: adjustConfig.eventBufferingEnabled,
-				launchDeferredDeeplink: adjustConfig.launchDeferredDeeplink,
-				logLevelString: logLevelString,
-				logDelegate: adjustConfig.logDelegate,
-				actionAttributionChangedData: attributionChangedAction,
-				actionSessionSuccessData: sessionSuccessChangedAction,
-				actionSessionFailureData: sessionFailureChangedAction,
-				actionEventSuccessData: eventSuccessChangedAction,
-				actionEventFailureData: eventFailureChangedAction
+				adjustConfigDto
 			);
         }
 
