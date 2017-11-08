@@ -1,4 +1,4 @@
-﻿#if UNITY_METRO
+﻿#if UNITY_WSA
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,8 +12,8 @@ using Win81Interface;
 #endif
 
 namespace com.adjust.sdk {
-    public class AdjustMetro : IAdjust {
-        private const string sdkPrefix = "unity4.11.4";
+    public class AdjustWindows : IAdjust {
+        private const string sdkPrefix = "unity4.12.0";
 
 		// TODO: make AdjustWS10 & AdjusWS81 implement an interface, which can be used as an abstraction here
 		// thus leading to less compiler branching (e.g. #if, #endif, etc.)
@@ -85,7 +85,6 @@ namespace com.adjust.sdk {
 				attributionChangedAction = (attributionMap) => {
 					var attributionMapJson = JsonUtility.ToJson(attributionMap);
 					Adjust.GetNativeAttribution(attributionMapJson);
-					//Adjust.RunAttributionChangedAction(attributionMap);
 				};
             }
 
@@ -93,7 +92,6 @@ namespace com.adjust.sdk {
 				sessionSuccessChangedAction = (sessionMap) => {
 					var sessionMapJson = JsonUtility.ToJson (sessionMap);
 					Adjust.GetNativeSessionSuccess(sessionMapJson);
-					//Adjust.RunSessionSuccessChangedAction(sessionMap);
 				};
 			}
 
@@ -101,7 +99,6 @@ namespace com.adjust.sdk {
 				sessionFailureChangedAction = (sessionMap) => {
 					var sessionMapJson = JsonUtility.ToJson (sessionMap);
 					Adjust.GetNativeSessionFailure(sessionMapJson);
-					//Adjust.RunSessionFailureChangedAction (sessionMap);
 				};
 			}
 
@@ -109,7 +106,6 @@ namespace com.adjust.sdk {
 				eventSuccessChangedAction = (eventMap) => {
 					var eventMapJson = JsonUtility.ToJson(eventMap);
 					Adjust.GetNativeEventSuccess(eventMapJson);
-					//Adjust.RunEventFailureChangedAction (eventMap);
 				};
 			}
 
@@ -117,7 +113,6 @@ namespace com.adjust.sdk {
 				eventFailureChangedAction = (eventMap) => {
 					var eventMapJson = JsonUtility.ToJson(eventMap);
 					Adjust.GetNativeEventFailure(eventMapJson);
-					//Adjust.RunEventFailureChangedAction (eventMap);
 				};
 			}
 

@@ -93,8 +93,8 @@ namespace com.adjust.sdk {
                 Adjust.instance = new AdjustAndroid();
             #elif UNITY_WP8
                 Adjust.instance = new AdjustWP8();
-            #elif UNITY_METRO
-                Adjust.instance = new AdjustMetro();
+            #elif UNITY_WSA
+                Adjust.instance = new AdjustWindows();
             #else
                 Adjust.instance = null;
             #endif
@@ -171,8 +171,8 @@ namespace com.adjust.sdk {
                 AdjustAndroid.addSessionPartnerParameter(key, value);
             #elif UNITY_WP8
                 AdjustWP8.addSessionPartnerParameter(key, value);
-            #elif UNITY_METRO
-                AdjustMetro.addSessionPartnerParameter(key, value);
+			#elif UNITY_WSA
+				AdjustWindows.addSessionPartnerParameter(key, value);
             #else
                 Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
                 return;
@@ -186,8 +186,8 @@ namespace com.adjust.sdk {
                 AdjustAndroid.addSessionCallbackParameter(key, value);
             #elif UNITY_WP8
                 AdjustWP8.addSessionCallbackParameter(key, value);
-            #elif UNITY_METRO
-                AdjustMetro.addSessionCallbackParameter(key, value);
+            #elif UNITY_WSA
+				AdjustWindows.addSessionCallbackParameter(key, value);
             #else
                 Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
                 return;
@@ -201,8 +201,8 @@ namespace com.adjust.sdk {
                 AdjustAndroid.removeSessionPartnerParameter(key);
             #elif UNITY_WP8
                 AdjustWP8.removeSessionPartnerParameter(key);
-            #elif UNITY_METRO
-                AdjustMetro.removeSessionPartnerParameter(key);
+            #elif UNITY_WSA
+				AdjustWindows.removeSessionPartnerParameter(key);
             #else
                 Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
                 return;
@@ -216,8 +216,8 @@ namespace com.adjust.sdk {
                 AdjustAndroid.removeSessionCallbackParameter(key);
             #elif UNITY_WP8
                 AdjustWP8.removeSessionCallbackParameter(key);
-            #elif UNITY_METRO
-                AdjustMetro.removeSessionCallbackParameter(key);
+            #elif UNITY_WSA
+				AdjustWindows.removeSessionCallbackParameter(key);
             #else
                 Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
                 return;
@@ -231,8 +231,8 @@ namespace com.adjust.sdk {
                 AdjustAndroid.resetSessionPartnerParameters();
             #elif UNITY_WP8
                 AdjustWP8.resetSessionPartnerParameters();
-            #elif UNITY_METRO
-                AdjustMetro.resetSessionPartnerParameters();
+            #elif UNITY_WSA
+				AdjustWindows.resetSessionPartnerParameters();
             #else
                 Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
                 return;
@@ -246,8 +246,8 @@ namespace com.adjust.sdk {
                 AdjustAndroid.resetSessionCallbackParameters();
             #elif UNITY_WP8
                 AdjustWP8.resetSessionCallbackParameters();
-            #elif UNITY_METRO
-                AdjustMetro.resetSessionCallbackParameters();
+            #elif UNITY_WSA
+				AdjustWindows.resetSessionCallbackParameters();
             #else
                 Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
                 return;
@@ -311,87 +311,7 @@ namespace com.adjust.sdk {
         }
         #endregion
 
-        #region Attribution callback
-
-//        public static void RunAttributionChangedAction(Dictionary<string, string> attributionData) {
-//            if (instance == null) {
-//                Debug.Log(Adjust.errorMessage);
-//                return;
-//            }
-//
-//            if (Adjust.attributionChangedDelegate == null) {
-//                Debug.Log("adjust: Attribution changed delegate was not set.");
-//                return;
-//            }
-//
-//			var attribution = new AdjustAttribution(attributionData);
-//            Adjust.attributionChangedDelegate(attribution);
-//        }
-//
-//		public static void RunSessionSuccessChangedAction(Dictionary<string, string> actionSessionSuccessData) {
-//			if (instance == null) {
-//				Debug.Log(Adjust.errorMessage);
-//				return;
-//			}
-//
-//			if (Adjust.sessionSuccessDelegate == null) {
-//				Debug.Log("adjust: Session success delegate was not set.");
-//				return;
-//			}
-//
-//			var actionSessionSuccessDataJson = JsonUtility.ToJson (actionSessionSuccessData);
-//			var sessionSussessData = new AdjustSessionSuccess(actionSessionSuccessDataJson);
-//			Adjust.sessionSuccessDelegate(sessionSussessData);
-//		}
-//
-//		public static void RunSessionFailureChangedAction(Dictionary<string, string> actionSessionFailureData) {
-//			if (instance == null) {
-//				Debug.Log(Adjust.errorMessage);
-//				return;
-//			}
-//
-//			if (Adjust.sessionFailureDelegate == null) {
-//				Debug.Log("adjust: Session failure delegate was not set.");
-//				return;
-//			}
-//
-//			var actionSessionFailureDataJson = JsonUtility.ToJson (actionSessionFailureData);
-//			var sessionFailureData = new AdjustSessionFailure(actionSessionFailureDataJson);
-//			Adjust.sessionFailureDelegate(sessionFailureData);
-//		}
-//
-//		public static void RunEventSuccessChangedAction(Dictionary<string, string> actionEventSuccessData) {
-//			if (instance == null) {
-//				Debug.Log(Adjust.errorMessage);
-//				return;
-//			}
-//
-//			if (Adjust.eventSuccessDelegate == null) {
-//				Debug.Log("adjust: Event success delegate was not set.");
-//				return;
-//			}
-//
-//			var actionEventSuccessDataJson = JsonUtility.ToJson (actionEventSuccessData);
-//			var eventSuccessData = new AdjustEventSuccess(actionEventSuccessDataJson);
-//			Adjust.eventSuccessDelegate(eventSuccessData);
-//		}
-//
-//		public static void RunEventFailureChangedAction(Dictionary<string, string> actionEventFailureData) {
-//			if (instance == null) {
-//				Debug.Log(Adjust.errorMessage);
-//				return;
-//			}
-//
-//			if (Adjust.eventFailureDelegate == null) {
-//				Debug.Log("adjust: Event failure delegate was not set.");
-//				return;
-//			}
-//
-//			var actionEventFailureDataJson = JsonUtility.ToJson (actionEventFailureData);
-//			var eventFailureData = new AdjustEventFailure (actionEventFailureDataJson);
-//			Adjust.eventFailureDelegate (eventFailureData);
-//		}
-
+        #region callbacks
 		public static void GetNativeAttribution(string attributionData) {
             if (instance == null) {
                 Debug.Log(Adjust.errorMessage);
