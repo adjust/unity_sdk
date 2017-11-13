@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 64aebd589aa21cd489368a1570e09acd
-timeCreated: 1509723107
+guid: 72c922127edd0e94b972c6e40580ec90
+timeCreated: 1510575009
 licenseType: Free
 PluginImporter:
   serializedVersion: 2
@@ -15,7 +15,6 @@ PluginImporter:
       second:
         enabled: 0
         settings:
-          Exclude Android: 1
           Exclude Editor: 1
           Exclude Linux: 1
           Exclude Linux64: 1
@@ -26,7 +25,6 @@ PluginImporter:
           Exclude Win: 1
           Exclude Win64: 1
           Exclude WindowsStoreApps: 0
-          Exclude iOS: 1
     data:
       first:
         '': Editor
@@ -35,13 +33,6 @@ PluginImporter:
         settings:
           CPU: AnyCPU
           OS: AnyOS
-    data:
-      first:
-        Android: Android
-      second:
-        enabled: 0
-        settings:
-          CPU: ARMv7
     data:
       first:
         Any: 
@@ -54,9 +45,7 @@ PluginImporter:
       second:
         enabled: 0
         settings:
-          CPU: AnyCPU
           DefaultValueInitialized: true
-          OS: AnyOS
     data:
       first:
         Facebook: Win
@@ -135,17 +124,9 @@ PluginImporter:
         settings:
           CPU: AnyCPU
           DontProcess: False
-          PlaceholderPath: Assets/Adjust/Windows/Stubs/Win10Interface.dll
-          SDK: UWP
+          PlaceholderPath: Assets/Adjust/Windows/Stubs/Win81Interface.dll
+          SDK: PhoneSDK81
           ScriptingBackend: AnyScriptingBackend
-    data:
-      first:
-        iPhone: iOS
-      second:
-        enabled: 0
-        settings:
-          CompileFlags: 
-          FrameworkDependencies: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 
