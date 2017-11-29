@@ -364,13 +364,13 @@ As the callback is configured using the AdjustConfig instance, you should call `
 
 The callback function will get called when the SDK receives final attribution data. Within the callback function you have access to the `attribution` parameter. Here is a quick summary of its properties:
 
-- `string trackerToken` the tracker token of the current install.
-- `string trackerName` the tracker name of the current install.
-- `string network` the network grouping level of the current install.
-- `string campaign` the campaign grouping level of the current install.
-- `string adgroup` the ad group grouping level of the current install.
-- `string creative` the creative grouping level of the current install.
-- `string clickLabel` the click label of the current install.
+- `string trackerToken` the tracker token of the current attribution.
+- `string trackerName` the tracker name of the current attribution.
+- `string network` the network grouping level of the current attribution.
+- `string campaign` the campaign grouping level of the current attribution.
+- `string adgroup` the ad group grouping level of the current attribution.
+- `string creative` the creative grouping level of the current attribution.
+- `string clickLabel` the click label of the current attribution.
 - `string adid` the Adjust device identifier.
 
 ```cs
