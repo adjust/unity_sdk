@@ -180,6 +180,9 @@ namespace WinInterface
         {
 #if NETFX_CORE
             var attribution = Adjust.GetAttributon();
+            if (attribution == null)
+                return new Dictionary<string, string>();
+
             return AdjustAttribution
                 .ToDictionary(attribution)
                 // convert from <string, object> to <string, string>

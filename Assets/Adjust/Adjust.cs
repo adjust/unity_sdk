@@ -93,8 +93,10 @@ namespace com.adjust.sdk {
                 Adjust.instance = new AdjustAndroid();
             #elif UNITY_WP8
                 Adjust.instance = new AdjustWP8();
+                adjustConfig.setLogDelegate(msg => Debug.Log(msg));
             #elif UNITY_WSA
                 Adjust.instance = new AdjustWindows();
+                adjustConfig.setLogDelegate(msg => Debug.Log(msg));
             #else
                 Adjust.instance = null;
             #endif

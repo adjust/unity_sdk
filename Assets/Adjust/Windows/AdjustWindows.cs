@@ -27,6 +27,9 @@ namespace com.adjust.sdk {
 
         public AdjustAttribution getAttribution() {
 			var attribution = AdjustWinInterface.GetAttribution ();
+			if (attribution == null)
+				return new AdjustAttribution ();
+
 			var attributionJson = JsonUtility.ToJson (attribution);
 			return new AdjustAttribution (attributionJson);
         }
