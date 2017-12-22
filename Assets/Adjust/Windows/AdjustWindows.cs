@@ -136,7 +136,13 @@ namespace com.adjust.sdk {
 				ActionSessionFailureData = sessionFailureChangedAction,
 				ActionEventSuccessData = eventSuccessChangedAction,
 				ActionEventFailureData = eventFailureChangedAction,
-				FuncDeeplinkResponseData = deeplinkResponseFunc
+				FuncDeeplinkResponseData = deeplinkResponseFunc,
+				IsDeviceKnown = adjustConfig.isDeviceKnown,
+				SecretId = adjustConfig.secretId,
+				AppSecretInfo1 = adjustConfig.appSecretInfo1,
+				AppSecretInfo2 = adjustConfig.appSecretInfo2,
+				AppSecretInfo3 = adjustConfig.appSecretInfo3,
+				AppSecretInfo4 = adjustConfig.appSecretInfo4
 			};
 
 			AdjustWinInterface.ApplicationLaunching (adjustConfigDto);

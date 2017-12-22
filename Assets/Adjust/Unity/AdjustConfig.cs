@@ -24,6 +24,13 @@ namespace com.adjust.sdk {
         internal Action<AdjustSessionSuccess> sessionSuccessDelegate;
         internal Action<AdjustSessionFailure> sessionFailureDelegate;
         internal Action<AdjustAttribution> attributionChangedDelegate;
+		
+		internal bool? isDeviceKnown;
+		internal long secretId = 0;
+		internal long appSecretInfo1 = 0;
+		internal long appSecretInfo2 = 0;
+		internal long appSecretInfo3 = 0;
+		internal long appSecretInfo4 = 0;
 
         // Android specific members
         internal string processName;
