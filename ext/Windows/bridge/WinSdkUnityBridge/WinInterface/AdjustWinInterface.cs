@@ -179,14 +179,16 @@ namespace WinInterface
         public static Dictionary<string, string> GetAttribution()
         {
 #if NETFX_CORE
-            var attribution = Adjust.GetAttributon();
+            AdjustAttribution attribution = Adjust.GetAttributon();
             if (attribution == null)
                 return new Dictionary<string, string>();
+            
+            var adjustAttributionMap = AdjustAttribution.ToDictionary(attribution);
+            if (adjustAttributionMap == null)
+                return new Dictionary<string, string>();
 
-            return AdjustAttribution
-                .ToDictionary(attribution)
-                // convert from <string, object> to <string, string>
-                .ToDictionary(x => x.Key, x => x.Value.ToString());
+            // convert from <string, object> to <string, string>
+            return adjustAttributionMap.ToDictionary(x => x.Key, x => x.Value.ToString());
 #else
             return null;
 #endif
