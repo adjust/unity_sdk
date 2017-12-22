@@ -32,9 +32,16 @@ namespace WinInterface
                 DelayStart = TimeSpan.FromSeconds(adjustConfigDto.DelayStart)
             };
 
-            // config.SetAppSecret(0, 0, 0, 0, 0);
+            config.SetAppSecret(adjustConfigDto.SecretId, 
+                adjustConfigDto.AppSecretInfo1, adjustConfigDto.AppSecretInfo2, 
+                adjustConfigDto.AppSecretInfo3, adjustConfigDto.AppSecretInfo4);
 
             config.SetUserAgent(adjustConfigDto.UserAgent);
+
+            if (adjustConfigDto.IsDeviceKnown.HasValue)
+            {
+                config.SetDeviceKnown(adjustConfigDto.IsDeviceKnown.Value);
+            }
 
             if (adjustConfigDto.EventBufferingEnabled.HasValue)
             {
