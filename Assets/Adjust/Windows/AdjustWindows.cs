@@ -96,7 +96,7 @@ namespace com.adjust.sdk {
 				};
 			}
 
-			if (adjustConfig.deeplinkDelegate != null) {
+			if (adjustConfig.deferredDeeplinkDelegate != null) {
 				deeplinkResponseFunc = uri => {
 					if(adjustConfig.launchDeferredDeeplink) {
 						Adjust.GetNativeDeferredDeeplink(uri);
