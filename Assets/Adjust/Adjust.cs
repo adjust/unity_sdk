@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 namespace com.adjust.sdk {
     public class Adjust : MonoBehaviour {
-        #region Adjust fields
+        
         private const string errorMessage = "adjust: SDK not started. Start it manually using the 'start' method.";
-
-        private static IAdjust instance = null;
 
         private static Action<string> deferredDeeplinkDelegate = null;
         private static Action<AdjustEventSuccess> eventSuccessDelegate = null;
@@ -27,14 +24,9 @@ namespace com.adjust.sdk {
 
         public AdjustLogLevel logLevel = AdjustLogLevel.Info;
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
-        #endregion
 
         #region Unity lifecycle methods
         void Awake() {
-            if (Adjust.instance != null) {
-                return;
-            }
-              
             DontDestroyOnLoad(transform.gameObject);
 
             if (!this.startManually) {
@@ -61,50 +53,45 @@ namespace com.adjust.sdk {
         }
 
         void OnApplicationPause(bool pauseStatus) {
-            if (Adjust.instance == null) {
-                return;
-            }
-            
+#if UNITY_IOS
+            // nop
+#elif UNITY_ANDROID
             if (pauseStatus) {
-                Adjust.instance.onPause();
-            } else {
-                Adjust.instance.onResume();
+                AdjustAndroid.onPause();
             }
+            else {
+                AdjustAndroid.onResume();
+            }
+#elif (UNITY_WSA || UNITY_WP8)
+            if (pauseStatus) {
+                AdjustWindows.onPause();
+            }
+            else {
+                AdjustWindows.onResume();
+            }
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+#endif
         }
         #endregion
 
         #region Adjust methods
-        public static void start(AdjustConfig adjustConfig) {
-            if (Adjust.instance != null) {
-                Debug.Log("adjust: Error, SDK already started.");
-                return;
-            }
-
+        public static void start(AdjustConfig adjustConfig) {            
             if (adjustConfig == null) {
                 Debug.Log("adjust: Missing config to start.");
                 return;
             }
 
-            #if UNITY_EDITOR
-                Adjust.instance = null;
-            #elif UNITY_IOS
-                Adjust.instance = new AdjustiOS();
-            #elif UNITY_ANDROID
-                Adjust.instance = new AdjustAndroid();
-            #elif UNITY_WP8
-                Adjust.instance = new AdjustWP8();
-                adjustConfig.setLogDelegate(msg => Debug.Log(msg));
-            #elif UNITY_WSA
-                Adjust.instance = new AdjustWindows();
-                adjustConfig.setLogDelegate(msg => Debug.Log(msg));
-            #else
-                Adjust.instance = null;
-            #endif
-
-            if (Adjust.instance == null) {
-                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
-                return;
-            }
+#if UNITY_IOS
+            AdjustiOS.start(adjustConfig);
+#elif UNITY_ANDROID
+            AdjustAndroid.start(adjustConfig);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.start(adjustConfig);
+            adjustConfig.setLogDelegate(msg => Debug.Log(msg));
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+#endif
 
             Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
             Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
@@ -112,214 +99,279 @@ namespace com.adjust.sdk {
             Adjust.sessionFailureDelegate = adjustConfig.getSessionFailureDelegate();
             Adjust.deferredDeeplinkDelegate = adjustConfig.getDeferredDeeplinkDelegate();
             Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate();
-
-            Adjust.instance.start(adjustConfig);
         }
 
         public static void trackEvent(AdjustEvent adjustEvent) {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-            
             if (adjustEvent == null) {
                 Debug.Log("adjust: Missing event to track.");
                 return;
             }
 
-            Adjust.instance.trackEvent(adjustEvent);
+#if UNITY_IOS
+            AdjustiOS.trackEvent(adjustEvent);
+#elif UNITY_ANDROID
+            AdjustAndroid.trackEvent(adjustEvent);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.trackEvent(adjustEvent);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+#endif
         }
 
         public static void setEnabled(bool enabled) {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
-            Adjust.instance.setEnabled(enabled);
+#if UNITY_IOS
+            AdjustiOS.setEnabled(enabled);
+#elif UNITY_ANDROID
+            AdjustAndroid.setEnabled(enabled);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.setEnabled(enabled);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+#endif
         }
 
         public static bool isEnabled() {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return false;
-            }
-
-            return Adjust.instance.isEnabled();
+#if UNITY_IOS
+            return AdjustiOS.isEnabled();
+#elif UNITY_ANDROID
+            return AdjustAndroid.isEnabled();
+#elif (UNITY_WSA || UNITY_WP8)
+            return AdjustWindows.isEnabled();
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+#endif
         }
 
         public static void setOfflineMode(bool enabled) {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
+#if UNITY_IOS
+            AdjustiOS.setOfflineMode(enabled);
+#elif UNITY_ANDROID
+            AdjustAndroid.setOfflineMode(enabled);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.setOfflineMode(enabled);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+#endif
+        }
 
-            Adjust.instance.setOfflineMode(enabled);
+        public static void setDeviceToken(string deviceToken)
+        {
+#if UNITY_IOS
+            AdjustiOS.setDeviceToken(deviceToken);
+#elif UNITY_ANDROID
+            AdjustAndroid.setDeviceToken(deviceToken);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.setDeviceToken(deviceToken);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
+        }
+
+        public static void appWillOpenUrl(string url)
+        {
+#if UNITY_IOS
+            AdjustiOS.appWillOpenUrl(url);
+#elif UNITY_ANDROID
+            AdjustAndroid.appWillOpenUrl(url);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.appWillOpenUrl(url);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static void sendFirstPackages() {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
-            Adjust.instance.sendFirstPackages();
+#if UNITY_IOS
+            AdjustiOS.sendFirstPackages();
+#elif UNITY_ANDROID
+            AdjustAndroid.sendFirstPackages();
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.sendFirstPackages();
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+#endif
         }
 
         public static void addSessionPartnerParameter(string key, string value) {
-            #if UNITY_IOS
-                AdjustiOS.addSessionPartnerParameter(key, value);
-            #elif UNITY_ANDROID
-                AdjustAndroid.addSessionPartnerParameter(key, value);
-            #elif UNITY_WP8
-                AdjustWP8.addSessionPartnerParameter(key, value);
-			#elif UNITY_WSA
-				AdjustWindows.addSessionPartnerParameter(key, value);
-            #else
-                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
-                return;
-            #endif
+#if UNITY_IOS
+            AdjustiOS.addSessionPartnerParameter(key, value);
+#elif UNITY_ANDROID
+            AdjustAndroid.addSessionPartnerParameter(key, value);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.addSessionPartnerParameter(key, value);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static void addSessionCallbackParameter(string key, string value) {
-            #if UNITY_IOS
-                AdjustiOS.addSessionCallbackParameter(key, value);
-            #elif UNITY_ANDROID
-                AdjustAndroid.addSessionCallbackParameter(key, value);
-            #elif UNITY_WP8
-                AdjustWP8.addSessionCallbackParameter(key, value);
-            #elif UNITY_WSA
-				AdjustWindows.addSessionCallbackParameter(key, value);
-            #else
-                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
-                return;
-            #endif
+#if UNITY_IOS
+            AdjustiOS.addSessionCallbackParameter(key, value);
+#elif UNITY_ANDROID
+            AdjustAndroid.addSessionCallbackParameter(key, value);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.addSessionCallbackParameter(key, value);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static void removeSessionPartnerParameter(string key) {
-            #if UNITY_IOS
-                AdjustiOS.removeSessionPartnerParameter(key);
-            #elif UNITY_ANDROID
-                AdjustAndroid.removeSessionPartnerParameter(key);
-            #elif UNITY_WP8
-                AdjustWP8.removeSessionPartnerParameter(key);
-            #elif UNITY_WSA
-				AdjustWindows.removeSessionPartnerParameter(key);
-            #else
-                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
-                return;
-            #endif
+#if UNITY_IOS
+            AdjustiOS.removeSessionPartnerParameter(key);
+#elif UNITY_ANDROID
+            AdjustAndroid.removeSessionPartnerParameter(key);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.removeSessionPartnerParameter(key);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static void removeSessionCallbackParameter(string key) {
-            #if UNITY_IOS
-                AdjustiOS.removeSessionCallbackParameter(key);
-            #elif UNITY_ANDROID
-                AdjustAndroid.removeSessionCallbackParameter(key);
-            #elif UNITY_WP8
-                AdjustWP8.removeSessionCallbackParameter(key);
-            #elif UNITY_WSA
-				AdjustWindows.removeSessionCallbackParameter(key);
-            #else
-                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
-                return;
-            #endif
+#if UNITY_IOS
+            AdjustiOS.removeSessionCallbackParameter(key);
+#elif UNITY_ANDROID
+            AdjustAndroid.removeSessionCallbackParameter(key);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.removeSessionCallbackParameter(key);
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static void resetSessionPartnerParameters() {
-            #if UNITY_IOS
-                AdjustiOS.resetSessionPartnerParameters();
-            #elif UNITY_ANDROID
-                AdjustAndroid.resetSessionPartnerParameters();
-            #elif UNITY_WP8
-                AdjustWP8.resetSessionPartnerParameters();
-            #elif UNITY_WSA
-				AdjustWindows.resetSessionPartnerParameters();
-            #else
-                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
-                return;
-            #endif
+#if UNITY_IOS
+            AdjustiOS.resetSessionPartnerParameters();
+#elif UNITY_ANDROID
+            AdjustAndroid.resetSessionPartnerParameters();
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.resetSessionPartnerParameters();
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static void resetSessionCallbackParameters() {
-            #if UNITY_IOS
-                AdjustiOS.resetSessionCallbackParameters();
-            #elif UNITY_ANDROID
-                AdjustAndroid.resetSessionCallbackParameters();
-            #elif UNITY_WP8
-                AdjustWP8.resetSessionCallbackParameters();
-            #elif UNITY_WSA
-				AdjustWindows.resetSessionCallbackParameters();
-            #else
-                Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
-                return;
-            #endif
+#if UNITY_IOS
+            AdjustiOS.resetSessionCallbackParameters();
+#elif UNITY_ANDROID
+            AdjustAndroid.resetSessionCallbackParameters();
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.resetSessionCallbackParameters();
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static string getAdid() {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return null;
-            }
-
-            return Adjust.instance.getAdid();
+#if UNITY_IOS
+            return AdjustiOS.getAdid();
+#elif UNITY_ANDROID
+            return AdjustAndroid.getAdid();
+#elif (UNITY_WSA || UNITY_WP8)
+            return AdjustWindows.getAdid();
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
-        public static AdjustAttribution getAttribution() {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return null;
-            }
-
-            return Adjust.instance.getAttribution();
+        public static AdjustAttribution getAttribution()
+        {
+#if UNITY_IOS
+            return AdjustiOS.getAttribution();
+#elif UNITY_ANDROID
+            return AdjustAndroid.getAttribution();
+#elif (UNITY_WSA || UNITY_WP8)
+            return AdjustWindows.getAttribution();
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
-        
-        // iOS specific methods
-        public static void setDeviceToken(string deviceToken) {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
 
-            Adjust.instance.setDeviceToken(deviceToken);
+        public static string getWinAdid() {
+#if UNITY_IOS
+            Debug.Log("adjust: Error! Win ADID is not available on iOS Platform.");
+            return null;
+#elif UNITY_ANDROID
+            Debug.Log("adjust: Error! Win ADID is not available on Android Platform.");
+            return null;
+#elif (UNITY_WSA || UNITY_WP8)
+            return AdjustWindows.getWinAdid();
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static string getIdfa() {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return null;
-            }
-
-            return Adjust.instance.getIdfa();
+#if UNITY_IOS
+            return AdjustiOS.getIdfa();
+#elif UNITY_ANDROID
+            Debug.Log("adjust: Error! IDFA not available on Android Platform.");
+            return null;
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("adjust: Error! IDFA not available on Windows Platform.");
+            return null;
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
-        // Android specific methods
         public static void setReferrer(string referrer) {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
-            Adjust.instance.setReferrer(referrer);
+#if UNITY_IOS
+            Debug.Log("adjust: Referrer not available on iOS Platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.setReferrer(referrer);
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("adjust: Error! Referrer not available on Windows Platform.");
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
 
         public static void getGoogleAdId(Action<string> onDeviceIdsRead) {
-            if (Adjust.instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
+#if UNITY_IOS
+            Debug.Log("adjust: Google Ad ID not available on iOS Platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.getGoogleAdId(onDeviceIdsRead);
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("adjust: Google Ad ID not available on Windows Platform.");
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
+        }
 
-            Adjust.instance.getGoogleAdId(onDeviceIdsRead);
+        public static void getAmazonAdId(Action<string> onDeviceIdsRead)
+        {
+#if UNITY_IOS
+            Debug.Log("adjust: Amazon Ad ID not available on iOS Platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.getAmazonAdId(onDeviceIdsRead);
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("adjust: Amazon Ad ID not available on Windows Platform.");
+#else
+            Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
+            return;
+#endif
         }
         #endregion
 
         #region callbacks
-		public static void GetNativeAttribution(string attributionData) {
-            if (instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
+        public static void GetNativeAttribution(string attributionData) {
             if (Adjust.attributionChangedDelegate == null) {
                 Debug.Log("adjust: Attribution changed delegate was not set.");
                 return;
@@ -330,11 +382,6 @@ namespace com.adjust.sdk {
         }
 
         public static void GetNativeEventSuccess(string eventSuccessData) {
-            if (instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
             if (Adjust.eventSuccessDelegate == null) {
                 Debug.Log("adjust: Event success delegate was not set.");
                 return;
@@ -345,11 +392,6 @@ namespace com.adjust.sdk {
         }
 
         public static void GetNativeEventFailure(string eventFailureData) {
-            if (instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
             if (Adjust.eventFailureDelegate == null) {
                 Debug.Log("adjust: Event failure delegate was not set.");
                 return;
@@ -360,11 +402,6 @@ namespace com.adjust.sdk {
         }
 
         public static void GetNativeSessionSuccess(string sessionSuccessData) {
-            if (instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
             if (Adjust.sessionSuccessDelegate == null) {
                 Debug.Log("adjust: Session success delegate was not set.");
                 return;
@@ -375,11 +412,6 @@ namespace com.adjust.sdk {
         }
 
         public static void GetNativeSessionFailure(string sessionFailureData) {
-            if (instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
             if (Adjust.sessionFailureDelegate == null) {
                 Debug.Log("adjust: Session failure delegate was not set.");
                 return;
@@ -390,11 +422,6 @@ namespace com.adjust.sdk {
         }
 
         public static void GetNativeDeferredDeeplink(string deeplinkURL) {
-            if (instance == null) {
-                Debug.Log(Adjust.errorMessage);
-                return;
-            }
-
             if (Adjust.deferredDeeplinkDelegate == null) {
                 Debug.Log("adjust: Deferred deeplink delegate was not set.");
                 return;

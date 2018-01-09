@@ -6,36 +6,37 @@ using UnityEngine;
 
 namespace com.adjust.sdk {
 #if UNITY_ANDROID
-    public class AdjustAndroid : IAdjust {
+    public class AdjustAndroid {
         #region Fields
-        private const string sdkPrefix = "unity4.11.4";
+        private const string sdkPrefix = "unity4.12.0";
 
         private static bool launchDeferredDeeplink = true;
 
-        private static AndroidJavaClass ajcAdjust;
-        private AndroidJavaObject ajoCurrentActivity;
+        private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+        private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass
+            ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
 
-        private DeferredDeeplinkListener onDeferredDeeplinkListener;
-        private AttributionChangeListener onAttributionChangedListener;
-        private EventTrackingFailedListener onEventTrackingFailedListener;
-        private EventTrackingSucceededListener onEventTrackingSucceededListener;
-        private SessionTrackingFailedListener onSessionTrackingFailedListener;
-        private SessionTrackingSucceededListener onSessionTrackingSucceededListener;
+        private static DeferredDeeplinkListener onDeferredDeeplinkListener;
+        private static AttributionChangeListener onAttributionChangedListener;
+        private static EventTrackingFailedListener onEventTrackingFailedListener;
+        private static EventTrackingSucceededListener onEventTrackingSucceededListener;
+        private static SessionTrackingFailedListener onSessionTrackingFailedListener;
+        private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
         #endregion
 
-        #region Constructors
-        public AdjustAndroid() {
-            if (ajcAdjust == null) {
-                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-            }
+        //#region Constructors
+        //public AdjustAndroid() {
+        //    if (ajcAdjust == null) {
+        //        ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+        //    }
 
-            AndroidJavaClass ajcUnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
-            ajoCurrentActivity = ajcUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        }
-        #endregion
+        //    AndroidJavaClass ajcUnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
+        //    ajoCurrentActivity = ajcUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        //}
+        //#endregion
 
         #region Public methods
-        public void start(AdjustConfig adjustConfig) {
+        public static void start(AdjustConfig adjustConfig) {
             // Get environment variable.
             AndroidJavaObject ajoEnvironment = adjustConfig.environment == AdjustEnvironment.Sandbox ? 
                 new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_SANDBOX") :
@@ -147,7 +148,7 @@ namespace com.adjust.sdk {
             ajcAdjust.CallStatic("onResume");
         }
 
-        public void trackEvent(AdjustEvent adjustEvent) {
+        public static void trackEvent(AdjustEvent adjustEvent) {
             AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.eventToken);
 
             if (adjustEvent.revenue != null) {
@@ -179,31 +180,31 @@ namespace com.adjust.sdk {
             ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
         }
 
-        public bool isEnabled() {
+        public static bool isEnabled() {
             return ajcAdjust.CallStatic<bool>("isEnabled");
         }
 
-        public void setEnabled(bool enabled) {
+        public static void setEnabled(bool enabled) {
             ajcAdjust.CallStatic("setEnabled", enabled);
         }
 
-        public void setOfflineMode(bool enabled) {
+        public static void setOfflineMode(bool enabled) {
             ajcAdjust.CallStatic("setOfflineMode", enabled);
         }
 
-        public void sendFirstPackages() {
+        public static void sendFirstPackages() {
             ajcAdjust.CallStatic("sendFirstPackages");
         }
 
-        public void setDeviceToken(string deviceToken) {
+        public static void setDeviceToken(string deviceToken) {
             ajcAdjust.CallStatic("setPushToken", deviceToken);
         }
 
-        public string getAdid() {
+        public static string getAdid() {
             return ajcAdjust.CallStatic<string>("getAdid");
         }
 
-        public AdjustAttribution getAttribution() {
+        public static AdjustAttribution getAttribution() {
             try {
                 AndroidJavaObject ajoAttribution = ajcAdjust.CallStatic<AndroidJavaObject>("getAttribution");
 
@@ -277,32 +278,22 @@ namespace com.adjust.sdk {
         }
 
         // Android specific methods
-        public void onPause() {
+        public static void onPause() {
             ajcAdjust.CallStatic("onPause");
         }
         
-        public void onResume() {
+        public static void onResume() {
             ajcAdjust.CallStatic("onResume");
         }
 
-        public void setReferrer(string referrer) {
+        public static void setReferrer(string referrer) {
             ajcAdjust.CallStatic("setReferrer", referrer);
         }
 
-        public void getGoogleAdId(Action<string> onDeviceIdsRead) {
+        public static void getGoogleAdId(Action<string> onDeviceIdsRead) {
             DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
             ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
         }
-
-        // iOS specific methods
-        public string getIdfa() {
-            return null;
-        }
-
-		// Windows specific methods
-		public string getWinAdid() {
-			return null;
-		}
         #endregion
 
         #region Proxy listener classes

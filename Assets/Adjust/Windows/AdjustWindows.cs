@@ -14,18 +14,19 @@ using WinWsInterface;
 #endif
 
 namespace com.adjust.sdk {
-    public class AdjustWindows : IAdjust {
+    public class AdjustWindows {
         private const string sdkPrefix = "unity4.12.0";
+        private static bool appLaunched = false;
 
-        public bool isEnabled() {
+        public static bool isEnabled() {
 			return AdjustWinInterface.IsEnabled();
         }
 
-        public string getAdid() {
+        public static string getAdid() {
 			return AdjustWinInterface.GetAdid ();
         }
 
-        public AdjustAttribution getAttribution() {
+        public static AdjustAttribution getAttribution() {
 			var attribution = AdjustWinInterface.GetAttribution ();
 			if (attribution == null)
 				return new AdjustAttribution ();
@@ -34,23 +35,24 @@ namespace com.adjust.sdk {
 			return new AdjustAttribution (attributionJson);
         }
 
-        public void onPause() {
+        public static void onPause() {
 			AdjustWinInterface.ApplicationDeactivated();
         }
 
-        public void onResume() {
-			AdjustWinInterface.ApplicationActivated();
+        public static void onResume() {
+            if (!appLaunched) { return; }
+            AdjustWinInterface.ApplicationActivated();
         }
 
-        public void setEnabled(bool enabled) {
+        public static void setEnabled(bool enabled) {
 			AdjustWinInterface.SetEnabled(enabled);
         }
 
-        public void setOfflineMode(bool offlineMode) {
+        public static void setOfflineMode(bool offlineMode) {
 			AdjustWinInterface.SetOfflineMode(offlineMode);
         }
 
-        public void start(AdjustConfig adjustConfig) {
+        public static void start(AdjustConfig adjustConfig) {
             string logLevelString = null;
             string environment = lowercaseToString(adjustConfig.environment);
             Action<Dictionary<string, string>> attributionChangedAction = null;
@@ -146,9 +148,11 @@ namespace com.adjust.sdk {
 			};
 
 			AdjustWinInterface.ApplicationLaunching (adjustConfigDto);
+            AdjustWinInterface.ApplicationActivated();
+            appLaunched = true;
         }
 
-        public void trackEvent(AdjustEvent adjustEvent) {
+        public static void trackEvent(AdjustEvent adjustEvent) {
 			AdjustWinInterface.TrackEvent (
 				eventToken: adjustEvent.eventToken,
 				revenue: adjustEvent.revenue,
@@ -159,15 +163,20 @@ namespace com.adjust.sdk {
 			);
         }
 
-        public void sendFirstPackages() {
+        public static void sendFirstPackages() {
 			AdjustWinInterface.SendFirstPackages ();
 		}
 
-        public void setDeviceToken(string deviceToken) {
+        public static void setDeviceToken(string deviceToken) {
 			AdjustWinInterface.SetDeviceToken (deviceToken);
 		}
 
-		public string getWinAdid() {
+        public static void appWillOpenUrl(string url)
+        {
+            // TODO: add appWillOpen
+        }
+
+		public static string getWinAdid() {
 			return AdjustWinInterface.GetWindowsAdId();
 		}
 
@@ -229,17 +238,7 @@ namespace com.adjust.sdk {
 			default:
 				return "unknown";
 			}
-		}
-
-		// iOS specific methods
-		public string getIdfa() {
-			return null;
-		}
-
-		// Android specific methods
-		public void setReferrer(string referrer) {}
-
-		public void getGoogleAdId(Action<string> onDeviceIdsRead) {}
+		}        
     }
 }
 #endif

@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace com.adjust.sdk {
 #if UNITY_IOS
-    public class AdjustiOS : IAdjust {
+    public class AdjustiOS {
         #region Fields
-        private const string sdkPrefix = "unity4.11.4";
+        private const string sdkPrefix = "unity4.12.1";
         #endregion
 
         #region External methods
@@ -71,7 +71,7 @@ namespace com.adjust.sdk {
         #endregion
 
         #region Public methods
-        public void start(AdjustConfig adjustConfig) {
+        public static void start(AdjustConfig adjustConfig) {
             string appToken = adjustConfig.appToken;
             string sceneName = adjustConfig.sceneName;
             string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : String.Empty;
@@ -112,7 +112,7 @@ namespace com.adjust.sdk {
                 isDeferredDeeplinkCallbackImplemented);
         }
 
-        public void trackEvent(AdjustEvent adjustEvent) {
+        public static void trackEvent(AdjustEvent adjustEvent) {
             int isReceiptSet = AdjustUtils.ConvertBool(adjustEvent.isReceiptSet);
             double revenue = AdjustUtils.ConvertDouble(adjustEvent.revenue);
 
@@ -126,21 +126,21 @@ namespace com.adjust.sdk {
             _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
         }
 
-        public void setEnabled(bool enabled) {
+        public static void setEnabled(bool enabled) {
             _AdjustSetEnabled(AdjustUtils.ConvertBool(enabled));
         }
 
-        public bool isEnabled() {
+        public static bool isEnabled() {
             var iIsEnabled = _AdjustIsEnabled();
 
             return Convert.ToBoolean(iIsEnabled);
         }
 
-        public void setOfflineMode(bool enabled) {
+        public static void setOfflineMode(bool enabled) {
             _AdjustSetOfflineMode(AdjustUtils.ConvertBool(enabled));
         }
 
-        public void sendFirstPackages() {
+        public static void sendFirstPackages() {
             _AdjustSendFirstPackages();
         }
 
@@ -169,19 +169,19 @@ namespace com.adjust.sdk {
         }
 
         // iOS specific methods
-        public void setDeviceToken(string deviceToken) {
+        public static void setDeviceToken(string deviceToken) {
             _AdjustSetDeviceToken(deviceToken);
         }
 
-        public string getIdfa() {
+        public static string getIdfa() {
             return _AdjustGetIdfa();
         }
 
-        public string getAdid() {
+        public static string getAdid() {
             return _AdjustGetAdid();
         }
 
-        public AdjustAttribution getAttribution() {
+        public static AdjustAttribution getAttribution() {
             string attributionString = _AdjustGetAttribution();
 
             if (null == attributionString) {
@@ -192,20 +192,6 @@ namespace com.adjust.sdk {
 
             return attribution;
         }
-
-        // Android specific methods
-        public void onPause() {}
-
-        public void onResume() {}
-
-        public void setReferrer(string referrer) {}
-
-        public void getGoogleAdId(Action<string> onDeviceIdsRead) {}
-
-		// Windows specific methods
-		public string getWinAdid() {
-			return null;
-		}
         #endregion
     }
 #endif
