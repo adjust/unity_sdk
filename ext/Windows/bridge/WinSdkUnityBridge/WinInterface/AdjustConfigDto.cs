@@ -26,11 +26,11 @@ namespace WinInterface
         public Action<string> LogDelegate;
         public bool? IsDeviceKnown;
 
-        public long SecretId;
-        public long AppSecretInfo1;
-        public long AppSecretInfo2;
-        public long AppSecretInfo3;
-        public long AppSecretInfo4;
+        public long? SecretId;
+        public long? AppSecretInfo1;
+        public long? AppSecretInfo2;
+        public long? AppSecretInfo3;
+        public long? AppSecretInfo4;
 
         public Action<Dictionary<string, string>> ActionAttributionChangedData;
         public Action<Dictionary<string, string>> ActionSessionSuccessData;
