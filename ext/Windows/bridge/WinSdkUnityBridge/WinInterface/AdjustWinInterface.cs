@@ -60,7 +60,10 @@ namespace WinInterface
                     var attributionMap = AdjustAttribution
                         .ToDictionary(attribution)
                         // convert from <string, object> to <string, string>
-                        .ToDictionary(x => x.Key, x => x.Value.ToString());
+                        .ToDictionary(
+                            x => char.ToLowerInvariant(x.Key[0]) + x.Key.Substring(1), 
+                            x => x.Value != null ? x.Value.ToString() : "null");
+
                     adjustConfigDto.ActionAttributionChangedData(attributionMap);
                 };
             }
