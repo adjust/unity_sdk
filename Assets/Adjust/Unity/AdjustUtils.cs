@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace com.adjust.sdk {
     public class AdjustUtils {
-        #region Constants
         public static string KeyAdid = "adid";
         public static string KeyMessage = "message";
         public static string KeyNetwork = "network";
@@ -19,9 +18,7 @@ namespace com.adjust.sdk {
         public static string KeyTrackerName = "trackerName";
         public static string KeyTrackerToken = "trackerToken";
         public static string KeyJsonResponse = "jsonResponse";
-        #endregion
-
-        #region Public methods
+        
         public static int ConvertLogLevel(AdjustLogLevel? logLevel) {
             if (logLevel == null) {
                 return -1;
@@ -141,6 +138,16 @@ namespace com.adjust.sdk {
                 WriteJsonResponseDictionary(subNode, newSubDictionary);
             }
         }
-        #endregion
+
+        public static string TryGetValue(Dictionary<string, string> d, string key)
+        {
+            string value;
+            if (d.TryGetValue(key, out value))
+            {
+                return value;
+            }
+
+            return null;
+        }
     }
 }

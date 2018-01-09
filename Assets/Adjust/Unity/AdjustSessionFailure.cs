@@ -3,18 +3,43 @@ using System.Collections.Generic;
 
 namespace com.adjust.sdk {
     public class AdjustSessionFailure {
-        #region Properties
         public string Adid { get; set; }
         public string Message { get; set; }
         public string Timestamp { get; set; }
 
         public bool WillRetry { get; set; }
         public Dictionary<string, object> JsonResponse { get; set; }
-        #endregion
 
-        #region Constructors
         public AdjustSessionFailure() {}
-        
+
+        public AdjustSessionFailure(Dictionary<string, string> sessionFailureDataMap)
+        {
+            if (sessionFailureDataMap == null)
+            {
+                return;
+            }
+
+            Adid = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyAdid);
+            Message = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyMessage);
+            Timestamp = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyTimestamp);
+
+            WillRetry = bool.Parse(AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyWillRetry));
+
+            bool willRetry;
+            if (bool.TryParse(AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyWillRetry), out willRetry))
+            {
+                WillRetry = willRetry;
+            }
+
+            string jsonResponseString = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyJsonResponse);
+            var jsonResponseNode = JSON.Parse(jsonResponseString);
+            if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+            {
+                JsonResponse = new Dictionary<string, object>();
+                AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
+            }
+        }
+
         public AdjustSessionFailure(string jsonString) {
             var jsonNode = JSON.Parse(jsonString);
             
@@ -40,9 +65,7 @@ namespace com.adjust.sdk {
             JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
-        #endregion
 
-        #region Public methods
         public void BuildJsonResponseFromString(string jsonResponseString) {
             var jsonNode = JSON.Parse(jsonResponseString);
             
@@ -57,6 +80,5 @@ namespace com.adjust.sdk {
         public string GetJsonResponse() {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }
-        #endregion
     }
 }

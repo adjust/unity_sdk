@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace com.adjust.sdk {
     public class AdjustEventFailure {
-        #region Properties
         public string Adid { get; set; }
         public string Message { get; set; }
         public string Timestamp { get; set; }
@@ -11,11 +10,38 @@ namespace com.adjust.sdk {
 
         public bool WillRetry { get; set; }
         public Dictionary<string, object> JsonResponse { get; set; }
-        #endregion
 
-        #region Constructors
         public AdjustEventFailure() {}
-        
+
+        public AdjustEventFailure(Dictionary<string, string> eventFailureDataMap)
+        {
+            if (eventFailureDataMap == null)
+            {
+                return;
+            }
+
+            Adid = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyAdid);
+            Message = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyMessage);
+            Timestamp = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyTimestamp);
+            EventToken = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyEventToken);
+
+            WillRetry = bool.Parse(AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyWillRetry));
+
+            bool willRetry;
+            if(bool.TryParse(AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyWillRetry), out willRetry))
+            {
+                WillRetry = willRetry;
+            }
+
+            string jsonResponseString = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyJsonResponse);
+            var jsonResponseNode = JSON.Parse(jsonResponseString);
+            if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+            {
+                JsonResponse = new Dictionary<string, object>();
+                AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
+            }
+        }
+
         public AdjustEventFailure(string jsonString) {
             var jsonNode = JSON.Parse(jsonString);
             
@@ -42,9 +68,7 @@ namespace com.adjust.sdk {
             JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
-        #endregion
 
-        #region Public methods
         public void BuildJsonResponseFromString(string jsonResponseString) {
             var jsonNode = JSON.Parse(jsonResponseString);
             
@@ -59,6 +83,5 @@ namespace com.adjust.sdk {
         public string GetJsonResponse() {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }
-        #endregion
     }
 }

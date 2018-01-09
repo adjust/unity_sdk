@@ -68,37 +68,37 @@ namespace com.adjust.sdk {
 
             if (adjustConfig.attributionChangedDelegate != null) {
 				attributionChangedAction = (attributionMap) => {
-					var attributionMapJson = JsonUtility.ToJson(attributionMap);
-					Adjust.GetNativeAttribution(attributionMapJson);
-				};
+				    var attribution = new AdjustAttribution(attributionMap);
+				    adjustConfig.attributionChangedDelegate(attribution);
+                };
             }
 
 			if (adjustConfig.sessionSuccessDelegate != null) {
 				sessionSuccessChangedAction = (sessionMap) => {
-					var sessionMapJson = JsonUtility.ToJson (sessionMap);
-					Adjust.GetNativeSessionSuccess(sessionMapJson);
+                    var sessionData = new AdjustSessionSuccess(sessionMap);
+				    adjustConfig.sessionSuccessDelegate(sessionData);
 				};
 			}
 
 			if (adjustConfig.sessionFailureDelegate != null) {
 				sessionFailureChangedAction = (sessionMap) => {
-					var sessionMapJson = JsonUtility.ToJson (sessionMap);
-					Adjust.GetNativeSessionFailure(sessionMapJson);
-				};
+				    var sessionData = new AdjustSessionFailure(sessionMap);
+				    adjustConfig.sessionFailureDelegate(sessionData);
+                };
 			}
 
 			if(adjustConfig.eventSuccessDelegate != null) {
 				eventSuccessChangedAction = (eventMap) => {
-					var eventMapJson = JsonUtility.ToJson(eventMap);
-					Adjust.GetNativeEventSuccess(eventMapJson);
+                    var eventData = new AdjustEventSuccess(eventMap);
+				    adjustConfig.eventSuccessDelegate(eventData);
 				};
 			}
 
 			if (adjustConfig.eventFailureDelegate != null) {
 				eventFailureChangedAction = (eventMap) => {
-					var eventMapJson = JsonUtility.ToJson(eventMap);
-					Adjust.GetNativeEventFailure(eventMapJson);
-				};
+				    var eventData = new AdjustEventFailure(eventMap);
+				    adjustConfig.eventFailureDelegate(eventData);
+                };
 			}
 
 			if (adjustConfig.deferredDeeplinkDelegate != null) {

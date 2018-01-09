@@ -3,17 +3,34 @@ using System.Collections.Generic;
 
 namespace com.adjust.sdk {
     public class AdjustSessionSuccess {
-        #region Properties
         public string Adid { get; set; }
         public string Message { get; set; }
         public string Timestamp { get; set; }
 
         public Dictionary<string, object> JsonResponse { get; set; }
-        #endregion
 
-        #region Constructors
         public AdjustSessionSuccess() {}
-        
+
+        public AdjustSessionSuccess(Dictionary<string, string> sessionSuccessDataMap)
+        {
+            if (sessionSuccessDataMap == null)
+            {
+                return;
+            }
+
+            Adid = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyAdid);
+            Message = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyMessage);
+            Timestamp = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyTimestamp);
+
+            string jsonResponseString = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyJsonResponse);
+            var jsonResponseNode = JSON.Parse(jsonResponseString);
+            if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+            {
+                JsonResponse = new Dictionary<string, object>();
+                AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
+            }
+        }
+
         public AdjustSessionSuccess(string jsonString) {
             var jsonNode = JSON.Parse(jsonString);
             
@@ -38,9 +55,7 @@ namespace com.adjust.sdk {
             JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
-        #endregion
 
-        #region Public methods
         public void BuildJsonResponseFromString(string jsonResponseString) {
             var jsonNode = JSON.Parse(jsonResponseString);
 
@@ -55,6 +70,5 @@ namespace com.adjust.sdk {
         public string GetJsonResponse() {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }
-        #endregion
     }
 }
