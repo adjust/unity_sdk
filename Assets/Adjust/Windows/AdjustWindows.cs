@@ -173,7 +173,7 @@ namespace com.adjust.sdk {
 
         public static void appWillOpenUrl(string url)
         {
-            // TODO: add appWillOpen
+            AdjustWinInterface.AppWillOpenUrl(url);
         }
 
 		public static string getWinAdid() {

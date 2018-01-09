@@ -65,6 +65,10 @@ namespace WinInterface
             return string.Empty;
         }
 
+        public static void AppWillOpenUrl(string url)
+        {
+        }
+
         public static void AddSessionCallbackParameter(string key, string value)
         {
         }

@@ -227,6 +227,13 @@ namespace WinInterface
 #endif
         }
 
+        public static void AppWillOpenUrl(string url)
+        {
+#if NETFX_CORE
+            Adjust.AppWillOpenUrl(new Uri(url));
+#endif
+        }
+
         public static void AddSessionCallbackParameter(string key, string value)
         {
 #if NETFX_CORE
