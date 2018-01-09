@@ -27,12 +27,11 @@ namespace com.adjust.sdk {
         }
 
         public static AdjustAttribution getAttribution() {
-			var attribution = AdjustWinInterface.GetAttribution ();
-			if (attribution == null)
+			var attributionMap = AdjustWinInterface.GetAttribution ();
+			if (attributionMap == null)
 				return new AdjustAttribution ();
 
-			var attributionJson = JsonUtility.ToJson (attribution);
-			return new AdjustAttribution (attributionJson);
+            return new AdjustAttribution(attributionMap);
         }
 
         public static void onPause() {

@@ -197,13 +197,15 @@ namespace WinInterface
             AdjustAttribution attribution = Adjust.GetAttributon();
             if (attribution == null)
                 return new Dictionary<string, string>();
-            
+
             var adjustAttributionMap = AdjustAttribution.ToDictionary(attribution);
             if (adjustAttributionMap == null)
                 return new Dictionary<string, string>();
 
             // convert from <string, object> to <string, string>
-            return adjustAttributionMap.ToDictionary(x => x.Key, x => x.Value.ToString());
+            return adjustAttributionMap.ToDictionary(
+                x => char.ToLowerInvariant(x.Key[0]) + x.Key.Substring(1),
+                x => x.Value != null ? x.Value.ToString() : "null");
 #else
             return null;
 #endif
