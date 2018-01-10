@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 #if WIN_STUB_10
 namespace Win10Interface
@@ -12,6 +13,8 @@ namespace WinInterface
 {
     public class AdjustWinInterface
     {
+        public static Action<string> LogAction;
+
         public static void ApplicationLaunching(AdjustConfigDto adjustConfigDto)
         {
         }

@@ -17,11 +17,21 @@ namespace WinInterface
 {
     public class AdjustWinInterface
     {
+        public static Action<string> LogAction;
+
         public static void ApplicationLaunching(AdjustConfigDto adjustConfigDto)
         {
 #if NETFX_CORE
+            if (adjustConfigDto.LogAction != null)
+            {
+                LogAction = adjustConfigDto.LogAction;
+            }
+
             LogLevel logLevel;
-            Enum.TryParse(adjustConfigDto.LogLevelString, out logLevel);
+            string logLevelString = char.ToUpper(adjustConfigDto.LogLevelString[0]) 
+                + adjustConfigDto.LogLevelString.Substring(1);
+            Enum.TryParse(logLevelString, out logLevel);
+            Log($"Setting log level from {logLevelString} to {logLevel}");
 
             var config = new AdjustConfig(adjustConfigDto.AppToken, adjustConfigDto.Environment,
                 adjustConfigDto.LogDelegate, logLevel)
@@ -101,7 +111,15 @@ namespace WinInterface
             Adjust.ApplicationLaunching(config);
 #endif
         }
+#if NETFX_CORE
+        private static void Log(string message)
+        {
+            if (LogAction == null)
+                return;
 
+            LogAction("[AdjustWinSDKBridge]: " + message);
+        }
+#endif
         public static void TrackEvent(string eventToken, double? revenue, string currency,
             string purchaseId, List<string> callbackList, List<string> partnerList)
         {
