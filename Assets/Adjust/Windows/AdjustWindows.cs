@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 #if UNITY_WSA_10_0
@@ -156,7 +155,7 @@ namespace com.adjust.sdk {
 				eventToken: adjustEvent.eventToken,
 				revenue: adjustEvent.revenue,
 				currency: adjustEvent.currency,
-				purchaseId: null,
+				purchaseId: adjustEvent.transactionId,
 				callbackList: adjustEvent.callbackList,
 				partnerList: adjustEvent.partnerList
 			);

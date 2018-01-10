@@ -87,8 +87,7 @@ namespace com.adjust.sdk {
 #elif UNITY_ANDROID
             AdjustAndroid.start(adjustConfig);
 #elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.start(adjustConfig);
-            adjustConfig.setLogDelegate(msg => Debug.Log(msg));
+            AdjustWindows.start(adjustConfig);            
 #else
             Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
 #endif
@@ -302,10 +301,10 @@ namespace com.adjust.sdk {
         public static string getWinAdid() {
 #if UNITY_IOS
             Debug.Log("adjust: Error! Win ADID is not available on iOS Platform.");
-            return null;
+            return string.Empty;
 #elif UNITY_ANDROID
             Debug.Log("adjust: Error! Win ADID is not available on Android Platform.");
-            return null;
+            return string.Empty;
 #elif (UNITY_WSA || UNITY_WP8)
             return AdjustWindows.getWinAdid();
 #else
@@ -319,10 +318,10 @@ namespace com.adjust.sdk {
             return AdjustiOS.getIdfa();
 #elif UNITY_ANDROID
             Debug.Log("adjust: Error! IDFA not available on Android Platform.");
-            return null;
+            return string.Empty;
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("adjust: Error! IDFA not available on Windows Platform.");
-            return null;
+            return string.Empty;
 #else
             Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
             return;
@@ -345,24 +344,28 @@ namespace com.adjust.sdk {
         public static void getGoogleAdId(Action<string> onDeviceIdsRead) {
 #if UNITY_IOS
             Debug.Log("adjust: Google Ad ID not available on iOS Platform.");
+            onDeviceIdsRead(string.Empty);
 #elif UNITY_ANDROID
             AdjustAndroid.getGoogleAdId(onDeviceIdsRead);
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("adjust: Google Ad ID not available on Windows Platform.");
+            onDeviceIdsRead(string.Empty);
 #else
             Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
             return;
 #endif
         }
 
-        public static void getAmazonAdId(Action<string> onDeviceIdsRead)
+        public static string getAmazonAdId()
         {
 #if UNITY_IOS
             Debug.Log("adjust: Amazon Ad ID not available on iOS Platform.");
+            return string.Empty;
 #elif UNITY_ANDROID
-            AdjustAndroid.getAmazonAdId(onDeviceIdsRead);
+            return AdjustAndroid.GetAmazonAdId();
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("adjust: Amazon Ad ID not available on Windows Platform.");
+            return string.Empty;
 #else
             Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
             return;
