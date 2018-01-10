@@ -17,21 +17,23 @@ namespace WinInterface
 {
     public class AdjustWinInterface
     {
+        // so far, this logging is used only for debugging
         public static Action<string> LogAction;
 
         public static void ApplicationLaunching(AdjustConfigDto adjustConfigDto)
         {
 #if NETFX_CORE
-            if (adjustConfigDto.LogAction != null)
+            if (adjustConfigDto.LogDelegate != null)
             {
-                LogAction = adjustConfigDto.LogAction;
+                LogAction = adjustConfigDto.LogDelegate;
             }
 
             LogLevel logLevel;
             string logLevelString = char.ToUpper(adjustConfigDto.LogLevelString[0]) 
                 + adjustConfigDto.LogLevelString.Substring(1);
             Enum.TryParse(logLevelString, out logLevel);
-            Log($"Setting log level from {logLevelString} to {logLevel}");
+
+            //Log($"Setting log level to {logLevelString}.");
 
             var config = new AdjustConfig(adjustConfigDto.AppToken, adjustConfigDto.Environment,
                 adjustConfigDto.LogDelegate, logLevel)

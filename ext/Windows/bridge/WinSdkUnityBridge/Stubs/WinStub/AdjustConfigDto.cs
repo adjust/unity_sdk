@@ -13,8 +13,6 @@ namespace WinInterface
 {
     public class AdjustConfigDto
     {
-        public Action<string> LogAction;
-
         public string AppToken;
         public string Environment;
         public string SdkPrefix;
