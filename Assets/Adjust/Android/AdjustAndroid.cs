@@ -140,6 +140,10 @@ namespace com.adjust.sdk {
 			if (adjustConfig.isDeviceKnown.HasValue) {
 				ajoAdjustConfig.Call("setDeviceKnown", adjustConfig.isDeviceKnown.Value);
 			}
+
+			if (adjustConfig.readImei.HasValue) {
+				ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value);
+			}
             
             // Initialise and start the SDK.
             ajcAdjust.CallStatic("onCreate", ajoAdjustConfig);
