@@ -128,11 +128,30 @@ namespace com.adjust.sdk {
             
             // Since INSTALL_REFERRER is not triggering SDK initialisation, call onResume after onCreate.
             // OnApplicationPause doesn't get called first time the scene loads, so call to onResume is needed.
+
+			// Set App Secret
+			if (IsAppSecretSet(adjustConfig)) {
+				ajoAdjustConfig.Call("setAppSecret", adjustConfig.secretId.Value,
+					adjustConfig.appSecretInfo1.Value, adjustConfig.appSecretInfo2.Value,
+					adjustConfig.appSecretInfo3.Value, adjustConfig.appSecretInfo4.Value);
+			}
+
+			// Set device known
+			if (adjustConfig.isDeviceKnown.HasValue) {
+				ajoAdjustConfig.Call("setDeviceKnown", adjustConfig.isDeviceKnown.Value);
+			}
             
             // Initialise and start the SDK.
             ajcAdjust.CallStatic("onCreate", ajoAdjustConfig);
             ajcAdjust.CallStatic("onResume");
         }
+
+		private static bool IsAppSecretSet(AdjustConfig adjustConfig)
+		{
+			return adjustConfig.secretId.HasValue &&
+				adjustConfig.appSecretInfo1.HasValue && adjustConfig.appSecretInfo2.HasValue &&
+				adjustConfig.appSecretInfo2.HasValue && adjustConfig.appSecretInfo2.HasValue;
+		}
 
         public static void trackEvent(AdjustEvent adjustEvent) {
             AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.eventToken);
@@ -216,9 +235,9 @@ namespace com.adjust.sdk {
         }
 
         public static void addSessionPartnerParameter(string key, string value) {
-            if (ajcAdjust == null) {
-                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-            }
+			if (ajcAdjust == null) {
+				ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+			}
 
             ajcAdjust.CallStatic("addSessionPartnerParameter", key, value);
         }
