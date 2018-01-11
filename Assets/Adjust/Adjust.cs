@@ -172,7 +172,7 @@ namespace com.adjust.sdk {
 #if UNITY_IOS
             AdjustiOS.appWillOpenUrl(url);
 #elif UNITY_ANDROID
-            AdjustAndroid.appWillOpenUrl(url);
+            AdjustAndroid.AppWillOpenUrl(url);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.appWillOpenUrl(url);
 #else
@@ -346,7 +346,7 @@ namespace com.adjust.sdk {
             Debug.Log("adjust: Google Ad ID not available on iOS Platform.");
             onDeviceIdsRead(string.Empty);
 #elif UNITY_ANDROID
-            AdjustAndroid.getGoogleAdId(onDeviceIdsRead);
+            AdjustAndroid.GetGoogleAdId(onDeviceIdsRead);
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("adjust: Google Ad ID not available on Windows Platform.");
             onDeviceIdsRead(string.Empty);

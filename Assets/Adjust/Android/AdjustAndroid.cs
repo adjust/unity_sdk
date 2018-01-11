@@ -7,8 +7,7 @@ using UnityEngine;
 namespace com.adjust.sdk {
 #if UNITY_ANDROID
     public class AdjustAndroid {
-        #region Fields
-        private const string sdkPrefix = "unity4.12.04";
+        private const string sdkPrefix = "unity4.12.0";
 
         private static bool launchDeferredDeeplink = true;
 
@@ -22,20 +21,7 @@ namespace com.adjust.sdk {
         private static EventTrackingSucceededListener onEventTrackingSucceededListener;
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
-        #endregion
-
-        //#region Constructors
-        //public AdjustAndroid() {
-        //    if (ajcAdjust == null) {
-        //        ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-        //    }
-
-        //    AndroidJavaClass ajcUnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
-        //    ajoCurrentActivity = ajcUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        //}
-        //#endregion
-
-        #region Public methods
+        
         public static void start(AdjustConfig adjustConfig) {
             // Get environment variable.
             AndroidJavaObject ajoEnvironment = adjustConfig.environment == AdjustEnvironment.Sandbox ? 
@@ -290,13 +276,24 @@ namespace com.adjust.sdk {
             ajcAdjust.CallStatic("setReferrer", referrer);
         }
 
-        public static void getGoogleAdId(Action<string> onDeviceIdsRead) {
+        public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 
+		{
             DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
             ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
         }
-        #endregion
 
-        #region Proxy listener classes
+		public static void AppWillOpenUrl(string url) 
+		{
+			AndroidJavaClass ajcUri = new AndroidJavaClass ("android.net.Uri");
+			AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
+			ajcAdjust.CallStatic("appWillOpenUrl", ajoUri);
+		}
+
+		public static string GetAmazonAdId()
+		{
+			return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
+		}
+        
         private class AttributionChangeListener : AndroidJavaProxy {
             private Action<AdjustAttribution> callback;
 
@@ -515,7 +512,6 @@ namespace com.adjust.sdk {
                 this.onGoogleAdIdRead(ajoAdId.Call<string>("toString"));
             }
         }
-        #endregion
     }
 #endif
 }
