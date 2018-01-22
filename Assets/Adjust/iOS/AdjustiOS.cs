@@ -13,14 +13,42 @@ namespace com.adjust.sdk {
 
         #region External methods
         [DllImport("__Internal")]
-        private static extern void _AdjustLaunchApp(string appToken, string environment, string sdkPrefix, int allowSuppressLogLevel,
-            int logLevel, int eventBuffering, int sendInBackground, double delayStart, string userAgent, int launchDeferredDeeplink,
-            string sceneName, int isAttributionCallbackImplemented, int isEventSuccessCallbackImplemented,int isEventFailureCallbackImplemented,
-            int isSessionSuccessCallbackImplemented, int isSessionFailureCallbackImplemented, int isDeferredDeeplinkCallbackImplemented);
+        private static extern void _AdjustLaunchApp(
+            string appToken,
+            string environment,
+            string sdkPrefix,
+            int allowSuppressLogLevel,
+            int logLevel,
+            int isDeviceKnown,
+            int eventBuffering,
+            int sendInBackground,
+            long secretId,
+            long info1,
+            long info2,
+            long info3,
+            long info4,
+            double delayStart,
+            string userAgent,
+            string defaultTracker,
+            int launchDeferredDeeplink,
+            string sceneName,
+            int isAttributionCallbackImplemented, 
+            int isEventSuccessCallbackImplemented,
+            int isEventFailureCallbackImplemented,
+            int isSessionSuccessCallbackImplemented,
+            int isSessionFailureCallbackImplemented,
+            int isDeferredDeeplinkCallbackImplemented);
 
         [DllImport("__Internal")]
-        private static extern void _AdjustTrackEvent(string eventToken, double revenue, string currency, string receipt, string transactionId,
-            int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
+        private static extern void _AdjustTrackEvent(
+            string eventToken,
+            double revenue,
+            string currency,
+            string receipt,
+            string transactionId,
+            int isReceiptSet,
+            string jsonCallbackParameters,
+            string jsonPartnerParameters);
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetEnabled(int enabled);
@@ -33,6 +61,9 @@ namespace com.adjust.sdk {
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetDeviceToken(string deviceToken);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustAppWillOpenUrl(string url);
 
         [DllImport("__Internal")]
         private static extern string _AdjustGetIdfa();
@@ -75,11 +106,19 @@ namespace com.adjust.sdk {
             string appToken = adjustConfig.appToken;
             string sceneName = adjustConfig.sceneName;
             string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : String.Empty;
+            string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : String.Empty;
             string environment = adjustConfig.environment.lowercaseToString();
+
+            long secretId = AdjustUtils.ConvertLong(adjustConfig.secretId);
+            long info1 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo1);
+            long info2 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo2);
+            long info3 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo3);
+            long info4 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo4);
 
             double delayStart = AdjustUtils.ConvertDouble(adjustConfig.delayStart);
 
             int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.logLevel);
+            int isDeviceKnown = AdjustUtils.ConvertBool(adjustConfig.isDeviceKnown);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool(adjustConfig.eventBufferingEnabled);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
@@ -98,10 +137,17 @@ namespace com.adjust.sdk {
                 sdkPrefix,
                 allowSuppressLogLevel,
                 logLevel,
+                isDeviceKnown,
                 eventBufferingEnabled,
                 sendInBackground,
+                secretId,
+                info1,
+                info2,
+                info3,
+                info4,
                 delayStart,
                 userAgent,
+                defaultTracker,
                 launchDeferredDeeplink,
                 sceneName,
                 isAttributionCallbackImplemented,
@@ -142,6 +188,10 @@ namespace com.adjust.sdk {
 
         public static void sendFirstPackages() {
             _AdjustSendFirstPackages();
+        }
+
+        public static void appWillOpenUrl(string url) {
+            _AdjustAppWillOpenUrl(url);
         }
 
         public static void addSessionPartnerParameter(string key, string value) {

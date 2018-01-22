@@ -47,6 +47,14 @@ namespace com.adjust.sdk {
             return (double)value;
         }
 
+        public static long ConvertLong(long? value) {
+            if (value == null) {
+                return -1;
+            }
+
+            return (long)value;
+        }
+
         public static string ConvertListToJson(List<String> list) {
             if (list == null) {
                 return null;

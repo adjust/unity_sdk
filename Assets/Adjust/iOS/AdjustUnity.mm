@@ -46,14 +46,36 @@ extern "C"
         }
     }
 
-    void _AdjustLaunchApp(const char* appToken, const char* environment, const char* sdkPrefix, int allowSuppressLogLevel, int logLevel, 
-        int eventBuffering, int sendInBackground, double delayStart, const char* userAgent, int launchDeferredDeeplink, const char* sceneName,
-        int isAttributionCallbackImplemented, int isEventSuccessCallbackImplemented, int isEventFailureCallbackImplemented,
-        int isSessionSuccessCallbackImplemented, int isSessionFailureCallbackImplemented, int isDeferredDeeplinkCallbackImplemented) {
+    void _AdjustLaunchApp(
+        const char* appToken, 
+        const char* environment, 
+        const char* sdkPrefix, 
+        int allowSuppressLogLevel, 
+        int logLevel,
+        int isDeviceKnown,
+        int eventBuffering, 
+        int sendInBackground,
+        long secretId,
+        long info1,
+        long info2,
+        long info3,
+        long info4,
+        double delayStart, 
+        const char* userAgent, 
+        const char* defaultTracker,
+        int launchDeferredDeeplink, 
+        const char* sceneName,
+        int isAttributionCallbackImplemented,
+        int isEventSuccessCallbackImplemented,
+        int isEventFailureCallbackImplemented,
+        int isSessionSuccessCallbackImplemented,
+        int isSessionFailureCallbackImplemented,
+        int isDeferredDeeplinkCallbackImplemented) {
         NSString *stringSdkPrefix = [NSString stringWithUTF8String:sdkPrefix];
         NSString *stringAppToken = [NSString stringWithUTF8String:appToken];
         NSString *stringEnvironment = [NSString stringWithUTF8String:environment];
         NSString *stringUserAgent = [NSString stringWithUTF8String:userAgent];
+        NSString *stringDefaultTracker = [NSString stringWithUTF8String:defaultTracker];
         NSString *stringSceneName = [NSString stringWithUTF8String:sceneName];
 
         ADJConfig *adjustConfig;
@@ -97,6 +119,10 @@ extern "C"
             [adjustConfig setSendInBackground:(BOOL)sendInBackground];
         }
 
+        if (isDeviceKnown != -1) {
+            [adjustConfig setIsDeviceKnown:(BOOL)isDeviceKnown];
+        }
+
         if (delayStart != -1) {
             [adjustConfig setDelayStart:delayStart];
         }
@@ -107,7 +133,15 @@ extern "C"
             }
         }
 
-        // NSLog(@"%@, %@, %@, %d, %d, %d, %d, %.1f, %@, %d, %@", stringAppToken, stringEnvironment, stringSdkPrefix, allowSuppressLogLevel, logLevel, eventBuffering, sendInBackground, delayStart, stringUserAgent, launchDeferredDeeplink, stringSceneName);
+        if (stringDefaultTracker != NULL) {
+            if ([stringDefaultTracker length] > 0) {
+                [adjustConfig setDefaultTracker:stringDefaultTracker];
+            }
+        }
+
+        if (secretId != -1 && info1 != -1 && info2 != -1 && info3 != -1 && info4 != 1) {
+            [adjustConfig setAppSecret:secretId info1:info1 info2:info2 info3:info3 info4:info4];
+        }
 
         // Launch adjust instance.
         [Adjust appDidLaunch:adjustConfig];
@@ -205,6 +239,23 @@ extern "C"
         NSString *stringDeviceToken = [NSString stringWithUTF8String:deviceToken];
 
         [Adjust setDeviceToken:[stringDeviceToken dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+
+    void _AdjustAppWillOpenUrl(const char* url) {
+        NSString *stringUrl = [NSString stringWithUTF8String:url];
+
+        NSURL *nsUrl;
+
+        if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
+            nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
+        } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+            nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        }
+#pragma clang diagnostic pop
+
+        [Adjust appWillOpenUrl:nsUrl];
     }
 
     char* _AdjustGetIdfa() {

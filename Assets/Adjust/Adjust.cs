@@ -25,7 +25,6 @@ namespace com.adjust.sdk {
         public AdjustLogLevel logLevel = AdjustLogLevel.Info;
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
 
-        #region Unity lifecycle methods
         void Awake() {
             DontDestroyOnLoad(transform.gameObject);
 
@@ -73,9 +72,7 @@ namespace com.adjust.sdk {
             Debug.Log("adjust: SDK can only be used in Android, iOS, Windows Phone 8 or Windows Store apps.");
 #endif
         }
-        #endregion
 
-        #region Adjust methods
         public static void start(AdjustConfig adjustConfig) {            
             if (adjustConfig == null) {
                 Debug.Log("adjust: Missing config to start.");
@@ -371,10 +368,9 @@ namespace com.adjust.sdk {
             return;
 #endif
         }
-        #endregion
 
-        #region callbacks
-        public static void GetNativeAttribution(string attributionData) {
+#if UNITY_IOS
+        public void GetNativeAttribution(string attributionData) {
             if (Adjust.attributionChangedDelegate == null) {
                 Debug.Log("adjust: Attribution changed delegate was not set.");
                 return;
@@ -384,7 +380,7 @@ namespace com.adjust.sdk {
             Adjust.attributionChangedDelegate(attribution);
         }
 
-        public static void GetNativeEventSuccess(string eventSuccessData) {
+        public void GetNativeEventSuccess(string eventSuccessData) {
             if (Adjust.eventSuccessDelegate == null) {
                 Debug.Log("adjust: Event success delegate was not set.");
                 return;
@@ -394,7 +390,7 @@ namespace com.adjust.sdk {
             Adjust.eventSuccessDelegate(eventSuccess);
         }
 
-        public static void GetNativeEventFailure(string eventFailureData) {
+        public void GetNativeEventFailure(string eventFailureData) {
             if (Adjust.eventFailureDelegate == null) {
                 Debug.Log("adjust: Event failure delegate was not set.");
                 return;
@@ -404,7 +400,7 @@ namespace com.adjust.sdk {
             Adjust.eventFailureDelegate(eventFailure);
         }
 
-        public static void GetNativeSessionSuccess(string sessionSuccessData) {
+        public void GetNativeSessionSuccess(string sessionSuccessData) {
             if (Adjust.sessionSuccessDelegate == null) {
                 Debug.Log("adjust: Session success delegate was not set.");
                 return;
@@ -414,7 +410,7 @@ namespace com.adjust.sdk {
             Adjust.sessionSuccessDelegate(sessionSuccess);
         }
 
-        public static void GetNativeSessionFailure(string sessionFailureData) {
+        public void GetNativeSessionFailure(string sessionFailureData) {
             if (Adjust.sessionFailureDelegate == null) {
                 Debug.Log("adjust: Session failure delegate was not set.");
                 return;
@@ -424,7 +420,7 @@ namespace com.adjust.sdk {
             Adjust.sessionFailureDelegate(sessionFailure);
         }
 
-        public static void GetNativeDeferredDeeplink(string deeplinkURL) {
+        public void GetNativeDeferredDeeplink(string deeplinkURL) {
             if (Adjust.deferredDeeplinkDelegate == null) {
                 Debug.Log("adjust: Deferred deeplink delegate was not set.");
                 return;
@@ -432,9 +428,8 @@ namespace com.adjust.sdk {
 
             Adjust.deferredDeeplinkDelegate(deeplinkURL);
         }
-        #endregion
+#endif
 
-        #region Private & helper methods
         // Our delegate for detecting attribution changes if chosen not to start manually.
         private void AttributionChangedCallback(AdjustAttribution attributionData) {
             Debug.Log("Attribution changed!");
@@ -578,6 +573,5 @@ namespace com.adjust.sdk {
                 Debug.Log("Deeplink URL is null!");
             }
         }
-        #endregion
     }
 }
