@@ -55,15 +55,20 @@ def edit_unity_xcode_project(Log, unity_xcode_project_path, framework_path):
     # load unity iOS pbxproj project file
     unity_XcodeProject = XcodeProject.Load(unity_xcode_project_path)
     
-    # Add adSupport framework to unity if it's not already there
+    # Add AdSupport.framework to unity if it's not already there
     Log("Adding AdSupport.framework to Xcode project.")
     unity_XcodeProject.add_file_if_doesnt_exist(framework_path + "AdSupport.framework", tree="SDKROOT", create_build_files=True,weak=True)
     Log("AdSupport.framework successfully added.")
 
-    # Add iAd framework to unity if it's not already there
+    # Add iAd.framework to unity if it's not already there
     Log("Adding iAd.framework to Xcode project.")
     unity_XcodeProject.add_file_if_doesnt_exist(framework_path + "iAd.framework", tree="SDKROOT", create_build_files=True,weak=True)
     Log("iAd.framework successfully added.")
+
+    # Add CoreTelephony.framework to unity if it's not already there
+    Log("Adding CoreTelephony.framework to Xcode project.")
+    unity_XcodeProject.add_file_if_doesnt_exist(framework_path + "CoreTelephony.framework", tree="SDKROOT", create_build_files=True,weak=True)
+    Log("CoreTelephony.framework successfully added.")
 
     # Removed.
     # Don't do anything with ARC at the moment.

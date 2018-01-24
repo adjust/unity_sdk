@@ -33,7 +33,9 @@ def main():
                 # Check if manifest has all changes needed.
                 all_check = check_dic["has_adjust_receiver"] and \
                             check_dic["has_internet_permission"] and \
-                            check_dic["has_wifi_permission"]
+                            check_dic["has_wifi_permission"] and \
+                            check_dic["has_network_state_permission"] and \
+                            check_dic["has_install_referrer_permission"]
                 
                 # Edit manifest if has any change missing.
                 if not all_check:
@@ -76,6 +78,7 @@ def edit_manifest(Log, manifest_file, check_dic, android_plugin_path):
         <receiver
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:name="com.adjust.sdk.AdjustReferrerReceiver"
+            android:permission="android.permission.INSTALL_PACKAGES"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
@@ -102,6 +105,26 @@ def edit_manifest(Log, manifest_file, check_dic, android_plugin_path):
         
         Log("Successfully added INTERNET permission to app's AndroidManifest.xml file.")
 
+    # Add the network state permission to the manifest element
+    if not check_dic["has_network_state_permission"]:
+        Log("Adding ACCESS_NETWORK_STATE permission to app's AndroidManifest.xml file.")
+        
+        ip_element = manifest_xml.createElement("uses-permission")
+        ip_element.setAttribute("android:name", "android.permission.ACCESS_NETWORK_STATE")
+        manifest_xml.documentElement.appendChild(ip_element)
+        
+        Log("Successfully added ACCESS_NETWORK_STATE permission to app's AndroidManifest.xml file.")
+
+    # Add the install referrer permission to the manifest element
+    if not check_dic["has_install_referrer_permission"]:
+        Log("Adding BIND_GET_INSTALL_REFERRER_SERVICE permission to app's AndroidManifest.xml file.")
+        
+        ip_element = manifest_xml.createElement("uses-permission")
+        ip_element.setAttribute("android:name", "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE")
+        manifest_xml.documentElement.appendChild(ip_element)
+        
+        Log("Successfully added BIND_GET_INSTALL_REFERRER_SERVICE permission to app's AndroidManifest.xml file.")
+
     # If google play services are not included add the access wifi state permission to the manifest element.
     # If google play services are included - don't add.
     google_play_services_path = os.path.join(android_plugin_path + "google-play-services_lib")
@@ -120,23 +143,30 @@ def edit_manifest(Log, manifest_file, check_dic, android_plugin_path):
     return manifest_xml
 
 def check_manifest(Log, manifest_file):
-    
     manifest_xml = parse(manifest_file)
     # Log(manifest_xml.toxml())
     
     has_adjust_receiver = has_element_attr(manifest_xml, "receiver", "android:name", "com.adjust.sdk.AdjustReferrerReceiver")
     Log("Does app's AndroidManifest.xml file have the adjust broadcast receiver? {0}", has_adjust_receiver)
-
+    
     has_internet_permission = has_element_attr(manifest_xml, "uses-permission", "android:name", "android.permission.INTERNET")
     Log("Does app's AndroidManifest.xml file have INTERNET permission? {0}", has_internet_permission)
     
     has_wifi_permission = has_element_attr(manifest_xml, "uses-permission", "android:name", "android.permission.ACCESS_WIFI_STATE")
     Log("Does app's AndroidManifest.xml file have ACCESS_WIFI_STATE permission? {0}", has_wifi_permission)
-
+    
+    has_network_state_permission = has_element_attr(manifest_xml, "uses-permission", "android:name", "android.permission.ACCESS_NETWORK_STATE")
+    Log("Does app's AndroidManifest.xml file have ACCESS_NETWORK_STATE permission? {0}", has_network_state_permission)
+    
+    has_install_referrer_permission = has_element_attr(manifest_xml, "uses-permission", "android:name", "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE")
+    Log("Does app's AndroidManifest.xml file have BIND_GET_INSTALL_REFERRER_SERVICE permission? {0}", has_install_referrer_permission)
+    
     return {"manifest_xml" : manifest_xml,
             "has_adjust_receiver" : has_adjust_receiver,
             "has_internet_permission" : has_internet_permission,
-            "has_wifi_permission" : has_wifi_permission}
+            "has_wifi_permission" : has_wifi_permission,
+            "has_network_state_permission" : has_network_state_permission,
+            "has_install_referrer_permission" : has_install_referrer_permission}
 
 def has_element_attr(xml_dom, tag_name, attr_name, attr_value):
     for node in xml_dom.getElementsByTagName(tag_name):
