@@ -272,6 +272,7 @@ public class AdjustEditor
         //         <!-- ... -->>
         //         <receiver
         //             android:name="com.adjust.sdk.AdjustReferrerReceiver"
+        //             android:permission="android.permission.INSTALL_PACKAGES"
         //             android:exported="true" >
         //             
         //             <intent-filter>
@@ -370,6 +371,7 @@ public class AdjustEditor
             // Generate adjust broadcast receiver entry and add it to the application node.
             XmlElement receiverElement = manifest.CreateElement("receiver");
             receiverElement.SetAttribute("android__name", "com.adjust.sdk.AdjustReferrerReceiver");
+            receiverElement.SetAttribute("android__permission", "android.permission.INSTALL_PACKAGES");
             receiverElement.SetAttribute("android__exported", "true");
 
             XmlElement intentFilterElement = manifest.CreateElement("intent-filter");
