@@ -12,47 +12,18 @@ using Win81Interface;
 using WinWsInterface;
 #endif
 
-namespace com.adjust.sdk {
-    public class AdjustWindows {
+namespace com.adjust.sdk
+{
+    public class AdjustWindows
+    {
         private const string sdkPrefix = "unity4.12.0";
         private static bool appLaunched = false;
 
-        public static bool isEnabled() {
-			return AdjustWinInterface.IsEnabled();
-        }
-
-        public static string getAdid() {
-			return AdjustWinInterface.GetAdid ();
-        }
-
-        public static AdjustAttribution getAttribution() {
-			var attributionMap = AdjustWinInterface.GetAttribution ();
-			if (attributionMap == null)
-				return new AdjustAttribution ();
-
-            return new AdjustAttribution(attributionMap);
-        }
-
-        public static void onPause() {
-			AdjustWinInterface.ApplicationDeactivated();
-        }
-
-        public static void onResume() {
-            if (!appLaunched) { return; }
-            AdjustWinInterface.ApplicationActivated();
-        }
-
-        public static void setEnabled(bool enabled) {
-			AdjustWinInterface.SetEnabled(enabled);
-        }
-
-        public static void setOfflineMode(bool offlineMode) {
-			AdjustWinInterface.SetOfflineMode(offlineMode);
-        }
-
-        public static void start(AdjustConfig adjustConfig) {
+        public static void Start(AdjustConfig adjustConfig)
+        {
             string logLevelString = null;
-            string environment = lowercaseToString(adjustConfig.environment);
+            string environment = adjustConfig.environment.ToLowercaseString();
+
             Action<Dictionary<string, string>> attributionChangedAction = null;
 			Action<Dictionary<string, string>> sessionSuccessChangedAction = null;
 			Action<Dictionary<string, string>> sessionFailureChangedAction = null;
@@ -60,48 +31,62 @@ namespace com.adjust.sdk {
 			Action<Dictionary<string, string>> eventFailureChangedAction = null;
 			Func<string, bool> deeplinkResponseFunc = null;
 
-            if (adjustConfig.logLevel.HasValue) {
-                logLevelString = lowercaseToString(adjustConfig.logLevel.Value);
+            if (adjustConfig.logLevel.HasValue)
+            {
+                logLevelString = adjustConfig.logLevel.ToLowercaseString();
             }
 
-            if (adjustConfig.attributionChangedDelegate != null) {
-				attributionChangedAction = (attributionMap) => {
+            if (adjustConfig.attributionChangedDelegate != null)
+            {
+				attributionChangedAction = (attributionMap) =>
+				{
 				    var attribution = new AdjustAttribution(attributionMap);
 				    adjustConfig.attributionChangedDelegate(attribution);
                 };
             }
 
-			if (adjustConfig.sessionSuccessDelegate != null) {
-				sessionSuccessChangedAction = (sessionMap) => {
+			if (adjustConfig.sessionSuccessDelegate != null)
+			{
+				sessionSuccessChangedAction = (sessionMap) =>
+				{
                     var sessionData = new AdjustSessionSuccess(sessionMap);
 				    adjustConfig.sessionSuccessDelegate(sessionData);
 				};
 			}
 
-			if (adjustConfig.sessionFailureDelegate != null) {
-				sessionFailureChangedAction = (sessionMap) => {
+			if (adjustConfig.sessionFailureDelegate != null)
+			{
+				sessionFailureChangedAction = (sessionMap) =>
+				{
 				    var sessionData = new AdjustSessionFailure(sessionMap);
 				    adjustConfig.sessionFailureDelegate(sessionData);
                 };
 			}
 
-			if(adjustConfig.eventSuccessDelegate != null) {
-				eventSuccessChangedAction = (eventMap) => {
+			if (adjustConfig.eventSuccessDelegate != null)
+			{
+				eventSuccessChangedAction = (eventMap) =>
+				{
                     var eventData = new AdjustEventSuccess(eventMap);
 				    adjustConfig.eventSuccessDelegate(eventData);
 				};
 			}
 
-			if (adjustConfig.eventFailureDelegate != null) {
-				eventFailureChangedAction = (eventMap) => {
+			if (adjustConfig.eventFailureDelegate != null)
+			{
+				eventFailureChangedAction = (eventMap) =>
+				{
 				    var eventData = new AdjustEventFailure(eventMap);
 				    adjustConfig.eventFailureDelegate(eventData);
                 };
 			}
 
-			if (adjustConfig.deferredDeeplinkDelegate != null) {
-				deeplinkResponseFunc = uri => {
-					if(adjustConfig.launchDeferredDeeplink) {
+			if (adjustConfig.deferredDeeplinkDelegate != null)
+			{
+				deeplinkResponseFunc = uri =>
+				{
+					if (adjustConfig.launchDeferredDeeplink)
+					{
 						Adjust.GetNativeDeferredDeeplink(uri);
 					}
 
@@ -110,12 +95,14 @@ namespace com.adjust.sdk {
 			}
 
 			bool sendInBackground = false;
-			if (adjustConfig.sendInBackground.HasValue) {
+			if (adjustConfig.sendInBackground.HasValue)
+			{
 				sendInBackground = adjustConfig.sendInBackground.Value;
 			}
 
 			double delayStartSeconds = 0;
-			if (adjustConfig.delayStart.HasValue) {
+			if (adjustConfig.delayStart.HasValue)
+			{
 				delayStartSeconds = adjustConfig.delayStart.Value;
 			}
 
@@ -145,13 +132,14 @@ namespace com.adjust.sdk {
 				AppSecretInfo4 = adjustConfig.appSecretInfo4
 			};
 
-			AdjustWinInterface.ApplicationLaunching (adjustConfigDto);
+			AdjustWinInterface.ApplicationLaunching(adjustConfigDto);
             AdjustWinInterface.ApplicationActivated();
             appLaunched = true;
         }
 
-        public static void trackEvent(AdjustEvent adjustEvent) {
-			AdjustWinInterface.TrackEvent (
+        public static void TrackEvent(AdjustEvent adjustEvent)
+        {
+			AdjustWinInterface.TrackEvent(
 				eventToken: adjustEvent.eventToken,
 				revenue: adjustEvent.revenue,
 				currency: adjustEvent.currency,
@@ -161,82 +149,101 @@ namespace com.adjust.sdk {
 			);
         }
 
-        public static void sendFirstPackages() {
-			AdjustWinInterface.SendFirstPackages ();
+        public static bool IsEnabled()
+        {
+			return AdjustWinInterface.IsEnabled();
+        }
+
+        public static void OnResume()
+        {
+            if (!appLaunched)
+            {
+            	return;
+            }
+
+            AdjustWinInterface.ApplicationActivated();
+        }
+
+        public static void OnPause()
+        {
+			AdjustWinInterface.ApplicationDeactivated();
+        }
+
+        public static void SetEnabled(bool enabled)
+        {
+			AdjustWinInterface.SetEnabled(enabled);
+        }
+
+        public static void SetOfflineMode(bool offlineMode)
+        {
+			AdjustWinInterface.SetOfflineMode(offlineMode);
+        }
+
+        public static void SendFirstPackages()
+        {
+			AdjustWinInterface.SendFirstPackages();
 		}
 
-        public static void setDeviceToken(string deviceToken) {
-			AdjustWinInterface.SetDeviceToken (deviceToken);
+        public static void SetDeviceToken(string deviceToken)
+        {
+			AdjustWinInterface.SetDeviceToken(deviceToken);
 		}
 
-        public static void appWillOpenUrl(string url)
+        public static void AppWillOpenUrl(string url)
         {
             AdjustWinInterface.AppWillOpenUrl(url);
         }
 
-		public static string getWinAdid() {
-			return AdjustWinInterface.GetWindowsAdId();
+        public static void AddSessionPartnerParameter(string key, string value)
+        {
+			AdjustWinInterface.AddSessionPartnerParameter(key, value);
 		}
 
-        public static void addSessionPartnerParameter(string key, string value) {
-			AdjustWinInterface.AddSessionPartnerParameter (key, value);
+        public static void AddSessionCallbackParameter(string key, string value)
+        {
+			AdjustWinInterface.AddSessionCallbackParameter(key, value);
 		}
 
-        public static void addSessionCallbackParameter(string key, string value) {
-			AdjustWinInterface.AddSessionCallbackParameter (key, value);
+        public static void RemoveSessionPartnerParameter(string key)
+        {
+			AdjustWinInterface.RemoveSessionPartnerParameter(key);
 		}
 
-        public static void removeSessionPartnerParameter(string key) {
-			AdjustWinInterface.RemoveSessionPartnerParameter (key);
+        public static void RemoveSessionCallbackParameter(string key)
+        {
+			AdjustWinInterface.RemoveSessionCallbackParameter(key);
 		}
 
-        public static void removeSessionCallbackParameter(string key) {
-			AdjustWinInterface.RemoveSessionCallbackParameter (key);
+        public static void ResetSessionPartnerParameters()
+        {
+			AdjustWinInterface.ResetSessionPartnerParameters();
 		}
 
-        public static void resetSessionPartnerParameters() {
-			AdjustWinInterface.ResetSessionPartnerParameters ();
-		}
-
-        public static void resetSessionCallbackParameters() {
+        public static void ResetSessionCallbackParameters()
+        {
 			AdjustWinInterface.ResetSessionCallbackParameters ();
 		}
 
-		public static string lowercaseToString(AdjustLogLevel AdjustLogLevel)
+		public static string GetAdid()
 		{
-			switch (AdjustLogLevel)
-			{
-			case AdjustLogLevel.Verbose:
-				return "verbose";
-			case AdjustLogLevel.Debug:
-				return "debug";
-			case AdjustLogLevel.Info:
-				return "info";
-			case AdjustLogLevel.Warn:
-				return "warn";
-			case AdjustLogLevel.Error:
-				return "error";
-			case AdjustLogLevel.Assert:
-				return "assert";
-			case AdjustLogLevel.Suppress:
-				return "suppress";
-			default:
-				return "unknown";
-			}
-		}
+			return AdjustWinInterface.GetAdid ();
+        }
 
-		public static string lowercaseToString(AdjustEnvironment adjustEnvironment)
-		{
-			switch (adjustEnvironment)
+        public static AdjustAttribution GetAttribution()
+        {
+			var attributionMap = AdjustWinInterface.GetAttribution();
+			if (attributionMap == null)
 			{
-			case AdjustEnvironment.Sandbox:
-				return "sandbox";
-			case AdjustEnvironment.Production:
-				return "production";
-			default:
-				return "unknown";
+				return new AdjustAttribution();
 			}
-		}        
+
+            return new AdjustAttribution(attributionMap);
+        }
+
+		public static string GetWinAdId()
+		{
+			return AdjustWinInterface.GetWindowsAdId();
+		}    
     }
 }
 #endif

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace com.adjust.sdk {
-    public class AdjustEventFailure {
+namespace com.adjust.sdk
+{
+    public class AdjustEventFailure
+    {
         public string Adid { get; set; }
         public string Message { get; set; }
         public string Timestamp { get; set; }
         public string EventToken { get; set; }
-
         public bool WillRetry { get; set; }
         public Dictionary<string, object> JsonResponse { get; set; }
 
@@ -26,9 +27,8 @@ namespace com.adjust.sdk {
             EventToken = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyEventToken);
 
             WillRetry = bool.Parse(AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyWillRetry));
-
             bool willRetry;
-            if(bool.TryParse(AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyWillRetry), out willRetry))
+            if (bool.TryParse(AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyWillRetry), out willRetry))
             {
                 WillRetry = willRetry;
             }
@@ -42,10 +42,11 @@ namespace com.adjust.sdk {
             }
         }
 
-        public AdjustEventFailure(string jsonString) {
+        public AdjustEventFailure(string jsonString)
+        {
             var jsonNode = JSON.Parse(jsonString);
-            
-            if (jsonNode == null) {
+            if (jsonNode == null)
+            {
                 return;
             }
 
@@ -56,12 +57,12 @@ namespace com.adjust.sdk {
             WillRetry = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyWillRetry));
 
             var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
-
-            if (jsonResponseNode == null) {
+            if (jsonResponseNode == null)
+            {
                 return;
             }
-
-            if (jsonResponseNode.AsObject == null) {
+            if (jsonResponseNode.AsObject == null)
+            {
                 return;
             }
 
@@ -69,18 +70,20 @@ namespace com.adjust.sdk {
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
 
-        public void BuildJsonResponseFromString(string jsonResponseString) {
+        public void BuildJsonResponseFromString(string jsonResponseString)
+        {
             var jsonNode = JSON.Parse(jsonResponseString);
-            
-            if (jsonNode == null) {
+            if (jsonNode == null)
+            {
                 return;
             }
 
             JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonNode.AsObject, JsonResponse);
         }
-        
-        public string GetJsonResponse() {
+
+        public string GetJsonResponse()
+        {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }
     }

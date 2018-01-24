@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace com.adjust.sdk {
-    public class AdjustAttribution {
+namespace com.adjust.sdk
+{
+    public class AdjustAttribution
+    {
         public string adid { get; set; }
         public string network { get; set; }
         public string adgroup { get; set; }
@@ -14,10 +16,12 @@ namespace com.adjust.sdk {
 
         public AdjustAttribution() {}
 
-        public AdjustAttribution(string jsonString) {
+        public AdjustAttribution(string jsonString)
+        {
             var jsonNode = JSON.Parse(jsonString);
             
-            if (jsonNode == null) {
+            if (jsonNode == null)
+            {
                 return;
             }
 
@@ -31,8 +35,10 @@ namespace com.adjust.sdk {
             adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
         }
 
-        public AdjustAttribution(Dictionary<string, string> dicAttributionData) {
-            if (dicAttributionData == null) {
+        public AdjustAttribution(Dictionary<string, string> dicAttributionData)
+        {
+            if (dicAttributionData == null)
+            {
                 return;
             }
 
@@ -46,9 +52,11 @@ namespace com.adjust.sdk {
             adid = TryGetValue(dicAttributionData, AdjustUtils.KeyAdid);
         }
 
-        private static string TryGetValue(Dictionary<string, string> dic, string key) {
+        private static string TryGetValue(Dictionary<string, string> dic, string key)
+        {
             string value;
-            if (dic.TryGetValue(key, out value)) {
+            if (dic.TryGetValue(key, out value))
+            {
                 return value;
             }
             return null;

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace com.adjust.sdk {
-    public class AdjustEventSuccess {
+namespace com.adjust.sdk
+{
+    public class AdjustEventSuccess
+    {
         public string Adid { get; set; }
         public string Message { get; set; }
         public string Timestamp { get; set; }
@@ -33,10 +35,11 @@ namespace com.adjust.sdk {
             }
         }
 
-        public AdjustEventSuccess(string jsonString) {
+        public AdjustEventSuccess(string jsonString)
+        {
             var jsonNode = JSON.Parse(jsonString);
-            
-            if (jsonNode == null) {
+            if (jsonNode == null)
+            {
                 return;
             }
 
@@ -44,14 +47,14 @@ namespace com.adjust.sdk {
             Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
             EventToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyEventToken);
-            
-            var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
 
-            if (jsonResponseNode == null) {
+            var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
+            if (jsonResponseNode == null)
+            {
                 return;
             }
-
-            if (jsonResponseNode.AsObject == null) {
+            if (jsonResponseNode.AsObject == null)
+            {
                 return;
             }
 
@@ -59,10 +62,11 @@ namespace com.adjust.sdk {
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
 
-        public void BuildJsonResponseFromString(string jsonResponseString) {
+        public void BuildJsonResponseFromString(string jsonResponseString)
+        {
             var jsonNode = JSON.Parse(jsonResponseString);
-
-            if (jsonNode == null) {
+            if (jsonNode == null)
+            {
                 return;
             }
 
@@ -70,7 +74,8 @@ namespace com.adjust.sdk {
             AdjustUtils.WriteJsonResponseDictionary(jsonNode.AsObject, JsonResponse);
         }
 
-        public string GetJsonResponse() {
+        public string GetJsonResponse()
+        {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }
     }

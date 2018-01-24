@@ -4,14 +4,13 @@ using System.Runtime.InteropServices;
 
 using UnityEngine;
 
-namespace com.adjust.sdk {
+namespace com.adjust.sdk
+{
 #if UNITY_IOS
-    public class AdjustiOS {
-        #region Fields
-        private const string sdkPrefix = "unity4.12.1";
-        #endregion
+    public class AdjustiOS
+    {
+        private const string sdkPrefix = "unity4.12.0";
 
-        #region External methods
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
             string appToken,
@@ -52,10 +51,10 @@ namespace com.adjust.sdk {
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetEnabled(int enabled);
-        
+
         [DllImport("__Internal")]
         private static extern int _AdjustIsEnabled();
-        
+
         [DllImport("__Internal")]
         private static extern void _AdjustSetOfflineMode(int enabled);
 
@@ -95,19 +94,15 @@ namespace com.adjust.sdk {
         [DllImport("__Internal")]
         private static extern void _AdjustResetSessionCallbackParameters();
 
-        #endregion
-
-        #region Constructors
         public AdjustiOS() {}
-        #endregion
 
-        #region Public methods
-        public static void start(AdjustConfig adjustConfig) {
+        public static void Start(AdjustConfig adjustConfig)
+        {
             string appToken = adjustConfig.appToken;
             string sceneName = adjustConfig.sceneName;
             string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : String.Empty;
             string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : String.Empty;
-            string environment = adjustConfig.environment.lowercaseToString();
+            string environment = adjustConfig.environment.ToLowercaseString();
 
             long secretId = AdjustUtils.ConvertLong(adjustConfig.secretId);
             long info1 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo1);
@@ -158,7 +153,8 @@ namespace com.adjust.sdk {
                 isDeferredDeeplinkCallbackImplemented);
         }
 
-        public static void trackEvent(AdjustEvent adjustEvent) {
+        public static void TrackEvent(AdjustEvent adjustEvent)
+        {
             int isReceiptSet = AdjustUtils.ConvertBool(adjustEvent.isReceiptSet);
             double revenue = AdjustUtils.ConvertDouble(adjustEvent.revenue);
 
@@ -168,73 +164,89 @@ namespace com.adjust.sdk {
             string transactionId = adjustEvent.transactionId;
             string stringJsonCallBackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
-            
+
             _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
         }
 
-        public static void setEnabled(bool enabled) {
+        public static void SetEnabled(bool enabled)
+        {
             _AdjustSetEnabled(AdjustUtils.ConvertBool(enabled));
         }
 
-        public static bool isEnabled() {
+        public static bool IsEnabled()
+        {
             var iIsEnabled = _AdjustIsEnabled();
 
             return Convert.ToBoolean(iIsEnabled);
         }
 
-        public static void setOfflineMode(bool enabled) {
+        public static void SetOfflineMode(bool enabled)
+        {
             _AdjustSetOfflineMode(AdjustUtils.ConvertBool(enabled));
         }
 
-        public static void sendFirstPackages() {
+        public static void SendFirstPackages()
+        {
             _AdjustSendFirstPackages();
         }
 
-        public static void appWillOpenUrl(string url) {
+        public static void AppWillOpenUrl(string url)
+        {
             _AdjustAppWillOpenUrl(url);
         }
 
-        public static void addSessionPartnerParameter(string key, string value) {
+        public static void AddSessionPartnerParameter(string key, string value)
+        {
             _AdjustAddSessionPartnerParameter(key, value);
         }
 
-        public static void addSessionCallbackParameter(string key, string value) {
+        public static void AddSessionCallbackParameter(string key, string value)
+        {
             _AdjustAddSessionCallbackParameter(key, value);
         }
 
-        public static void removeSessionPartnerParameter(string key) {
+        public static void RemoveSessionPartnerParameter(string key)
+        {
             _AdjustRemoveSessionPartnerParameter(key);
         }
 
-        public static void removeSessionCallbackParameter(string key) {
+        public static void RemoveSessionCallbackParameter(string key)
+        {
             _AdjustRemoveSessionCallbackParameter(key);
         }
 
-        public static void resetSessionPartnerParameters() {
+        public static void ResetSessionPartnerParameters()
+        {
             _AdjustResetSessionPartnerParameters();
         }
 
-        public static void resetSessionCallbackParameters() {
+        public static void ResetSessionCallbackParameters()
+        {
             _AdjustResetSessionCallbackParameters();
         }
 
         // iOS specific methods
-        public static void setDeviceToken(string deviceToken) {
+        public static void SetDeviceToken(string deviceToken)
+        {
             _AdjustSetDeviceToken(deviceToken);
         }
 
-        public static string getIdfa() {
+        public static string GetIdfa()
+        {
             return _AdjustGetIdfa();
         }
 
-        public static string getAdid() {
+        public static string GetAdid()
+        {
             return _AdjustGetAdid();
         }
 
-        public static AdjustAttribution getAttribution() {
+        public static AdjustAttribution GetAttribution()
+        {
             string attributionString = _AdjustGetAttribution();
 
-            if (null == attributionString) {
+            if (null == attributionString)
+            {
                 return null;
             }
 
@@ -242,7 +254,6 @@ namespace com.adjust.sdk {
 
             return attribution;
         }
-        #endregion
     }
 #endif
 }

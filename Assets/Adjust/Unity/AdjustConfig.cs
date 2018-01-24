@@ -4,14 +4,12 @@ namespace com.adjust.sdk
 {
     public class AdjustConfig
     {
-        #region Fields
-        internal double? delayStart;
-
         internal string appToken;
         internal string sceneName;
         internal string userAgent;
         internal string defaultTracker;
 
+        internal bool? isDeviceKnown;
         internal bool? sendInBackground;
         internal bool? eventBufferingEnabled;
         internal bool? allowSuppressLogLevel;
@@ -27,7 +25,7 @@ namespace com.adjust.sdk
         internal Action<AdjustSessionFailure> sessionFailureDelegate;
         internal Action<AdjustAttribution> attributionChangedDelegate;
 
-        internal bool? isDeviceKnown;
+        internal double? delayStart;
         internal long? secretId;
         internal long? appSecretInfo1;
         internal long? appSecretInfo2;
@@ -40,9 +38,7 @@ namespace com.adjust.sdk
 
         // Windows specific members
         internal Action<String> logDelegate;
-        #endregion
 
-        #region Constructors
         public AdjustConfig(string appToken, AdjustEnvironment environment)
         {
             this.sceneName = "";
@@ -59,9 +55,7 @@ namespace com.adjust.sdk
             this.environment = environment;
             this.allowSuppressLogLevel = allowSuppressLogLevel;
         }
-        #endregion
 
-        #region Public methods
         public void setLogLevel(AdjustLogLevel logLevel)
         {
             this.logLevel = logLevel;
@@ -167,8 +161,9 @@ namespace com.adjust.sdk
         {
             return this.sessionFailureDelegate;
         }
-			
-		public void setAppSecret(long secretId, long info1, long info2, long info3, long info4) {
+
+		public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)
+        {
 			this.secretId = secretId;
 			this.appSecretInfo1 = info1;
 			this.appSecretInfo2 = info2;
@@ -182,7 +177,8 @@ namespace com.adjust.sdk
             this.processName = processName;
         }
 
-		public void setReadMobileEquipmentIdentity(bool readMobileEquipmentIdentity) {
+		public void setReadMobileEquipmentIdentity(bool readMobileEquipmentIdentity)
+        {
 			this.readImei = readMobileEquipmentIdentity;
 		}
 
@@ -191,7 +187,5 @@ namespace com.adjust.sdk
         {
             this.logDelegate = logDelegate;
         }
-
-        #endregion
     }
 }
