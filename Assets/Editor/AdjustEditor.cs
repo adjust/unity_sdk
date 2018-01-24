@@ -75,6 +75,10 @@ public class AdjustEditor
             xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
             UnityEngine.Debug.Log("Adjust: iAd.framework added successfully.");
 
+            UnityEngine.Debug.Log("Adjust: Adding CoreTelephony.framework to Xcode project.");
+            xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
+            UnityEngine.Debug.Log("Adjust: CoreTelephony.framework added successfully.");
+
             // The adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
 
@@ -161,11 +165,15 @@ public class AdjustEditor
         // The adjust SDK needs two permissions to be added to you app's manifest file:
         // <uses-permission android:name="android.permission.INTERNET" />
         // <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        // <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        // <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
 
         UnityEngine.Debug.Log("Adjust: Checking if all permissions needed for the adjust SDK are present in the app's AndroidManifest.xml file.");
 
         bool hasInternetPermission = false;
         bool hasAccessWifiStatePermission = false;
+        bool hasAccessNetworkStatePermission = false;
+        bool hasInstallReferrerServicePermission = false;
 
         XmlElement manifestRoot = manifest.DocumentElement;
 
@@ -183,6 +191,14 @@ public class AdjustEditor
                     else if (attribute.Value.Contains("android.permission.ACCESS_WIFI_STATE"))
                     {
                         hasAccessWifiStatePermission = true;
+                    }
+                    else if (attribute.Value.Contains("android.permission.ACCESS_NETWORK_STATE"))
+                    {
+                        hasAccessNetworkStatePermission = true;
+                    }
+                    else if (attribute.Value.Contains("com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"))
+                    {
+                        hasInstallReferrerServicePermission = true;
                     }
                 }
             }
@@ -213,6 +229,32 @@ public class AdjustEditor
         {
             UnityEngine.Debug.Log("Adjust: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_WIFI_STATE permission.");
         }
+
+        // If android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
+        if (!hasAccessNetworkStatePermission)
+        {
+            XmlElement element = manifest.CreateElement("uses-permission");
+            element.SetAttribute("android__name", "android.permission.ACCESS_NETWORK_STATE");
+            manifestRoot.AppendChild(element);
+            UnityEngine.Debug.Log("Adjust: android.permission.ACCESS_NETWORK_STATE permission successfully added to your app's AndroidManifest.xml file.");
+        }
+        else
+        {
+            UnityEngine.Debug.Log("Adjust: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_NETWORK_STATE permission.");
+        }
+
+        // If com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
+        if (!hasInstallReferrerServicePermission)
+        {
+            XmlElement element = manifest.CreateElement("uses-permission");
+            element.SetAttribute("android__name", "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
+            manifestRoot.AppendChild(element);
+            UnityEngine.Debug.Log("Adjust: com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission successfully added to your app's AndroidManifest.xml file.");
+        }
+        else
+        {
+            UnityEngine.Debug.Log("Adjust: Your app's AndroidManifest.xml file already contains com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission.");
+        }
     }
 
     private static void AddBroadcastReceiver(XmlDocument manifest)
@@ -242,8 +284,8 @@ public class AdjustEditor
         //         </activity>
         //     </application>
         // 
-        //     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"
-        //     <uses-permission android:name="android.permission.INTERNET" />
+        //     <!-- ... -->>
+        //
         // </manifest>
 
         UnityEngine.Debug.Log("Adjust: Checking if app's AndroidManifest.xml file contains receiver for INSTALL_REFERRER intent.");
