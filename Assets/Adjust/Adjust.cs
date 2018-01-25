@@ -60,11 +60,11 @@ namespace com.adjust.sdk
 #elif (UNITY_WSA || UNITY_WP8)
             if (pauseStatus)
             {
-                AdjustWindows.onPause();
+                AdjustWindows.OnPause();
             }
             else
             {
-                AdjustWindows.onResume();
+                AdjustWindows.OnResume();
             }
 #else
             Debug.Log(errorMsgPlatform);

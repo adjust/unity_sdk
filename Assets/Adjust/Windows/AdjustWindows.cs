@@ -33,7 +33,7 @@ namespace com.adjust.sdk
 
             if (adjustConfig.logLevel.HasValue)
             {
-                logLevelString = adjustConfig.logLevel.ToLowercaseString();
+                logLevelString = adjustConfig.logLevel.Value.ToLowercaseString();
             }
 
             if (adjustConfig.attributionChangedDelegate != null)
@@ -87,9 +87,9 @@ namespace com.adjust.sdk
 				{
 					if (adjustConfig.launchDeferredDeeplink)
 					{
-						Adjust.GetNativeDeferredDeeplink(uri);
-					}
-
+                        adjustConfig.deferredDeeplinkDelegate(uri);
+                    }
+                    
 					return adjustConfig.launchDeferredDeeplink;
 				};
 			}
