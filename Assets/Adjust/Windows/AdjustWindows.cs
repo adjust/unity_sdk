@@ -126,10 +126,10 @@ namespace com.adjust.sdk
 				FuncDeeplinkResponseData = deeplinkResponseFunc,
 				IsDeviceKnown = adjustConfig.isDeviceKnown,
 				SecretId = adjustConfig.secretId,
-				AppSecretInfo1 = adjustConfig.appSecretInfo1,
-				AppSecretInfo2 = adjustConfig.appSecretInfo2,
-				AppSecretInfo3 = adjustConfig.appSecretInfo3,
-				AppSecretInfo4 = adjustConfig.appSecretInfo4
+				Info1 = adjustConfig.info1,
+				Info2 = adjustConfig.info2,
+				Info3 = adjustConfig.info3,
+				Info4 = adjustConfig.info4
 			};
 
 			AdjustWinInterface.ApplicationLaunching(adjustConfigDto);

@@ -155,9 +155,12 @@ namespace com.adjust.sdk
 			// Set App Secret
 			if (IsAppSecretSet(adjustConfig))
             {
-				ajoAdjustConfig.Call("setAppSecret", adjustConfig.secretId.Value,
-					adjustConfig.appSecretInfo1.Value, adjustConfig.appSecretInfo2.Value,
-					adjustConfig.appSecretInfo3.Value, adjustConfig.appSecretInfo4.Value);
+				ajoAdjustConfig.Call("setAppSecret",
+                    adjustConfig.secretId.Value,
+					adjustConfig.info1.Value,
+                    adjustConfig.info2.Value,
+					adjustConfig.info3.Value,
+                    adjustConfig.info4.Value);
 			}
 
 			// Set device known
@@ -370,10 +373,10 @@ namespace com.adjust.sdk
         private static bool IsAppSecretSet(AdjustConfig adjustConfig)
         {
             return adjustConfig.secretId.HasValue 
-            && adjustConfig.appSecretInfo1.HasValue
-            && adjustConfig.appSecretInfo2.HasValue
-            && adjustConfig.appSecretInfo2.HasValue
-            && adjustConfig.appSecretInfo2.HasValue;
+            && adjustConfig.info1.HasValue
+            && adjustConfig.info2.HasValue
+            && adjustConfig.info3.HasValue
+            && adjustConfig.info4.HasValue;
         }
 
         private class AttributionChangeListener : AndroidJavaProxy

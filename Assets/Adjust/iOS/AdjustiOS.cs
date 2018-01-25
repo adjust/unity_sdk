@@ -104,11 +104,11 @@ namespace com.adjust.sdk
             string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : String.Empty;
             string environment = adjustConfig.environment.ToLowercaseString();
 
+            long info1 = AdjustUtils.ConvertLong(adjustConfig.info1);
+            long info2 = AdjustUtils.ConvertLong(adjustConfig.info2);
+            long info3 = AdjustUtils.ConvertLong(adjustConfig.info3);
+            long info4 = AdjustUtils.ConvertLong(adjustConfig.info4);
             long secretId = AdjustUtils.ConvertLong(adjustConfig.secretId);
-            long info1 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo1);
-            long info2 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo2);
-            long info3 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo3);
-            long info4 = AdjustUtils.ConvertLong(adjustConfig.appSecretInfo4);
 
             double delayStart = AdjustUtils.ConvertDouble(adjustConfig.delayStart);
 

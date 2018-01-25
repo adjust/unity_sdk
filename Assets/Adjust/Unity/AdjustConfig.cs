@@ -25,12 +25,13 @@ namespace com.adjust.sdk
         internal Action<AdjustSessionFailure> sessionFailureDelegate;
         internal Action<AdjustAttribution> attributionChangedDelegate;
 
-        internal double? delayStart;
+        internal long? info1;
+        internal long? info2;
+        internal long? info3;
+        internal long? info4;
         internal long? secretId;
-        internal long? appSecretInfo1;
-        internal long? appSecretInfo2;
-        internal long? appSecretInfo3;
-        internal long? appSecretInfo4;
+
+        internal double? delayStart;
 
         // Android specific members
         internal string processName;
@@ -165,10 +166,10 @@ namespace com.adjust.sdk
 		public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)
         {
 			this.secretId = secretId;
-			this.appSecretInfo1 = info1;
-			this.appSecretInfo2 = info2;
-			this.appSecretInfo3 = info3;
-			this.appSecretInfo4 = info4;
+			this.info1 = info1;
+			this.info2 = info2;
+			this.info3 = info3;
+			this.info4 = info4;
 		}
 
         // Android specific methods.

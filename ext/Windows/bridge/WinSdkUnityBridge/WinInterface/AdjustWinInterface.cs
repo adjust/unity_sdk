@@ -44,13 +44,13 @@ namespace WinInterface
                 DelayStart = TimeSpan.FromSeconds(adjustConfigDto.DelayStart)
             };
 
-            if (adjustConfigDto.SecretId.HasValue && adjustConfigDto.AppSecretInfo1.HasValue &&
-                adjustConfigDto.AppSecretInfo2.HasValue && adjustConfigDto.AppSecretInfo3.HasValue &&
-                adjustConfigDto.AppSecretInfo4.HasValue)
+            if (adjustConfigDto.SecretId.HasValue && adjustConfigDto.Info1.HasValue &&
+                adjustConfigDto.Info2.HasValue && adjustConfigDto.Info3.HasValue &&
+                adjustConfigDto.Info4.HasValue)
             {
                 config.SetAppSecret(adjustConfigDto.SecretId.Value,
-                    adjustConfigDto.AppSecretInfo1.Value, adjustConfigDto.AppSecretInfo2.Value,
-                    adjustConfigDto.AppSecretInfo3.Value, adjustConfigDto.AppSecretInfo4.Value);
+                    adjustConfigDto.Info1.Value, adjustConfigDto.Info2.Value,
+                    adjustConfigDto.Info3.Value, adjustConfigDto.Info4.Value);
             }
 
             config.SetUserAgent(adjustConfigDto.UserAgent);
