@@ -25,11 +25,11 @@ namespace com.adjust.sdk
             string environment = adjustConfig.environment.ToLowercaseString();
 
             Action<Dictionary<string, string>> attributionChangedAction = null;
-			Action<Dictionary<string, string>> sessionSuccessChangedAction = null;
-			Action<Dictionary<string, string>> sessionFailureChangedAction = null;
-			Action<Dictionary<string, string>> eventSuccessChangedAction = null;
-			Action<Dictionary<string, string>> eventFailureChangedAction = null;
-			Func<string, bool> deeplinkResponseFunc = null;
+            Action<Dictionary<string, string>> sessionSuccessChangedAction = null;
+            Action<Dictionary<string, string>> sessionFailureChangedAction = null;
+            Action<Dictionary<string, string>> eventSuccessChangedAction = null;
+            Action<Dictionary<string, string>> eventFailureChangedAction = null;
+            Func<string, bool> deeplinkResponseFunc = null;
 
             if (adjustConfig.logLevel.HasValue)
             {
@@ -38,127 +38,127 @@ namespace com.adjust.sdk
 
             if (adjustConfig.attributionChangedDelegate != null)
             {
-				attributionChangedAction = (attributionMap) =>
-				{
-				    var attribution = new AdjustAttribution(attributionMap);
-				    adjustConfig.attributionChangedDelegate(attribution);
+                attributionChangedAction = (attributionMap) =>
+                {
+                    var attribution = new AdjustAttribution(attributionMap);
+                    adjustConfig.attributionChangedDelegate(attribution);
                 };
             }
 
-			if (adjustConfig.sessionSuccessDelegate != null)
-			{
-				sessionSuccessChangedAction = (sessionMap) =>
-				{
+            if (adjustConfig.sessionSuccessDelegate != null)
+            {
+                sessionSuccessChangedAction = (sessionMap) =>
+                {
                     var sessionData = new AdjustSessionSuccess(sessionMap);
-				    adjustConfig.sessionSuccessDelegate(sessionData);
-				};
-			}
-
-			if (adjustConfig.sessionFailureDelegate != null)
-			{
-				sessionFailureChangedAction = (sessionMap) =>
-				{
-				    var sessionData = new AdjustSessionFailure(sessionMap);
-				    adjustConfig.sessionFailureDelegate(sessionData);
+                    adjustConfig.sessionSuccessDelegate(sessionData);
                 };
-			}
+            }
 
-			if (adjustConfig.eventSuccessDelegate != null)
-			{
-				eventSuccessChangedAction = (eventMap) =>
-				{
+            if (adjustConfig.sessionFailureDelegate != null)
+            {
+                sessionFailureChangedAction = (sessionMap) =>
+                {
+                    var sessionData = new AdjustSessionFailure(sessionMap);
+                    adjustConfig.sessionFailureDelegate(sessionData);
+                };
+            }
+
+            if (adjustConfig.eventSuccessDelegate != null)
+            {
+                eventSuccessChangedAction = (eventMap) =>
+                {
                     var eventData = new AdjustEventSuccess(eventMap);
-				    adjustConfig.eventSuccessDelegate(eventData);
-				};
-			}
-
-			if (adjustConfig.eventFailureDelegate != null)
-			{
-				eventFailureChangedAction = (eventMap) =>
-				{
-				    var eventData = new AdjustEventFailure(eventMap);
-				    adjustConfig.eventFailureDelegate(eventData);
+                    adjustConfig.eventSuccessDelegate(eventData);
                 };
-			}
+            }
 
-			if (adjustConfig.deferredDeeplinkDelegate != null)
-			{
-				deeplinkResponseFunc = uri =>
-				{
-					if (adjustConfig.launchDeferredDeeplink)
-					{
+            if (adjustConfig.eventFailureDelegate != null)
+            {
+                eventFailureChangedAction = (eventMap) =>
+                {
+                    var eventData = new AdjustEventFailure(eventMap);
+                    adjustConfig.eventFailureDelegate(eventData);
+                };
+            }
+
+            if (adjustConfig.deferredDeeplinkDelegate != null)
+            {
+                deeplinkResponseFunc = uri =>
+                {
+                    if (adjustConfig.launchDeferredDeeplink)
+                    {
                         adjustConfig.deferredDeeplinkDelegate(uri);
                     }
                     
-					return adjustConfig.launchDeferredDeeplink;
-				};
-			}
+                    return adjustConfig.launchDeferredDeeplink;
+                };
+            }
 
-			bool sendInBackground = false;
-			if (adjustConfig.sendInBackground.HasValue)
-			{
-				sendInBackground = adjustConfig.sendInBackground.Value;
-			}
+            bool sendInBackground = false;
+            if (adjustConfig.sendInBackground.HasValue)
+            {
+                sendInBackground = adjustConfig.sendInBackground.Value;
+            }
 
-			double delayStartSeconds = 0;
-			if (adjustConfig.delayStart.HasValue)
-			{
-				delayStartSeconds = adjustConfig.delayStart.Value;
-			}
+            double delayStartSeconds = 0;
+            if (adjustConfig.delayStart.HasValue)
+            {
+                delayStartSeconds = adjustConfig.delayStart.Value;
+            }
 
-			AdjustConfigDto adjustConfigDto = new AdjustConfigDto {
-				AppToken = adjustConfig.appToken,
-				Environment = environment,
-				SdkPrefix = sdkPrefix,
-				SendInBackground = sendInBackground,
-				DelayStart = delayStartSeconds,
-				UserAgent = adjustConfig.userAgent,
-				DefaultTracker = adjustConfig.defaultTracker,
-				EventBufferingEnabled = adjustConfig.eventBufferingEnabled,
-				LaunchDeferredDeeplink = adjustConfig.launchDeferredDeeplink,
-				LogLevelString = logLevelString,
-				LogDelegate = adjustConfig.logDelegate,
-				ActionAttributionChangedData = attributionChangedAction,
-				ActionSessionSuccessData = sessionSuccessChangedAction,
-				ActionSessionFailureData = sessionFailureChangedAction,
-				ActionEventSuccessData = eventSuccessChangedAction,
-				ActionEventFailureData = eventFailureChangedAction,
-				FuncDeeplinkResponseData = deeplinkResponseFunc,
-				IsDeviceKnown = adjustConfig.isDeviceKnown,
-				SecretId = adjustConfig.secretId,
-				Info1 = adjustConfig.info1,
-				Info2 = adjustConfig.info2,
-				Info3 = adjustConfig.info3,
-				Info4 = adjustConfig.info4
-			};
+            AdjustConfigDto adjustConfigDto = new AdjustConfigDto {
+                AppToken = adjustConfig.appToken,
+                Environment = environment,
+                SdkPrefix = sdkPrefix,
+                SendInBackground = sendInBackground,
+                DelayStart = delayStartSeconds,
+                UserAgent = adjustConfig.userAgent,
+                DefaultTracker = adjustConfig.defaultTracker,
+                EventBufferingEnabled = adjustConfig.eventBufferingEnabled,
+                LaunchDeferredDeeplink = adjustConfig.launchDeferredDeeplink,
+                LogLevelString = logLevelString,
+                LogDelegate = adjustConfig.logDelegate,
+                ActionAttributionChangedData = attributionChangedAction,
+                ActionSessionSuccessData = sessionSuccessChangedAction,
+                ActionSessionFailureData = sessionFailureChangedAction,
+                ActionEventSuccessData = eventSuccessChangedAction,
+                ActionEventFailureData = eventFailureChangedAction,
+                FuncDeeplinkResponseData = deeplinkResponseFunc,
+                IsDeviceKnown = adjustConfig.isDeviceKnown,
+                SecretId = adjustConfig.secretId,
+                Info1 = adjustConfig.info1,
+                Info2 = adjustConfig.info2,
+                Info3 = adjustConfig.info3,
+                Info4 = adjustConfig.info4
+            };
 
-			AdjustWinInterface.ApplicationLaunching(adjustConfigDto);
+            AdjustWinInterface.ApplicationLaunching(adjustConfigDto);
             AdjustWinInterface.ApplicationActivated();
             appLaunched = true;
         }
 
         public static void TrackEvent(AdjustEvent adjustEvent)
         {
-			AdjustWinInterface.TrackEvent(
-				eventToken: adjustEvent.eventToken,
-				revenue: adjustEvent.revenue,
-				currency: adjustEvent.currency,
-				purchaseId: adjustEvent.transactionId,
-				callbackList: adjustEvent.callbackList,
-				partnerList: adjustEvent.partnerList
-			);
+            AdjustWinInterface.TrackEvent(
+                eventToken: adjustEvent.eventToken,
+                revenue: adjustEvent.revenue,
+                currency: adjustEvent.currency,
+                purchaseId: adjustEvent.transactionId,
+                callbackList: adjustEvent.callbackList,
+                partnerList: adjustEvent.partnerList
+            );
         }
 
         public static bool IsEnabled()
         {
-			return AdjustWinInterface.IsEnabled();
+            return AdjustWinInterface.IsEnabled();
         }
 
         public static void OnResume()
         {
             if (!appLaunched)
             {
-            	return;
+                return;
             }
 
             AdjustWinInterface.ApplicationActivated();
@@ -166,28 +166,28 @@ namespace com.adjust.sdk
 
         public static void OnPause()
         {
-			AdjustWinInterface.ApplicationDeactivated();
+            AdjustWinInterface.ApplicationDeactivated();
         }
 
         public static void SetEnabled(bool enabled)
         {
-			AdjustWinInterface.SetEnabled(enabled);
+            AdjustWinInterface.SetEnabled(enabled);
         }
 
         public static void SetOfflineMode(bool offlineMode)
         {
-			AdjustWinInterface.SetOfflineMode(offlineMode);
+            AdjustWinInterface.SetOfflineMode(offlineMode);
         }
 
         public static void SendFirstPackages()
         {
-			AdjustWinInterface.SendFirstPackages();
-		}
+            AdjustWinInterface.SendFirstPackages();
+        }
 
         public static void SetDeviceToken(string deviceToken)
         {
-			AdjustWinInterface.SetDeviceToken(deviceToken);
-		}
+            AdjustWinInterface.SetDeviceToken(deviceToken);
+        }
 
         public static void AppWillOpenUrl(string url)
         {
@@ -196,54 +196,54 @@ namespace com.adjust.sdk
 
         public static void AddSessionPartnerParameter(string key, string value)
         {
-			AdjustWinInterface.AddSessionPartnerParameter(key, value);
-		}
+            AdjustWinInterface.AddSessionPartnerParameter(key, value);
+        }
 
         public static void AddSessionCallbackParameter(string key, string value)
         {
-			AdjustWinInterface.AddSessionCallbackParameter(key, value);
-		}
+            AdjustWinInterface.AddSessionCallbackParameter(key, value);
+        }
 
         public static void RemoveSessionPartnerParameter(string key)
         {
-			AdjustWinInterface.RemoveSessionPartnerParameter(key);
-		}
+            AdjustWinInterface.RemoveSessionPartnerParameter(key);
+        }
 
         public static void RemoveSessionCallbackParameter(string key)
         {
-			AdjustWinInterface.RemoveSessionCallbackParameter(key);
-		}
+            AdjustWinInterface.RemoveSessionCallbackParameter(key);
+        }
 
         public static void ResetSessionPartnerParameters()
         {
-			AdjustWinInterface.ResetSessionPartnerParameters();
-		}
+            AdjustWinInterface.ResetSessionPartnerParameters();
+        }
 
         public static void ResetSessionCallbackParameters()
         {
-			AdjustWinInterface.ResetSessionCallbackParameters ();
-		}
+            AdjustWinInterface.ResetSessionCallbackParameters ();
+        }
 
-		public static string GetAdid()
-		{
-			return AdjustWinInterface.GetAdid ();
+        public static string GetAdid()
+        {
+            return AdjustWinInterface.GetAdid ();
         }
 
         public static AdjustAttribution GetAttribution()
         {
-			var attributionMap = AdjustWinInterface.GetAttribution();
-			if (attributionMap == null)
-			{
-				return new AdjustAttribution();
-			}
+            var attributionMap = AdjustWinInterface.GetAttribution();
+            if (attributionMap == null)
+            {
+                return new AdjustAttribution();
+            }
 
             return new AdjustAttribution(attributionMap);
         }
 
-		public static string GetWinAdId()
-		{
-			return AdjustWinInterface.GetWindowsAdId();
-		}    
+        public static string GetWinAdId()
+        {
+            return AdjustWinInterface.GetWindowsAdId();
+        }    
     }
 }
 #endif
