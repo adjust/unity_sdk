@@ -5,6 +5,11 @@ Temp/
 Obj/
 UnityGenerated/
 Library/
+
+# ===================================================================== #
+# Binary DLL files have to be ADDDED (not ignored). Used by Windows SDK #
+# ===================================================================== #
+!*.dll
  
 # ===================================== #
 # Visual Studio / MonoDevelop generated #

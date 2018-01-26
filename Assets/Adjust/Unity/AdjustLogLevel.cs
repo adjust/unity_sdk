@@ -1,5 +1,7 @@
-﻿namespace com.adjust.sdk {
-    public enum AdjustLogLevel {
+﻿namespace com.adjust.sdk
+{
+    public enum AdjustLogLevel
+    {
         Verbose = 1,
         Debug,
         Info,
@@ -9,9 +11,12 @@
         Suppress
     }
 
-    public static class AdjustLogLevelExtension {
-        public static string lowercaseToString(this AdjustLogLevel AdjustLogLevel) {
-            switch (AdjustLogLevel) {
+    public static class AdjustLogLevelExtension
+    {
+        public static string ToLowercaseString(this AdjustLogLevel AdjustLogLevel)
+        {
+            switch (AdjustLogLevel)
+            {
                 case AdjustLogLevel.Verbose:
                     return "verbose";
                 case AdjustLogLevel.Debug:
@@ -31,8 +36,10 @@
             }
         }
 
-        public static string uppercaseToString(this AdjustLogLevel AdjustLogLevel) {
-            switch (AdjustLogLevel) {
+        public static string ToUppercaseString(this AdjustLogLevel AdjustLogLevel)
+        {
+            switch (AdjustLogLevel)
+            {
                 case AdjustLogLevel.Verbose:
                     return "VERBOSE";
                 case AdjustLogLevel.Debug:
@@ -48,7 +55,7 @@
                 case AdjustLogLevel.Suppress:
                     return "SUPPRESS";
                 default:
-                    return "unknown";
+                    return "UNKNOWN";
             }
         }
     }

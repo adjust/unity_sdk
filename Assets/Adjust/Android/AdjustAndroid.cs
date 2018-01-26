@@ -4,38 +4,28 @@ using System.Runtime.InteropServices;
 
 using UnityEngine;
 
-namespace com.adjust.sdk {
+namespace com.adjust.sdk
+{
 #if UNITY_ANDROID
-    public class AdjustAndroid : IAdjust {
-        #region Fields
-        private const string sdkPrefix = "unity4.11.4";
+    public class AdjustAndroid
+    {
+        private const string sdkPrefix = "unity4.12.0";
 
         private static bool launchDeferredDeeplink = true;
 
-        private static AndroidJavaClass ajcAdjust;
-        private AndroidJavaObject ajoCurrentActivity;
+        private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+        private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass
+            ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
 
-        private DeferredDeeplinkListener onDeferredDeeplinkListener;
-        private AttributionChangeListener onAttributionChangedListener;
-        private EventTrackingFailedListener onEventTrackingFailedListener;
-        private EventTrackingSucceededListener onEventTrackingSucceededListener;
-        private SessionTrackingFailedListener onSessionTrackingFailedListener;
-        private SessionTrackingSucceededListener onSessionTrackingSucceededListener;
-        #endregion
+        private static DeferredDeeplinkListener onDeferredDeeplinkListener;
+        private static AttributionChangeListener onAttributionChangedListener;
+        private static EventTrackingFailedListener onEventTrackingFailedListener;
+        private static EventTrackingSucceededListener onEventTrackingSucceededListener;
+        private static SessionTrackingFailedListener onSessionTrackingFailedListener;
+        private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
 
-        #region Constructors
-        public AdjustAndroid() {
-            if (ajcAdjust == null) {
-                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-            }
-
-            AndroidJavaClass ajcUnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
-            ajoCurrentActivity = ajcUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        }
-        #endregion
-
-        #region Public methods
-        public void start(AdjustConfig adjustConfig) {
+        public static void Start(AdjustConfig adjustConfig)
+        {
             // Get environment variable.
             AndroidJavaObject ajoEnvironment = adjustConfig.environment == AdjustEnvironment.Sandbox ? 
                 new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_SANDBOX") :
@@ -45,9 +35,12 @@ namespace com.adjust.sdk {
             AndroidJavaObject ajoAdjustConfig;
 
             // Check if suppress log leve is supported.
-            if (adjustConfig.allowSuppressLogLevel != null) {
+            if (adjustConfig.allowSuppressLogLevel != null)
+            {
                 ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment, adjustConfig.allowSuppressLogLevel);
-            } else {
+            }
+            else
+            {
                 ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.appToken, ajoEnvironment);
             }
 
@@ -55,83 +48,100 @@ namespace com.adjust.sdk {
             launchDeferredDeeplink = adjustConfig.launchDeferredDeeplink;
 
             // Check log level.
-            if (adjustConfig.logLevel != null) {
+            if (adjustConfig.logLevel != null)
+            {
                 AndroidJavaObject ajoLogLevel;
 
-                if (adjustConfig.logLevel.Value.uppercaseToString().Equals("SUPPRESS")) {
+                if (adjustConfig.logLevel.Value.ToUppercaseString().Equals("SUPPRESS"))
+                {
                     ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>("SUPRESS");
-                } else {
-                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>(adjustConfig.logLevel.Value.uppercaseToString());
+                }
+                else
+                {
+                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>(adjustConfig.logLevel.Value.ToUppercaseString());
                 }
 
-                if (ajoLogLevel != null) {
+                if (ajoLogLevel != null)
+                {
                     ajoAdjustConfig.Call("setLogLevel", ajoLogLevel);
                 }
             }
 
             // Check if user has configured the delayed start option.
-            if (adjustConfig.delayStart != null) {
+            if (adjustConfig.delayStart != null)
+            {
                 ajoAdjustConfig.Call("setDelayStart", adjustConfig.delayStart);
             }
 
             // Check event buffering setting.
-            if (adjustConfig.eventBufferingEnabled != null) {
+            if (adjustConfig.eventBufferingEnabled != null)
+            {
                 AndroidJavaObject ajoIsEnabled = new AndroidJavaObject("java.lang.Boolean", adjustConfig.eventBufferingEnabled.Value);
                 ajoAdjustConfig.Call("setEventBufferingEnabled", ajoIsEnabled);
             }
 
             // Check if user enabled tracking in the background.
-            if (adjustConfig.sendInBackground != null) {
+            if (adjustConfig.sendInBackground != null)
+            {
                 ajoAdjustConfig.Call("setSendInBackground", adjustConfig.sendInBackground.Value);
             }
 
             // Check if user has set user agent value.
-            if (adjustConfig.userAgent != null) {
+            if (adjustConfig.userAgent != null)
+            {
                 ajoAdjustConfig.Call("setUserAgent", adjustConfig.userAgent);
             }
 
             // Check if user has set default process name.
-            if (!String.IsNullOrEmpty(adjustConfig.processName)) {
+            if (!String.IsNullOrEmpty(adjustConfig.processName))
+            {
                 ajoAdjustConfig.Call("setProcessName", adjustConfig.processName);
             }
 
             // Check if user has set default tracker token.
-            if (adjustConfig.defaultTracker != null) {
+            if (adjustConfig.defaultTracker != null)
+            {
                 ajoAdjustConfig.Call("setDefaultTracker", adjustConfig.defaultTracker);
             }
 
             // Check attribution changed delagate setting.
-            if (adjustConfig.attributionChangedDelegate != null) {
+            if (adjustConfig.attributionChangedDelegate != null)
+            {
                 onAttributionChangedListener = new AttributionChangeListener(adjustConfig.attributionChangedDelegate);
                 ajoAdjustConfig.Call("setOnAttributionChangedListener", onAttributionChangedListener);
             }
 
             // Check event success delegate setting.
-            if (adjustConfig.eventSuccessDelegate != null) {
+            if (adjustConfig.eventSuccessDelegate != null)
+            {
                 onEventTrackingSucceededListener = new EventTrackingSucceededListener(adjustConfig.eventSuccessDelegate);
                 ajoAdjustConfig.Call("setOnEventTrackingSucceededListener", onEventTrackingSucceededListener);
             }
 
             // Check event failure delagate setting.
-            if (adjustConfig.eventFailureDelegate != null) {
+            if (adjustConfig.eventFailureDelegate != null)
+            {
                 onEventTrackingFailedListener = new EventTrackingFailedListener(adjustConfig.eventFailureDelegate);
                 ajoAdjustConfig.Call("setOnEventTrackingFailedListener", onEventTrackingFailedListener);
             }
 
             // Check session success delegate setting.
-            if (adjustConfig.sessionSuccessDelegate != null) {
+            if (adjustConfig.sessionSuccessDelegate != null)
+            {
                 onSessionTrackingSucceededListener = new SessionTrackingSucceededListener(adjustConfig.sessionSuccessDelegate);
                 ajoAdjustConfig.Call("setOnSessionTrackingSucceededListener", onSessionTrackingSucceededListener);
             }
 
             // Check session failure delegate setting.
-            if (adjustConfig.sessionFailureDelegate != null) {
+            if (adjustConfig.sessionFailureDelegate != null)
+            {
                 onSessionTrackingFailedListener = new SessionTrackingFailedListener(adjustConfig.sessionFailureDelegate);
                 ajoAdjustConfig.Call("setOnSessionTrackingFailedListener", onSessionTrackingFailedListener);
             }
 
             // Check deferred deeplink delegate setting.
-            if (adjustConfig.deferredDeeplinkDelegate != null) {
+            if (adjustConfig.deferredDeeplinkDelegate != null)
+            {
                 onDeferredDeeplinkListener = new DeferredDeeplinkListener(adjustConfig.deferredDeeplinkDelegate);
                 ajoAdjustConfig.Call("setOnDeeplinkResponseListener", onDeferredDeeplinkListener);
             }
@@ -141,21 +151,47 @@ namespace com.adjust.sdk {
             
             // Since INSTALL_REFERRER is not triggering SDK initialisation, call onResume after onCreate.
             // OnApplicationPause doesn't get called first time the scene loads, so call to onResume is needed.
-            
+
+			// Set App Secret
+			if (IsAppSecretSet(adjustConfig))
+            {
+				ajoAdjustConfig.Call("setAppSecret",
+                    adjustConfig.secretId.Value,
+					adjustConfig.info1.Value,
+                    adjustConfig.info2.Value,
+					adjustConfig.info3.Value,
+                    adjustConfig.info4.Value);
+			}
+
+			// Set device known
+			if (adjustConfig.isDeviceKnown.HasValue)
+            {
+				ajoAdjustConfig.Call("setDeviceKnown", adjustConfig.isDeviceKnown.Value);
+			}
+
+			if (adjustConfig.readImei.HasValue)
+            {
+				ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value);
+			}
+
             // Initialise and start the SDK.
             ajcAdjust.CallStatic("onCreate", ajoAdjustConfig);
             ajcAdjust.CallStatic("onResume");
         }
 
-        public void trackEvent(AdjustEvent adjustEvent) {
+        public static void TrackEvent(AdjustEvent adjustEvent)
+        {
             AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.eventToken);
 
-            if (adjustEvent.revenue != null) {
+            if (adjustEvent.revenue != null)
+            {
                 ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.revenue, adjustEvent.currency);
             }
 
-            if (adjustEvent.callbackList != null) {
-                for (int i = 0; i < adjustEvent.callbackList.Count; i += 2) {
+            if (adjustEvent.callbackList != null)
+            {
+                for (int i = 0; i < adjustEvent.callbackList.Count; i += 2)
+                {
                     string key = adjustEvent.callbackList[i];
                     string value = adjustEvent.callbackList[i + 1];
 
@@ -163,56 +199,67 @@ namespace com.adjust.sdk {
                 }
             }
 
-            if (adjustEvent.partnerList != null) {
-                for (int i = 0; i < adjustEvent.partnerList.Count; i += 2) {
+            if (adjustEvent.partnerList != null)
+            {
+                for (int i = 0; i < adjustEvent.partnerList.Count; i += 2)
+                {
                     string key = adjustEvent.partnerList[i];
                     string value = adjustEvent.partnerList[i + 1];
-                
+
                     ajoAdjustEvent.Call("addPartnerParameter", key, value);
                 }
             }
 
-            if (adjustEvent.transactionId != null) {
+            if (adjustEvent.transactionId != null)
+            {
                 ajoAdjustEvent.Call("setOrderId", adjustEvent.transactionId);
             }
 
             ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
         }
 
-        public bool isEnabled() {
+        public static bool IsEnabled()
+        {
             return ajcAdjust.CallStatic<bool>("isEnabled");
         }
 
-        public void setEnabled(bool enabled) {
+        public static void SetEnabled(bool enabled)
+        {
             ajcAdjust.CallStatic("setEnabled", enabled);
         }
 
-        public void setOfflineMode(bool enabled) {
+        public static void SetOfflineMode(bool enabled)
+        {
             ajcAdjust.CallStatic("setOfflineMode", enabled);
         }
 
-        public void sendFirstPackages() {
+        public static void SendFirstPackages()
+        {
             ajcAdjust.CallStatic("sendFirstPackages");
         }
 
-        public void setDeviceToken(string deviceToken) {
+        public static void SetDeviceToken(string deviceToken)
+        {
             ajcAdjust.CallStatic("setPushToken", deviceToken);
         }
 
-        public string getAdid() {
+        public static string GetAdid()
+        {
             return ajcAdjust.CallStatic<string>("getAdid");
         }
 
-        public AdjustAttribution getAttribution() {
-            try {
+        public static AdjustAttribution GetAttribution()
+        {
+            try
+            {
                 AndroidJavaObject ajoAttribution = ajcAdjust.CallStatic<AndroidJavaObject>("getAttribution");
 
-                if (null == ajoAttribution) {
+                if (null == ajoAttribution)
+                {
                     return null;
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-
                 adjustAttribution.trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
                 adjustAttribution.trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
                 adjustAttribution.network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
@@ -223,53 +270,66 @@ namespace com.adjust.sdk {
                 adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
 
                 return adjustAttribution;
-            } catch (Exception) {}
+            }
+            catch (Exception) {}
 
             return null;
         }
 
-        public static void addSessionPartnerParameter(string key, string value) {
-            if (ajcAdjust == null) {
-                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-            }
+        public static void AddSessionPartnerParameter(string key, string value)
+        {
+			if (ajcAdjust == null)
+            {
+				ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+			}
 
             ajcAdjust.CallStatic("addSessionPartnerParameter", key, value);
         }
 
-        public static void addSessionCallbackParameter(string key, string value) {
-            if (ajcAdjust == null) {
+        public static void AddSessionCallbackParameter(string key, string value)
+        {
+            if (ajcAdjust == null)
+            {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
 
             ajcAdjust.CallStatic("addSessionCallbackParameter", key, value);
         }
 
-        public static void removeSessionPartnerParameter(string key) {
-            if (ajcAdjust == null) {
+        public static void RemoveSessionPartnerParameter(string key)
+        {
+            if (ajcAdjust == null)
+            {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
 
             ajcAdjust.CallStatic("removeSessionPartnerParameter", key);
         }
 
-        public static void removeSessionCallbackParameter(string key) {
-            if (ajcAdjust == null) {
+        public static void RemoveSessionCallbackParameter(string key)
+        {
+            if (ajcAdjust == null)
+            {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
 
             ajcAdjust.CallStatic("removeSessionCallbackParameter", key);
         }
 
-        public static void resetSessionPartnerParameters() {
-            if (ajcAdjust == null) {
+        public static void ResetSessionPartnerParameters()
+        {
+            if (ajcAdjust == null)
+            {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
 
             ajcAdjust.CallStatic("resetSessionPartnerParameters");
         }
 
-        public static void resetSessionCallbackParameters() {
-            if (ajcAdjust == null) {
+        public static void ResetSessionCallbackParameters()
+        {
+            if (ajcAdjust == null)
+            {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
 
@@ -277,44 +337,65 @@ namespace com.adjust.sdk {
         }
 
         // Android specific methods
-        public void onPause() {
+        public static void OnPause()
+        {
             ajcAdjust.CallStatic("onPause");
         }
         
-        public void onResume() {
+        public static void OnResume()
+        {
             ajcAdjust.CallStatic("onResume");
         }
 
-        public void setReferrer(string referrer) {
+        public static void SetReferrer(string referrer)
+        {
             ajcAdjust.CallStatic("setReferrer", referrer);
         }
 
-        public void getGoogleAdId(Action<string> onDeviceIdsRead) {
+        public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 
+		{
             DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
             ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
         }
 
-        // iOS specific methods
-        public string getIdfa() {
-            return null;
-        }
-        #endregion
+		public static void AppWillOpenUrl(string url) 
+		{
+			AndroidJavaClass ajcUri = new AndroidJavaClass ("android.net.Uri");
+			AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
+			ajcAdjust.CallStatic("appWillOpenUrl", ajoUri);
+		}
 
-        #region Proxy listener classes
-        private class AttributionChangeListener : AndroidJavaProxy {
+		public static string GetAmazonAdId()
+		{
+			return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
+		}
+
+        private static bool IsAppSecretSet(AdjustConfig adjustConfig)
+        {
+            return adjustConfig.secretId.HasValue 
+            && adjustConfig.info1.HasValue
+            && adjustConfig.info2.HasValue
+            && adjustConfig.info3.HasValue
+            && adjustConfig.info4.HasValue;
+        }
+
+        private class AttributionChangeListener : AndroidJavaProxy
+        {
             private Action<AdjustAttribution> callback;
 
-            public AttributionChangeListener(Action<AdjustAttribution> pCallback) : base("com.adjust.sdk.OnAttributionChangedListener") {
+            public AttributionChangeListener(Action<AdjustAttribution> pCallback) : base("com.adjust.sdk.OnAttributionChangedListener")
+            {
                 this.callback = pCallback;
             }
 
-            public void onAttributionChanged(AndroidJavaObject attribution) {
-                if (callback == null) {
+            public void onAttributionChanged(AndroidJavaObject attribution)
+            {
+                if (callback == null)
+                {
                     return;
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-
                 adjustAttribution.trackerName = attribution.Get<string>(AdjustUtils.KeyTrackerName);
                 adjustAttribution.trackerToken = attribution.Get<string>(AdjustUtils.KeyTrackerToken);
                 adjustAttribution.network = attribution.Get<string>(AdjustUtils.KeyNetwork);
@@ -328,15 +409,20 @@ namespace com.adjust.sdk {
             }
         }
 
-        private class DeferredDeeplinkListener : AndroidJavaProxy {
+        private class DeferredDeeplinkListener : AndroidJavaProxy
+        {
             private Action<string> callback;
 
-            public DeferredDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeeplinkResponseListener") {
+            public DeferredDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeeplinkResponseListener")
+            {
                 this.callback = pCallback;
             }
 
-            public bool launchReceivedDeeplink(AndroidJavaObject deeplink) {
-                if (callback == null) {
+            // Method must be lowercase to match Android method signature.
+            public bool launchReceivedDeeplink(AndroidJavaObject deeplink)
+            {
+                if (callback == null)
+                {
                     return launchDeferredDeeplink;
                 }
 
@@ -348,35 +434,42 @@ namespace com.adjust.sdk {
             }
         }
 
-        private class EventTrackingSucceededListener : AndroidJavaProxy {
+        private class EventTrackingSucceededListener : AndroidJavaProxy
+        {
             private Action<AdjustEventSuccess> callback;
 
-            public EventTrackingSucceededListener(Action<AdjustEventSuccess> pCallback) : base("com.adjust.sdk.OnEventTrackingSucceededListener") {
+            public EventTrackingSucceededListener(Action<AdjustEventSuccess> pCallback) : base("com.adjust.sdk.OnEventTrackingSucceededListener")
+            {
                 this.callback = pCallback;
             }
 
-            public void onFinishedEventTrackingSucceeded(AndroidJavaObject eventSuccessData) {
-                if (callback == null) {
+            // Method must be lowercase to match Android method signature.
+            public void onFinishedEventTrackingSucceeded(AndroidJavaObject eventSuccessData)
+            {
+                if (callback == null)
+                {
                     return;
                 }
 
-                if (eventSuccessData == null) {
+                if (eventSuccessData == null)
+                {
                     return;
                 }
 
                 AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess();
-
                 adjustEventSuccess.Adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
                 adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
                 adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
 
-                try {
+                try
+                {
                     AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
                     string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-
                     adjustEventSuccess.BuildJsonResponseFromString(jsonResponseString);
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     // JSON response reading failed.
                 }
 
@@ -384,36 +477,43 @@ namespace com.adjust.sdk {
             }
         }
 
-        private class EventTrackingFailedListener : AndroidJavaProxy {
+        private class EventTrackingFailedListener : AndroidJavaProxy
+        {
             private Action<AdjustEventFailure> callback;
 
-            public EventTrackingFailedListener(Action<AdjustEventFailure> pCallback) : base("com.adjust.sdk.OnEventTrackingFailedListener") {
+            public EventTrackingFailedListener(Action<AdjustEventFailure> pCallback) : base("com.adjust.sdk.OnEventTrackingFailedListener")
+            {
                 this.callback = pCallback;
             }
 
-            public void onFinishedEventTrackingFailed(AndroidJavaObject eventFailureData) {
-                if (callback == null) {
+            // Method must be lowercase to match Android method signature.
+            public void onFinishedEventTrackingFailed(AndroidJavaObject eventFailureData)
+            {
+                if (callback == null)
+                {
                     return;
                 }
 
-                if (eventFailureData == null) {
+                if (eventFailureData == null)
+                {
                     return;
                 }
 
                 AdjustEventFailure adjustEventFailure = new AdjustEventFailure();
-
                 adjustEventFailure.Adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid);
                 adjustEventFailure.Message = eventFailureData.Get<string>(AdjustUtils.KeyMessage);
                 adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
                 adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
 
-                try {
+                try
+                {
                     AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
                     string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-
                     adjustEventFailure.BuildJsonResponseFromString(jsonResponseString);
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     // JSON response reading failed.
                 }
                 
@@ -421,34 +521,41 @@ namespace com.adjust.sdk {
             }
         }
 
-        private class SessionTrackingSucceededListener : AndroidJavaProxy {
+        private class SessionTrackingSucceededListener : AndroidJavaProxy
+        {
             private Action<AdjustSessionSuccess> callback;
 
-            public SessionTrackingSucceededListener(Action<AdjustSessionSuccess> pCallback) : base("com.adjust.sdk.OnSessionTrackingSucceededListener") {
+            public SessionTrackingSucceededListener(Action<AdjustSessionSuccess> pCallback) : base("com.adjust.sdk.OnSessionTrackingSucceededListener")
+            {
                 this.callback = pCallback;
             }
 
-            public void onFinishedSessionTrackingSucceeded(AndroidJavaObject sessionSuccessData) {
-                if (callback == null) {
+            // Method must be lowercase to match Android method signature.
+            public void onFinishedSessionTrackingSucceeded(AndroidJavaObject sessionSuccessData)
+            {
+                if (callback == null)
+                {
                     return;
                 }
 
-                if (sessionSuccessData == null) {
+                if (sessionSuccessData == null)
+                {
                     return;
                 }
 
                 AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess();
-
                 adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
                 adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
                 adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
 
-                try {
+                try
+                {
                     AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
                     string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-
                     adjustSessionSuccess.BuildJsonResponseFromString(jsonResponseString);
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     // JSON response reading failed.
                 }
 
@@ -456,35 +563,42 @@ namespace com.adjust.sdk {
             }
         }
 
-        private class SessionTrackingFailedListener : AndroidJavaProxy {
+        private class SessionTrackingFailedListener : AndroidJavaProxy
+        {
             private Action<AdjustSessionFailure> callback;
 
-            public SessionTrackingFailedListener(Action<AdjustSessionFailure> pCallback) : base("com.adjust.sdk.OnSessionTrackingFailedListener") {
+            public SessionTrackingFailedListener(Action<AdjustSessionFailure> pCallback) : base("com.adjust.sdk.OnSessionTrackingFailedListener")
+            {
                 this.callback = pCallback;
             }
 
-            public void onFinishedSessionTrackingFailed(AndroidJavaObject sessionFailureData) {
-                if (callback == null) {
+            // Method must be lowercase to match Android method signature.
+            public void onFinishedSessionTrackingFailed(AndroidJavaObject sessionFailureData)
+            {
+                if (callback == null)
+                {
                     return;
                 }
 
-                if (sessionFailureData == null) {
+                if (sessionFailureData == null)
+                {
                     return;
                 }
 
                 AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure();
-
                 adjustSessionFailure.Adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
                 adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
                 adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
                 adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
 
-                try {
+                try
+                {
                     AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
                     string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-
                     adjustSessionFailure.BuildJsonResponseFromString(jsonResponseString);
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     // JSON response reading failed.
                 }
 
@@ -492,34 +606,39 @@ namespace com.adjust.sdk {
             }
         }
 
-        private class DeviceIdsReadListener : AndroidJavaProxy {
+        private class DeviceIdsReadListener : AndroidJavaProxy
+        {
             private Action<string> onPlayAdIdReadCallback;
 
-            public DeviceIdsReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeviceIdsRead") {
+            public DeviceIdsReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeviceIdsRead")
+            {
                 this.onPlayAdIdReadCallback = pCallback;
             }
 
-            public void onGoogleAdIdRead(string playAdId) {
-                if (onPlayAdIdReadCallback == null) {
+            // Method must be lowercase to match Android method signature.
+            public void onGoogleAdIdRead(string playAdId)
+            {
+                if (onPlayAdIdReadCallback == null)
+                {
                     return;
                 }
 
                 this.onPlayAdIdReadCallback(playAdId);
             }
 
-            // null object.
-            public void onGoogleAdIdRead(AndroidJavaObject ajoAdId) {
-                if (ajoAdId == null) {
+            // Handling of null object.
+            public void onGoogleAdIdRead(AndroidJavaObject ajoAdId)
+            {
+                if (ajoAdId == null)
+                {
                     string adId = null;
                     this.onGoogleAdIdRead(adId);
-
                     return;
                 }
 
                 this.onGoogleAdIdRead(ajoAdId.Call<string>("toString"));
             }
         }
-        #endregion
     }
 #endif
 }

@@ -4,35 +4,65 @@ using System.Runtime.InteropServices;
 
 using UnityEngine;
 
-namespace com.adjust.sdk {
+namespace com.adjust.sdk
+{
 #if UNITY_IOS
-    public class AdjustiOS : IAdjust {
-        #region Fields
-        private const string sdkPrefix = "unity4.11.4";
-        #endregion
-
-        #region External methods
-        [DllImport("__Internal")]
-        private static extern void _AdjustLaunchApp(string appToken, string environment, string sdkPrefix, int allowSuppressLogLevel,
-            int logLevel, int eventBuffering, int sendInBackground, double delayStart, string userAgent, int launchDeferredDeeplink,
-            string sceneName, int isAttributionCallbackImplemented, int isEventSuccessCallbackImplemented,int isEventFailureCallbackImplemented,
-            int isSessionSuccessCallbackImplemented, int isSessionFailureCallbackImplemented, int isDeferredDeeplinkCallbackImplemented);
+    public class AdjustiOS
+    {
+        private const string sdkPrefix = "unity4.12.0";
 
         [DllImport("__Internal")]
-        private static extern void _AdjustTrackEvent(string eventToken, double revenue, string currency, string receipt, string transactionId,
-            int isReceiptSet, string jsonCallbackParameters, string jsonPartnerParameters);
+        private static extern void _AdjustLaunchApp(
+            string appToken,
+            string environment,
+            string sdkPrefix,
+            int allowSuppressLogLevel,
+            int logLevel,
+            int isDeviceKnown,
+            int eventBuffering,
+            int sendInBackground,
+            long secretId,
+            long info1,
+            long info2,
+            long info3,
+            long info4,
+            double delayStart,
+            string userAgent,
+            string defaultTracker,
+            int launchDeferredDeeplink,
+            string sceneName,
+            int isAttributionCallbackImplemented, 
+            int isEventSuccessCallbackImplemented,
+            int isEventFailureCallbackImplemented,
+            int isSessionSuccessCallbackImplemented,
+            int isSessionFailureCallbackImplemented,
+            int isDeferredDeeplinkCallbackImplemented);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustTrackEvent(
+            string eventToken,
+            double revenue,
+            string currency,
+            string receipt,
+            string transactionId,
+            int isReceiptSet,
+            string jsonCallbackParameters,
+            string jsonPartnerParameters);
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetEnabled(int enabled);
-        
+
         [DllImport("__Internal")]
         private static extern int _AdjustIsEnabled();
-        
+
         [DllImport("__Internal")]
         private static extern void _AdjustSetOfflineMode(int enabled);
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetDeviceToken(string deviceToken);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustAppWillOpenUrl(string url);
 
         [DllImport("__Internal")]
         private static extern string _AdjustGetIdfa();
@@ -64,22 +94,26 @@ namespace com.adjust.sdk {
         [DllImport("__Internal")]
         private static extern void _AdjustResetSessionCallbackParameters();
 
-        #endregion
-
-        #region Constructors
         public AdjustiOS() {}
-        #endregion
 
-        #region Public methods
-        public void start(AdjustConfig adjustConfig) {
+        public static void Start(AdjustConfig adjustConfig)
+        {
             string appToken = adjustConfig.appToken;
             string sceneName = adjustConfig.sceneName;
             string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : String.Empty;
-            string environment = adjustConfig.environment.lowercaseToString();
+            string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : String.Empty;
+            string environment = adjustConfig.environment.ToLowercaseString();
+
+            long info1 = AdjustUtils.ConvertLong(adjustConfig.info1);
+            long info2 = AdjustUtils.ConvertLong(adjustConfig.info2);
+            long info3 = AdjustUtils.ConvertLong(adjustConfig.info3);
+            long info4 = AdjustUtils.ConvertLong(adjustConfig.info4);
+            long secretId = AdjustUtils.ConvertLong(adjustConfig.secretId);
 
             double delayStart = AdjustUtils.ConvertDouble(adjustConfig.delayStart);
 
             int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.logLevel);
+            int isDeviceKnown = AdjustUtils.ConvertBool(adjustConfig.isDeviceKnown);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool(adjustConfig.eventBufferingEnabled);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
@@ -98,10 +132,17 @@ namespace com.adjust.sdk {
                 sdkPrefix,
                 allowSuppressLogLevel,
                 logLevel,
+                isDeviceKnown,
                 eventBufferingEnabled,
                 sendInBackground,
+                secretId,
+                info1,
+                info2,
+                info3,
+                info4,
                 delayStart,
                 userAgent,
+                defaultTracker,
                 launchDeferredDeeplink,
                 sceneName,
                 isAttributionCallbackImplemented,
@@ -112,7 +153,8 @@ namespace com.adjust.sdk {
                 isDeferredDeeplinkCallbackImplemented);
         }
 
-        public void trackEvent(AdjustEvent adjustEvent) {
+        public static void TrackEvent(AdjustEvent adjustEvent)
+        {
             int isReceiptSet = AdjustUtils.ConvertBool(adjustEvent.isReceiptSet);
             double revenue = AdjustUtils.ConvertDouble(adjustEvent.revenue);
 
@@ -122,69 +164,89 @@ namespace com.adjust.sdk {
             string transactionId = adjustEvent.transactionId;
             string stringJsonCallBackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
-            
+
             _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
         }
 
-        public void setEnabled(bool enabled) {
+        public static void SetEnabled(bool enabled)
+        {
             _AdjustSetEnabled(AdjustUtils.ConvertBool(enabled));
         }
 
-        public bool isEnabled() {
+        public static bool IsEnabled()
+        {
             var iIsEnabled = _AdjustIsEnabled();
 
             return Convert.ToBoolean(iIsEnabled);
         }
 
-        public void setOfflineMode(bool enabled) {
+        public static void SetOfflineMode(bool enabled)
+        {
             _AdjustSetOfflineMode(AdjustUtils.ConvertBool(enabled));
         }
 
-        public void sendFirstPackages() {
+        public static void SendFirstPackages()
+        {
             _AdjustSendFirstPackages();
         }
 
-        public static void addSessionPartnerParameter(string key, string value) {
+        public static void AppWillOpenUrl(string url)
+        {
+            _AdjustAppWillOpenUrl(url);
+        }
+
+        public static void AddSessionPartnerParameter(string key, string value)
+        {
             _AdjustAddSessionPartnerParameter(key, value);
         }
 
-        public static void addSessionCallbackParameter(string key, string value) {
+        public static void AddSessionCallbackParameter(string key, string value)
+        {
             _AdjustAddSessionCallbackParameter(key, value);
         }
 
-        public static void removeSessionPartnerParameter(string key) {
+        public static void RemoveSessionPartnerParameter(string key)
+        {
             _AdjustRemoveSessionPartnerParameter(key);
         }
 
-        public static void removeSessionCallbackParameter(string key) {
+        public static void RemoveSessionCallbackParameter(string key)
+        {
             _AdjustRemoveSessionCallbackParameter(key);
         }
 
-        public static void resetSessionPartnerParameters() {
+        public static void ResetSessionPartnerParameters()
+        {
             _AdjustResetSessionPartnerParameters();
         }
 
-        public static void resetSessionCallbackParameters() {
+        public static void ResetSessionCallbackParameters()
+        {
             _AdjustResetSessionCallbackParameters();
         }
 
         // iOS specific methods
-        public void setDeviceToken(string deviceToken) {
+        public static void SetDeviceToken(string deviceToken)
+        {
             _AdjustSetDeviceToken(deviceToken);
         }
 
-        public string getIdfa() {
+        public static string GetIdfa()
+        {
             return _AdjustGetIdfa();
         }
 
-        public string getAdid() {
+        public static string GetAdid()
+        {
             return _AdjustGetAdid();
         }
 
-        public AdjustAttribution getAttribution() {
+        public static AdjustAttribution GetAttribution()
+        {
             string attributionString = _AdjustGetAttribution();
 
-            if (null == attributionString) {
+            if (null == attributionString)
+            {
                 return null;
             }
 
@@ -192,16 +254,6 @@ namespace com.adjust.sdk {
 
             return attribution;
         }
-
-        // Android specific methods
-        public void onPause() {}
-
-        public void onResume() {}
-
-        public void setReferrer(string referrer) {}
-
-        public void getGoogleAdId(Action<string> onDeviceIdsRead) {}
-        #endregion
     }
 #endif
 }
