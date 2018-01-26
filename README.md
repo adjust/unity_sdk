@@ -545,7 +545,7 @@ Unlike disabling tracking, **this setting is not remembered** between sessions. 
 If your app makes heavy use of event tracking, you might want to delay some HTTP requests in order to send them in one batch every minute. You can enable event buffering with your `AdjustConfig` instance:
 
 ```cs
-AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", "{YourEnvironment}");
 
 adjustConfig.setEventBufferingEnabled(true);
 
@@ -563,7 +563,7 @@ If the SDK signature has already been enabled on your account and you have acces
 An App Secret is set by passing all secret parameters (`secretId`, `info1`, `info2`, `info3`, `info4`) to `setAppSecret` method of `AdjustConfig` instance:
 
 ```cs
-AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", "{YourEnvironment}");
 
 adjustConfig.setAppSecret(secretId, info1, info2, info3, info4);
 
@@ -575,7 +575,7 @@ Adjust.start(adjustConfig);
 The default behaviour of the Adjust SDK is to **pause sending HTTP requests while the app is in the background**. You can change this in your `AdjustConfig` instance:
 
 ```csharp
-AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", "{YourEnvironment}");
 
 adjustConfig.setSendInBackground(true);
 
@@ -649,7 +649,7 @@ Push tokens are used for Audience Builder and client callbacks, and they are req
 If you are distributing your Android app **outside of the Google Play Store** and would like to track additional device identifiers (IMEI and MEID), you need to explicitly instruct the Adjust SDK to do so. You can do that by calling the `setReadMobileEquipmentIdentity` method of the `AdjustConfig` instance. **The Adjust SDK does not collect these identifiers by default**.
 
 ```cs
-AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", "{YourEnvironment}");
 
 adjustConfig.setReadMobileEquipmentIdentity(true);
 
@@ -712,7 +712,7 @@ private void DeferredDeeplinkCallback(string deeplinkURL) {
    // ...
 }
 
-AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", "{YourEnvironment}");
 
 adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
 
@@ -730,7 +730,7 @@ private void DeferredDeeplinkCallback(string deeplinkURL) {
    // ...
 }
 
-AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken", "{YourEnvironment}");
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", "{YourEnvironment}");
 
 adjustConfig.setLaunchDeferredDeeplink(true);
 adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
