@@ -1,3 +1,28 @@
+### Version 4.12.0 (26th January 2018)
+#### Native changes:
+- **[iOS]** https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
+- **[iOS]** https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4121-13th-december-2017
+- **[AND]** https://github.com/adjust/android_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
+- **[WIN]** https://github.com/adjust/windows_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
+
+#### Added
+- **[AND]** Added `getAmazonAdId` method to `Adjust` interface.
+- **[iOS][AND][WIN]** Added `setAppSecret` method to `AdjustConfig` interface.
+- **[AND]** Added `setReadMobileEquipmentIdentity` method to `AdjustConfig` interface.
+
+#### Changed
+- **[WIN]** Updated Windows platform to be feature wise up to date with Android and iOS.
+
+#### Fixed
+- **[iOS]** Fixed handling of default tracker for iOS platform.
+
+#### Native SDKs
+- **[iOS]** [iOS@v4.12.1][ios_sdk_v4.12.1]
+- **[AND]** [Android@v4.12.0][android_sdk_v4.12.0]
+- **[WIN]** [Windows@v4.12.0][windows_sdk_v4.12.0]
+
+---
+
 ### Version 4.11.4 (28th September 2017)
 #### Added
 - **[iOS]** Improved iOS 11 support.
@@ -371,3 +396,32 @@
 #### Added
 - Initial release of the adjust SDK for Unity 3D.
 - Central initialization for AppToken (Universal App Support).
+
+
+[ios_sdk_v3.4.0]: https://github.com/adjust/ios_sdk/tree/v3.4.0
+[ios_sdk_v4.2.7]: https://github.com/adjust/ios_sdk/tree/v4.2.7
+[ios_sdk_v4.4.1]: https://github.com/adjust/ios_sdk/tree/v4.4.1
+[ios_sdk_v4.5.0]: https://github.com/adjust/ios_sdk/tree/v4.5.0
+[ios_sdk_v4.5.4]: https://github.com/adjust/ios_sdk/tree/v4.5.4
+[ios_sdk_v4.10.2]: https://github.com/adjust/ios_sdk/tree/v4.10.2
+[ios_sdk_v4.10.3]: https://github.com/adjust/ios_sdk/tree/v4.10.3
+[ios_sdk_v4.11.0]: https://github.com/adjust/ios_sdk/tree/v4.11.0
+[ios_sdk_v4.11.3]: https://github.com/adjust/ios_sdk/tree/v4.11.3
+[ios_sdk_v4.11.4]: https://github.com/adjust/ios_sdk/tree/v4.11.4
+[ios_sdk_v4.11.5]: https://github.com/adjust/ios_sdk/tree/v4.11.5
+[ios_sdk_v4.12.1]: https://github.com/adjust/ios_sdk/tree/v4.12.1
+
+[android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
+[android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
+[android_sdk_v4.1.3]: https://github.com/adjust/android_sdk/tree/v4.1.3
+[android_sdk_v4.2.0]: https://github.com/adjust/android_sdk/tree/v4.2.0
+[android_sdk_v4.2.3]: https://github.com/adjust/android_sdk/tree/v4.2.3
+[android_sdk_v4.10.2]: https://github.com/adjust/android_sdk/tree/v4.10.2
+[android_sdk_v4.10.4]: https://github.com/adjust/android_sdk/tree/v4.10.4
+[android_sdk_v4.11.0]: https://github.com/adjust/android_sdk/tree/v4.11.0
+[android_sdk_v4.11.1]: https://github.com/adjust/android_sdk/tree/v4.11.1
+[android_sdk_v4.11.3]: https://github.com/adjust/android_sdk/tree/v4.11.3
+[android_sdk_v4.11.4]: https://github.com/adjust/android_sdk/tree/v4.11.4
+[android_sdk_v4.12.0]: https://github.com/adjust/android_sdk/tree/v4.12.0
+
+[windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
