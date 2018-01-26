@@ -1,79 +1,79 @@
 ### Version 4.12.0 (26th January 2018)
-#### Native changes:
-- **[iOS]** https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
-- **[iOS]** https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4121-13th-december-2017
-- **[AND]** https://github.com/adjust/android_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
-- **[WIN]** https://github.com/adjust/windows_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
-
 #### Added
-- **[AND]** Added `getAmazonAdId` method to `Adjust` interface.
-- **[iOS][AND][WIN]** Added `setAppSecret` method to `AdjustConfig` interface.
-- **[AND]** Added `setReadMobileEquipmentIdentity` method to `AdjustConfig` interface.
+- Added `getAmazonAdId` method to `Adjust` interface.
+- Added `setAppSecret` method to `AdjustConfig` interface.
+- Added `setReadMobileEquipmentIdentity` method to `AdjustConfig` interface.
 
 #### Changed
-- **[WIN]** Updated Windows platform to be feature wise up to date with Android and iOS.
+- Dropped support for Unity 4.
+- Updated Windows platform to be feature wise up to date with Android and iOS.
 
 #### Fixed
-- **[iOS]** Fixed handling of default tracker for iOS platform.
+- Fixed handling of default tracker for iOS platform.
+
+#### Native changes
+- https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
+- https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4121-13th-december-2017
+- https://github.com/adjust/android_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
+- https://github.com/adjust/windows_sdk/blob/master/CHANGELOG.md#version-4120-13th-december-2017
 
 #### Native SDKs
-- **[iOS]** [iOS@v4.12.1][ios_sdk_v4.12.1]
-- **[AND]** [Android@v4.12.0][android_sdk_v4.12.0]
-- **[WIN]** [Windows@v4.12.0][windows_sdk_v4.12.0]
+- [iOS@v4.12.1][ios_sdk_v4.12.1]
+- [Android@v4.12.0][android_sdk_v4.12.0]
+- [Windows@v4.12.0][windows_sdk_v4.12.0]
 
 ---
 
 ### Version 4.11.4 (28th September 2017)
 #### Added
-- **[iOS]** Improved iOS 11 support.
+- Improved iOS 11 support.
 
 #### Changed
-- **[iOS]** Re-added support for Xcode 7.
-- **[iOS]** Removed iOS connection validity checks.
+- Re-added support for Xcode 7.
+- Removed iOS connection validity checks.
 
 ---
 
 ### Version 4.11.3 (19th May 2017)
 #### Added
-- **[iOS][AND]** Added check if `sdk_click` package response contains attribution information.
-- **[iOS][AND]** Added sending of attributable parameters with every `sdk_click` package.
+- Added check if `sdk_click` package response contains attribution information.
+- Added sending of attributable parameters with every `sdk_click` package.
 
 #### Changed
-- **[iOS][AND]** Replaced `assert` level logs with `warn` level.
+- Replaced `assert` level logs with `warn` level.
 
 ---
 
 ### Version 4.11.2 (6th March 2017)
 #### Changed
-- **[AND]** Removed connection validity checks.
-- **[AND]** Refactored native networking code.
-- **[AND]** Updated native Android SDK to version **4.11.3**.
+- Removed connection validity checks.
+- Refactored native networking code.
+- Updated native Android SDK to version **4.11.3**.
 
 ---
 
 ### Version 4.11.1 (29th March 2017)
 #### Added
-- **[iOS]** Added nullability annotations to public headers for Swift 3.0 compatibility.
-- **[iOS]** Added `BITCODE_GENERATION_MODE` to iOS framework for `Carthage` support.
-- **[iOS]** Added support for iOS 10.3.
-- **[iOS][AND]** Added connection validity checks.
-- **[iOS][AND]** Added sending of the app's install time.
-- **[iOS][AND]** Added sending of the app's update time.
-- **[WIN]** Added support for Windows Phone 8.1 and Windows 10 to Unity 5 package.
+- Added nullability annotations to public headers for Swift 3.0 compatibility.
+- Added `BITCODE_GENERATION_MODE` to iOS framework for `Carthage` support.
+- Added support for iOS 10.3.
+- Added connection validity checks.
+- Added sending of the app's install time.
+- Added sending of the app's update time.
+- Added support for Windows Phone 8.1 and Windows 10 to Unity 5 package.
 
 #### Fixed
-- **[iOS]** Fixed not processing of `sdk_info` package type causing logs not to print proper package name once tracked.
-- **[AND]** Fixed query string parsing.
-- **[iOS][AND]** Fixed random occurrence of attribution request being fired before session request.
-- **[iOS]** Fixed handling of `null` being passed as currency value for iOS platform (https://github.com/adjust/unity_sdk/issues/102).
-- **[AND]** Fixed issue of creating and destroying lots of threads on certain Android API levels (https://github.com/adjust/android_sdk/issues/265).
-- **[AND]** Protected `Package Manager` from throwing unexpected exceptions (https://github.com/adjust/android_sdk/issues/266).
+- Fixed not processing of `sdk_info` package type causing logs not to print proper package name once tracked.
+- Fixed query string parsing.
+- Fixed random occurrence of attribution request being fired before session request.
+- Fixed handling of `null` being passed as currency value for iOS platform (https://github.com/adjust/unity_sdk/issues/102).
+- Fixed issue of creating and destroying lots of threads on certain Android API levels (https://github.com/adjust/android_sdk/issues/265).
+- Protected `Package Manager` from throwing unexpected exceptions (https://github.com/adjust/android_sdk/issues/266).
 
 #### Changed
-- **[AND]** Garanteed that access of `Activity Handler` to internal methods is done through it's executor.
-- **[iOS]** Updated native iOS SDK to version **4.11.3**.
-- **[AND]** Updated native Android SDK to version **4.11.2**.
-- **[DOC]** Introduced `[iOS]`, `[AND]`, `[WIN]` and `[DOC]` tags to `CHANGELOG` to highlight the platform the change is referring to.
+- Garanteed that access of `Activity Handler` to internal methods is done through it's executor.
+- Updated native iOS SDK to version **4.11.3**.
+- Updated native Android SDK to version **4.11.2**.
 
 ---
 
