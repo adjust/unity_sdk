@@ -8,6 +8,7 @@ namespace com.adjust.sdk
     {
         private const string errorMsgStart = "Adjust: SDK not started. Start it manually using the 'start' method.";
         private const string errorMsgPlatform = "Adjust: SDK can only be used in Android, iOS, Windows Phone 8.1, Windows Store or Universal Windows apps.";
+		private const string errorMsgUnityEditor = "Adjust: SDK can't be used in UnityEditor.";
 
         public bool startManually = true;
         public bool eventBuffering = false;
@@ -46,6 +47,10 @@ namespace com.adjust.sdk
 
         void OnApplicationPause(bool pauseStatus)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             // No action, iOS SDK is subscribed to iOS lifecycle notifications.
 #elif UNITY_ANDROID
@@ -79,12 +84,19 @@ namespace com.adjust.sdk
                 return;
             }
 #if UNITY_IOS
-            Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
-            Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
-            Adjust.sessionSuccessDelegate = adjustConfig.getSessionSuccessDelegate();
-            Adjust.sessionFailureDelegate = adjustConfig.getSessionFailureDelegate();
-            Adjust.deferredDeeplinkDelegate = adjustConfig.getDeferredDeeplinkDelegate();
-            Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate();
+			Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
+			Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
+			Adjust.sessionSuccessDelegate = adjustConfig.getSessionSuccessDelegate();
+			Adjust.sessionFailureDelegate = adjustConfig.getSessionFailureDelegate();
+			Adjust.deferredDeeplinkDelegate = adjustConfig.getDeferredDeeplinkDelegate();
+			Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate();
+#endif
+
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
+#if UNITY_IOS
             AdjustiOS.Start(adjustConfig);
 #elif UNITY_ANDROID
             AdjustAndroid.Start(adjustConfig);
@@ -102,6 +114,10 @@ namespace com.adjust.sdk
                 Debug.Log("Adjust: Missing event to track.");
                 return;
             }
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.TrackEvent(adjustEvent);
 #elif UNITY_ANDROID
@@ -115,6 +131,10 @@ namespace com.adjust.sdk
 
         public static void setEnabled(bool enabled)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.SetEnabled(enabled);
 #elif UNITY_ANDROID
@@ -128,6 +148,10 @@ namespace com.adjust.sdk
 
         public static bool isEnabled()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return false;
+#endif
 #if UNITY_IOS
             return AdjustiOS.IsEnabled();
 #elif UNITY_ANDROID
@@ -142,6 +166,10 @@ namespace com.adjust.sdk
 
         public static void setOfflineMode(bool enabled)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.SetOfflineMode(enabled);
 #elif UNITY_ANDROID
@@ -155,6 +183,10 @@ namespace com.adjust.sdk
 
         public static void setDeviceToken(string deviceToken)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.SetDeviceToken(deviceToken);
 #elif UNITY_ANDROID
@@ -168,6 +200,10 @@ namespace com.adjust.sdk
 
         public static void appWillOpenUrl(string url)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.AppWillOpenUrl(url);
 #elif UNITY_ANDROID
@@ -181,6 +217,10 @@ namespace com.adjust.sdk
 
         public static void sendFirstPackages()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.SendFirstPackages();
 #elif UNITY_ANDROID
@@ -194,6 +234,10 @@ namespace com.adjust.sdk
 
         public static void addSessionPartnerParameter(string key, string value)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.AddSessionPartnerParameter(key, value);
 #elif UNITY_ANDROID
@@ -207,6 +251,10 @@ namespace com.adjust.sdk
 
         public static void addSessionCallbackParameter(string key, string value)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.AddSessionCallbackParameter(key, value);
 #elif UNITY_ANDROID
@@ -220,6 +268,10 @@ namespace com.adjust.sdk
 
         public static void removeSessionPartnerParameter(string key)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.RemoveSessionPartnerParameter(key);
 #elif UNITY_ANDROID
@@ -233,6 +285,10 @@ namespace com.adjust.sdk
 
         public static void removeSessionCallbackParameter(string key)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.RemoveSessionCallbackParameter(key);
 #elif UNITY_ANDROID
@@ -246,6 +302,10 @@ namespace com.adjust.sdk
 
         public static void resetSessionPartnerParameters()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.ResetSessionPartnerParameters();
 #elif UNITY_ANDROID
@@ -259,6 +319,10 @@ namespace com.adjust.sdk
 
         public static void resetSessionCallbackParameters()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             AdjustiOS.ResetSessionCallbackParameters();
 #elif UNITY_ANDROID
@@ -272,6 +336,10 @@ namespace com.adjust.sdk
 
         public static string getAdid()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return string.Empty;
+#endif
 #if UNITY_IOS
             return AdjustiOS.GetAdid();
 #elif UNITY_ANDROID
@@ -286,6 +354,10 @@ namespace com.adjust.sdk
 
         public static AdjustAttribution getAttribution()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return null;
+#endif
 #if UNITY_IOS
             return AdjustiOS.GetAttribution();
 #elif UNITY_ANDROID
@@ -300,6 +372,10 @@ namespace com.adjust.sdk
 
         public static string getWinAdid()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return string.Empty;
+#endif
 #if UNITY_IOS
             Debug.Log("Adjust: Error! Windows Advertising ID is not available on iOS platform.");
             return string.Empty;
@@ -316,6 +392,10 @@ namespace com.adjust.sdk
 
         public static string getIdfa()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return string.Empty;
+#endif
 #if UNITY_IOS
             return AdjustiOS.GetIdfa();
 #elif UNITY_ANDROID
@@ -333,6 +413,10 @@ namespace com.adjust.sdk
         [Obsolete("This method is intended for testing purposes only. Do not use it.")]
         public static void setReferrer(string referrer)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             Debug.Log("Adjust: Install referrer is not available on iOS platform.");
 #elif UNITY_ANDROID
@@ -346,6 +430,10 @@ namespace com.adjust.sdk
 
         public static void getGoogleAdId(Action<string> onDeviceIdsRead)
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return;
+#endif
 #if UNITY_IOS
             Debug.Log("Adjust: Google Play Advertising ID is not available on iOS platform.");
             onDeviceIdsRead(string.Empty);
@@ -361,6 +449,10 @@ namespace com.adjust.sdk
 
         public static string getAmazonAdId()
         {
+#if UNITY_EDITOR
+			Debug.Log(errorMsgUnityEditor);
+			return string.Empty;
+#endif
 #if UNITY_IOS
             Debug.Log("Adjust: Amazon Advertising ID is not available on iOS platform.");
             return string.Empty;
