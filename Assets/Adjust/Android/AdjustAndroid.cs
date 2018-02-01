@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
+using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
@@ -14,6 +15,7 @@ namespace com.adjust.sdk
         private static bool launchDeferredDeeplink = true;
 
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+		// TODO: check whether currentActivity should be disposed after usage
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass
             ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
 
@@ -378,6 +380,14 @@ namespace com.adjust.sdk
             && adjustConfig.info3.HasValue
             && adjustConfig.info4.HasValue;
         }
+
+		public static void SetTestOptions(AdjustTestOptions testOptions)
+		{
+			// map unity AdjustTestOptions to Android AdjustTestOptions
+			// call Android's Adjust.setTestOptions with Android AdjustTestOptions as a param
+			AndroidJavaObject ajoTestOptions = testOptions.ToAndroidJavaObject (ajoCurrentActivity);
+			ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
+		}
 
         private class AttributionChangeListener : AndroidJavaProxy
         {

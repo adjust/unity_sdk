@@ -40,6 +40,9 @@ namespace com.adjust.sdk
         // Windows specific members
         internal Action<String> logDelegate;
 
+		// Integration testing members
+		internal string SdkPrefix { get; set; }
+
         public AdjustConfig(string appToken, AdjustEnvironment environment)
         {
             this.sceneName = "";
