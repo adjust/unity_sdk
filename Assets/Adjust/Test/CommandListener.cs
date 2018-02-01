@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using UnityEngine;
-using com.adjust.sdk;
+﻿using UnityEngine;
 using Newtonsoft.Json;
 
 namespace com.adjust.sdk.test
@@ -17,10 +13,8 @@ namespace com.adjust.sdk.test
 		}
 
 		public void executeCommand(string json) {
-			if (json == null) {
-				return;
-			}
-				
+			if (json == null) { return; }
+
 			Command command = JsonConvert.DeserializeObject<Command> (json);
 			_commandExecutor.ExecuteCommand(command);
 		}

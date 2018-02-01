@@ -17,12 +17,18 @@ namespace com.adjust.sdk.test
 			onCommandReceivedListener = new CommandListener(commandExecutor);
 		}
 
-		public void StartTestSession() 
+		public void StartTestSession(string testNames = null) 
 		{
 			TestApp.Log ("TestFactory -> StartTestSession()");
 
-			if (ajoTestLibrary == null) {
+			if (ajoTestLibrary == null) 
+			{
 				ajoTestLibrary = new AndroidJavaObject("com.adjust.testlibrary.TestLibrary", this.baseUrl, onCommandReceivedListener);
+			}
+
+			if (!string.IsNullOrEmpty (testNames)) 
+			{
+				ajoTestLibrary.Call("setTests", testNames);
 			}
 
 			TestApp.Log ("TestFactory -> calling testLib.startTestSession()");
@@ -34,17 +40,13 @@ namespace com.adjust.sdk.test
 			ajoTestLibrary.Call("teardown", shutdownNow);
 		}
 
-		public void SetTests(string testNames)
-		{
-			if (ajoTestLibrary == null) { return; }
-			ajoTestLibrary.Call("setTests", testNames);
-		}
-
 		public void AddInfoToSend(string key, string paramValue) {
+			if (ajoTestLibrary == null) { return; }
 			ajoTestLibrary.Call("addInfoToSend", key, paramValue);
 		}
 
 		public void SendInfoToServer(string basePath) {
+			if (ajoTestLibrary == null) { return; }
 			ajoTestLibrary.Call("sendInfoToServer", basePath);
 		}
 	}

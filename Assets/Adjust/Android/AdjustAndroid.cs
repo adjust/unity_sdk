@@ -351,7 +351,7 @@ namespace com.adjust.sdk
 
         public static void SetReferrer(string referrer)
         {
-            ajcAdjust.CallStatic("setReferrer", referrer);
+			ajcAdjust.CallStatic("setReferrer", referrer, ajoCurrentActivity);
         }
 
         public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 

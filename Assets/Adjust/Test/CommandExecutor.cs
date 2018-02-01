@@ -69,6 +69,8 @@ namespace com.adjust.sdk.test
 
 		private void TestOptions()
 		{
+			TestApp.Log ("Configuring and setting Testing Options...");
+
 			AdjustTestOptions testOptions = new AdjustTestOptions();
 			testOptions.BaseUrl = _baseUrl;
 
@@ -110,6 +112,7 @@ namespace com.adjust.sdk.test
 					{
 						testOptions.Teardown = true;
 						testOptions.BasePath = BasePath;
+						testOptions.UseTestConnectionOptions = true;
 					}
 					if (teardownOption == "deleteState")
 					{
@@ -128,6 +131,7 @@ namespace com.adjust.sdk.test
 					{
 						testOptions.Teardown = true;
 						testOptions.BasePath = null;
+						testOptions.UseTestConnectionOptions = false;
 					}
 					if (teardownOption == "test")
 					{
@@ -288,7 +292,6 @@ namespace com.adjust.sdk.test
 					if (uri == null) {
 						TestApp.Log ("DeeplinkResponse, uri = null");
 						adjustConfig.setLaunchDeferredDeeplink(false);
-						//return false;
 					}
 
 					TestApp.Log ("DeeplinkResponse, uri = " + uri.ToString ());
@@ -296,11 +299,9 @@ namespace com.adjust.sdk.test
 					if (!uri.StartsWith ("adjusttest")) 
 					{
 						adjustConfig.setLaunchDeferredDeeplink(false);
-						//return false;
 					}
 
 					adjustConfig.setLaunchDeferredDeeplink(true);
-					//return true;
 				});
 			}
 
@@ -390,87 +391,6 @@ namespace com.adjust.sdk.test
 					this._testFactory.SendInfoToServer (localBasePath);
 				});
 			}
-		}
-
-		private AdjustEvent GetEvent (JSONNode parameters)
-		{
-			AdjustEvent adjustEvent = null;
-
-			string eventToken = parameters ["eventToken"] [0].Value;
-			string revenue = parameters ["revenue"] [1].Value;
-			string currency = parameters ["revenue"] [0].Value;
-			string orderId = parameters ["orderId"] [0].Value;
-
-			JSONNode callbackParameters = parameters ["callbackParams"];
-			JSONNode partnerParameters = parameters ["partnerParams"];
-
-			if (!String.IsNullOrEmpty (eventToken)) {
-				if (eventToken.Equals ("null")) {
-					adjustEvent = new AdjustEvent (null);
-				} else {
-					adjustEvent = new AdjustEvent (eventToken);
-				}
-			}
-
-			if (!String.IsNullOrEmpty (revenue)) {
-				try {
-					float revenueValue = float.Parse (revenue, CultureInfo.InvariantCulture.NumberFormat);
-
-					if (!String.IsNullOrEmpty (currency)) {
-						if (currency.Equals ("null")) {
-							adjustEvent.setRevenue (revenueValue, null);
-						} else {
-							adjustEvent.setRevenue (revenueValue, currency);
-						}
-					}
-				} catch (Exception e) {
-					TestApp.Log ("adjust test: " + e.ToString ());
-				}
-			}
-
-			if (!String.IsNullOrEmpty (orderId)) {
-				if (orderId.Equals ("null")) {
-					adjustEvent.setTransactionId (null);
-				} else {
-					adjustEvent.setTransactionId (orderId);
-				}
-			}
-
-			if (null != callbackParameters) {
-				for (int i = 0; i < callbackParameters.Count; i += 2) {
-					string paramKey = callbackParameters [i].Value;
-					string paramValue = callbackParameters [i + 1].Value;
-
-					if (paramKey.Equals ("null")) {
-						paramKey = null;
-					}
-
-					if (paramValue.Equals ("null")) {
-						paramValue = null;
-					}
-
-					adjustEvent.addCallbackParameter (paramKey, paramValue);
-				}
-			}
-
-			if (null != partnerParameters) {
-				for (int i = 0; i < partnerParameters.Count; i += 2) {
-					string paramKey = partnerParameters [i].Value;
-					string paramValue = partnerParameters [i + 1].Value;
-
-					if (paramKey.Equals ("null")) {
-						paramKey = null;
-					}
-
-					if (paramValue.Equals ("null")) {
-						paramValue = null;
-					}
-
-					adjustEvent.addPartnerParameter (paramKey, paramValue);
-				}
-			}
-
-			return adjustEvent;
 		}
 
 		private void Start()
@@ -684,7 +604,6 @@ namespace com.adjust.sdk.test
 			Adjust.resetSessionPartnerParameters ();
 		}
 
-		//private void SetPushToken (JSONNode parameters)
 		private void SetPushToken()
 		{
 			var pushToken = Command.GetFirstParameterValue("pushToken");

@@ -24,13 +24,17 @@ namespace com.adjust.sdk.test
 		{
 			AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
 			ajoTestOptions.Set<String> ("baseUrl", BaseUrl);
-			ajoTestOptions.Set<String> ("basePath", BasePath);
+
+			if (!string.IsNullOrEmpty (BasePath)) 
+			{
+				ajoTestOptions.Set<String> ("basePath", BasePath);
+			}
 
 			if (ajoCurrentActivity != null) 
 			{
 				ajoTestOptions.Set<AndroidJavaObject> ("context", ajoCurrentActivity);
 			}
-
+				
 			if (UseTestConnectionOptions.HasValue) 
 			{
 				AndroidJavaObject ajoUseTestConnectionOptions = new AndroidJavaObject ("java.lang.Boolean", UseTestConnectionOptions.Value);
