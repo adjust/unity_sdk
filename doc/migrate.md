@@ -1,4 +1,4 @@
-## Migrate your adjust SDK for Unity3d to 4.12.0 from 3.4.4
+## Migrate your Adjust SDK for Unity3d to 4.12.1 from 3.4.4
 
 ### Migration procedure
 
@@ -7,14 +7,9 @@ adjust SDK are now moved to the `Assets/Adjust` folder, since Unity 5 allows tha
 outside of `Assets/Plugins` folder. This is done so that adjust files are no longer mixed with files you may be 
 keeping in `Assets/Plugins` folder.
 
-For migration purposes, we have prepared two Unity packages:
+For migration purposes, we have prepared the Adjust SDK uninstall script written in Python (`adjust_uninstall.py`).
 
-  * `Adjust_v4.12.0_Unity_4.unitypackage` (for Unity 4 users)
-  * `Adjust_v4.12.0_Unity_5.unitypackage` (for Unity 5 users)
-  
-and the adjust SDK uninstall script written in Python (`adjust_uninstall.py`).
-
-Migration to version 4.12.0 of our SDK requires the following steps:
+Migration to version 4.12.1 of our SDK requires the following steps:
 
 1. Copy the `adjust_uninstall.py` script to your root Unity project directory and run it. This script should
 delete all adjust source files from the previous SDK version you had.
