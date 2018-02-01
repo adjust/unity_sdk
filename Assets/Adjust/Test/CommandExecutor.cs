@@ -526,7 +526,9 @@ namespace com.adjust.sdk.test
 
 		private void SetReferrer() {
 			string referrer = Command.GetFirstParameterValue("referrer");
+			#pragma warning disable CS0618
 			Adjust.setReferrer(referrer);
+			#pragma warning restore CS0618
 		}
 
 		private void AddSessionCallbackParameter()
