@@ -10,8 +10,8 @@ namespace com.adjust.sdk.test
 		private TestFactory _testFactory;
 		private static bool _isLaunched = false;
 
-		//private string _baseUrl = "https://10.0.2.2:8443";
-		private string _baseUrl = "https://192.168.8.170:8443";
+		private string _baseUrl = "https://10.0.2.2:8443";
+		//private string _baseUrl = "https://192.168.8.170:8443";
 	
 		void OnGUI()
 		{
@@ -23,12 +23,27 @@ namespace com.adjust.sdk.test
 			}
 
 			// set specific tests to run
-			string testNames = "current/eventBuffering/Test_EventBuffering_agnostic_packets;";
-			testNames += "current/eventBuffering/Test_EventBuffering_sensitive_packets;";
+			string testNames = GetTestNames();
 
 			Log ("Starting test session...");
 			_testFactory.StartTestSession(testNames);
 			_isLaunched = true;
+		}
+
+		private string GetTestNames()
+		{
+			string testDir = "current/";
+			string testNames = "";
+
+			testNames += testDir + "referrer/Test_ReftagReferrer_before_install_killw_in_between;";
+			// push token saved before start. sdk killed and restarted - saved push token not being read
+			// error message: Adjust not initialized correctly
+			testNames += testDir + "sdkInfo/Test_PushToken_before_install_kill_in_between;";
+			// setPushToken called between start and resume
+			// sdk_info package being sent, but seems like it should not
+			testNames += testDir + "sdkInfo/Test_PushToken_between_create_and_resume;";
+
+			return testNames;
 		}
 
 		public static void Log(string message, bool useUnityDebug = false)
