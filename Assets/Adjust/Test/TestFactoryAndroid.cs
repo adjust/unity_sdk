@@ -4,14 +4,14 @@ using com.adjust.sdk;
 
 namespace com.adjust.sdk.test
 {
-	public class TestFactory {
-		private string baseUrl;
+	public class TestFactoryAndroid : ITestFactory {
+		private string _baseUrl;
 		private AndroidJavaObject ajoTestLibrary;
 
 		private static CommandListener onCommandReceivedListener;
 
-		public TestFactory(string baseUrl) {
-			this.baseUrl = baseUrl;
+		public TestFactoryAndroid(string baseUrl) {
+			_baseUrl = baseUrl;
 
 			CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl);
 			onCommandReceivedListener = new CommandListener(commandExecutor);
@@ -23,7 +23,7 @@ namespace com.adjust.sdk.test
 
 			if (ajoTestLibrary == null) 
 			{
-				ajoTestLibrary = new AndroidJavaObject("com.adjust.testlibrary.TestLibrary", this.baseUrl, onCommandReceivedListener);
+				ajoTestLibrary = new AndroidJavaObject("com.adjust.testlibrary.TestLibrary", this._baseUrl, onCommandReceivedListener);
 			}
 
 			if (!string.IsNullOrEmpty (testNames)) 

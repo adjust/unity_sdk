@@ -19,9 +19,9 @@ namespace com.adjust.sdk.test
 		private string _baseUrl;
 		public string BasePath  { get; set; }
 		public Command Command { get; set; }
-		private TestFactory _testFactory;
+		private ITestFactory _testFactory;
 
-		public CommandExecutor (TestFactory testFactory, string baseUrl)
+		public CommandExecutor (ITestFactory testFactory, string baseUrl)
 		{
 			_baseUrl = baseUrl;
 			_testFactory = testFactory;
@@ -495,7 +495,7 @@ namespace com.adjust.sdk.test
 			#elif (UNITY_WSA || UNITY_WP8)
 				AdjustWindows.OnResume();
 			#else
-				Debug.Log(errorMsgPlatform);
+				Debug.Log("TestApp - Command Executor - Error! Cannot Resume. None of the supported platforms selected.");
 			#endif
 		}
 
@@ -508,7 +508,7 @@ namespace com.adjust.sdk.test
 			#elif (UNITY_WSA || UNITY_WP8)
 				AdjustWindows.OnPause();
 			#else
-				Debug.Log(errorMsgPlatform);
+				Debug.Log("TestApp - Command Executor - Error! Cannot Pause. None of the supported platforms selected.");
 			#endif
 		}
 
