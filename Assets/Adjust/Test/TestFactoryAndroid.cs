@@ -1,53 +1,56 @@
-﻿using System;
 using UnityEngine;
-using com.adjust.sdk;
 
 namespace com.adjust.sdk.test
 {
-	public class TestFactoryAndroid : ITestFactory {
-		private string _baseUrl;
-		private AndroidJavaObject ajoTestLibrary;
+    public class TestFactoryAndroid : ITestFactory
+    {
+        private string _baseUrl;
+        private AndroidJavaObject ajoTestLibrary;
+        private CommandListener onCommandReceivedListener;
 
-		private static CommandListener onCommandReceivedListener;
+        public TestFactoryAndroid(string baseUrl)
+        {
+            _baseUrl = baseUrl;
+            CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl);
+            onCommandReceivedListener = new CommandListener(commandExecutor);
+        }
 
-		public TestFactoryAndroid(string baseUrl) {
-			_baseUrl = baseUrl;
+        public void StartTestSession(string testNames = null)
+        {
+            TestApp.Log("TestFactory -> StartTestSession()");
 
-			CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl);
-			onCommandReceivedListener = new CommandListener(commandExecutor);
-		}
+            if (ajoTestLibrary == null)
+            {
+                ajoTestLibrary = new AndroidJavaObject("com.adjust.testlibrary.TestLibrary", _baseUrl,
+                    onCommandReceivedListener);
+            }
 
-		public void StartTestSession(string testNames = null) 
-		{
-			TestApp.Log ("TestFactory -> StartTestSession()");
+            if (!string.IsNullOrEmpty(testNames))
+            {
+                ajoTestLibrary.Call("setTests", testNames);
+            }
 
-			if (ajoTestLibrary == null) 
-			{
-				ajoTestLibrary = new AndroidJavaObject("com.adjust.testlibrary.TestLibrary", this._baseUrl, onCommandReceivedListener);
-			}
+            TestApp.Log("TestFactory -> calling testLib.startTestSession()");
+            ajoTestLibrary.Call("startTestSession", "unity4.12.0@android4.12.0");
+        }
 
-			if (!string.IsNullOrEmpty (testNames)) 
-			{
-				ajoTestLibrary.Call("setTests", testNames);
-			}
+        public void Teardown(bool shutdownNow)
+        {
+            if (ajoTestLibrary == null) { return; }
+            ajoTestLibrary.Call("teardown", shutdownNow);
+        }
 
-			TestApp.Log ("TestFactory -> calling testLib.startTestSession()");
-			ajoTestLibrary.Call("startTestSession", "unity4.12.0@android4.12.0");
-		}
+        public void AddInfoToSend(string key, string paramValue)
+        {
+            if (ajoTestLibrary == null) { return; }
+            ajoTestLibrary.Call("addInfoToSend", key, paramValue);
+        }
 
-		public void Teardown(bool shutdownNow) {
-			if (ajoTestLibrary == null) { return; }
-			ajoTestLibrary.Call("teardown", shutdownNow);
-		}
-
-		public void AddInfoToSend(string key, string paramValue) {
-			if (ajoTestLibrary == null) { return; }
-			ajoTestLibrary.Call("addInfoToSend", key, paramValue);
-		}
-
-		public void SendInfoToServer(string basePath) {
-			if (ajoTestLibrary == null) { return; }
-			ajoTestLibrary.Call("sendInfoToServer", basePath);
-		}
-	}
+        public void SendInfoToServer(string basePath)
+        {
+            if (ajoTestLibrary == null) { return; }
+            ajoTestLibrary.Call("sendInfoToServer", basePath);
+        }
+    }
 }
+

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace com.adjust.sdk.test
+﻿namespace com.adjust.sdk.test
 {
 	public interface ITestFactory
 	{
