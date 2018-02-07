@@ -21,11 +21,6 @@ namespace com.adjust.sdk.test
 
 		}
 
-		public void Teardown(bool shutdownNow) {
-			//TODO:
-
-		}
-
 		public void AddInfoToSend(string key, string paramValue) {
 			//TODO: 
 

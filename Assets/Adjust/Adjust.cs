@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using com.adjust.sdk.test;
@@ -520,17 +520,16 @@ namespace com.adjust.sdk
 #endif
 		public static void SetTestOptions(AdjustTestOptions testOptions)
 		{
-			#if UNITY_IOS
-				// TODO
+#if UNITY_IOS
+			// TODO
 
-			#elif UNITY_ANDROID
-				AdjustAndroid.SetTestOptions(testOptions);
-			#elif (UNITY_WSA || UNITY_WP8)
-				// TODO
-
-			#else
-				Debug.Log("Cannot run integration tests. None of the supported platforms selected.");
-			#endif
+#elif UNITY_ANDROID
+			AdjustAndroid.SetTestOptions(testOptions);
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.SetTestOptions(testOptions);
+#else
+			Debug.Log("Cannot run integration tests. None of the supported platforms selected.");
+#endif
 		}
     }
 }

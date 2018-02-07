@@ -1,20 +1,25 @@
-﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+#if UNITY_ANDROID
 using Newtonsoft.Json;
+#endif
 
 namespace com.adjust.sdk.test
 {
 	public class Command
 	{
+#if UNITY_ANDROID
 		[JsonProperty("className")]
 		public string ClassName { get; set; }
 		[JsonProperty("functionName")]
 		public string MethodName  { get; set; }
 		[JsonProperty("params")]
 		public Dictionary<string, List<string>> Parameters  { get; set; }
-
-		public Command() {}
+#else
+        public string ClassName { get; set; }
+        public string MethodName { get; set; }
+        public Dictionary<string, List<string>> Parameters { get; set; }
+#endif
+        public Command() {}
 
 		public Command(string className, string methodName, Dictionary<string, List<string>> parameters)
 		{

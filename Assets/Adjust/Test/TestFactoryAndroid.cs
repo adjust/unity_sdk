@@ -6,13 +6,13 @@ namespace com.adjust.sdk.test
     {
         private string _baseUrl;
         private AndroidJavaObject ajoTestLibrary;
-        private CommandListener onCommandReceivedListener;
+        private CommandListenerAndroid onCommandReceivedListener;
 
         public TestFactoryAndroid(string baseUrl)
         {
             _baseUrl = baseUrl;
             CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl);
-            onCommandReceivedListener = new CommandListener(commandExecutor);
+            onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);
         }
 
         public void StartTestSession(string testNames = null)
@@ -31,13 +31,7 @@ namespace com.adjust.sdk.test
             }
 
             TestApp.Log("TestFactory -> calling testLib.startTestSession()");
-            ajoTestLibrary.Call("startTestSession", "unity4.12.0@android4.12.0");
-        }
-
-        public void Teardown(bool shutdownNow)
-        {
-            if (ajoTestLibrary == null) { return; }
-            ajoTestLibrary.Call("teardown", shutdownNow);
+            ajoTestLibrary.Call("startTestSession", TestApp.CLIENT_SDK);
         }
 
         public void AddInfoToSend(string key, string paramValue)

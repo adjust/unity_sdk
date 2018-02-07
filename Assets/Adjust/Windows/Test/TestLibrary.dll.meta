@@ -1,5 +1,7 @@
 fileFormatVersion: 2
-guid: 1c7c4091694b5032917dd5adf1ec14e2
+guid: 1f651b59f6d7dbf4a97f2aa0ce03778d
+timeCreated: 1517907974
+licenseType: Free
 PluginImporter:
   serializedVersion: 2
   iconMap: {}
@@ -13,8 +15,8 @@ PluginImporter:
       second:
         enabled: 0
         settings:
-          Exclude Android: 0
-          Exclude Editor: 0
+          Exclude Android: 1
+          Exclude Editor: 1
           Exclude Linux: 1
           Exclude Linux64: 1
           Exclude LinuxUniversal: 1
@@ -23,8 +25,9 @@ PluginImporter:
           Exclude OSXUniversal: 1
           Exclude Win: 1
           Exclude Win64: 1
-          Exclude WindowsStoreApps: 1
+          Exclude WindowsStoreApps: 0
           Exclude iOS: 1
+          Exclude tvOS: 1
     data:
       first:
         '': Editor
@@ -37,7 +40,7 @@ PluginImporter:
       first:
         Android: Android
       second:
-        enabled: 1
+        enabled: 0
         settings:
           CPU: ARMv7
     data:
@@ -50,7 +53,7 @@ PluginImporter:
       first:
         Editor: Editor
       second:
-        enabled: 1
+        enabled: 0
         settings:
           DefaultValueInitialized: true
     data:
@@ -127,7 +130,7 @@ PluginImporter:
       first:
         Windows Store Apps: WindowsStoreApps
       second:
-        enabled: 0
+        enabled: 1
         settings:
           CPU: AnyCPU
           DontProcess: False
@@ -137,6 +140,14 @@ PluginImporter:
     data:
       first:
         iPhone: iOS
+      second:
+        enabled: 0
+        settings:
+          CompileFlags: 
+          FrameworkDependencies: 
+    data:
+      first:
+        tvOS: tvOS
       second:
         enabled: 0
         settings:

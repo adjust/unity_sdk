@@ -1,10 +1,17 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+#if (UNITY_WSA || UNITY_WP8)
+using TestLibraryInterface;
+#endif
 
 namespace com.adjust.sdk.test
 {
+#if (UNITY_WSA || UNITY_WP8)
+    public class CommandExecutor : IAdjustCommandExecutor
+#else
     public class CommandExecutor
+#endif
     {
         private Dictionary<int, AdjustConfig> _savedConfigs = new Dictionary<int, AdjustConfig>();
         private Dictionary<int, AdjustEvent> _savedEvents = new Dictionary<int, AdjustEvent>();
@@ -19,14 +26,20 @@ namespace com.adjust.sdk.test
             _testFactory = testFactory;
         }
 
+#if (UNITY_WSA || UNITY_WP8)
+        public void ExecuteCommand(string className, string methodName, Dictionary<string, List<string>> parameters)
+        {
+            _command = new Command(className, methodName, parameters);
+#else
         public void ExecuteCommand(Command command)
         {
             _command = command;
-            TestApp.Log(string.Format(" \t>>> EXECUTING METHOD: [{0}.{1}] <<<", command.ClassName, command.MethodName));
+#endif
+            TestApp.Log(string.Format(" \t>>> EXECUTING METHOD: [{0}.{1}] <<<", _command.ClassName, _command.MethodName));
 
             try
             {
-                switch (command.MethodName)
+                switch (_command.MethodName)
                 {
                     case "testOptions": TestOptions(); break;
                     case "config": Config(); break;
@@ -49,7 +62,7 @@ namespace com.adjust.sdk.test
                     case "openDeeplink": OpenDeepLink(); break;
                     case "sendReferrer": SetReferrer(); break;
 
-                    default: CommandNotFound(command.ClassName, command.MethodName); break;
+                    default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
             catch (Exception ex)
@@ -211,9 +224,9 @@ namespace com.adjust.sdk.test
                 if (logLevel.HasValue)
                     adjustConfig.setLogLevel(logLevel.Value);
 
-                #if (UNITY_WSA || UNITY_WP8)
+#if (UNITY_WSA || UNITY_WP8)
                 adjustConfig.logDelegate = msg => Debug.Log(msg);
-                #endif
+#endif
 
                 _savedConfigs.Add(configNumber, adjustConfig);
             }

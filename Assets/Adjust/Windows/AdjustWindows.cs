@@ -1,4 +1,5 @@
-﻿#if UNITY_WSA
+#if UNITY_WSA
+using com.adjust.sdk.test;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -243,7 +244,23 @@ namespace com.adjust.sdk
         public static string GetWinAdId()
         {
             return AdjustWinInterface.GetWindowsAdId();
-        }    
+        }
+
+        public static void SetTestOptions(AdjustTestOptions testOptions)
+        {
+            TestLibraryInterface.TestLibraryInterface.SetTestOptions(
+                new TestLibraryInterface.AdjustTestOptionsDto
+                {
+                    BasePath = testOptions.BasePath,
+                    BaseUrl = testOptions.BaseUrl,
+                    DeleteState = testOptions.DeleteState,
+                    SessionIntervalInMilliseconds = testOptions.SessionIntervalInMilliseconds,
+                    SubsessionIntervalInMilliseconds = testOptions.SubsessionIntervalInMilliseconds,
+                    TimerIntervalInMilliseconds = testOptions.TimerIntervalInMilliseconds,
+                    TimerStartInMilliseconds = testOptions.TimerStartInMilliseconds,
+                    Teardown = testOptions.Teardown
+                });
+        }
     }
 }
 #endif
