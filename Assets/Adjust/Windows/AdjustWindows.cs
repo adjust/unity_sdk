@@ -107,6 +107,8 @@ namespace com.adjust.sdk
                 delayStartSeconds = adjustConfig.delayStart.Value;
             }
 
+            string sdkPrefix = adjustConfig.SdkPrefix == null ? SDK_PREFIX : adjustConfig.SdkPrefix;
+
             AdjustConfigDto adjustConfigDto = new AdjustConfigDto {
                 AppToken = adjustConfig.appToken,
                 Environment = environment,
