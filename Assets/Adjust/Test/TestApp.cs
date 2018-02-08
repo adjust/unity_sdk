@@ -7,20 +7,26 @@ namespace com.adjust.sdk.test
 {
 	public class TestApp : MonoBehaviour
 	{
-        public const string CLIENT_SDK = "unity4.12.0@android4.12.0";
         public static readonly string TAG = "[TestApp]";
 		private static bool _isLaunched = false;
 
 #if (UNITY_WSA || UNITY_WP8)
+	    public const string CLIENT_SDK = "unity4.12.0@wuap4.12.0";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-#else
+#elif UNITY_ANDROID
+        public const string CLIENT_SDK = "unity4.12.0@android4.12.0";
+        private const string PORT = ":8443";
+        private const string PROTOCOL = "https://";
+#elif UNITY_IOS
+        public const string CLIENT_SDK = "unity4.12.0@ios.12.0";
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
 #endif
 
         //private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;
-        private const string BASE_URL = PROTOCOL + "192.168.8.171" + PORT;
+        //private const string BASE_URL = PROTOCOL + "192.168.8.171" + PORT;
+        private const string BASE_URL = PROTOCOL + "localhost" + PORT;
 
         void OnGUI()
 		{
