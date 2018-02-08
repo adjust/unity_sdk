@@ -504,26 +504,26 @@ namespace com.adjust.sdk.test
         private void Resume()
         {
 #if UNITY_IOS
-			// No action, iOS SDK is subscribed to iOS lifecycle notifications.
+            // No action, iOS SDK is subscribed to iOS lifecycle notifications.
 #elif UNITY_ANDROID
-			AdjustAndroid.OnResume();
+            AdjustAndroid.OnResume();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.OnResume();
 #else
-			Debug.Log("TestApp - Command Executor - Error! Cannot Resume. None of the supported platforms selected.");
+            Debug.Log("TestApp - Command Executor - Error! Cannot Resume. None of the supported platforms selected.");
 #endif
         }
 
         private void Pause()
         {
 #if UNITY_IOS
-			// No action, iOS SDK is subscribed to iOS lifecycle notifications.
+            // No action, iOS SDK is subscribed to iOS lifecycle notifications.
 #elif UNITY_ANDROID
-			AdjustAndroid.OnPause();
+            AdjustAndroid.OnPause();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.OnPause();
 #else
-			Debug.Log("TestApp - Command Executor - Error! Cannot Pause. None of the supported platforms selected.");
+            Debug.Log("TestApp - Command Executor - Error! Cannot Pause. None of the supported platforms selected.");
 #endif
         }
 
