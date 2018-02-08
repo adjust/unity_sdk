@@ -1,3 +1,15 @@
+### Version 4.12.2 (8th February 2018)
+#### Fixed
+- Fixed Adjust SDK behaviour once tried to be run in `Editor` - no errors displayed anymore.
+- Fixed random crashes on iOS 10.1.x devices when trying to initialise SDK.
+
+#### Native SDKs
+- [iOS@v4.12.1][ios_sdk_v4.12.1]
+- [Android@v4.12.1][android_sdk_v4.12.1]
+- [Windows@v4.12.0][windows_sdk_v4.12.0]
+
+---
+
 ### Version 4.12.1 (1st February 2018)
 #### Native changes
 - https://github.com/adjust/android_sdk/blob/master/CHANGELOG.md#version-4121-31st-january-2018
