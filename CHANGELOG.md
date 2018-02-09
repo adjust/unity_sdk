@@ -1,4 +1,4 @@
-### Version 4.12.2 (8th February 2018)
+### Version 4.12.2 (9th February 2018)
 #### Fixed
 - Fixed Adjust SDK behaviour once tried to be run in `Editor` - no errors displayed anymore.
 - Fixed random crashes on iOS 10.1.x devices when trying to initialise SDK.
