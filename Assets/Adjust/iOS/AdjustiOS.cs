@@ -9,13 +9,16 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.12.1";
+        private const string sdkPrefix = "unity4.12.2";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
             string appToken,
             string environment,
             string sdkPrefix,
+            string userAgent,
+            string defaultTracker,
+            string sceneName,
             int allowSuppressLogLevel,
             int logLevel,
             int isDeviceKnown,
@@ -27,10 +30,7 @@ namespace com.adjust.sdk
             long info3,
             long info4,
             double delayStart,
-            string userAgent,
-            string defaultTracker,
             int launchDeferredDeeplink,
-            string sceneName,
             int isAttributionCallbackImplemented, 
             int isEventSuccessCallbackImplemented,
             int isEventFailureCallbackImplemented,
@@ -98,10 +98,10 @@ namespace com.adjust.sdk
 
         public static void Start(AdjustConfig adjustConfig)
         {
-            string appToken = adjustConfig.appToken;
-            string sceneName = adjustConfig.sceneName;
-            string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : String.Empty;
-            string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : String.Empty;
+            string appToken = adjustConfig.appToken != null ? adjustConfig.appToken : "ADJ_INVALID";
+            string sceneName = adjustConfig.sceneName != null ? adjustConfig.sceneName : "ADJ_INVALID";
+            string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : "ADJ_INVALID";
+            string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : "ADJ_INVALID";
             string environment = adjustConfig.environment.ToLowercaseString();
 
             long info1 = AdjustUtils.ConvertLong(adjustConfig.info1);
@@ -130,6 +130,9 @@ namespace com.adjust.sdk
                 appToken,
                 environment,
                 sdkPrefix,
+                userAgent,
+                defaultTracker,
+                sceneName,
                 allowSuppressLogLevel,
                 logLevel,
                 isDeviceKnown,
@@ -141,10 +144,7 @@ namespace com.adjust.sdk
                 info3,
                 info4,
                 delayStart,
-                userAgent,
-                defaultTracker,
                 launchDeferredDeeplink,
-                sceneName,
                 isAttributionCallbackImplemented,
                 isEventSuccessCallbackImplemented,
                 isEventFailureCallbackImplemented,
