@@ -17,6 +17,20 @@ namespace com.adjust.sdk.test
 
 		public TestLibraryiOS () { }
 
+		public static void StartTestSession(string clientSdk)
+		{
+			_ATLStartTestSession (clientSdk);
+		}
+
+		public static void AddInfoToSend(string key, string paramValue)
+		{
+			_ATLAddInfoToSend (key, paramValue);
+		}
+
+		public static void SendInfoToServer(string basePath)
+		{
+			_ATLSendInfoToServer (basePath);
+		}
 	}
 	#endif
 }

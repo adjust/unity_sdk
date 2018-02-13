@@ -182,10 +182,16 @@ namespace com.adjust.sdk
 
 		public static void SetTestOptions(AdjustTestOptions testOptions)
 		{
+			long timerIntervalMls = testOptions.TimerIntervalInMilliseconds.HasValue ? testOptions.TimerIntervalInMilliseconds.Value : -1;
+			long timerStartMls = testOptions.TimerStartInMilliseconds.HasValue ? testOptions.TimerStartInMilliseconds.Value : -1;
+			long sessionIntMls = testOptions.SessionIntervalInMilliseconds.HasValue ? testOptions.SessionIntervalInMilliseconds.Value : -1;
+			long subsessionIntMls = testOptions.SubsessionIntervalInMilliseconds.HasValue ? testOptions.SubsessionIntervalInMilliseconds.Value : -1;
+			bool teardown = testOptions.Teardown.HasValue ? testOptions.Teardown.Value : false;
+			bool deleteState = testOptions.DeleteState.HasValue ? testOptions.DeleteState.Value : false;
+
 			_AdjustSetTestOptions (testOptions.BaseUrl, testOptions.BasePath,
-				testOptions.TimerIntervalInMilliseconds, testOptions.TimerStartInMilliseconds,
-				testOptions.SessionIntervalInMilliseconds, testOptions.SubsessionIntervalInMilliseconds,
-				testOptions.Teardown, testOptions.DeleteState);
+				timerIntervalMls, timerStartMls, sessionIntMls, subsessionIntMls, 
+				AdjustUtils.ConvertBool(teardown), AdjustUtils.ConvertBool(deleteState));
 		}
 
         public static void SetEnabled(bool enabled)

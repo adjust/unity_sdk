@@ -14,23 +14,17 @@ namespace com.adjust.sdk.test
         public void StartTestSession(string testNames = null) 
         {
             TestApp.Log ("TestFactory -> StartTestSession()");
-            // TODO:
-
-            TestApp.Log ("TestFactory -> calling testLib.startTestSession()");
-            //TODO: 
-
+			TestLibraryiOS.StartTestSession (TestApp.CLIENT_SDK);
         }
 
         public void AddInfoToSend(string key, string paramValue) 
         {
-            //TODO: 
-
+			TestLibraryiOS.AddInfoToSend (key, paramValue);
         }
 
         public void SendInfoToServer(string basePath) 
         {
-            //TODO: 
-
+			TestLibraryiOS.SendInfoToServer (basePath);
         }
     }
 }

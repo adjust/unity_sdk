@@ -520,15 +520,17 @@ namespace com.adjust.sdk
 #endif
 		public static void SetTestOptions(AdjustTestOptions testOptions)
 		{
-#if UNITY_IOS
-			AdjustiOS.SetTestOptions(testOptions);
-#elif UNITY_ANDROID
-			AdjustAndroid.SetTestOptions(testOptions);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.SetTestOptions(testOptions);
-#else
-			Debug.Log("Cannot run integration tests. None of the supported platforms selected.");
-#endif
+			if (Application.isEditor) { return; }
+
+	        #if UNITY_IOS
+				AdjustiOS.SetTestOptions(testOptions);
+	        #elif UNITY_ANDROID
+				AdjustAndroid.SetTestOptions(testOptions);
+	        #elif (UNITY_WSA || UNITY_WP8)
+	            AdjustWindows.SetTestOptions(testOptions);
+	        #else
+				Debug.Log("Cannot run integration tests. None of the supported platforms selected.");
+	        #endif
 		}
     }
 }
