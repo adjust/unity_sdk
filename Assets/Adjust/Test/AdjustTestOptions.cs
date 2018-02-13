@@ -20,6 +20,7 @@ namespace com.adjust.sdk.test
         // default value => Constants.ONE_SECOND;
         public long? SubsessionIntervalInMilliseconds { get; set; }
 
+#if UNITY_ANDROID
         public AndroidJavaObject ToAndroidJavaObject(AndroidJavaObject ajoCurrentActivity)
         {
             AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
@@ -73,6 +74,7 @@ namespace com.adjust.sdk.test
 
             return ajoTestOptions;
         }
+#endif
     }
 }
 

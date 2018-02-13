@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
+using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
@@ -48,6 +49,17 @@ namespace com.adjust.sdk
             int isReceiptSet,
             string jsonCallbackParameters,
             string jsonPartnerParameters);
+
+		[DllImport("__Internal")]
+		private static extern void _AdjustSetTestOptions(
+			string baseUrl, 
+			string basePath, 
+			long timerIntervalInMilliseconds,
+			long timerStartInMilliseconds,
+			long sessionIntervalInMilliseconds,
+			long subsessionIntervalInMilliseconds,
+			int teardown,
+			int deleteState);
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetEnabled(int enabled);
@@ -167,6 +179,14 @@ namespace com.adjust.sdk
 
             _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
         }
+
+		public static void SetTestOptions(AdjustTestOptions testOptions)
+		{
+			_AdjustSetTestOptions (testOptions.BaseUrl, testOptions.BasePath,
+				testOptions.TimerIntervalInMilliseconds, testOptions.TimerStartInMilliseconds,
+				testOptions.SessionIntervalInMilliseconds, testOptions.SubsessionIntervalInMilliseconds,
+				testOptions.Teardown, testOptions.DeleteState);
+		}
 
         public static void SetEnabled(bool enabled)
         {

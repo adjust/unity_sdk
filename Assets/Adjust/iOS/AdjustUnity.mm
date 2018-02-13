@@ -236,6 +236,42 @@ extern "C"
         [Adjust trackEvent:event];
     }
 
+    // + (void)setTestOptions:(nullable AdjustTestOptions *)testOptions;
+    void _AdjustSetTestOptions(
+        const char* baseUrl, 
+        const char* basePath, 
+        long timerIntervalInMilliseconds,
+        long timerStartInMilliseconds,
+        long sessionIntervalInMilliseconds,
+        long subsessionIntervalInMilliseconds,
+        int teardown,
+        int deleteState) {
+        AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
+
+        NSString *stringBaseUrl = [NSString stringWithUTF8String:baseUrl];
+        [testOptions setBaseUrl:stringBaseUrl];
+        
+        NSString *stringBasePath = [NSString stringWithUTF8String:basePath];
+        if (stringBasePath != NULL && [stringBasePath length] > 0) {
+            [testOptions setBasePath:stringBasePath];
+        }
+
+        testOptions.timerIntervalInMilliseconds = timerIntervalInMilliseconds;
+        testOptions.timerStartInMilliseconds = timerStartInMilliseconds;
+        testOptions.sessionIntervalInMilliseconds = sessionIntervalInMilliseconds;
+        testOptions.subsessionIntervalInMilliseconds = subsessionIntervalInMilliseconds;
+
+        if (teardown != -1) {
+            [testOptions setTeardown:(BOOL)teardown];
+        }
+
+        if (deleteState != -1) {
+            [testOptions setDeleteState:(BOOL)deleteState];
+        }
+
+        [Adjust setTestOptions:testOptions];
+    }
+
     void _AdjustSetEnabled(int enabled) {
         BOOL bEnabled = (BOOL)enabled;
 

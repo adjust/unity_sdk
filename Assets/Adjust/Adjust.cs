@@ -521,8 +521,7 @@ namespace com.adjust.sdk
 		public static void SetTestOptions(AdjustTestOptions testOptions)
 		{
 #if UNITY_IOS
-			// TODO
-
+			AdjustiOS.SetTestOptions(testOptions);
 #elif UNITY_ANDROID
 			AdjustAndroid.SetTestOptions(testOptions);
 #elif (UNITY_WSA || UNITY_WP8)

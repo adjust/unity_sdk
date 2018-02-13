@@ -25,16 +25,16 @@ namespace com.adjust.sdk.test
             _baseUrl = baseUrl;
             _testFactory = testFactory;
         }
+			
+		public void ExecuteCommand(string className, string methodName, Dictionary<string, List<string>> parameters)
+		{
+			this.ExecuteCommand (new Command (className, methodName, parameters));
+		}
 
-#if (UNITY_WSA || UNITY_WP8)
-        public void ExecuteCommand(string className, string methodName, Dictionary<string, List<string>> parameters)
-        {
-            _command = new Command(className, methodName, parameters);
-#else
         public void ExecuteCommand(Command command)
         {
             _command = command;
-#endif
+
             TestApp.Log(string.Format(" \t>>> EXECUTING METHOD: [{0}.{1}] <<<", _command.ClassName, _command.MethodName));
 
             try

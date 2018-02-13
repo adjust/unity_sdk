@@ -21,12 +21,14 @@ namespace com.adjust.sdk.test
 
         }
 
-        public void AddInfoToSend(string key, string paramValue) {
+        public void AddInfoToSend(string key, string paramValue) 
+        {
             //TODO: 
 
         }
 
-        public void SendInfoToServer(string basePath) {
+        public void SendInfoToServer(string basePath) 
+        {
             //TODO: 
 
         }

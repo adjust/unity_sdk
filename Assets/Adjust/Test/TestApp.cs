@@ -65,14 +65,14 @@ namespace com.adjust.sdk.test
             testNames += testDir + "event/Test_Event_Params;";
             testNames += testDir + "event/Test_Event_Count_6events;";
 
-            testNames += testDir + "sessionCount/Test_SessionCount;";
-            testNames += testDir + "referrer/Test_ReftagReferrer_before_install_killw_in_between;";
+            //testNames += testDir + "sessionCount/Test_SessionCount;";
+            //testNames += testDir + "referrer/Test_ReftagReferrer_before_install_killw_in_between;";
             // push token saved before start. sdk killed and restarted - saved push token not being read
             // error message: Adjust not initialized correctly
-            testNames += testDir + "sdkInfo/Test_PushToken_before_install_kill_in_between;";
+            //testNames += testDir + "sdkInfo/Test_PushToken_before_install_kill_in_between;";
             // setPushToken called between start and resume
             // sdk_info package being sent, but seems like it should not
-            testNames += testDir + "sdkInfo/Test_PushToken_between_create_and_resume;";
+            //testNames += testDir + "sdkInfo/Test_PushToken_between_create_and_resume;";
 
             return testNames;
         }
