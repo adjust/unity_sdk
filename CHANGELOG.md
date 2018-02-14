@@ -1,3 +1,17 @@
+### Version 4.12.3 (14th February 2018)
+#### Native changes
+- https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4122-13th-february-2018
+
+#### Fixed
+- Fixed Unity and Objective-C data types alignment issues and improved support for 32-bit CPU types (https://github.com/adjust/unity_sdk/issues/123 and special thanks to @alexeSGN).
+
+#### Native SDKs
+- [iOS@v4.12.2][ios_sdk_v4.12.2]
+- [Android@v4.12.1][android_sdk_v4.12.1]
+- [Windows@v4.12.0][windows_sdk_v4.12.0]
+
+---
+
 ### Version 4.12.2 (9th February 2018)
 #### Fixed
 - Fixed Adjust SDK behaviour once tried to be run in `Editor` - no errors displayed anymore.
@@ -433,6 +447,7 @@
 [ios_sdk_v4.11.4]: https://github.com/adjust/ios_sdk/tree/v4.11.4
 [ios_sdk_v4.11.5]: https://github.com/adjust/ios_sdk/tree/v4.11.5
 [ios_sdk_v4.12.1]: https://github.com/adjust/ios_sdk/tree/v4.12.1
+[ios_sdk_v4.12.2]: https://github.com/adjust/ios_sdk/tree/v4.12.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
