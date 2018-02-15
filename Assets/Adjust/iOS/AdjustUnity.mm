@@ -256,10 +256,10 @@ extern "C"
             [testOptions setBasePath:stringBasePath];
         }
 
-        testOptions.timerIntervalInMilliseconds = timerIntervalInMilliseconds;
-        testOptions.timerStartInMilliseconds = timerStartInMilliseconds;
-        testOptions.sessionIntervalInMilliseconds = sessionIntervalInMilliseconds;
-        testOptions.subsessionIntervalInMilliseconds = subsessionIntervalInMilliseconds;
+        testOptions.timerIntervalInMilliseconds = [NSNumber numberWithLong:timerIntervalInMilliseconds];
+        testOptions.timerStartInMilliseconds = [NSNumber numberWithLong:timerStartInMilliseconds];
+        testOptions.sessionIntervalInMilliseconds = [NSNumber numberWithLong:sessionIntervalInMilliseconds];
+        testOptions.subsessionIntervalInMilliseconds = [NSNumber numberWithLong:subsessionIntervalInMilliseconds];
 
         if (teardown != -1) {
             [testOptions setTeardown:(BOOL)teardown];

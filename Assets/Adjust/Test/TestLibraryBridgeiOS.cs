@@ -4,8 +4,11 @@ using System.Runtime.InteropServices;
 namespace com.adjust.sdk.test
 {
 	#if UNITY_IOS
-	public class TestLibraryiOS
+	public static class TestLibraryBridgeiOS
 	{
+		[DllImport("__Internal")]
+		private static extern void _ATLInitialize(string baseUrl);
+
 		[DllImport("__Internal")]
 		private static extern void _ATLStartTestSession(string clientSdk);
 
@@ -15,7 +18,10 @@ namespace com.adjust.sdk.test
 		[DllImport("__Internal")]
 		private static extern void _ATLSendInfoToServer(string basePath);
 
-		public TestLibraryiOS () { }
+		public static void Initialize(string baseUrl)
+		{
+			_ATLInitialize(baseUrl);
+		}
 
 		public static void StartTestSession(string clientSdk)
 		{

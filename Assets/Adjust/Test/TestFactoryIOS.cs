@@ -1,31 +1,39 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace com.adjust.sdk.test
 {
     public class TestFactoryIOS : ITestFactory
     {
-        private string _baseUrl;
+		private CommandExecutor _commandExecutor;
 
         public TestFactoryIOS (string baseUrl)
         {
-            _baseUrl = baseUrl;
+			_commandExecutor = new CommandExecutor(this, baseUrl);
+			TestLibraryBridgeiOS.Initialize(baseUrl);
         }
 
         public void StartTestSession(string testNames = null) 
         {
             TestApp.Log ("TestFactory -> StartTestSession()");
-			TestLibraryiOS.StartTestSession (TestApp.CLIENT_SDK);
+			TestLibraryBridgeiOS.StartTestSession (TestApp.CLIENT_SDK);
         }
 
         public void AddInfoToSend(string key, string paramValue) 
         {
-			TestLibraryiOS.AddInfoToSend (key, paramValue);
+			TestLibraryBridgeiOS.AddInfoToSend (key, paramValue);
         }
 
         public void SendInfoToServer(string basePath) 
         {
-			TestLibraryiOS.SendInfoToServer (basePath);
+			TestLibraryBridgeiOS.SendInfoToServer (basePath);
         }
+
+		public void ExecuteCommand(string commandJson)
+		{
+			Command command = JsonConvert.DeserializeObject<Command> (commandJson);
+			_commandExecutor.ExecuteCommand (command);
+		}
     }
 }
 

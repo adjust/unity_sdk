@@ -22,6 +22,8 @@ namespace com.adjust.sdk.test
         public const string CLIENT_SDK = "unity4.12.0@ios.12.0";
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
+
+		private TestFactoryIOS _testFactoryiOS;
 #endif
 
         //private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;
@@ -33,6 +35,10 @@ namespace com.adjust.sdk.test
             if (_isLaunched) { return; }
 
             ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
+
+			#if UNITY_IOS
+			_testFactoryiOS = testFactory as TestFactoryIOS;
+			#endif
 
             // set specific tests to run
             string testNames = GetTestNames();
@@ -55,6 +61,13 @@ namespace com.adjust.sdk.test
             Debug.Log("Cannot run integration tests (Error in TestApp.GetPlatformSpecificTestLibrary(...)). None of the supported platforms selected.");
 #endif
         }
+
+#if UNITY_IOS
+		public void ExecuteCommand(string commandJson)
+        {
+			_testFactoryiOS.ExecuteCommand (commandJson);
+        }
+#endif
 
         private string GetTestNames()
         {
