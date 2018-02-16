@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-#if UNITY_ANDROID
+#if  (UNITY_ANDROID || UNITY_IOS)
 using Newtonsoft.Json;
 #endif
 
@@ -7,7 +7,7 @@ namespace com.adjust.sdk.test
 {
     public class Command
     {
-#if UNITY_ANDROID
+#if  (UNITY_ANDROID || UNITY_IOS)
         [JsonProperty("className")]
         public string ClassName { get; set; }
         [JsonProperty("functionName")]

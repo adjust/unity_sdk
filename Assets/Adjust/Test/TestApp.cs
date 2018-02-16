@@ -15,20 +15,21 @@ namespace com.adjust.sdk.test
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
 #elif UNITY_ANDROID
-        public const string CLIENT_SDK = "unity4.12.0@android4.12.0";
+        public const string CLIENT_SDK = "unity4.12.2@android4.12.2";
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
 #elif UNITY_IOS
-        public const string CLIENT_SDK = "unity4.12.0@ios.12.0";
-        private const string PORT = ":8443";
-        private const string PROTOCOL = "https://";
+        public const string CLIENT_SDK = "unity4.12.2@ios4.12.2";
+		private const string PORT = ":8080";
+        private const string PROTOCOL = "http://";
 
 		private TestFactoryIOS _testFactoryiOS;
 #endif
 
-        //private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;
-        //private const string BASE_URL = PROTOCOL + "192.168.8.171" + PORT;
-        private const string BASE_URL = PROTOCOL + "localhost" + PORT;
+        //private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;  		// android simulator
+		//private const string BASE_URL = PROTOCOL + "localhost" + PORT;		// windows simulator
+		private const string BASE_URL = PROTOCOL + "192.168.8.95" + PORT;		// over WiFi
+		//private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;		// iOS simulator
 
         void OnGUI()
         {
