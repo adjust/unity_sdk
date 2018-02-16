@@ -1,4 +1,4 @@
-### Version 4.12.3 (14th February 2018)
+### Version 4.12.3 (17th February 2018)
 #### Native changes
 - https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4122-13th-february-2018
 
