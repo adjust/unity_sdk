@@ -274,6 +274,16 @@ extern "C"
         [Adjust setTestOptions:testOptions];
     }
 
+    void _AdjustTrackSubsessionStart() {
+        NSLog(@"Telling adjust that the application resumed...");
+        [Adjust trackSubsessionStart];
+    }
+
+    void _AdjustTrackSubsessionEnd() {
+        NSLog(@"Telling adjust that the application paused...");
+        [Adjust trackSubsessionEnd];
+    }
+
     void _AdjustSetEnabled(int enabled) {
         BOOL bEnabled = (BOOL)enabled;
 

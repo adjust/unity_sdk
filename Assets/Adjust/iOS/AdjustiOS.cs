@@ -106,6 +106,12 @@ namespace com.adjust.sdk
         [DllImport("__Internal")]
         private static extern void _AdjustResetSessionCallbackParameters();
 
+		[DllImport("__Internal")]
+		private static extern void _AdjustTrackSubsessionStart();
+
+		[DllImport("__Internal")]
+		private static extern void _AdjustTrackSubsessionEnd();
+
         public AdjustiOS() {}
 
         public static void Start(AdjustConfig adjustConfig)
@@ -280,6 +286,16 @@ namespace com.adjust.sdk
 
             return attribution;
         }
+
+		public static void TrackSubsessionStart()
+		{
+			_AdjustTrackSubsessionStart ();
+		}
+
+		public static void TrackSubsessionEnd()
+		{
+			_AdjustTrackSubsessionEnd ();
+		}
     }
 #endif
 }

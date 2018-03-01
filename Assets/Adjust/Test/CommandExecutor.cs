@@ -504,7 +504,7 @@ namespace com.adjust.sdk.test
         private void Resume()
         {
 #if UNITY_IOS
-            // No action, iOS SDK is subscribed to iOS lifecycle notifications.
+			AdjustiOS.TrackSubsessionStart();
 #elif UNITY_ANDROID
             AdjustAndroid.OnResume();
 #elif (UNITY_WSA || UNITY_WP8)
@@ -517,7 +517,7 @@ namespace com.adjust.sdk.test
         private void Pause()
         {
 #if UNITY_IOS
-            // No action, iOS SDK is subscribed to iOS lifecycle notifications.
+			AdjustiOS.TrackSubsessionEnd();
 #elif UNITY_ANDROID
             AdjustAndroid.OnPause();
 #elif (UNITY_WSA || UNITY_WP8)
