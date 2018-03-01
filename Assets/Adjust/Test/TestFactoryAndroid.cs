@@ -15,7 +15,7 @@ namespace com.adjust.sdk.test
             onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);
         }
 
-        public void StartTestSession(string testNames = null)
+        public void StartTestSession()
         {
             TestApp.Log("TestFactory -> StartTestSession()");
 
@@ -23,11 +23,6 @@ namespace com.adjust.sdk.test
             {
                 ajoTestLibrary = new AndroidJavaObject("com.adjust.testlibrary.TestLibrary", _baseUrl,
                     onCommandReceivedListener);
-            }
-
-            if (!string.IsNullOrEmpty(testNames))
-            {
-                ajoTestLibrary.Call("setTests", testNames);
             }
 
             TestApp.Log("TestFactory -> calling testLib.startTestSession()");
@@ -45,6 +40,18 @@ namespace com.adjust.sdk.test
             if (ajoTestLibrary == null) { return; }
             ajoTestLibrary.Call("sendInfoToServer", basePath);
         }
+
+		public void AddTest(string testName)
+		{
+			if (ajoTestLibrary == null) { return; }
+			ajoTestLibrary.Call("addTest", testName);
+		}
+
+		public void AddTestDirectory(string testDirectory)
+		{
+			if (ajoTestLibrary == null) { return; }
+			ajoTestLibrary.Call("addTestDirectory", testDirectory);
+		}
     }
 }
 

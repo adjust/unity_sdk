@@ -18,9 +18,11 @@ namespace com.adjust.sdk.test
             _testLibraryInterface.Init(adjustCommandExecutor, baseUrl, UnityEngine.Debug.Log);
         }
 
-        public void StartTestSession(string testNames = null)
+        public void StartTestSession()
         {
             TestApp.Log("TestFactory -> StartTestSession()");
+			// TODO: add possibility to add specific tests and/or test dirs to WinSDK Bridge
+			string testNames = null;
             _testLibraryInterface.StartTestSession(TestApp.CLIENT_SDK, testNames);
         }
 
@@ -33,7 +35,24 @@ namespace com.adjust.sdk.test
         {
             _testLibraryInterface.SendInfoToServer(basePath);
         }
+
+		public void AddTest(string testName)
+		{
+			// TODO:
+			throw new NotImplementedException ();
+		}
+
+		public void AddTestDirectory(string testDirectory)
+		{
+			// TODO:
+			throw new NotImplementedException ();
+		}
 #else
+		public void StartTestSession()
+		{
+			throw new NotImplementedException();
+		}
+			
         public void AddInfoToSend(string key, string paramValue)
         {
             throw new NotImplementedException();
@@ -44,10 +63,15 @@ namespace com.adjust.sdk.test
             throw new NotImplementedException();
         }
 
-        public void StartTestSession(string testNames = null)
-        {
-            throw new NotImplementedException();
-        }
+		public void AddTest(string testName)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void AddTestDirectory(string testDirectory)
+		{
+			throw new NotImplementedException ();
+		}
 #endif
     }
 }

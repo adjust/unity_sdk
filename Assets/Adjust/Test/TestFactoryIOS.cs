@@ -13,7 +13,7 @@ namespace com.adjust.sdk.test
 			TestLibraryBridgeiOS.Initialize(baseUrl);
         }
 
-        public void StartTestSession(string testNames = null) 
+        public void StartTestSession() 
         {
             TestApp.Log ("TestFactory -> StartTestSession()");
 			TestLibraryBridgeiOS.StartTestSession (TestApp.CLIENT_SDK);
@@ -33,6 +33,16 @@ namespace com.adjust.sdk.test
 		{
 			Command command = JsonConvert.DeserializeObject<Command> (commandJson);
 			_commandExecutor.ExecuteCommand (command);
+		}
+
+		public void AddTest(string testName)
+		{
+			TestLibraryBridgeiOS.AddTest(testName);
+		}
+
+		public void AddTestDirectory(string testDirectory)
+		{
+			TestLibraryBridgeiOS.AddTestDirectory(testDirectory);
 		}
     }
 }

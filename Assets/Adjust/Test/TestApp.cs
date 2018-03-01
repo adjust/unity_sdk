@@ -1,4 +1,4 @@
-#if UNITY_ANDROID
+#if (UNITY_ANDROID || UNITY_IOS)
 using System;
 #endif
 using UnityEngine;
@@ -25,11 +25,10 @@ namespace com.adjust.sdk.test
 
 		private TestFactoryIOS _testFactoryiOS;
 #endif
-
         //private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;  		// android simulator
 		//private const string BASE_URL = PROTOCOL + "localhost" + PORT;		// windows simulator
-		private const string BASE_URL = PROTOCOL + "192.168.8.95" + PORT;		// over WiFi
-		//private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;		// iOS simulator
+		private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;			// iOS simulator
+		//private const string BASE_URL = PROTOCOL + "192.168.8.186" + PORT;	// over WiFi
 
         void OnGUI()
         {
@@ -41,12 +40,12 @@ namespace com.adjust.sdk.test
 			_testFactoryiOS = testFactory as TestFactoryIOS;
 			#endif
 
-            // set specific tests to run
-            string testNames = GetTestNames();
-            //testNames = null;
+			// set specific tests to run
+			// test fails - last session not being sent, which makes the test to timeout
+			testFactory.AddTest ("current/eventBuffering/Test_EventBuffering_sensitive_packets");
 
-            Log ("Starting test session...");
-            testFactory.StartTestSession(testNames);
+			Log ("Starting test session...");
+            testFactory.StartTestSession();
             _isLaunched = true;
         }
 
@@ -69,28 +68,6 @@ namespace com.adjust.sdk.test
 			_testFactoryiOS.ExecuteCommand (commandJson);
         }
 #endif
-
-        private string GetTestNames()
-        {
-            string testDir = "current/";
-            string testNames = "";
-
-            testNames += testDir + "event/Test_Event_OrderId;";
-            testNames += testDir + "event/Test_Event_Params;";
-            testNames += testDir + "event/Test_Event_Count_6events;";
-
-            //testNames += testDir + "sessionCount/Test_SessionCount;";
-            //testNames += testDir + "referrer/Test_ReftagReferrer_before_install_killw_in_between;";
-            // push token saved before start. sdk killed and restarted - saved push token not being read
-            // error message: Adjust not initialized correctly
-            //testNames += testDir + "sdkInfo/Test_PushToken_before_install_kill_in_between;";
-            // setPushToken called between start and resume
-            // sdk_info package being sent, but seems like it should not
-            //testNames += testDir + "sdkInfo/Test_PushToken_between_create_and_resume;";
-
-            return testNames;
-        }
-
         public static void Log(string message, bool useUnityDebug = false)
         {
 #if UNITY_ANDROID

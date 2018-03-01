@@ -171,7 +171,7 @@ extern "C"
                            int isReceiptSet,
                            const char* jsonCallbackParameters,
                            const char* jsonPartnerParameters) {
-        NSString *stringEventToken = [NSString stringWithUTF8String:eventToken];
+        NSString *stringEventToken = isStringValid(eventToken) == true ? [NSString stringWithUTF8String:eventToken] : nil;
 
         ADJEvent *event = [ADJEvent eventWithEventToken:stringEventToken];
 
@@ -248,11 +248,13 @@ extern "C"
         int deleteState) {
         AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
 
-        NSString *stringBaseUrl = [NSString stringWithUTF8String:baseUrl];
-        [testOptions setBaseUrl:stringBaseUrl];
+        NSString *stringBaseUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:baseUrl] : nil;
+        if(stringBaseUrl != nil) {
+            [testOptions setBaseUrl:stringBaseUrl];
+        }
         
-        NSString *stringBasePath = [NSString stringWithUTF8String:basePath];
-        if (stringBasePath != NULL && [stringBasePath length] > 0) {
+        NSString *stringBasePath = isStringValid(basePath) == true ? [NSString stringWithUTF8String:basePath] : nil;
+        if (stringBasePath != nil && [stringBasePath length] > 0) {
             [testOptions setBasePath:stringBasePath];
         }
 

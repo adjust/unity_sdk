@@ -18,6 +18,12 @@ namespace com.adjust.sdk.test
 		[DllImport("__Internal")]
 		private static extern void _ATLSendInfoToServer(string basePath);
 
+		[DllImport("__Internal")]
+		private static extern void _ATLAddTest(string testName);
+
+		[DllImport("__Internal")]
+		private static extern void _ATLAddTestDirectory(string testDirectory);
+
 		public static void Initialize(string baseUrl)
 		{
 			_ATLInitialize(baseUrl);
@@ -36,6 +42,16 @@ namespace com.adjust.sdk.test
 		public static void SendInfoToServer(string basePath)
 		{
 			_ATLSendInfoToServer (basePath);
+		}
+
+		public static void AddTest(string testName)
+		{
+			_ATLAddTest(testName);
+		}
+
+		public static void AddTestDirectory(string testDirectory)
+		{
+			_ATLAddTestDirectory(testDirectory);
 		}
 	}
 	#endif

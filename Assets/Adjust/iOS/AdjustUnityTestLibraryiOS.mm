@@ -42,4 +42,16 @@ extern "C"
 
 		[testLibrary sendInfoToServer:stringBasePath];
 	}
+
+	void _ATLAddTest(const char* testName) {
+		NSString *stringTestName = [NSString stringWithUTF8String:testName];
+
+		[testLibrary addTest:stringTestName];	
+	}
+
+	void _ATLAddTestDirectory(const char* testDirectory) {
+		NSString *stringTestDirectory = [NSString stringWithUTF8String:testDirectory];
+		
+		[testLibrary addTestDirectory:stringTestDirectory];	
+	}
 }

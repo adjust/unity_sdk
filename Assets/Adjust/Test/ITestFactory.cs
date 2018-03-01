@@ -2,9 +2,11 @@
 {
     public interface ITestFactory
     {
-        void StartTestSession(string testNames = null);
+        void StartTestSession();
         void AddInfoToSend(string key, string paramValue);
         void SendInfoToServer(string basePath);
+		void AddTest (string testName);
+		void AddTestDirectory (string testDirectory);
     }
 }
 
