@@ -1,3 +1,15 @@
+### Version 4.12.3 (9th March 2018)
+#### Fixed
+- Fixed JNI exception occurences upon triggering session/event failure callbacks when `Performance Reporting` is turned ON while building Android app (https://github.com/adjust/unity_sdk/issues/126).
+- Changed target platform for iOS source files and static library to iOS only (https://github.com/adjust/unity_sdk/issues/128).
+
+#### Native SDKs
+- [iOS@v4.12.3][ios_sdk_v4.12.3]
+- [Android@v4.12.4][android_sdk_v4.12.4]
+- [Windows@v4.12.0][windows_sdk_v4.12.0]
+
+---
+
 ### Version 4.12.3 (17th February 2018)
 #### Native changes
 - https://github.com/adjust/ios_sdk/blob/master/CHANGELOG.md#version-4122-13th-february-2018
@@ -448,6 +460,7 @@
 [ios_sdk_v4.11.5]: https://github.com/adjust/ios_sdk/tree/v4.11.5
 [ios_sdk_v4.12.1]: https://github.com/adjust/ios_sdk/tree/v4.12.1
 [ios_sdk_v4.12.2]: https://github.com/adjust/ios_sdk/tree/v4.12.2
+[ios_sdk_v4.12.3]: https://github.com/adjust/ios_sdk/tree/v4.12.3
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -462,5 +475,6 @@
 [android_sdk_v4.11.4]: https://github.com/adjust/android_sdk/tree/v4.11.4
 [android_sdk_v4.12.0]: https://github.com/adjust/android_sdk/tree/v4.12.0
 [android_sdk_v4.12.1]: https://github.com/adjust/android_sdk/tree/v4.12.1
+[android_sdk_v4.12.4]: https://github.com/adjust/android_sdk/tree/v4.12.4
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
