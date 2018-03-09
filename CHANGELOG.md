@@ -1,4 +1,4 @@
-### Version 4.12.3 (17th February 2018)
+### Version 4.12.3 (9th March 2018)
 #### Fixed
 - Fixed JNI exception occurences upon triggering session/event failure callbacks when `Performance Reporting` is turned ON while building Android app (https://github.com/adjust/unity_sdk/issues/126).
 - Changed target platform for iOS source files and static library to iOS only (https://github.com/adjust/unity_sdk/issues/128).
