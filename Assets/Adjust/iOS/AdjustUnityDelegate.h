@@ -23,4 +23,6 @@
 					 shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
 					     withAdjustUnitySceneName:(NSString *)adjustUnitySceneName;
 
++ (void)teardown;
+
 @end

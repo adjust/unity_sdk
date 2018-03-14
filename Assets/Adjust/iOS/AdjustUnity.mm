@@ -264,6 +264,7 @@ extern "C"
         testOptions.subsessionIntervalInMilliseconds = [NSNumber numberWithLong:subsessionIntervalInMilliseconds];
 
         if (teardown != -1) {
+            [AdjustUnityDelegate teardown];
             [testOptions setTeardown:(BOOL)teardown];
         }
 

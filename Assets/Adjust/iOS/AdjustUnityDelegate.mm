@@ -9,6 +9,9 @@
 #import <objc/runtime.h>
 #import "AdjustUnityDelegate.h"
 
+static dispatch_once_t onceToken;
+static AdjustUnityDelegate *defaultInstance = nil;
+
 @implementation AdjustUnityDelegate
 
 + (id)getInstanceWithSwizzleOfAttributionCallback:(BOOL)swizzleAttributionCallback
@@ -19,8 +22,6 @@
                          deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
                      shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
                          withAdjustUnitySceneName:(NSString *)adjustUnitySceneName {
-    static dispatch_once_t onceToken;
-    static AdjustUnityDelegate *defaultInstance = nil;
     
     dispatch_once(&onceToken, ^{
         defaultInstance = [[AdjustUnityDelegate alloc] init];
@@ -230,6 +231,11 @@
     } else {
         [dictionary setObject:@"" forKey:key];
     }
+}
+
++ (void)teardown {
+    defaultInstance = nil;
+    onceToken = 0;
 }
 
 @end
