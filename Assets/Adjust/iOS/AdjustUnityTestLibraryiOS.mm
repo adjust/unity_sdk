@@ -32,9 +32,13 @@ extern "C"
 
 	void _ATLAddInfoToSend(const char* key, const char* paramValue) {
 		NSString *stringKey = [NSString stringWithUTF8String:key];
-		NSString *stringValue = [NSString stringWithUTF8String:paramValue];
 
-		[testLibrary addInfoToSend:stringKey value:stringValue];
+		if (paramValue == NULL) {
+	        [testLibrary addInfoToSend:stringKey value:nil];
+	    } else {
+			NSString *stringValue = [NSString stringWithUTF8String:paramValue];
+			[testLibrary addInfoToSend:stringKey value:stringValue];
+		}
 	}
 
 	void _ATLSendInfoToServer(const char* basePath) {
