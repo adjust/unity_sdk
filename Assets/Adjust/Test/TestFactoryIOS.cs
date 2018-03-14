@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 
 namespace com.adjust.sdk.test
 {
     public class TestFactoryIOS : ITestFactory
     {
-		private CommandExecutor _commandExecutor;
+#if UNITY_IOS
+        private CommandExecutor _commandExecutor;
 
         public TestFactoryIOS (string baseUrl)
         {
@@ -44,6 +45,32 @@ namespace com.adjust.sdk.test
 		{
 			TestLibraryBridgeiOS.AddTestDirectory(testDirectory);
 		}
+#else
+        public void AddInfoToSend(string key, string paramValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddTest(string testName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddTestDirectory(string testDirectory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendInfoToServer(string basePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartTestSession()
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }
 

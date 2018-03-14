@@ -1,8 +1,7 @@
 #if (UNITY_WSA || UNITY_WP8)
 using TestLibraryInterface;
-#else
-using System;
 #endif
+using System;
 
 namespace com.adjust.sdk.test
 {
