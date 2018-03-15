@@ -6,6 +6,7 @@ namespace com.adjust.sdk
 {
     public class Adjust : MonoBehaviour
     {
+        private const string errorMsgEditor = "Adjust: SDK can not be used in Editor.";
         private const string errorMsgStart = "Adjust: SDK not started. Start it manually using the 'start' method.";
         private const string errorMsgPlatform = "Adjust: SDK can only be used in Android, iOS, Windows Phone 8.1, Windows Store or Universal Windows apps.";
 
@@ -31,26 +32,26 @@ namespace com.adjust.sdk
 
         void Awake()
         {
-            if (!Application.isEditor)
-            {
-                DontDestroyOnLoad(transform.gameObject);
+        #if !UNITY_EDITOR
+            DontDestroyOnLoad(transform.gameObject);
 
-                if (!this.startManually)
-                {
-                    AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment, (this.logLevel == AdjustLogLevel.Suppress));
-                    adjustConfig.setLogLevel(this.logLevel);
-                    adjustConfig.setSendInBackground(this.sendInBackground);
-                    adjustConfig.setEventBufferingEnabled(this.eventBuffering);
-                    adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
-                    Adjust.start(adjustConfig);
-                }
+            if (!this.startManually)
+            {
+                AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment, (this.logLevel == AdjustLogLevel.Suppress));
+                adjustConfig.setLogLevel(this.logLevel);
+                adjustConfig.setSendInBackground(this.sendInBackground);
+                adjustConfig.setEventBufferingEnabled(this.eventBuffering);
+                adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
+                Adjust.start(adjustConfig);
             }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         void OnApplicationPause(bool pauseStatus)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 // No action, iOS SDK is subscribed to iOS lifecycle notifications.
             #elif UNITY_ANDROID
@@ -74,18 +75,19 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void start(AdjustConfig adjustConfig)
         {
-            if (!Application.isEditor)
+        #if !UNITY_EDITOR
+            if (adjustConfig == null)
             {
-                if (adjustConfig == null)
-                {
-                    Debug.Log("Adjust: Missing config to start.");
-                    return;
-                }
+                Debug.Log("Adjust: Missing config to start.");
+                return;
+            }
             #if UNITY_IOS
                 Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
                 Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
@@ -101,18 +103,19 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void trackEvent(AdjustEvent adjustEvent)
         {
-            if (!Application.isEditor)
+        #if !UNITY_EDITOR
+            if (adjustEvent == null)
             {
-                if (adjustEvent == null)
-                {
-                    Debug.Log("Adjust: Missing event to track.");
-                    return;
-                }
+                Debug.Log("Adjust: Missing event to track.");
+                return;
+            }
             #if UNITY_IOS
                 AdjustiOS.TrackEvent(adjustEvent);
             #elif UNITY_ANDROID
@@ -122,13 +125,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void setEnabled(bool enabled)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.SetEnabled(enabled);
             #elif UNITY_ANDROID
@@ -138,13 +142,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static bool isEnabled()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 return AdjustiOS.IsEnabled();
             #elif UNITY_ANDROID
@@ -155,17 +160,15 @@ namespace com.adjust.sdk
                 Debug.Log(errorMsgPlatform);
                 return false;
             #endif
-            }
-            else
-            {
-                return false;
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+            return false;
+        #endif
         }
 
         public static void setOfflineMode(bool enabled)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.SetOfflineMode(enabled);
             #elif UNITY_ANDROID
@@ -175,13 +178,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void setDeviceToken(string deviceToken)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.SetDeviceToken(deviceToken);
             #elif UNITY_ANDROID
@@ -191,13 +195,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void appWillOpenUrl(string url)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.AppWillOpenUrl(url);
             #elif UNITY_ANDROID
@@ -207,13 +212,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void sendFirstPackages()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.SendFirstPackages();
             #elif UNITY_ANDROID
@@ -223,13 +229,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void addSessionPartnerParameter(string key, string value)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.AddSessionPartnerParameter(key, value);
             #elif UNITY_ANDROID
@@ -239,13 +246,12 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #endif
         }
 
         public static void addSessionCallbackParameter(string key, string value)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.AddSessionCallbackParameter(key, value);
             #elif UNITY_ANDROID
@@ -255,13 +261,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void removeSessionPartnerParameter(string key)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.RemoveSessionPartnerParameter(key);
             #elif UNITY_ANDROID
@@ -271,13 +278,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void removeSessionCallbackParameter(string key)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.RemoveSessionCallbackParameter(key);
             #elif UNITY_ANDROID
@@ -287,13 +295,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void resetSessionPartnerParameters()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.ResetSessionPartnerParameters();
             #elif UNITY_ANDROID
@@ -303,13 +312,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void resetSessionCallbackParameters()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 AdjustiOS.ResetSessionCallbackParameters();
             #elif UNITY_ANDROID
@@ -319,13 +329,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static string getAdid()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 return AdjustiOS.GetAdid();
             #elif UNITY_ANDROID
@@ -336,17 +347,15 @@ namespace com.adjust.sdk
                 Debug.Log(errorMsgPlatform);
                 return string.Empty;
             #endif
-            }
-            else
-            {
-                return string.Empty;
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+            return string.Empty;
+        #endif
         }
 
         public static AdjustAttribution getAttribution()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 return AdjustiOS.GetAttribution();
             #elif UNITY_ANDROID
@@ -357,17 +366,15 @@ namespace com.adjust.sdk
                 Debug.Log(errorMsgPlatform);
                 return null;
             #endif
-            }
-            else
-            {
-                return null;
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+            return null;
+        #endif
         }
 
         public static string getWinAdid()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 Debug.Log("Adjust: Error! Windows Advertising ID is not available on iOS platform.");
                 return string.Empty;
@@ -380,17 +387,15 @@ namespace com.adjust.sdk
                 Debug.Log(errorMsgPlatform);
                 return string.Empty;
             #endif
-            }
-            else
-            {
-                return string.Empty;
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+            return string.Empty;
+        #endif
         }
 
         public static string getIdfa()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 return AdjustiOS.GetIdfa();
             #elif UNITY_ANDROID
@@ -403,18 +408,16 @@ namespace com.adjust.sdk
                 Debug.Log(errorMsgPlatform);
                 return string.Empty;
             #endif
-            }
-            else
-            {
-                return string.Empty;
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+            return string.Empty;
+        #endif
         }
 
         [Obsolete("This method is intended for testing purposes only. Do not use it.")]
         public static void setReferrer(string referrer)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 Debug.Log("Adjust: Install referrer is not available on iOS platform.");
             #elif UNITY_ANDROID
@@ -424,13 +427,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static void getGoogleAdId(Action<string> onDeviceIdsRead)
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 Debug.Log("Adjust: Google Play Advertising ID is not available on iOS platform.");
                 onDeviceIdsRead(string.Empty);
@@ -442,13 +446,14 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+        #endif
         }
 
         public static string getAmazonAdId()
         {
-            if (!Application.isEditor)
-            {
+        #if !UNITY_EDITOR
             #if UNITY_IOS
                 Debug.Log("Adjust: Amazon Advertising ID is not available on iOS platform.");
                 return string.Empty;
@@ -461,14 +466,13 @@ namespace com.adjust.sdk
                 Debug.Log(errorMsgPlatform);
                 return string.Empty;
             #endif
-            }
-            else
-            {
-                return string.Empty;
-            }
+        #else
+            Debug.Log(errorMsgEditor);
+            return string.Empty;
+        #endif
         }
 
-#if UNITY_IOS
+        #if UNITY_IOS
         public void GetNativeAttribution(string attributionData)
         {
             if (!Application.isEditor)
@@ -557,6 +561,6 @@ namespace com.adjust.sdk
                 Adjust.deferredDeeplinkDelegate(deeplinkURL);
             }
         }
-#endif
+        #endif
     }
 }
