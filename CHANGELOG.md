@@ -1,4 +1,15 @@
-### Version 4.12.3 (9th March 2018)
+### Version 4.12.5 (19th March 2018)
+#### Changed
+- Changed the way how to detect `Editor` presence from `Application.isEditor` to usage of preprocessor macros.
+
+#### Native SDKs
+- [iOS@v4.12.3][ios_sdk_v4.12.3]
+- [Android@v4.12.4][android_sdk_v4.12.4]
+- [Windows@v4.12.0][windows_sdk_v4.12.0]
+
+---
+
+### Version 4.12.4 (9th March 2018)
 #### Fixed
 - Fixed JNI exception occurences upon triggering session/event failure callbacks when `Performance Reporting` is turned ON while building Android app (https://github.com/adjust/unity_sdk/issues/126).
 - Changed target platform for iOS source files and static library to iOS only (https://github.com/adjust/unity_sdk/issues/128).
