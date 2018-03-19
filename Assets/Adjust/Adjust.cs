@@ -32,7 +32,7 @@ namespace com.adjust.sdk
 
         void Awake()
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             DontDestroyOnLoad(transform.gameObject);
 
@@ -49,7 +49,7 @@ namespace com.adjust.sdk
 
         void OnApplicationPause(bool pauseStatus)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 // No action, iOS SDK is subscribed to iOS lifecycle notifications.
@@ -78,7 +78,7 @@ namespace com.adjust.sdk
 
         public static void start(AdjustConfig adjustConfig)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (adjustConfig == null)
             {
@@ -104,7 +104,7 @@ namespace com.adjust.sdk
 
         public static void trackEvent(AdjustEvent adjustEvent)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (adjustEvent == null)
             {
@@ -124,7 +124,7 @@ namespace com.adjust.sdk
 
         public static void setEnabled(bool enabled)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.SetEnabled(enabled);
@@ -139,7 +139,7 @@ namespace com.adjust.sdk
 
         public static bool isEnabled()
         {
-            if (IsEditor ()) { return false; }
+            if (IsEditor()) { return false; }
 
             #if UNITY_IOS
                 return AdjustiOS.IsEnabled();
@@ -155,7 +155,7 @@ namespace com.adjust.sdk
 
         public static void setOfflineMode(bool enabled)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.SetOfflineMode(enabled);
@@ -170,7 +170,7 @@ namespace com.adjust.sdk
 
         public static void setDeviceToken(string deviceToken)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.SetDeviceToken(deviceToken);
@@ -185,7 +185,7 @@ namespace com.adjust.sdk
 
         public static void appWillOpenUrl(string url)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.AppWillOpenUrl(url);
@@ -200,7 +200,7 @@ namespace com.adjust.sdk
 
         public static void sendFirstPackages()
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.SendFirstPackages();
@@ -215,7 +215,7 @@ namespace com.adjust.sdk
 
         public static void addSessionPartnerParameter(string key, string value)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.AddSessionPartnerParameter(key, value);
@@ -230,7 +230,7 @@ namespace com.adjust.sdk
 
         public static void addSessionCallbackParameter(string key, string value)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.AddSessionCallbackParameter(key, value);
@@ -245,7 +245,7 @@ namespace com.adjust.sdk
 
         public static void removeSessionPartnerParameter(string key)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.RemoveSessionPartnerParameter(key);
@@ -260,7 +260,7 @@ namespace com.adjust.sdk
 
         public static void removeSessionCallbackParameter(string key)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.RemoveSessionCallbackParameter(key);
@@ -275,7 +275,7 @@ namespace com.adjust.sdk
 
         public static void resetSessionPartnerParameters()
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.ResetSessionPartnerParameters();
@@ -290,7 +290,7 @@ namespace com.adjust.sdk
 
         public static void resetSessionCallbackParameters()
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.ResetSessionCallbackParameters();
@@ -305,7 +305,7 @@ namespace com.adjust.sdk
 
         public static string getAdid()
         {
-            if (IsEditor ()) { return string.Empty; }
+            if (IsEditor()) { return string.Empty; }
 
             #if UNITY_IOS
                 return AdjustiOS.GetAdid();
@@ -321,7 +321,7 @@ namespace com.adjust.sdk
 
         public static AdjustAttribution getAttribution()
         {
-            if (IsEditor ()) { return null; }
+            if (IsEditor()) { return null; }
 
             #if UNITY_IOS
                 return AdjustiOS.GetAttribution();
@@ -337,7 +337,7 @@ namespace com.adjust.sdk
 
         public static string getWinAdid()
         {
-            if (IsEditor ()) { return string.Empty; }
+            if (IsEditor()) { return string.Empty; }
 
             #if UNITY_IOS
                 Debug.Log("Adjust: Error! Windows Advertising ID is not available on iOS platform.");
@@ -355,7 +355,7 @@ namespace com.adjust.sdk
 
         public static string getIdfa()
         {
-            if (IsEditor ()) { return string.Empty; }
+            if (IsEditor()) { return string.Empty; }
 
             #if UNITY_IOS
                 return AdjustiOS.GetIdfa();
@@ -374,7 +374,7 @@ namespace com.adjust.sdk
         [Obsolete("This method is intended for testing purposes only. Do not use it.")]
         public static void setReferrer(string referrer)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 Debug.Log("Adjust: Install referrer is not available on iOS platform.");
@@ -389,7 +389,7 @@ namespace com.adjust.sdk
 
         public static void getGoogleAdId(Action<string> onDeviceIdsRead)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 Debug.Log("Adjust: Google Play Advertising ID is not available on iOS platform.");
@@ -406,7 +406,7 @@ namespace com.adjust.sdk
 
         public static string getAmazonAdId()
         {
-            if (IsEditor ()) { return string.Empty; }
+            if (IsEditor()) { return string.Empty; }
 
             #if UNITY_IOS
                 Debug.Log("Adjust: Amazon Advertising ID is not available on iOS platform.");
@@ -425,7 +425,7 @@ namespace com.adjust.sdk
         #if UNITY_IOS
         public void GetNativeAttribution(string attributionData)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (Adjust.attributionChangedDelegate == null)
             {
@@ -439,7 +439,7 @@ namespace com.adjust.sdk
 
         public void GetNativeEventSuccess(string eventSuccessData)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (Adjust.eventSuccessDelegate == null)
             {
@@ -453,7 +453,7 @@ namespace com.adjust.sdk
 
         public void GetNativeEventFailure(string eventFailureData)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (Adjust.eventFailureDelegate == null)
             {
@@ -467,7 +467,7 @@ namespace com.adjust.sdk
 
         public void GetNativeSessionSuccess(string sessionSuccessData)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (Adjust.sessionSuccessDelegate == null)
             {
@@ -481,7 +481,7 @@ namespace com.adjust.sdk
 
         public void GetNativeSessionFailure(string sessionFailureData)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (Adjust.sessionFailureDelegate == null)
             {
@@ -495,7 +495,7 @@ namespace com.adjust.sdk
 
         public void GetNativeDeferredDeeplink(string deeplinkURL)
         {
-            if (IsEditor ()) { return; }
+            if (IsEditor()) { return; }
 
             if (Adjust.deferredDeeplinkDelegate == null)
             {
