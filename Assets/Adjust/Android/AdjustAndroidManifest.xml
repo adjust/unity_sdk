@@ -12,6 +12,8 @@
         android:xlargeScreens="true"
         android:anyDensity="true"/>
 
+    <!-- Permissions needed by the Adjust SDK. -->
+    <!-- For more information, check: https://github.com/adjust/unity_sdk#post-build-android -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,7 +24,8 @@
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:debuggable="true">
-        
+
+        <!-- Adjust broadcast receiver used to capture referrer content from INSTALL_REFERRER intent. -->
         <receiver
             android:name="com.adjust.sdk.AdjustReferrerReceiver"
             android:permission="android.permission.INSTALL_PACKAGES"
