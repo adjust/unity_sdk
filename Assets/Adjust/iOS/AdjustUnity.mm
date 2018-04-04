@@ -116,10 +116,10 @@ extern "C"
             || isDeferredDeeplinkCallbackImplemented) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
-                                                          eventSucceededCallback:isEventSuccessCallbackImplemented
-                                                             eventFailedCallback:isEventFailureCallbackImplemented
-                                                        sessionSucceededCallback:isSessionSuccessCallbackImplemented
-                                                           sessionFailedCallback:isSessionFailureCallbackImplemented
+                                                            eventSuccessCallback:isEventSuccessCallbackImplemented
+                                                            eventFailureCallback:isEventFailureCallbackImplemented
+                                                          sessionSuccessCallback:isSessionSuccessCallbackImplemented
+                                                          sessionFailureCallback:isSessionFailureCallbackImplemented
                                                         deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
                                                     shouldLaunchDeferredDeeplink:launchDeferredDeeplink
                                                         withAdjustUnitySceneName:stringSceneName]];
