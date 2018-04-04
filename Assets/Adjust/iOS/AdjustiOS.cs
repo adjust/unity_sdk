@@ -50,17 +50,6 @@ namespace com.adjust.sdk
             string jsonCallbackParameters,
             string jsonPartnerParameters);
 
-		[DllImport("__Internal")]
-		private static extern void _AdjustSetTestOptions(
-			string baseUrl, 
-			string basePath, 
-			long timerIntervalInMilliseconds,
-			long timerStartInMilliseconds,
-			long sessionIntervalInMilliseconds,
-			long subsessionIntervalInMilliseconds,
-			int teardown,
-			int deleteState);
-
         [DllImport("__Internal")]
         private static extern void _AdjustSetEnabled(int enabled);
 
@@ -105,6 +94,17 @@ namespace com.adjust.sdk
 
         [DllImport("__Internal")]
         private static extern void _AdjustResetSessionCallbackParameters();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustSetTestOptions(
+            string baseUrl, 
+            string basePath, 
+            long timerIntervalInMilliseconds,
+            long timerStartInMilliseconds,
+            long sessionIntervalInMilliseconds,
+            long subsessionIntervalInMilliseconds,
+            int teardown,
+            int deleteState);
 
 		[DllImport("__Internal")]
 		private static extern void _AdjustTrackSubsessionStart();
@@ -175,7 +175,6 @@ namespace com.adjust.sdk
         {
             int isReceiptSet = AdjustUtils.ConvertBool(adjustEvent.isReceiptSet);
             double revenue = AdjustUtils.ConvertDouble(adjustEvent.revenue);
-
             string eventToken = adjustEvent.eventToken;
             string currency = adjustEvent.currency;
             string receipt = adjustEvent.receipt;
@@ -184,21 +183,7 @@ namespace com.adjust.sdk
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
 
             _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
-        }
-
-		public static void SetTestOptions(AdjustTestOptions testOptions)
-		{
-			long timerIntervalMls = testOptions.TimerIntervalInMilliseconds.HasValue ? testOptions.TimerIntervalInMilliseconds.Value : -1;
-			long timerStartMls = testOptions.TimerStartInMilliseconds.HasValue ? testOptions.TimerStartInMilliseconds.Value : -1;
-			long sessionIntMls = testOptions.SessionIntervalInMilliseconds.HasValue ? testOptions.SessionIntervalInMilliseconds.Value : -1;
-			long subsessionIntMls = testOptions.SubsessionIntervalInMilliseconds.HasValue ? testOptions.SubsessionIntervalInMilliseconds.Value : -1;
-			bool teardown = testOptions.Teardown.HasValue ? testOptions.Teardown.Value : false;
-			bool deleteState = testOptions.DeleteState.HasValue ? testOptions.DeleteState.Value : false;
-
-			_AdjustSetTestOptions (testOptions.BaseUrl, testOptions.BasePath,
-				timerIntervalMls, timerStartMls, sessionIntMls, subsessionIntMls, 
-				AdjustUtils.ConvertBool(teardown), AdjustUtils.ConvertBool(deleteState));
-		}
+        }		
 
         public static void SetEnabled(bool enabled)
         {
@@ -208,7 +193,6 @@ namespace com.adjust.sdk
         public static bool IsEnabled()
         {
             var iIsEnabled = _AdjustIsEnabled();
-
             return Convert.ToBoolean(iIsEnabled);
         }
 
@@ -276,25 +260,43 @@ namespace com.adjust.sdk
         public static AdjustAttribution GetAttribution()
         {
             string attributionString = _AdjustGetAttribution();
-
             if (null == attributionString)
             {
                 return null;
             }
 
             var attribution = new AdjustAttribution(attributionString);
-
             return attribution;
+        }
+
+        public static void SetTestOptions(AdjustTestOptions testOptions)
+        {
+            long timerIntervalMls = testOptions.TimerIntervalInMilliseconds.HasValue ? testOptions.TimerIntervalInMilliseconds.Value : -1;
+            long timerStartMls = testOptions.TimerStartInMilliseconds.HasValue ? testOptions.TimerStartInMilliseconds.Value : -1;
+            long sessionIntMls = testOptions.SessionIntervalInMilliseconds.HasValue ? testOptions.SessionIntervalInMilliseconds.Value : -1;
+            long subsessionIntMls = testOptions.SubsessionIntervalInMilliseconds.HasValue ? testOptions.SubsessionIntervalInMilliseconds.Value : -1;
+            bool teardown = testOptions.Teardown.HasValue ? testOptions.Teardown.Value : false;
+            bool deleteState = testOptions.DeleteState.HasValue ? testOptions.DeleteState.Value : false;
+
+            _AdjustSetTestOptions(
+                testOptions.BaseUrl,
+                testOptions.BasePath,
+                timerIntervalMls,
+                timerStartMls,
+                sessionIntMls,
+                subsessionIntMls, 
+                AdjustUtils.ConvertBool(teardown),
+                AdjustUtils.ConvertBool(deleteState));
         }
 
 		public static void TrackSubsessionStart()
 		{
-			_AdjustTrackSubsessionStart ();
+			_AdjustTrackSubsessionStart();
 		}
 
 		public static void TrackSubsessionEnd()
 		{
-			_AdjustTrackSubsessionEnd ();
+			_AdjustTrackSubsessionEnd();
 		}
     }
 #endif
