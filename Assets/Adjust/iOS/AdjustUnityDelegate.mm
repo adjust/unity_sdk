@@ -1,5 +1,5 @@
 //
-//  AdjustUnityDelegate.m
+//  AdjustUnityDelegate.mm
 //  Adjust SDK
 //
 //  Created by Uglješa Erceg (@uerceg) on 5th December 2016.
