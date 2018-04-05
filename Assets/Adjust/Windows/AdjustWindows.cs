@@ -224,12 +224,12 @@ namespace com.adjust.sdk
 
         public static void ResetSessionCallbackParameters()
         {
-            AdjustWinInterface.ResetSessionCallbackParameters ();
+            AdjustWinInterface.ResetSessionCallbackParameters();
         }
 
         public static string GetAdid()
         {
-            return AdjustWinInterface.GetAdid ();
+            return AdjustWinInterface.GetAdid();
         }
 
         public static AdjustAttribution GetAttribution()
