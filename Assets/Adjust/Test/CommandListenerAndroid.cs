@@ -19,12 +19,14 @@ namespace com.adjust.sdk.test
         }
 
         public void executeCommand(string json) {
-            if (json == null) { return; }
+            if (json == null)
+            {
+                return;
+            }
 #if UNITY_ANDROID
-            Command command = JsonConvert.DeserializeObject<Command> (json);
+            Command command = JsonConvert.DeserializeObject<Command>(json);
             _commandExecutor.ExecuteCommand(command);
 #endif
         }
     }
 }
-

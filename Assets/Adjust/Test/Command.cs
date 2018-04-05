@@ -31,7 +31,9 @@ namespace com.adjust.sdk.test
         public string GetFirstParameterValue(string parameterKey)
         {
             if (Parameters == null || !Parameters.ContainsKey(parameterKey))
+            {
                 return null;
+            }
 
             var parameterValues = Parameters[parameterKey];
             return parameterValues.Count == 0 ? null : parameterValues[0];
@@ -40,10 +42,11 @@ namespace com.adjust.sdk.test
         public bool ContainsParameter(string parameterKey)
         {
             if (Parameters == null || string.IsNullOrEmpty(parameterKey))
+            {
                 return false;
+            }
 
             return Parameters.ContainsKey(parameterKey);
         }
     }
 }
-

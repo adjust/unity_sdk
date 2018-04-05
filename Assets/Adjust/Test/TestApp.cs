@@ -25,14 +25,17 @@ namespace com.adjust.sdk.test
 
 		private TestFactoryIOS _testFactoryiOS;
 #endif
-        //private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;  		// android simulator
-		//private const string BASE_URL = PROTOCOL + "localhost" + PORT;		// windows simulator
-		private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;			// iOS simulator
-		//private const string BASE_URL = PROTOCOL + "192.168.8.186" + PORT;	// over WiFi
+        // private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;  		// Android simulator
+		// private const string BASE_URL = PROTOCOL + "localhost" + PORT;		// Windows simulator
+		// private const string BASE_URL = PROTOCOL + "192.168.8.186" + PORT;	// Over WiFi
+        private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;          // iOS simulator
 
         void OnGUI()
         {
-            if (_isLaunched) { return; }
+            if (_isLaunched)
+            {
+                return;
+            }
 
             ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
 
@@ -40,9 +43,8 @@ namespace com.adjust.sdk.test
 			_testFactoryiOS = testFactory as TestFactoryIOS;
 			#endif
 
-			// set specific tests to run
-			// test fails - last session not being sent, which makes the test to timeout
-			testFactory.AddTest ("current/eventBuffering/Test_EventBuffering_sensitive_packets");
+			// Set specific tests to run.
+			// testFactory.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
 
 			Log ("Starting test session...");
             testFactory.StartTestSession();
@@ -65,7 +67,7 @@ namespace com.adjust.sdk.test
 #if UNITY_IOS
 		public void ExecuteCommand(string commandJson)
         {
-			_testFactoryiOS.ExecuteCommand (commandJson);
+			_testFactoryiOS.ExecuteCommand(commandJson);
         }
 #endif
         public static void Log(string message, bool useUnityDebug = false)
@@ -75,9 +77,13 @@ namespace com.adjust.sdk.test
             string currentTimeString = string.Format("{0}:{1}", now.ToShortTimeString(), now.Second);
             string output = string.Format("[{0}{1}]: {2}", currentTimeString, TAG, message);
             if (!useUnityDebug)
+            {
                 Console.WriteLine(output);
+            }
             else
+            {
                 Debug.Log(output);
+            }
 #else
             Debug.Log(message);
 #endif
@@ -90,13 +96,16 @@ namespace com.adjust.sdk.test
             string currentTimeString = string.Format("{0}:{1}", now.ToShortTimeString(), now.Second);
             string output = string.Format("[{0}{1}][Error!]: {2}", currentTimeString, TAG, message);
             if (!useUnityDebug)
+            {
                 Console.WriteLine(output);
+            }
             else
+            {
                 Debug.Log(output);
+            }
 #else
             Debug.LogError(message);
 #endif
         }
     }
 }
-

@@ -11,65 +11,65 @@ namespace com.adjust.sdk.test
         public bool? DeleteState { get; set; }
         public bool? UseTestConnectionOptions { get; set; }
 
-        // default value => Constants.ONE_MINUTE;
+        // Default value => Constants.ONE_MINUTE
         public long? TimerIntervalInMilliseconds { get; set; }
-        // default value => Constants.ONE_MINUTE;
+        // Default value => Constants.ONE_MINUTE
         public long? TimerStartInMilliseconds { get; set; }
-        // default value => Constants.THIRTY_MINUTES;
+        // Default value => Constants.THIRTY_MINUTES
         public long? SessionIntervalInMilliseconds { get; set; }
-        // default value => Constants.ONE_SECOND;
+        // Default value => Constants.ONE_SECOND
         public long? SubsessionIntervalInMilliseconds { get; set; }
 
 #if UNITY_ANDROID
         public AndroidJavaObject ToAndroidJavaObject(AndroidJavaObject ajoCurrentActivity)
         {
             AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
-            ajoTestOptions.Set<String> ("baseUrl", BaseUrl);
+            ajoTestOptions.Set<String>("baseUrl", BaseUrl);
 
-            if (!string.IsNullOrEmpty (BasePath)) 
+            if (!string.IsNullOrEmpty(BasePath)) 
             {
-                ajoTestOptions.Set<String> ("basePath", BasePath);
+                ajoTestOptions.Set<String>("basePath", BasePath);
             }
 
             if (ajoCurrentActivity != null) 
             {
-                ajoTestOptions.Set<AndroidJavaObject> ("context", ajoCurrentActivity);
+                ajoTestOptions.Set<AndroidJavaObject>("context", ajoCurrentActivity);
             }
                 
             if (UseTestConnectionOptions.HasValue) 
             {
-                AndroidJavaObject ajoUseTestConnectionOptions = new AndroidJavaObject ("java.lang.Boolean", UseTestConnectionOptions.Value);
-                ajoTestOptions.Set<AndroidJavaObject> ("useTestConnectionOptions", ajoUseTestConnectionOptions);
+                AndroidJavaObject ajoUseTestConnectionOptions = new AndroidJavaObject("java.lang.Boolean", UseTestConnectionOptions.Value);
+                ajoTestOptions.Set<AndroidJavaObject>("useTestConnectionOptions", ajoUseTestConnectionOptions);
             }
 
             if (TimerIntervalInMilliseconds.HasValue) 
             {
-                AndroidJavaObject ajoTimerIntervalInMilliseconds = new AndroidJavaObject ("java.lang.Long", TimerIntervalInMilliseconds.Value);
-                ajoTestOptions.Set<AndroidJavaObject> ("timerIntervalInMilliseconds", ajoTimerIntervalInMilliseconds);
+                AndroidJavaObject ajoTimerIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", TimerIntervalInMilliseconds.Value);
+                ajoTestOptions.Set<AndroidJavaObject>("timerIntervalInMilliseconds", ajoTimerIntervalInMilliseconds);
             }
 
             if (TimerStartInMilliseconds.HasValue) 
             {
-                AndroidJavaObject ajoTimerStartInMilliseconds = new AndroidJavaObject ("java.lang.Long", TimerStartInMilliseconds.Value);
-                ajoTestOptions.Set<AndroidJavaObject> ("timerStartInMilliseconds", ajoTimerStartInMilliseconds);
+                AndroidJavaObject ajoTimerStartInMilliseconds = new AndroidJavaObject("java.lang.Long", TimerStartInMilliseconds.Value);
+                ajoTestOptions.Set<AndroidJavaObject>("timerStartInMilliseconds", ajoTimerStartInMilliseconds);
             }
 
             if (SessionIntervalInMilliseconds.HasValue) 
             {
-                AndroidJavaObject ajoSessionIntervalInMilliseconds = new AndroidJavaObject ("java.lang.Long", SessionIntervalInMilliseconds.Value);
-                ajoTestOptions.Set<AndroidJavaObject> ("sessionIntervalInMilliseconds", ajoSessionIntervalInMilliseconds);
+                AndroidJavaObject ajoSessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", SessionIntervalInMilliseconds.Value);
+                ajoTestOptions.Set<AndroidJavaObject>("sessionIntervalInMilliseconds", ajoSessionIntervalInMilliseconds);
             }
 
             if (SubsessionIntervalInMilliseconds.HasValue) 
             {
-                AndroidJavaObject ajoSubsessionIntervalInMilliseconds = new AndroidJavaObject ("java.lang.Long", SubsessionIntervalInMilliseconds.Value);
-                ajoTestOptions.Set<AndroidJavaObject> ("subsessionIntervalInMilliseconds", ajoSubsessionIntervalInMilliseconds);
+                AndroidJavaObject ajoSubsessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", SubsessionIntervalInMilliseconds.Value);
+                ajoTestOptions.Set<AndroidJavaObject>("subsessionIntervalInMilliseconds", ajoSubsessionIntervalInMilliseconds);
             }
 
             if (Teardown.HasValue)
             {
-                AndroidJavaObject ajoTeardown = new AndroidJavaObject ("java.lang.Boolean", Teardown.Value);
-                ajoTestOptions.Set<AndroidJavaObject> ("teardown", ajoTeardown);
+                AndroidJavaObject ajoTeardown = new AndroidJavaObject("java.lang.Boolean", Teardown.Value);
+                ajoTestOptions.Set<AndroidJavaObject>("teardown", ajoTeardown);
             }
 
             return ajoTestOptions;
@@ -77,4 +77,3 @@ namespace com.adjust.sdk.test
 #endif
     }
 }
-

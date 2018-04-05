@@ -28,14 +28,14 @@ namespace com.adjust.sdk.test
 			
 		public void ExecuteCommand(string className, string methodName, Dictionary<string, List<string>> parameters)
 		{
-			this.ExecuteCommand (new Command (className, methodName, parameters));
+			this.ExecuteCommand(new Command(className, methodName, parameters));
 		}
 
         public void ExecuteCommand(Command command)
         {
             _command = command;
 
-            TestApp.Log(string.Format(" \t>>> EXECUTING METHOD: [{0}.{1}] <<<", _command.ClassName, _command.MethodName));
+            TestApp.Log(string.Format("\t>>> EXECUTING METHOD: [{0}.{1}] <<<", _command.ClassName, _command.MethodName));
 
             try
             {
@@ -222,7 +222,9 @@ namespace com.adjust.sdk.test
                 }
 
                 if (logLevel.HasValue)
+                {
                     adjustConfig.setLogLevel(logLevel.Value);
+                }
 
 #if (UNITY_WSA || UNITY_WP8)
                 adjustConfig.logDelegate = msg => Debug.Log(msg);
@@ -232,10 +234,14 @@ namespace com.adjust.sdk.test
             }
 
             if (_command.ContainsParameter("sdkPrefix"))
+            {
                 adjustConfig.SdkPrefix = _command.GetFirstParameterValue("sdkPrefix");
+            }
 
             if (_command.ContainsParameter("defaultTracker"))
+            {
                 adjustConfig.setDefaultTracker(_command.GetFirstParameterValue("defaultTracker"));
+            }
 
             if (_command.ContainsParameter("delayStart"))
             {
@@ -262,7 +268,9 @@ namespace com.adjust.sdk.test
                     adjustConfig.setAppSecret(secretId, info1, info2, info3, info4);
                 }
                 else
+                {
                     TestApp.LogError("App secret list does not contain 5 elements! Skip setting app secret.");
+                }
             }
 
             if (_command.ContainsParameter("deviceKnown"))
@@ -302,109 +310,117 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("deferredDeeplinkCallback"))
             {
                 adjustConfig.setDeferredDeeplinkDelegate(uri =>
-               {
-                   if (uri == null)
-                   {
-                       TestApp.Log("DeeplinkResponse, uri = null");
-                       adjustConfig.setLaunchDeferredDeeplink(false);
-                   }
+                {
+                    if (uri == null)
+                    {
+                        TestApp.Log("DeeplinkResponse, uri = null");
+                        adjustConfig.setLaunchDeferredDeeplink(false);
+                    }
 
-                   TestApp.Log("DeeplinkResponse, uri = " + uri.ToString());
+                    TestApp.Log("DeeplinkResponse, uri = " + uri.ToString());
 
-                   if (!uri.StartsWith("adjusttest"))
-                   {
-                       adjustConfig.setLaunchDeferredDeeplink(false);
-                   }
+                    if (!uri.StartsWith("adjusttest"))
+                    {
+                        adjustConfig.setLaunchDeferredDeeplink(false);
+                    }
 
-                   adjustConfig.setLaunchDeferredDeeplink(true);
-               });
+                    adjustConfig.setLaunchDeferredDeeplink(true);
+                });
             }
 
             if (_command.ContainsParameter("attributionCallbackSendAll"))
             {
                 string localBasePath = BasePath;
                 adjustConfig.setAttributionChangedDelegate(attribution =>
-               {
-                   TestApp.Log("AttributionChanged, attribution = " + attribution);
+                {
+                    TestApp.Log("AttributionChanged, attribution = " + attribution);
 
-                   _testFactory.AddInfoToSend("trackerToken", attribution.trackerToken);
-                   _testFactory.AddInfoToSend("trackerName", attribution.trackerName);
-                   _testFactory.AddInfoToSend("network", attribution.network);
-                   _testFactory.AddInfoToSend("campaign", attribution.campaign);
-                   _testFactory.AddInfoToSend("adgroup", attribution.adgroup);
-                   _testFactory.AddInfoToSend("creative", attribution.creative);
-                   _testFactory.AddInfoToSend("clickLabel", attribution.clickLabel);
-                   _testFactory.AddInfoToSend("adid", attribution.adid);
-                   _testFactory.SendInfoToServer(localBasePath);
-               });
+                    _testFactory.AddInfoToSend("trackerToken", attribution.trackerToken);
+                    _testFactory.AddInfoToSend("trackerName", attribution.trackerName);
+                    _testFactory.AddInfoToSend("network", attribution.network);
+                    _testFactory.AddInfoToSend("campaign", attribution.campaign);
+                    _testFactory.AddInfoToSend("adgroup", attribution.adgroup);
+                    _testFactory.AddInfoToSend("creative", attribution.creative);
+                    _testFactory.AddInfoToSend("clickLabel", attribution.clickLabel);
+                    _testFactory.AddInfoToSend("adid", attribution.adid);
+                    _testFactory.SendInfoToServer(localBasePath);
+                });
             }
 
             if (_command.ContainsParameter("sessionCallbackSendSuccess"))
             {
                 string localBasePath = BasePath;
                 adjustConfig.setSessionSuccessDelegate(sessionSuccessResponseData =>
-               {
-                   TestApp.Log("SesssionTrackingSucceeded, sessionSuccessResponseData = " + sessionSuccessResponseData);
+                {
+                    TestApp.Log("SesssionTrackingSucceeded, sessionSuccessResponseData = " + sessionSuccessResponseData);
 
-                   _testFactory.AddInfoToSend("message", sessionSuccessResponseData.Message);
-                   _testFactory.AddInfoToSend("timestamp", sessionSuccessResponseData.Timestamp);
-                   _testFactory.AddInfoToSend("adid", sessionSuccessResponseData.Adid);
-                   if (sessionSuccessResponseData.JsonResponse != null)
-                       _testFactory.AddInfoToSend("jsonResponse", sessionSuccessResponseData.GetJsonResponse());
-                   _testFactory.SendInfoToServer(localBasePath);
-               });
+                    _testFactory.AddInfoToSend("message", sessionSuccessResponseData.Message);
+                    _testFactory.AddInfoToSend("timestamp", sessionSuccessResponseData.Timestamp);
+                    _testFactory.AddInfoToSend("adid", sessionSuccessResponseData.Adid);
+                    if (sessionSuccessResponseData.JsonResponse != null)
+                    {
+                        _testFactory.AddInfoToSend("jsonResponse", sessionSuccessResponseData.GetJsonResponse());
+                    }
+                    _testFactory.SendInfoToServer(localBasePath);
+                });
             }
 
             if (_command.ContainsParameter("sessionCallbackSendFailure"))
             {
                 string localBasePath = BasePath;
                 adjustConfig.setSessionFailureDelegate(sessionFailureResponseData =>
-               {
-                   TestApp.Log("SesssionTrackingFailed, sessionFailureResponseData = " + sessionFailureResponseData);
+                {
+                    TestApp.Log("SesssionTrackingFailed, sessionFailureResponseData = " + sessionFailureResponseData);
 
-                   _testFactory.AddInfoToSend("message", sessionFailureResponseData.Message);
-                   _testFactory.AddInfoToSend("timestamp", sessionFailureResponseData.Timestamp);
-                   _testFactory.AddInfoToSend("adid", sessionFailureResponseData.Adid);
-                   _testFactory.AddInfoToSend("willRetry", sessionFailureResponseData.WillRetry.ToString().ToLower());
-                   if (sessionFailureResponseData.JsonResponse != null)
-                       _testFactory.AddInfoToSend("jsonResponse", sessionFailureResponseData.GetJsonResponse());
-                   _testFactory.SendInfoToServer(localBasePath);
-               });
+                    _testFactory.AddInfoToSend("message", sessionFailureResponseData.Message);
+                    _testFactory.AddInfoToSend("timestamp", sessionFailureResponseData.Timestamp);
+                    _testFactory.AddInfoToSend("adid", sessionFailureResponseData.Adid);
+                    _testFactory.AddInfoToSend("willRetry", sessionFailureResponseData.WillRetry.ToString().ToLower());
+                    if (sessionFailureResponseData.JsonResponse != null)
+                    {
+                        _testFactory.AddInfoToSend("jsonResponse", sessionFailureResponseData.GetJsonResponse());
+                    }
+                    _testFactory.SendInfoToServer(localBasePath);
+                });
             }
 
             if (_command.ContainsParameter("eventCallbackSendSuccess"))
             {
                 string localBasePath = BasePath;
                 adjustConfig.setEventSuccessDelegate(eventSuccessResponseData =>
-               {
-                   TestApp.Log("EventTrackingSucceeded, eventSuccessResponseData = " + eventSuccessResponseData);
+                {
+                    TestApp.Log("EventTrackingSucceeded, eventSuccessResponseData = " + eventSuccessResponseData);
 
-                   _testFactory.AddInfoToSend("message", eventSuccessResponseData.Message);
-                   _testFactory.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
-                   _testFactory.AddInfoToSend("adid", eventSuccessResponseData.Adid);
-                   _testFactory.AddInfoToSend("eventToken", eventSuccessResponseData.EventToken);
-                   if (eventSuccessResponseData.JsonResponse != null)
-                       _testFactory.AddInfoToSend("jsonResponse", eventSuccessResponseData.GetJsonResponse());
-                   _testFactory.SendInfoToServer(localBasePath);
-               });
+                    _testFactory.AddInfoToSend("message", eventSuccessResponseData.Message);
+                    _testFactory.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
+                    _testFactory.AddInfoToSend("adid", eventSuccessResponseData.Adid);
+                    _testFactory.AddInfoToSend("eventToken", eventSuccessResponseData.EventToken);
+                    if (eventSuccessResponseData.JsonResponse != null)
+                    {
+                        _testFactory.AddInfoToSend("jsonResponse", eventSuccessResponseData.GetJsonResponse());
+                    }
+                    _testFactory.SendInfoToServer(localBasePath);
+                });
             }
 
             if (_command.ContainsParameter("eventCallbackSendFailure"))
             {
                 string localBasePath = BasePath;
                 adjustConfig.setEventFailureDelegate(eventFailureResponseData =>
-               {
-                   TestApp.Log("EventTrackingFailed, eventFailureResponseData = " + eventFailureResponseData);
+                {
+                    TestApp.Log("EventTrackingFailed, eventFailureResponseData = " + eventFailureResponseData);
 
-                   _testFactory.AddInfoToSend("message", eventFailureResponseData.Message);
-                   _testFactory.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
-                   _testFactory.AddInfoToSend("adid", eventFailureResponseData.Adid);
-                   _testFactory.AddInfoToSend("eventToken", eventFailureResponseData.EventToken);
-                   _testFactory.AddInfoToSend("willRetry", eventFailureResponseData.WillRetry.ToString().ToLower());
-                   if (eventFailureResponseData.JsonResponse != null)
-                       _testFactory.AddInfoToSend("jsonResponse", eventFailureResponseData.GetJsonResponse());
-                   _testFactory.SendInfoToServer(localBasePath);
-               });
+                    _testFactory.AddInfoToSend("message", eventFailureResponseData.Message);
+                    _testFactory.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
+                    _testFactory.AddInfoToSend("adid", eventFailureResponseData.Adid);
+                    _testFactory.AddInfoToSend("eventToken", eventFailureResponseData.EventToken);
+                    _testFactory.AddInfoToSend("willRetry", eventFailureResponseData.WillRetry.ToString().ToLower());
+                    if (eventFailureResponseData.JsonResponse != null)
+                    {
+                        _testFactory.AddInfoToSend("jsonResponse", eventFailureResponseData.GetJsonResponse());
+                    }
+                    _testFactory.SendInfoToServer(localBasePath);
+                });
             }
         }
 
@@ -420,9 +436,7 @@ namespace com.adjust.sdk.test
             }
 
             var adjustConfig = _savedConfigs[configNumber];
-
             Adjust.start(adjustConfig);
-
             _savedConfigs.Remove(0);
         }
 
@@ -497,7 +511,6 @@ namespace com.adjust.sdk.test
 
             var adjustEvent = _savedEvents[eventNumber];
             Adjust.trackEvent(adjustEvent);
-
             _savedEvents.Remove(0);
         }
 
@@ -549,7 +562,10 @@ namespace com.adjust.sdk.test
 
         private void AddSessionCallbackParameter()
         {
-            if (!_command.ContainsParameter("KeyValue")) return;
+            if (!_command.ContainsParameter("KeyValue"))
+            {
+                return;
+            }
 
             var keyValuePairs = _command.Parameters["KeyValue"];
             for (var i = 0; i < keyValuePairs.Count; i = i + 2)
@@ -567,7 +583,10 @@ namespace com.adjust.sdk.test
 
         private void AddSessionPartnerParameter()
         {
-            if (!_command.ContainsParameter("KeyValue")) return;
+            if (!_command.ContainsParameter("KeyValue"))
+            {
+                return;
+            }
 
             var keyValuePairs = _command.Parameters["KeyValue"];
             for (var i = 0; i < keyValuePairs.Count; i = i + 2)
@@ -580,7 +599,10 @@ namespace com.adjust.sdk.test
 
         private void RemoveSessionCallbackParameter()
         {
-            if (!_command.ContainsParameter("key")) return;
+            if (!_command.ContainsParameter("key"))
+            {
+                return;
+            }
 
             var keys = _command.Parameters["key"];
             for (var i = 0; i < keys.Count; i = i + 1)
@@ -592,7 +614,10 @@ namespace com.adjust.sdk.test
 
         private void RemoveSessionPartnerParameter()
         {
-            if (!_command.ContainsParameter("key")) return;
+            if (!_command.ContainsParameter("key"))
+            {
+                return;
+            }
 
             var keys = _command.Parameters["key"];
             for (var i = 0; i < keys.Count; i = i + 1)
@@ -651,4 +676,3 @@ namespace com.adjust.sdk.test
         }
     }
 }
-

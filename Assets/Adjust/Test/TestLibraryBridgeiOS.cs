@@ -31,17 +31,17 @@ namespace com.adjust.sdk.test
 
 		public static void StartTestSession(string clientSdk)
 		{
-			_ATLStartTestSession (clientSdk);
+			_ATLStartTestSession(clientSdk);
 		}
 
 		public static void AddInfoToSend(string key, string paramValue)
 		{
-			_ATLAddInfoToSend (key, paramValue);
+			_ATLAddInfoToSend(key, paramValue);
 		}
 
 		public static void SendInfoToServer(string basePath)
 		{
-			_ATLSendInfoToServer (basePath);
+			_ATLSendInfoToServer(basePath);
 		}
 
 		public static void AddTest(string testName)
@@ -56,4 +56,3 @@ namespace com.adjust.sdk.test
 	}
 	#endif
 }
-

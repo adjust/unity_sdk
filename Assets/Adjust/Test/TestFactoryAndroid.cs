@@ -21,7 +21,9 @@ namespace com.adjust.sdk.test
 
             if (ajoTestLibrary == null)
             {
-                ajoTestLibrary = new AndroidJavaObject("com.adjust.testlibrary.TestLibrary", _baseUrl,
+                ajoTestLibrary = new AndroidJavaObject(
+                    "com.adjust.testlibrary.TestLibrary",
+                    _baseUrl,
                     onCommandReceivedListener);
             }
 
@@ -31,27 +33,37 @@ namespace com.adjust.sdk.test
 
         public void AddInfoToSend(string key, string paramValue)
         {
-            if (ajoTestLibrary == null) { return; }
+            if (ajoTestLibrary == null)
+            {
+                return;
+            }
             ajoTestLibrary.Call("addInfoToSend", key, paramValue);
         }
 
         public void SendInfoToServer(string basePath)
         {
-            if (ajoTestLibrary == null) { return; }
+            if (ajoTestLibrary == null)
+            {
+                return;
+            }
             ajoTestLibrary.Call("sendInfoToServer", basePath);
         }
 
 		public void AddTest(string testName)
 		{
-			if (ajoTestLibrary == null) { return; }
+			if (ajoTestLibrary == null) {
+                return;
+            }
 			ajoTestLibrary.Call("addTest", testName);
 		}
 
 		public void AddTestDirectory(string testDirectory)
 		{
-			if (ajoTestLibrary == null) { return; }
+			if (ajoTestLibrary == null)
+            {
+                return; 
+            }
 			ajoTestLibrary.Call("addTestDirectory", testDirectory);
 		}
     }
 }
-

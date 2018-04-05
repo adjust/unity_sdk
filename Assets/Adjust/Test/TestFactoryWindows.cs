@@ -64,14 +64,13 @@ namespace com.adjust.sdk.test
 
 		public void AddTest(string testName)
 		{
-			throw new NotImplementedException ();
+			throw new NotImplementedException();
 		}
 
 		public void AddTestDirectory(string testDirectory)
 		{
-			throw new NotImplementedException ();
+			throw new NotImplementedException();
 		}
 #endif
     }
 }
-
