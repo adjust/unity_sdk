@@ -517,7 +517,7 @@ namespace com.adjust.sdk
                 return false;
             #endif
         }
-#endif
+
 		public static void SetTestOptions(AdjustTestOptions testOptions)
 		{
 			if (Application.isEditor) { return; }
