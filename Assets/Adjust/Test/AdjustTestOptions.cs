@@ -31,7 +31,7 @@ namespace com.adjust.sdk.test
                 ajoTestOptions.Set<String>("basePath", BasePath);
             }
 
-            if (ajoCurrentActivity != null) 
+            if (DeleteState.GetValueOrDefault(false) && ajoCurrentActivity != null)
             {
                 ajoTestOptions.Set<AndroidJavaObject>("context", ajoCurrentActivity);
             }
