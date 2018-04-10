@@ -7,7 +7,7 @@
 //
 
 #import "ATLTestLibrary.h"
-#import "AdjustCommandExecutor.h"
+#import "AdjustUnityCommandExecutor.h"
 #import "AdjustUnityTestLibrary.h"
 
 static ATLTestLibrary *testLibrary;
@@ -33,12 +33,12 @@ static id<AdjustCommandDelegate> commandDelegate;
 
 extern "C"
 {
-	void _ATLInitialize(const char* baseUrl) {
-		NSString *sBaseUrl = [NSString stringWithUTF8String:baseUrl];
-		commandDelegate = [[AdjustCommandExecutor alloc] init];
-		testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:sBaseUrl
-								          andCommandDelegate:commandDelegate];
-	}
+    void _ATLInitialize(const char* baseUrl) {
+        NSString *sBaseUrl = [NSString stringWithUTF8String:baseUrl];
+        commandDelegate = [[AdjustUnityCommandExecutor alloc] init];
+        testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:sBaseUrl
+                                          andCommandDelegate:commandDelegate];
+    }
 
 	void _ATLStartTestSession(const char* clientSdk) {
         NSString *sClientSdk = [NSString stringWithUTF8String:clientSdk];

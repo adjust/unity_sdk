@@ -6,9 +6,9 @@
 //  Copyright © 2012-2018 Adjust GmbH. All rights reserved.
 //
 
-#import "AdjustCommandExecutor.h"
+#import "AdjustUnityCommandExecutor.h"
 
-@implementation AdjustCommandExecutor
+@implementation AdjustUnityCommandExecutor
 
 - (id)init {
     self = [super init];
