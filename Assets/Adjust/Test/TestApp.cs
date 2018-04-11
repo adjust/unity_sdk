@@ -8,7 +8,6 @@ namespace com.adjust.sdk.test
     public class TestApp : MonoBehaviour
     {
         public static readonly string TAG = "[TestApp]";
-        private static bool _isLaunched = false;
 
 #if (UNITY_WSA || UNITY_WP8)
         public const string CLIENT_SDK = "unity4.12.5@wuap4.12.0";
@@ -38,12 +37,14 @@ namespace com.adjust.sdk.test
 
         void OnGUI()
         {
-            if (_isLaunched)
+            if (GUI.Button(new Rect(0, Screen.height * 0 / 2, Screen.width, Screen.height / 2), "Start test"))
             {
-                return;
+                StartTestSession ();
             }
+        }
 
-            ITestFactory testFactory = GetPlatformSpecificTestLibrary();
+		private void StartTestSession() {
+			ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
 
             #if UNITY_IOS
             _testFactoryiOS = testFactory as TestFactoryiOS;
@@ -54,8 +55,7 @@ namespace com.adjust.sdk.test
 
             Log ("Starting test session...");
             testFactory.StartTestSession();
-            _isLaunched = true;
-        }
+		}
 
         private ITestFactory GetPlatformSpecificTestLibrary()
         {
