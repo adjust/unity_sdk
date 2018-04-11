@@ -11,7 +11,7 @@ namespace com.adjust.sdk.test
         private static bool _isLaunched = false;
 
 #if (UNITY_WSA || UNITY_WP8)
-        public const string CLIENT_SDK = "unity4.12.0@wuap4.12.0";
+        public const string CLIENT_SDK = "unity4.12.5@wuap4.12.0";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "localhost" + PORT;        // Windows simulator
@@ -24,10 +24,10 @@ namespace com.adjust.sdk.test
         public const string CLIENT_SDK = "unity4.12.5@ios4.12.3";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;            // iOS simulator
+        private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;           // iOS simulator
         // private const string BASE_URL = PROTOCOL + "192.168.8.141" + PORT;    // Over WiFi
 
-        private TestFactoryIOS _testFactoryiOS;
+        private TestFactoryiOS _testFactoryiOS;
 #else
         public const string CLIENT_SDK = null;
 #endif
@@ -43,10 +43,10 @@ namespace com.adjust.sdk.test
                 return;
             }
 
-            ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
+            ITestFactory testFactory = GetPlatformSpecificTestLibrary();
 
             #if UNITY_IOS
-            _testFactoryiOS = testFactory as TestFactoryIOS;
+            _testFactoryiOS = testFactory as TestFactoryiOS;
             #endif
 
             // Set specific tests to run.
@@ -60,7 +60,7 @@ namespace com.adjust.sdk.test
         private ITestFactory GetPlatformSpecificTestLibrary()
         {
 #if UNITY_IOS
-            return new TestFactoryIOS(BASE_URL);
+            return new TestFactoryiOS(BASE_URL);
 #elif UNITY_ANDROID
             return new TestFactoryAndroid(BASE_URL);
 #elif (UNITY_WSA || UNITY_WP8)

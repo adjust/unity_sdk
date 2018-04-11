@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace com.adjust.sdk.test
 {
-    public class TestFactoryIOS : ITestFactory
+    public class TestFactoryiOS : ITestFactory
     {
 #if UNITY_IOS
         private CommandExecutor _commandExecutor;
