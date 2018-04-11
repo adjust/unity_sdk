@@ -40,33 +40,33 @@ extern "C"
                                           andCommandDelegate:commandDelegate];
     }
 
-	void _ATLStartTestSession(const char* clientSdk) {
+    void _ATLStartTestSession(const char* clientSdk) {
         NSString *sClientSdk = [NSString stringWithUTF8String:clientSdk];
         [testLibrary startTestSession:sClientSdk];
     }
 
-	void _ATLAddInfoToSend(const char* key, const char* value) {
-		NSString *sKey = [NSString stringWithUTF8String:key];
-		if (value == NULL) {
-	        [testLibrary addInfoToSend:sKey value:nil];
-	    } else {
-			NSString *sValue = [NSString stringWithUTF8String:value];
-			[testLibrary addInfoToSend:sKey value:sValue];
-		}
-	}
+    void _ATLAddInfoToSend(const char* key, const char* value) {
+        NSString *sKey = [NSString stringWithUTF8String:key];
+        if (value == NULL) {
+            [testLibrary addInfoToSend:sKey value:nil];
+        } else {
+            NSString *sValue = [NSString stringWithUTF8String:value];
+            [testLibrary addInfoToSend:sKey value:sValue];
+        }
+    }
 
-	void _ATLSendInfoToServer(const char* basePath) {
-		NSString *sBasePath = [NSString stringWithUTF8String:basePath];
-		[testLibrary sendInfoToServer:sBasePath];
-	}
+    void _ATLSendInfoToServer(const char* basePath) {
+        NSString *sBasePath = [NSString stringWithUTF8String:basePath];
+        [testLibrary sendInfoToServer:sBasePath];
+    }
 
-	void _ATLAddTest(const char* testName) {
-		NSString *sTestName = [NSString stringWithUTF8String:testName];
-		[testLibrary addTest:sTestName];
-	}
+    void _ATLAddTest(const char* testName) {
+        NSString *sTestName = [NSString stringWithUTF8String:testName];
+        [testLibrary addTest:sTestName];
+    }
 
-	void _ATLAddTestDirectory(const char* testDirectory) {
-		NSString *sTestDirectory = [NSString stringWithUTF8String:testDirectory];
-		[testLibrary addTestDirectory:sTestDirectory];
-	}
+    void _ATLAddTestDirectory(const char* testDirectory) {
+        NSString *sTestDirectory = [NSString stringWithUTF8String:testDirectory];
+        [testLibrary addTestDirectory:sTestDirectory];
+    }
 }

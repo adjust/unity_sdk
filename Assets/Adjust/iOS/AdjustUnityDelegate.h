@@ -43,9 +43,9 @@
                              eventFailureCallback:(BOOL)swizzleEventFailureCallback
                            sessionSuccessCallback:(BOOL)swizzleSessionSuccessCallback
                            sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
-					     deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
-					 shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
-					     withAdjustUnitySceneName:(NSString *)adjustUnitySceneName;
+                         deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
+                     shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
+                         withAdjustUnitySceneName:(NSString *)adjustUnitySceneName;
 
 /**
  * @brief Teardown method used to reset static AdjustUnityDelegate instance.

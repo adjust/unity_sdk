@@ -279,10 +279,10 @@ namespace com.adjust.sdk
 
         public static void AddSessionPartnerParameter(string key, string value)
         {
-			if (ajcAdjust == null)
+            if (ajcAdjust == null)
             {
-				ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-			}
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
             ajcAdjust.CallStatic("addSessionPartnerParameter", key, value);
         }
 
@@ -351,19 +351,19 @@ namespace com.adjust.sdk
 
         public static void SetReferrer(string referrer)
         {
-			ajcAdjust.CallStatic("setReferrer", referrer, ajoCurrentActivity);
+            ajcAdjust.CallStatic("setReferrer", referrer, ajoCurrentActivity);
         }
 
         public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 
-		{
+        {
             DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
             ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
         }
 
-		public static string GetAmazonAdId()
-		{
-			return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
-		}
+        public static string GetAmazonAdId()
+        {
+            return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
+        }
 
         // Used for testing only.
         public static void SetTestOptions(AdjustTestOptions testOptions)

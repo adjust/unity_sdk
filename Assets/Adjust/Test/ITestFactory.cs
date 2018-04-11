@@ -5,7 +5,7 @@
         void StartTestSession();
         void AddInfoToSend(string key, string paramValue);
         void SendInfoToServer(string basePath);
-		void AddTest(string testName);
-		void AddTestDirectory(string testDirectory);
+        void AddTest(string testName);
+        void AddTestDirectory(string testDirectory);
     }
 }

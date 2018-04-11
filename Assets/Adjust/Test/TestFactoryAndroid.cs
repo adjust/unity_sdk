@@ -13,11 +13,11 @@ namespace com.adjust.sdk.test
             _baseUrl = baseUrl;
             CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl);
             onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);
-			ajoTestLibrary = new AndroidJavaObject(
-				"com.adjust.testlibrary.TestLibrary",
-				_baseUrl,
-				onCommandReceivedListener);
-			
+            ajoTestLibrary = new AndroidJavaObject(
+                "com.adjust.testlibrary.TestLibrary",
+                _baseUrl,
+                onCommandReceivedListener);
+            
         }
 
         public void StartTestSession()
@@ -35,14 +35,14 @@ namespace com.adjust.sdk.test
             ajoTestLibrary.Call("sendInfoToServer", basePath);
         }
 
-		public void AddTest(string testName)
-		{
-			ajoTestLibrary.Call("addTest", testName);
-		}
+        public void AddTest(string testName)
+        {
+            ajoTestLibrary.Call("addTest", testName);
+        }
 
-		public void AddTestDirectory(string testDirectory)
-		{
-			ajoTestLibrary.Call("addTestDirectory", testDirectory);
-		}
+        public void AddTestDirectory(string testDirectory)
+        {
+            ajoTestLibrary.Call("addTestDirectory", testDirectory);
+        }
     }
 }

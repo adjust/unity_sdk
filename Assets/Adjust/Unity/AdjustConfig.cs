@@ -35,13 +35,13 @@ namespace com.adjust.sdk
 
         // Android specific members
         internal string processName;
-		internal bool? readImei;
+        internal bool? readImei;
 
         // Windows specific members
         internal Action<String> logDelegate;
 
-		// Integration testing members
-		internal string SdkPrefix { get; set; }
+        // Integration testing members
+        internal string SdkPrefix { get; set; }
 
         public AdjustConfig(string appToken, AdjustEnvironment environment)
         {
@@ -166,14 +166,14 @@ namespace com.adjust.sdk
             return this.sessionFailureDelegate;
         }
 
-		public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)
+        public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)
         {
-			this.secretId = secretId;
-			this.info1 = info1;
-			this.info2 = info2;
-			this.info3 = info3;
-			this.info4 = info4;
-		}
+            this.secretId = secretId;
+            this.info1 = info1;
+            this.info2 = info2;
+            this.info3 = info3;
+            this.info4 = info4;
+        }
 
         // Android specific methods.
         public void setProcessName(string processName)
@@ -181,10 +181,10 @@ namespace com.adjust.sdk
             this.processName = processName;
         }
 
-		public void setReadMobileEquipmentIdentity(bool readMobileEquipmentIdentity)
+        public void setReadMobileEquipmentIdentity(bool readMobileEquipmentIdentity)
         {
-			this.readImei = readMobileEquipmentIdentity;
-		}
+            this.readImei = readMobileEquipmentIdentity;
+        }
 
         // Windows specific methods.
         public void setLogDelegate(Action<String> logDelegate)

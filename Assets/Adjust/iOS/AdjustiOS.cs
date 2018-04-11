@@ -106,11 +106,11 @@ namespace com.adjust.sdk
             int teardown,
             int deleteState);
 
-		[DllImport("__Internal")]
-		private static extern void _AdjustTrackSubsessionStart();
+        [DllImport("__Internal")]
+        private static extern void _AdjustTrackSubsessionStart();
 
-		[DllImport("__Internal")]
-		private static extern void _AdjustTrackSubsessionEnd();
+        [DllImport("__Internal")]
+        private static extern void _AdjustTrackSubsessionEnd();
 
         public AdjustiOS() {}
 
@@ -183,7 +183,7 @@ namespace com.adjust.sdk
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
 
             _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
-        }		
+        }        
 
         public static void SetEnabled(bool enabled)
         {
@@ -289,15 +289,15 @@ namespace com.adjust.sdk
                 AdjustUtils.ConvertBool(deleteState));
         }
 
-		public static void TrackSubsessionStart()
-		{
-			_AdjustTrackSubsessionStart();
-		}
+        public static void TrackSubsessionStart()
+        {
+            _AdjustTrackSubsessionStart();
+        }
 
-		public static void TrackSubsessionEnd()
-		{
-			_AdjustTrackSubsessionEnd();
-		}
+        public static void TrackSubsessionEnd()
+        {
+            _AdjustTrackSubsessionEnd();
+        }
     }
 #endif
 }
