@@ -520,7 +520,7 @@ namespace com.adjust.sdk
 
         public static void SetTestOptions(AdjustTestOptions testOptions)
         {
-            if (Application.isEditor) { return; }
+            if (IsEditor()) { return; }
 
             #if UNITY_IOS
                 AdjustiOS.SetTestOptions(testOptions);
