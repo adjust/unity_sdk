@@ -243,7 +243,7 @@ namespace com.adjust.sdk
 
         public static void SetDeviceToken(string deviceToken)
         {
-            ajcAdjust.CallStatic("setPushToken", deviceToken);
+            ajcAdjust.CallStatic("setPushToken", deviceToken, ajoCurrentActivity);
         }
 
         public static string GetAdid()
