@@ -43,8 +43,8 @@ namespace com.adjust.sdk.test
             }
         }
 
-		private void StartTestSession() {
-			ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
+        private void StartTestSession() {
+            ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
 
             #if UNITY_IOS
             _testFactoryiOS = testFactory as TestFactoryiOS;
@@ -53,9 +53,9 @@ namespace com.adjust.sdk.test
             // Set specific tests to run.
             // testFactory.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
 
-            Log ("Starting test session...");
+            Log("Starting test session...");
             testFactory.StartTestSession();
-		}
+        }
 
         private ITestFactory GetPlatformSpecificTestLibrary()
         {

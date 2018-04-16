@@ -20,7 +20,7 @@ namespace com.adjust.sdk.test
         public void StartTestSession()
         {
             TestApp.Log("TestFactory -> StartTestSession()");
-            // TODO: add possibility to add specific tests and/or test dirs to WinSDK Bridge
+            // TODO: Add possibility to add specific tests and/or test dirs to WinSDK Bridge.
             string testNames = null;
             _testLibraryInterface.StartTestSession(TestApp.CLIENT_SDK, testNames);
         }
