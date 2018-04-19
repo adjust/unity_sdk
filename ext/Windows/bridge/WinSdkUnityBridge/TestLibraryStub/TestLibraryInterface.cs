@@ -12,7 +12,7 @@ namespace TestLibraryInterface
         {
         }
 
-        public void StartTestSession(string clientSdk, string testNames = null)
+        public void StartTestSession(string clientSdk)
         {
         }
 
@@ -21,6 +21,14 @@ namespace TestLibraryInterface
         }
 
         public void SendInfoToServer(string basePath)
+        {
+        }
+
+        public void AddTest(string testName)
+        {
+        }
+
+        public void AddTestDirectory(string testDirectory)
         {
         }
     }

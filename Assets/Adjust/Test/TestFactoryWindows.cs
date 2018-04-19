@@ -20,9 +20,7 @@ namespace com.adjust.sdk.test
         public void StartTestSession()
         {
             TestApp.Log("TestFactory -> StartTestSession()");
-            // TODO: Add possibility to add specific tests and/or test dirs to WinSDK Bridge.
-            string testNames = null;
-            _testLibraryInterface.StartTestSession(TestApp.CLIENT_SDK, testNames);
+            _testLibraryInterface.StartTestSession(TestApp.CLIENT_SDK);
         }
 
         public void AddInfoToSend(string key, string paramValue)
@@ -37,14 +35,12 @@ namespace com.adjust.sdk.test
 
         public void AddTest(string testName)
         {
-            // TODO:
-            throw new NotImplementedException ();
+            _testLibraryInterface.AddTest(testName);
         }
 
         public void AddTestDirectory(string testDirectory)
         {
-            // TODO:
-            throw new NotImplementedException ();
+            _testLibraryInterface.AddTestDirectory(testDirectory);
         }
 #else
         public void StartTestSession()

@@ -32,16 +32,11 @@ namespace TestLibraryInterface
             Adjust.SetTestOptions(adjustTestOptionsDto.ToAdjustTestOptions());
         }
 
-        public void StartTestSession(string clientSdk, string testNames = null)
+        public void StartTestSession(string clientSdk)
         {
             if (_testLibrary == null) { return; }
 
             Log("Starting Test Session...");
-
-            if(!string.IsNullOrEmpty(testNames))
-            {
-                _testLibrary.SetTests(testNames);
-            }
 
             _testLibrary.StartTestSession(clientSdk);
         }
@@ -56,6 +51,18 @@ namespace TestLibraryInterface
         {
             if (_testLibrary == null) { return; }
             _testLibrary.SendInfoToServer(basePath);
+        }
+
+        public void AddTest(string testName)
+        {
+            if (_testLibrary == null) { return; }
+            _testLibrary.AddTest(testName);
+        }
+
+        public void AddTestDirectory(string testDirectory)
+        {
+            if (_testLibrary == null) { return; }
+            _testLibrary.AddTestDirectory(testDirectory);
         }
 
         private string GetLocalIp()
