@@ -11,10 +11,10 @@ namespace com.adjust.sdk.test
         private readonly TestLibraryInterface.TestLibraryInterface _testLibraryInterface
             = new TestLibraryInterface.TestLibraryInterface();
 
-        public TestFactoryWindows(string baseUrl)
+        public TestFactoryWindows(string baseUrl, string gdprUrl)
         {
             IAdjustCommandExecutor adjustCommandExecutor = new CommandExecutor(this, baseUrl);
-            _testLibraryInterface.Init(adjustCommandExecutor, baseUrl, UnityEngine.Debug.Log);
+            _testLibraryInterface.Init(adjustCommandExecutor, baseUrl, gdprUrl, UnityEngine.Debug.Log);
         }
 
         public void StartTestSession()

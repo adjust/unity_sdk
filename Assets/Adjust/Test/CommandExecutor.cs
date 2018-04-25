@@ -61,6 +61,7 @@ namespace com.adjust.sdk.test
                     case "setPushToken": SetPushToken(); break;
                     case "openDeeplink": OpenDeepLink(); break;
                     case "sendReferrer": SetReferrer(); break;
+                    case "gdprForgetMe": GdprForgetMe(); break;
 
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
@@ -544,6 +545,11 @@ namespace com.adjust.sdk.test
         {
             var enabled = bool.Parse(_command.GetFirstParameterValue("enabled"));
             Adjust.setEnabled(enabled);
+        }
+
+        public void GdprForgetMe()
+        {
+            Adjust.gdprForgetMe();
         }
 
         private void SetOfflineMode()

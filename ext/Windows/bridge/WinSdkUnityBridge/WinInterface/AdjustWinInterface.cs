@@ -231,6 +231,13 @@ namespace WinInterface
 #endif
         }
 
+        public static void GdprForgetMe()
+        {
+#if NETFX_CORE
+            Adjust.GdprForgetMe();
+#endif
+        }
+
         public static string GetWindowsAdId()
         {
 #if NETFX_CORE

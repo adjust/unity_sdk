@@ -10,7 +10,7 @@ namespace com.adjust.sdk.test
         public static readonly string TAG = "[TestApp]";
 
 #if (UNITY_WSA || UNITY_WP8)
-        public const string CLIENT_SDK = "unity4.12.5@wuap4.12.0";
+        public const string CLIENT_SDK = "unity4.12.5@wuap4.12.1";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "localhost" + PORT;        // Windows simulator
@@ -46,12 +46,14 @@ namespace com.adjust.sdk.test
         private void StartTestSession() {
             ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
 
-            #if UNITY_IOS
+#if UNITY_IOS
             _testFactoryiOS = testFactory as TestFactoryiOS;
-            #endif
+#endif
 
             // Set specific tests to run.
             // testFactory.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
+            // testFactory.AddTest("current/gdpr/Test_GdprForgetMe_before_install_kill_in_between");
+            testFactory.AddTestDirectory("current/gdpr");
 
             Log("Starting test session...");
             testFactory.StartTestSession();
@@ -64,7 +66,8 @@ namespace com.adjust.sdk.test
 #elif UNITY_ANDROID
             return new TestFactoryAndroid(BASE_URL);
 #elif (UNITY_WSA || UNITY_WP8)
-            return new TestFactoryWindows(BASE_URL);
+            string gdprUrl = BASE_URL;
+            return new TestFactoryWindows(BASE_URL, gdprUrl);
 #else
             Debug.Log("Cannot run integration tests (Error in TestApp.GetPlatformSpecificTestLibrary(...)). None of the supported platforms selected.");
             return null;

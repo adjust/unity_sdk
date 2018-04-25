@@ -58,6 +58,10 @@ namespace WinInterface
             return null;
         }
 
+        public static void GdprForgetMe()
+        {
+        }
+
         public static string GetWindowsAdId()
         {
             return string.Empty;

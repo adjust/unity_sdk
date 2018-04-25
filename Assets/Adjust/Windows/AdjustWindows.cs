@@ -243,6 +243,11 @@ namespace com.adjust.sdk
             return new AdjustAttribution(attributionMap);
         }
 
+        public static void GdprForgetMe()
+        {
+            AdjustWinInterface.GdprForgetMe();
+        }
+
         public static string GetWinAdId()
         {
             return AdjustWinInterface.GetWindowsAdId();

@@ -184,6 +184,19 @@ namespace com.adjust.sdk
             #endif
         }
 
+        public static void gdprForgetMe()
+        {
+#if UNITY_IOS
+			AdjustiOS.GdprForgetMe();
+#elif UNITY_ANDROID
+            AdjustAndroid.GdprForgetMe();
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.GdprForgetMe();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static void appWillOpenUrl(string url)
         {
             if (IsEditor()) { return; }
