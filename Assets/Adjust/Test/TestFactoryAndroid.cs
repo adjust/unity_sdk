@@ -4,18 +4,16 @@ namespace com.adjust.sdk.test
 {
     public class TestFactoryAndroid : ITestFactory
     {
-        private string _baseUrl;
         private AndroidJavaObject ajoTestLibrary;
         private CommandListenerAndroid onCommandReceivedListener;
 
-        public TestFactoryAndroid(string baseUrl)
+		public TestFactoryAndroid(string baseUrl, string gdprUrl)
         {
-            _baseUrl = baseUrl;
-            CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl);
+			CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
             onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);
             ajoTestLibrary = new AndroidJavaObject(
                 "com.adjust.testlibrary.TestLibrary",
-                _baseUrl,
+                baseUrl,
                 onCommandReceivedListener);
             
         }

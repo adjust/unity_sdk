@@ -15,7 +15,7 @@ namespace com.adjust.sdk.test
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "localhost" + PORT;        // Windows simulator
 #elif UNITY_ANDROID
-        public const string CLIENT_SDK = "unity4.12.5@android4.12.4";
+        public const string CLIENT_SDK = "unity4.12.5@android4.13.0";
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
         private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;          // Android simulator
@@ -52,7 +52,7 @@ namespace com.adjust.sdk.test
 
             // Set specific tests to run.
             // testFactory.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
-            // testFactory.AddTest("current/gdpr/Test_GdprForgetMe_before_install_kill_in_between");
+			// testFactory.AddTest("current/gdpr/Test_GdprForgetMe_after_install");
             testFactory.AddTestDirectory("current/gdpr");
 
             Log("Starting test session...");
@@ -61,12 +61,13 @@ namespace com.adjust.sdk.test
 
         private ITestFactory GetPlatformSpecificTestLibrary()
         {
+			// gdpr url on sdk_test_server is the same as base url
+			string gdprUrl = BASE_URL;
 #if UNITY_IOS
             return new TestFactoryiOS(BASE_URL);
 #elif UNITY_ANDROID
-            return new TestFactoryAndroid(BASE_URL);
+			return new TestFactoryAndroid(BASE_URL, gdprUrl);
 #elif (UNITY_WSA || UNITY_WP8)
-            string gdprUrl = BASE_URL;
             return new TestFactoryWindows(BASE_URL, gdprUrl);
 #else
             Debug.Log("Cannot run integration tests (Error in TestApp.GetPlatformSpecificTestLibrary(...)). None of the supported platforms selected.");

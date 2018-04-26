@@ -16,13 +16,16 @@ namespace com.adjust.sdk.test
         private Dictionary<int, AdjustConfig> _savedConfigs = new Dictionary<int, AdjustConfig>();
         private Dictionary<int, AdjustEvent> _savedEvents = new Dictionary<int, AdjustEvent>();
         public string BasePath { get; set; }
+		public string GdprPath { get; set; }
         private string _baseUrl;
+		private string _gdprUrl;
         private Command _command;
         private ITestFactory _testFactory;
 
-        public CommandExecutor(ITestFactory testFactory, string baseUrl)
+		public CommandExecutor(ITestFactory testFactory, string baseUrl, string gdprUrl)
         {
             _baseUrl = baseUrl;
+			_gdprUrl = gdprUrl;
             _testFactory = testFactory;
         }
 			
@@ -79,10 +82,12 @@ namespace com.adjust.sdk.test
 
             AdjustTestOptions testOptions = new AdjustTestOptions();
             testOptions.BaseUrl = _baseUrl;
+			testOptions.GdprUrl = _gdprUrl;
 
             if (_command.ContainsParameter("basePath"))
             {
                 BasePath = _command.GetFirstParameterValue("basePath");
+				GdprPath = _command.GetFirstParameterValue("basePath");
             }
 
             if (_command.ContainsParameter("timerInterval"))
@@ -118,6 +123,7 @@ namespace com.adjust.sdk.test
                     {
                         testOptions.Teardown = true;
                         testOptions.BasePath = BasePath;
+						testOptions.GdprPath = GdprPath;
                         testOptions.UseTestConnectionOptions = true;
                     }
                     if (teardownOption == "deleteState")
@@ -137,6 +143,7 @@ namespace com.adjust.sdk.test
                     {
                         testOptions.Teardown = true;
                         testOptions.BasePath = null;
+						testOptions.GdprPath = null;
                         testOptions.UseTestConnectionOptions = false;
                     }
                     if (teardownOption == "test")

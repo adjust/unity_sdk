@@ -251,6 +251,11 @@ namespace com.adjust.sdk
             return ajcAdjust.CallStatic<string>("getAdid");
         }
 
+		public static void GdprForgetMe()
+		{
+			ajcAdjust.CallStatic("gdprForgetMe", ajoCurrentActivity);
+		}
+
         public static AdjustAttribution GetAttribution()
         {
             try
