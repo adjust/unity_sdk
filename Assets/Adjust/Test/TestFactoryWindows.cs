@@ -13,8 +13,8 @@ namespace com.adjust.sdk.test
 
         public TestFactoryWindows(string baseUrl, string gdprUrl)
         {
-            IAdjustCommandExecutor adjustCommandExecutor = new CommandExecutor(this, baseUrl);
-            _testLibraryInterface.Init(adjustCommandExecutor, baseUrl, gdprUrl, UnityEngine.Debug.Log);
+            IAdjustCommandExecutor adjustCommandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
+            _testLibraryInterface.Init(adjustCommandExecutor, baseUrl, UnityEngine.Debug.Log);
         }
 
         public void StartTestSession()

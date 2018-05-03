@@ -10,7 +10,7 @@ namespace com.adjust.sdk.test
         public static readonly string TAG = "[TestApp]";
 
 #if (UNITY_WSA || UNITY_WP8)
-        public const string CLIENT_SDK = "unity4.12.5@wuap4.12.1";
+        public const string CLIENT_SDK = "unity4.12.5@wuap4.13.0";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "localhost" + PORT;        // Windows simulator

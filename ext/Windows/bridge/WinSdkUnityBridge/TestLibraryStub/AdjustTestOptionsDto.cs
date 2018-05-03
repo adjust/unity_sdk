@@ -4,6 +4,8 @@ namespace TestLibraryInterface
     {
         public string BaseUrl { get; set; }
         public string BasePath { get; set; }
+        public string GdprUrl { get; set; }
+        public string GdprPath { get; set; }
         public bool? Teardown { get; set; }
         public bool? DeleteState { get; set; }
         public long? TimerIntervalInMilliseconds { get; set; }

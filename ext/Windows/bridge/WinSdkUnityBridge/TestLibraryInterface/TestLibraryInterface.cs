@@ -1,5 +1,4 @@
 using System;
-using AdjustSdk.Pcl;
 using Windows.Networking.Connectivity;
 using AdjustSdk;
 
@@ -10,7 +9,7 @@ namespace TestLibraryInterface
         private TestLibrary.TestLibrary _testLibrary;
         private Action<string> _logDelegate;
 
-        public void Init(IAdjustCommandExecutor adjustCommandExecutor, string baseUrl, string gdprUrl, Action<string> logDelegate = null)
+        public void Init(IAdjustCommandExecutor adjustCommandExecutor, string baseUrl, Action<string> logDelegate = null)
         {
             _logDelegate = logDelegate;
             Log("Initializing...");
@@ -21,10 +20,7 @@ namespace TestLibraryInterface
             var commandListener = new WindowsCommandListener(adjustCommandExecutor);
 
             Log("Setting AdjustFactory.BaseUrl to: " + baseUrl);
-            AdjustFactory.BaseUrl = baseUrl;
-            AdjustFactory.GdprUrl = gdprUrl;
-
-            _testLibrary = new TestLibrary.TestLibrary(baseUrl, gdprUrl, commandListener, localIp, _logDelegate);
+            _testLibrary = new TestLibrary.TestLibrary(baseUrl, commandListener, localIp, _logDelegate);
             Log("Init finished.");
         }
 

@@ -4,7 +4,7 @@ namespace TestLibraryInterface
 {
     public class TestLibraryInterface
     {
-        public void Init(IAdjustCommandExecutor adjustCommandExecutor, string baseUrl, string gdprUrl, Action<string> logDelegate = null)
+        public void Init(IAdjustCommandExecutor adjustCommandExecutor, string baseUrl, Action<string> logDelegate = null)
         {
         }
 

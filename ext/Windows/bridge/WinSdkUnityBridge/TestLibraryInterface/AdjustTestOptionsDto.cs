@@ -6,6 +6,8 @@ namespace TestLibraryInterface
     {
         public string BaseUrl { get; set; }
         public string BasePath { get; set; }
+        public string GdprUrl { get; set; }
+        public string GdprPath { get; set; }
         public bool? Teardown { get; set; }
         public bool? DeleteState { get; set; }
 
@@ -23,7 +25,9 @@ namespace TestLibraryInterface
             return new AdjustTestOptions
             {
                 BasePath = this.BasePath,
+                GdprPath = this.GdprPath,
                 BaseUrl = this.BaseUrl,
+                GdprUrl = this.GdprUrl,
                 DeleteState = this.DeleteState,
                 SessionIntervalInMilliseconds = this.SessionIntervalInMilliseconds,
                 SubsessionIntervalInMilliseconds = this.SubsessionIntervalInMilliseconds,

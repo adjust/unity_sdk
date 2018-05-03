@@ -259,7 +259,9 @@ namespace com.adjust.sdk
                 new TestLibraryInterface.AdjustTestOptionsDto
                 {
                     BasePath = testOptions.BasePath,
+                    GdprPath = testOptions.GdprPath,
                     BaseUrl = testOptions.BaseUrl,
+                    GdprUrl = testOptions.GdprUrl,
                     DeleteState = testOptions.DeleteState,
                     SessionIntervalInMilliseconds = testOptions.SessionIntervalInMilliseconds,
                     SubsessionIntervalInMilliseconds = testOptions.SubsessionIntervalInMilliseconds,
