@@ -354,6 +354,10 @@ extern "C"
         [Adjust sendFirstPackages];
     }
 
+    void _AdjustGdprForgetMe() {
+        [Adjust gdprForgetMe];
+    }
+
     void _AdjustAddSessionPartnerParameter(const char* key, const char* value) {
         NSString *stringKey = [NSString stringWithUTF8String:key];
         NSString *stringValue = [NSString stringWithUTF8String:value];
@@ -386,6 +390,8 @@ extern "C"
 
     void _AdjustSetTestOptions(const char* baseUrl,
                                const char* basePath,
+                               const char* gdprUrl,
+                               const char* gdprPath,
                                long timerIntervalInMilliseconds,
                                long timerStartInMilliseconds,
                                long sessionIntervalInMilliseconds,
@@ -399,9 +405,19 @@ extern "C"
             [testOptions setBaseUrl:stringBaseUrl];
         }
 
+        NSString *stringGdprUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:gdprUrl] : nil;
+        if (stringGdprUrl != nil) {
+            [testOptions setGdprUrl:stringGdprUrl];
+        }
+
         NSString *stringBasePath = isStringValid(basePath) == true ? [NSString stringWithUTF8String:basePath] : nil;
         if (stringBasePath != nil && [stringBasePath length] > 0) {
             [testOptions setBasePath:stringBasePath];
+        }
+
+        NSString *stringGdprPath = isStringValid(gdprPath) == true ? [NSString stringWithUTF8String:gdprPath] : nil;
+        if (stringGdprPath != nil && [stringGdprPath length] > 0) {
+            [testOptions setGdprPath:stringGdprPath];
         }
 
         testOptions.timerIntervalInMilliseconds = [NSNumber numberWithLong:timerIntervalInMilliseconds];

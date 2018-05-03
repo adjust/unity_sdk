@@ -20,7 +20,7 @@ namespace com.adjust.sdk.test
         private const string PROTOCOL = "https://";
         private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;          // Android simulator
 #elif UNITY_IOS
-        public const string CLIENT_SDK = "unity4.12.5@ios4.12.3";
+        public const string CLIENT_SDK = "unity4.12.5@ios4.13.0";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;           // iOS simulator
@@ -64,7 +64,7 @@ namespace com.adjust.sdk.test
 			// gdpr url on sdk_test_server is the same as base url
 			string gdprUrl = BASE_URL;
 #if UNITY_IOS
-            return new TestFactoryiOS(BASE_URL);
+			return new TestFactoryiOS(BASE_URL, gdprUrl);
 #elif UNITY_ANDROID
 			return new TestFactoryAndroid(BASE_URL, gdprUrl);
 #elif (UNITY_WSA || UNITY_WP8)

@@ -15,7 +15,6 @@ namespace com.adjust.sdk.test
                 "com.adjust.testlibrary.TestLibrary",
                 baseUrl,
                 onCommandReceivedListener);
-            
         }
 
         public void StartTestSession()

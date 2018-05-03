@@ -71,6 +71,9 @@ namespace com.adjust.sdk
         [DllImport("__Internal")]
         private static extern string _AdjustGetAdid();
 
+		[DllImport("__Internal")]
+		private static extern void _AdjustGdprForgetMe();
+
         [DllImport("__Internal")]
         private static extern string _AdjustGetAttribution();
 
@@ -97,8 +100,10 @@ namespace com.adjust.sdk
 
         [DllImport("__Internal")]
         private static extern void _AdjustSetTestOptions(
-            string baseUrl, 
-            string basePath, 
+            string baseUrl,
+            string basePath,
+            string gdprUrl,
+            string gdprPath,
             long timerIntervalInMilliseconds,
             long timerStartInMilliseconds,
             long sessionIntervalInMilliseconds,
@@ -257,6 +262,11 @@ namespace com.adjust.sdk
             return _AdjustGetAdid();
         }
 
+		public static void GdprForgetMe()
+		{
+			_AdjustGdprForgetMe();
+		}
+
         public static AdjustAttribution GetAttribution()
         {
             string attributionString = _AdjustGetAttribution();
@@ -281,6 +291,8 @@ namespace com.adjust.sdk
             _AdjustSetTestOptions(
                 testOptions.BaseUrl,
                 testOptions.BasePath,
+				testOptions.GdprUrl,
+				testOptions.GdprPath,
                 timerIntervalMls,
                 timerStartMls,
                 sessionIntMls,
