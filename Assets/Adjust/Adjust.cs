@@ -187,7 +187,7 @@ namespace com.adjust.sdk
         public static void gdprForgetMe()
         {
 #if UNITY_IOS
-			AdjustiOS.GdprForgetMe();
+            AdjustiOS.GdprForgetMe();
 #elif UNITY_ANDROID
             AdjustAndroid.GdprForgetMe();
 #elif (UNITY_WSA || UNITY_WP8)

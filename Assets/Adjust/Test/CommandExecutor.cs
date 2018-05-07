@@ -16,23 +16,23 @@ namespace com.adjust.sdk.test
         private Dictionary<int, AdjustConfig> _savedConfigs = new Dictionary<int, AdjustConfig>();
         private Dictionary<int, AdjustEvent> _savedEvents = new Dictionary<int, AdjustEvent>();
         public string BasePath { get; set; }
-		public string GdprPath { get; set; }
+        public string GdprPath { get; set; }
         private string _baseUrl;
-		private string _gdprUrl;
+        private string _gdprUrl;
         private Command _command;
         private ITestFactory _testFactory;
 
-		public CommandExecutor(ITestFactory testFactory, string baseUrl, string gdprUrl)
+        public CommandExecutor(ITestFactory testFactory, string baseUrl, string gdprUrl)
         {
             _baseUrl = baseUrl;
-			_gdprUrl = gdprUrl;
+            _gdprUrl = gdprUrl;
             _testFactory = testFactory;
         }
-			
-		public void ExecuteCommand(string className, string methodName, Dictionary<string, List<string>> parameters)
-		{
-			this.ExecuteCommand(new Command(className, methodName, parameters));
-		}
+            
+        public void ExecuteCommand(string className, string methodName, Dictionary<string, List<string>> parameters)
+        {
+            this.ExecuteCommand(new Command(className, methodName, parameters));
+        }
 
         public void ExecuteCommand(Command command)
         {
@@ -82,12 +82,12 @@ namespace com.adjust.sdk.test
 
             AdjustTestOptions testOptions = new AdjustTestOptions();
             testOptions.BaseUrl = _baseUrl;
-			testOptions.GdprUrl = _gdprUrl;
+            testOptions.GdprUrl = _gdprUrl;
 
             if (_command.ContainsParameter("basePath"))
             {
                 BasePath = _command.GetFirstParameterValue("basePath");
-				GdprPath = _command.GetFirstParameterValue("basePath");
+                GdprPath = _command.GetFirstParameterValue("basePath");
             }
 
             if (_command.ContainsParameter("timerInterval"))
@@ -123,7 +123,7 @@ namespace com.adjust.sdk.test
                     {
                         testOptions.Teardown = true;
                         testOptions.BasePath = BasePath;
-						testOptions.GdprPath = GdprPath;
+                        testOptions.GdprPath = GdprPath;
                         testOptions.UseTestConnectionOptions = true;
                     }
                     if (teardownOption == "deleteState")
@@ -143,7 +143,7 @@ namespace com.adjust.sdk.test
                     {
                         testOptions.Teardown = true;
                         testOptions.BasePath = null;
-						testOptions.GdprPath = null;
+                        testOptions.GdprPath = null;
                         testOptions.UseTestConnectionOptions = false;
                     }
                     if (teardownOption == "test")
@@ -525,7 +525,7 @@ namespace com.adjust.sdk.test
         private void Resume()
         {
 #if UNITY_IOS
-			AdjustiOS.TrackSubsessionStart();
+            AdjustiOS.TrackSubsessionStart();
 #elif UNITY_ANDROID
             AdjustAndroid.OnResume();
 #elif (UNITY_WSA || UNITY_WP8)
@@ -538,7 +538,7 @@ namespace com.adjust.sdk.test
         private void Pause()
         {
 #if UNITY_IOS
-			AdjustiOS.TrackSubsessionEnd();
+            AdjustiOS.TrackSubsessionEnd();
 #elif UNITY_ANDROID
             AdjustAndroid.OnPause();
 #elif (UNITY_WSA || UNITY_WP8)

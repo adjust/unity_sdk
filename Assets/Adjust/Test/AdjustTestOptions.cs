@@ -6,9 +6,9 @@ namespace com.adjust.sdk.test
     public class AdjustTestOptions
     {
         public string BaseUrl { get; set; }
-		public string GdprUrl { get; set; }
+        public string GdprUrl { get; set; }
         public string BasePath { get; set; }
-		public string GdprPath { get; set; }
+        public string GdprPath { get; set; }
         public bool? Teardown { get; set; }
         public bool? DeleteState { get; set; }
         public bool? UseTestConnectionOptions { get; set; }
@@ -27,17 +27,17 @@ namespace com.adjust.sdk.test
         {
             AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
             ajoTestOptions.Set<String>("baseUrl", BaseUrl);
-			ajoTestOptions.Set<String>("gdprUrl", GdprUrl);
+            ajoTestOptions.Set<String>("gdprUrl", GdprUrl);
 
             if (!string.IsNullOrEmpty(BasePath)) 
             {
                 ajoTestOptions.Set<String>("basePath", BasePath);
             }
 
-			if (!string.IsNullOrEmpty(GdprPath)) 
-			{
-				ajoTestOptions.Set<String>("gdprPath", GdprPath);
-			}
+            if (!string.IsNullOrEmpty(GdprPath)) 
+            {
+                ajoTestOptions.Set<String>("gdprPath", GdprPath);
+            }
 
             if (DeleteState.GetValueOrDefault(false) && ajoCurrentActivity != null)
             {

@@ -9,8 +9,7 @@
 #import "Adjust.h"
 
 /**
- * @brief The main interface to Adjust Unity delegate.
- *        Used to do callback methods swizzling where needed.
+ * @brief The main interface to Adjust Unity delegate. Used to do callback methods swizzling where needed.
  */
 @interface AdjustUnityDelegate : NSObject<AdjustDelegate>
 

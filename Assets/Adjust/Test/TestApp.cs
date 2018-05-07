@@ -52,7 +52,7 @@ namespace com.adjust.sdk.test
 
             // Set specific tests to run.
             // testFactory.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
-			// testFactory.AddTest("current/gdpr/Test_GdprForgetMe_after_install");
+            // testFactory.AddTest("current/gdpr/Test_GdprForgetMe_after_install");
             testFactory.AddTestDirectory("current/gdpr");
 
             Log("Starting test session...");
@@ -61,12 +61,12 @@ namespace com.adjust.sdk.test
 
         private ITestFactory GetPlatformSpecificTestLibrary()
         {
-			// gdpr url on sdk_test_server is the same as base url
-			string gdprUrl = BASE_URL;
+            // gdpr url on sdk_test_server is the same as base url
+            string gdprUrl = BASE_URL;
 #if UNITY_IOS
-			return new TestFactoryiOS(BASE_URL, gdprUrl);
+            return new TestFactoryiOS(BASE_URL, gdprUrl);
 #elif UNITY_ANDROID
-			return new TestFactoryAndroid(BASE_URL, gdprUrl);
+            return new TestFactoryAndroid(BASE_URL, gdprUrl);
 #elif (UNITY_WSA || UNITY_WP8)
             return new TestFactoryWindows(BASE_URL, gdprUrl);
 #else

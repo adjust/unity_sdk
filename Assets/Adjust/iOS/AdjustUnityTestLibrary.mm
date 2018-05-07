@@ -7,8 +7,8 @@
 //
 
 #import "ATLTestLibrary.h"
-#import "AdjustUnityCommandExecutor.h"
 #import "AdjustUnityTestLibrary.h"
+#import "AdjustUnityCommandExecutor.h"
 
 static ATLTestLibrary *testLibrary;
 static id<AdjustCommandDelegate> commandDelegate;
@@ -19,11 +19,9 @@ static id<AdjustCommandDelegate> commandDelegate;
 
 - (id)init {
     self = [super init];
-
     if (nil == self) {
         return nil;
     }
-
     return self;
 }
 

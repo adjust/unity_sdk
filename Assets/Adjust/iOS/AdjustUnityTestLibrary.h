@@ -6,6 +6,9 @@
 //  Copyright © 2012-2018 Adjust GmbH. All rights reserved.
 //
 
+/**
+ * @brief The main interface to Adjust Unity test library. Used for integration tests only.
+ */
 @interface AdjustUnityTestLibrary : NSObject
 
 @end

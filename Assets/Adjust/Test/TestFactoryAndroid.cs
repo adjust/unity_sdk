@@ -7,9 +7,9 @@ namespace com.adjust.sdk.test
         private AndroidJavaObject ajoTestLibrary;
         private CommandListenerAndroid onCommandReceivedListener;
 
-		public TestFactoryAndroid(string baseUrl, string gdprUrl)
+        public TestFactoryAndroid(string baseUrl, string gdprUrl)
         {
-			CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
+            CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
             onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);
             ajoTestLibrary = new AndroidJavaObject(
                 "com.adjust.testlibrary.TestLibrary",

@@ -18,11 +18,9 @@ static AdjustUnityDelegate *defaultInstance = nil;
 
 - (id)init {
     self = [super init];
-
     if (nil == self) {
         return nil;
     }
-
     return self;
 }
 
@@ -41,33 +39,28 @@ static AdjustUnityDelegate *defaultInstance = nil;
 
         // Do the swizzling where and if needed.
         if (swizzleAttributionCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustAttributionChanged:)
-                                        withMethod:@selector(adjustAttributionChangedWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustAttributionChanged:)
+                                        withSelector:@selector(adjustAttributionChangedWannabe:)];
         }
-
         if (swizzleEventSuccessCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustEventTrackingSucceeded:)
-                                        withMethod:@selector(adjustEventTrackingSucceededWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustEventTrackingSucceeded:)
+                                        withSelector:@selector(adjustEventTrackingSucceededWannabe:)];
         }
-
         if (swizzleEventFailureCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustEventTrackingFailed:)
-                                        withMethod:@selector(adjustEventTrackingFailedWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustEventTrackingFailed:)
+                                        withSelector:@selector(adjustEventTrackingFailedWannabe:)];
         }
-
         if (swizzleSessionSuccessCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustSessionTrackingSucceeded:)
-                                        withMethod:@selector(adjustSessionTrackingSucceededWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustSessionTrackingSucceeded:)
+                                        withSelector:@selector(adjustSessionTrackingSucceededWannabe:)];
         }
-
         if (swizzleSessionFailureCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustSessionTrackingFailed:)
-                                        withMethod:@selector(adjustSessionTrackingFailedWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustSessionTrackingFailed:)
+                                        withSelector:@selector(adjustSessionTrackingFailedWannabe:)];
         }
-
         if (swizzleDeferredDeeplinkCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustDeeplinkResponse:)
-                                        withMethod:@selector(adjustDeeplinkResponseWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustDeeplinkResponse:)
+                                        withSelector:@selector(adjustDeeplinkResponseWannabe:)];
         }
 
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
@@ -194,8 +187,8 @@ static AdjustUnityDelegate *defaultInstance = nil;
     return _shouldLaunchDeferredDeeplink;
 }
 
-- (void)swizzleCallbackMethod:(SEL)originalSelector
-                   withMethod:(SEL)swizzledSelector {
+- (void)swizzleOriginalSelector:(SEL)originalSelector
+                   withSelector:(SEL)swizzledSelector {
     Class className = [self class];
     Method originalMethod = class_getInstanceMethod(className, originalSelector);
     Method swizzledMethod = class_getInstanceMethod(className, swizzledSelector);
