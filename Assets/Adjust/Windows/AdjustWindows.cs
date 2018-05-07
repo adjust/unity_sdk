@@ -17,7 +17,7 @@ namespace com.adjust.sdk
 {
     public class AdjustWindows
     {
-        private const string SDK_PREFIX = "unity4.12.5";
+        private const string sdkPrefix = "unity4.12.5";
         private static bool appLaunched = false;
 
         public static void Start(AdjustConfig adjustConfig)
@@ -106,8 +106,6 @@ namespace com.adjust.sdk
             {
                 delayStartSeconds = adjustConfig.delayStart.Value;
             }
-
-            string sdkPrefix = adjustConfig.SdkPrefix == null ? SDK_PREFIX : adjustConfig.SdkPrefix;
 
             AdjustConfigDto adjustConfigDto = new AdjustConfigDto {
                 AppToken = adjustConfig.appToken,
