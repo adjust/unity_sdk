@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string SDK_PREFIX = "unity4.12.5";
+        private const string sdkPrefix = "unity4.12.5";
         private static bool launchDeferredDeeplink = true;
 
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
@@ -68,8 +68,7 @@ namespace com.adjust.sdk
                 }
             }
 
-            // Set Unity SDK prefix.
-            string sdkPrefix = adjustConfig.SdkPrefix == null ? SDK_PREFIX : adjustConfig.SdkPrefix;
+            // Set unity SDK prefix.
             ajoAdjustConfig.Call("setSdkPrefix", sdkPrefix);
 
             // Check if user has configured the delayed start option.
@@ -251,10 +250,10 @@ namespace com.adjust.sdk
             return ajcAdjust.CallStatic<string>("getAdid");
         }
 
-		public static void GdprForgetMe()
-		{
-			ajcAdjust.CallStatic("gdprForgetMe", ajoCurrentActivity);
-		}
+        public static void GdprForgetMe()
+        {
+            ajcAdjust.CallStatic("gdprForgetMe", ajoCurrentActivity);
+        }
 
         public static AdjustAttribution GetAttribution()
         {

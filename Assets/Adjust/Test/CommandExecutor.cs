@@ -243,7 +243,7 @@ namespace com.adjust.sdk.test
 
             if (_command.ContainsParameter("sdkPrefix"))
             {
-                adjustConfig.SdkPrefix = _command.GetFirstParameterValue("sdkPrefix");
+                // SDK prefix not tested for non natives.
             }
 
             if (_command.ContainsParameter("defaultTracker"))
