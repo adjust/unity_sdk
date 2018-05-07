@@ -53,7 +53,6 @@ namespace com.adjust.sdk.test
             // Set specific tests to run.
             // testFactory.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
             // testFactory.AddTest("current/gdpr/Test_GdprForgetMe_after_install");
-            testFactory.AddTestDirectory("current/gdpr");
 
             Log("Starting test session...");
             testFactory.StartTestSession();
