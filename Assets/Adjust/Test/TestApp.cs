@@ -10,17 +10,17 @@ namespace com.adjust.sdk.test
         public static readonly string TAG = "[TestApp]";
 
 #if (UNITY_WSA || UNITY_WP8)
-        public const string CLIENT_SDK = "unity4.12.5@wuap4.13.0";
+        public const string CLIENT_SDK = "unity4.13.0@wuap4.13.0";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "localhost" + PORT;        // Windows simulator
 #elif UNITY_ANDROID
-        public const string CLIENT_SDK = "unity4.12.5@android4.13.0";
+        public const string CLIENT_SDK = "unity4.13.0@android4.13.0";
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
         private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;          // Android simulator
 #elif UNITY_IOS
-        public const string CLIENT_SDK = "unity4.12.5@ios4.13.0";
+        public const string CLIENT_SDK = "unity4.13.0@ios4.13.0";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;           // iOS simulator
