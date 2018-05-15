@@ -19,7 +19,6 @@ namespace com.adjust.sdk
         public AdjustAttribution(string jsonString)
         {
             var jsonNode = JSON.Parse(jsonString);
-            
             if (jsonNode == null)
             {
                 return;

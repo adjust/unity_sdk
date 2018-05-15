@@ -1,59 +1,66 @@
 //
-//  AdjustUnityDelegate.m
-//  Adjust
+//  AdjustUnityDelegate.mm
+//  Adjust SDK
 //
-//  Created by uerceg on 12/05/16.
-//  Copyright (c) 2012-2016 adjust GmbH. All rights reserved.
+//  Created by Uglješa Erceg (@uerceg) on 5th December 2016.
+//  Copyright © 2012-2018 Adjust GmbH. All rights reserved.
 //
 
 #import <objc/runtime.h>
 #import "AdjustUnityDelegate.h"
 
+static dispatch_once_t onceToken;
+static AdjustUnityDelegate *defaultInstance = nil;
+
 @implementation AdjustUnityDelegate
 
+#pragma mark - Object lifecycle methods
+
+- (id)init {
+    self = [super init];
+    if (nil == self) {
+        return nil;
+    }
+    return self;
+}
+
+#pragma mark - Public methods
+
 + (id)getInstanceWithSwizzleOfAttributionCallback:(BOOL)swizzleAttributionCallback
-                           eventSucceededCallback:(BOOL)swizzleEventSucceededCallback
-                              eventFailedCallback:(BOOL)swizzleEventFailedCallback
-                         sessionSucceededCallback:(BOOL)swizzleSessionSucceededCallback
-                            sessionFailedCallback:(BOOL)swizzleSessionFailedCallback
+                             eventSuccessCallback:(BOOL)swizzleEventSuccessCallback
+                             eventFailureCallback:(BOOL)swizzleEventFailureCallback
+                           sessionSuccessCallback:(BOOL)swizzleSessionSuccessCallback
+                           sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
                          deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
                      shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
                          withAdjustUnitySceneName:(NSString *)adjustUnitySceneName {
-    static dispatch_once_t onceToken;
-    static AdjustUnityDelegate *defaultInstance = nil;
-    
     dispatch_once(&onceToken, ^{
         defaultInstance = [[AdjustUnityDelegate alloc] init];
 
         // Do the swizzling where and if needed.
         if (swizzleAttributionCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustAttributionChanged:)
-                                  swizzledSelector:@selector(adjustAttributionChangedWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustAttributionChanged:)
+                                        withSelector:@selector(adjustAttributionChangedWannabe:)];
         }
-
-        if (swizzleEventSucceededCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustEventTrackingSucceeded:)
-                                  swizzledSelector:@selector(adjustEventTrackingSucceededWannabe:)];
+        if (swizzleEventSuccessCallback) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustEventTrackingSucceeded:)
+                                        withSelector:@selector(adjustEventTrackingSucceededWannabe:)];
         }
-
-        if (swizzleEventFailedCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustEventTrackingFailed:)
-                                  swizzledSelector:@selector(adjustEventTrackingFailedWannabe:)];
+        if (swizzleEventFailureCallback) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustEventTrackingFailed:)
+                                        withSelector:@selector(adjustEventTrackingFailedWannabe:)];
         }
-
-        if (swizzleSessionSucceededCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustSessionTrackingSucceeded:)
-                                  swizzledSelector:@selector(adjustSessionTrackingSucceededWannabe:)];
+        if (swizzleSessionSuccessCallback) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustSessionTrackingSucceeded:)
+                                        withSelector:@selector(adjustSessionTrackingSucceededWannabe:)];
         }
-
-        if (swizzleSessionFailedCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustSessionTrackingFailed:)
-                                  swizzledSelector:@selector(adjustSessionTrackingFailedWananbe:)];
+        if (swizzleSessionFailureCallback) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustSessionTrackingFailed:)
+                                        withSelector:@selector(adjustSessionTrackingFailedWannabe:)];
         }
-
         if (swizzleDeferredDeeplinkCallback) {
-            [defaultInstance swizzleCallbackMethod:@selector(adjustDeeplinkResponse:)
-                                  swizzledSelector:@selector(adjustDeeplinkResponseWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustDeeplinkResponse:)
+                                        withSelector:@selector(adjustDeeplinkResponseWannabe:)];
         }
 
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
@@ -63,15 +70,12 @@
     return defaultInstance;
 }
 
-- (id)init {
-    self = [super init];
-    
-    if (nil == self) {
-        return nil;
-    }
-    
-    return self;
++ (void)teardown {
+    defaultInstance = nil;
+    onceToken = 0;
 }
+
+#pragma mark - Private & helper methods
 
 - (void)adjustAttributionChangedWannabe:(ADJAttribution *)attribution {
     if (attribution == nil) {
@@ -79,23 +83,20 @@
     }
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
-    [self addValueOrEmpty:dictionary key:@"trackerToken" value:attribution.trackerToken];
-    [self addValueOrEmpty:dictionary key:@"trackerName" value:attribution.trackerName];
-    [self addValueOrEmpty:dictionary key:@"network" value:attribution.network];
-    [self addValueOrEmpty:dictionary key:@"campaign" value:attribution.campaign];
-    [self addValueOrEmpty:dictionary key:@"creative" value:attribution.creative];
-    [self addValueOrEmpty:dictionary key:@"adgroup" value:attribution.adgroup];
-    [self addValueOrEmpty:dictionary key:@"clickLabel" value:attribution.clickLabel];
-    [self addValueOrEmpty:dictionary key:@"adid" value:attribution.adid];
+    [self addValueOrEmpty:attribution.trackerToken forKey:@"trackerToken" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.trackerName forKey:@"trackerName" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.network forKey:@"network" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.campaign forKey:@"campaign" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.creative forKey:@"creative" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.adgroup forKey:@"adgroup" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.clickLabel forKey:@"clickLabel" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.adid forKey:@"adid" toDictionary:dictionary];
 
     NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
                                                            length:[dataAttribution length]
                                                          encoding:NSUTF8StringEncoding];
-
     const char* charArrayAttribution = [stringAttribution UTF8String];
-
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeAttribution", charArrayAttribution);
 }
 
@@ -105,20 +106,17 @@
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
-    [self addValueOrEmpty:dictionary key:@"message" value:eventSuccessResponseData.message];
-    [self addValueOrEmpty:dictionary key:@"timestamp" value:eventSuccessResponseData.timeStamp];
-    [self addValueOrEmpty:dictionary key:@"adid" value:eventSuccessResponseData.adid];
-    [self addValueOrEmpty:dictionary key:@"eventToken" value:eventSuccessResponseData.eventToken];
-    [self addValueOrEmpty:dictionary key:@"jsonResponse" value:eventSuccessResponseData.jsonResponse];
+    [self addValueOrEmpty:eventSuccessResponseData.message forKey:@"message" toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.adid forKey:@"adid" toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
 
     NSData *dataEventSuccess = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringEventSuccess = [[NSString alloc] initWithBytes:[dataEventSuccess bytes]
                                                             length:[dataEventSuccess length]
                                                           encoding:NSUTF8StringEncoding];
-
     const char* charArrayEventSuccess = [stringEventSuccess UTF8String];
-    
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeEventSuccess", charArrayEventSuccess);
 }
 
@@ -128,21 +126,18 @@
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
-    [self addValueOrEmpty:dictionary key:@"message" value:eventFailureResponseData.message];
-    [self addValueOrEmpty:dictionary key:@"timestamp" value:eventFailureResponseData.timeStamp];
-    [self addValueOrEmpty:dictionary key:@"adid" value:eventFailureResponseData.adid];
-    [self addValueOrEmpty:dictionary key:@"eventToken" value:eventFailureResponseData.eventToken];
+    [self addValueOrEmpty:eventFailureResponseData.message forKey:@"message" toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.adid forKey:@"adid" toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
     [dictionary setObject:(eventFailureResponseData.willRetry ? @"true" : @"false") forKey:@"willRetry"];
-    [self addValueOrEmpty:dictionary key:@"jsonResponse" value:eventFailureResponseData.jsonResponse];
 
     NSData *dataEventFailure = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringEventFailure = [[NSString alloc] initWithBytes:[dataEventFailure bytes]
                                                             length:[dataEventFailure length]
                                                           encoding:NSUTF8StringEncoding];
-
     const char* charArrayEventFailure = [stringEventFailure UTF8String];
-
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeEventFailure", charArrayEventFailure);
 }
 
@@ -152,58 +147,49 @@
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
-    [self addValueOrEmpty:dictionary key:@"message" value:sessionSuccessResponseData.message];
-    [self addValueOrEmpty:dictionary key:@"timestamp" value:sessionSuccessResponseData.timeStamp];
-    [self addValueOrEmpty:dictionary key:@"adid" value:sessionSuccessResponseData.adid];
-    [self addValueOrEmpty:dictionary key:@"jsonResponse" value:sessionSuccessResponseData.jsonResponse];
+    [self addValueOrEmpty:sessionSuccessResponseData.message forKey:@"message" toDictionary:dictionary];
+    [self addValueOrEmpty:sessionSuccessResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
+    [self addValueOrEmpty:sessionSuccessResponseData.adid forKey:@"adid" toDictionary:dictionary];
+    [self addValueOrEmpty:sessionSuccessResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
 
     NSData *dataSessionSuccess = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringSessionSuccess = [[NSString alloc] initWithBytes:[dataSessionSuccess bytes]
                                                               length:[dataSessionSuccess length]
                                                             encoding:NSUTF8StringEncoding];
-
     const char* charArraySessionSuccess = [stringSessionSuccess UTF8String];
-
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeSessionSuccess", charArraySessionSuccess);
 }
 
-- (void)adjustSessionTrackingFailedWananbe:(ADJSessionFailure *)sessionFailureResponseData {
+- (void)adjustSessionTrackingFailedWannabe:(ADJSessionFailure *)sessionFailureResponseData {
     if (nil == sessionFailureResponseData) {
         return;
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
-    [self addValueOrEmpty:dictionary key:@"message" value:sessionFailureResponseData.message];
-    [self addValueOrEmpty:dictionary key:@"timestamp" value:sessionFailureResponseData.timeStamp];
-    [self addValueOrEmpty:dictionary key:@"adid" value:sessionFailureResponseData.adid];
+    [self addValueOrEmpty:sessionFailureResponseData.message forKey:@"message" toDictionary:dictionary];
+    [self addValueOrEmpty:sessionFailureResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
+    [self addValueOrEmpty:sessionFailureResponseData.adid forKey:@"adid" toDictionary:dictionary];
+    [self addValueOrEmpty:sessionFailureResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
     [dictionary setObject:(sessionFailureResponseData.willRetry ? @"true" : @"false") forKey:@"willRetry"];
-    [self addValueOrEmpty:dictionary key:@"jsonResponse" value:sessionFailureResponseData.jsonResponse];
 
     NSData *dataSessionFailure = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringSessionFailure = [[NSString alloc] initWithBytes:[dataSessionFailure bytes]
                                                               length:[dataSessionFailure length]
                                                             encoding:NSUTF8StringEncoding];
-
     const char* charArraySessionFailure = [stringSessionFailure UTF8String];
-
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeSessionFailure", charArraySessionFailure);
 }
 
 - (BOOL)adjustDeeplinkResponseWannabe:(NSURL *)deeplink {
     NSString *stringDeeplink = [deeplink absoluteString];
     const char* charDeeplink = [stringDeeplink UTF8String];
-
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeDeferredDeeplink", charDeeplink);
-
     return _shouldLaunchDeferredDeeplink;
 }
 
-- (void)swizzleCallbackMethod:(SEL)originalSelector
-             swizzledSelector:(SEL)swizzledSelector {
+- (void)swizzleOriginalSelector:(SEL)originalSelector
+                   withSelector:(SEL)swizzledSelector {
     Class className = [self class];
-
     Method originalMethod = class_getInstanceMethod(className, originalSelector);
     Method swizzledMethod = class_getInstanceMethod(className, swizzledSelector);
 
@@ -211,7 +197,6 @@
                                         originalSelector,
                                         method_getImplementation(swizzledMethod),
                                         method_getTypeEncoding(swizzledMethod));
-
     if (didAddMethod) {
         class_replaceMethod(className,
                             swizzledSelector,
@@ -222,9 +207,9 @@
     }
 }
 
-- (void)addValueOrEmpty:(NSMutableDictionary *)dictionary
-                    key:(NSString *)key
-                  value:(NSObject *)value {
+- (void)addValueOrEmpty:(NSObject *)value
+                 forKey:(NSString *)key
+           toDictionary:(NSMutableDictionary *)dictionary {
     if (nil != value) {
         [dictionary setObject:[NSString stringWithFormat:@"%@", value] forKey:key];
     } else {

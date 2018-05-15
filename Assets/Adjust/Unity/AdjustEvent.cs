@@ -53,12 +53,12 @@ namespace com.adjust.sdk
             partnerList.Add(value);
         }
 
-        // iOS specific methods
         public void setTransactionId(string transactionId)
         {
             this.transactionId = transactionId;
         }
 
+        // iOS specific methods
         [Obsolete("This is an obsolete method. Please use the adjust purchase SDK for purchase verification (https://github.com/adjust/unity_purchase_sdk)")]
         public void setReceipt(string receipt, string transactionId)
         {

@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
@@ -181,6 +182,19 @@ namespace com.adjust.sdk
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
+        }
+
+        public static void gdprForgetMe()
+        {
+#if UNITY_IOS
+            AdjustiOS.GdprForgetMe();
+#elif UNITY_ANDROID
+            AdjustAndroid.GdprForgetMe();
+#elif (UNITY_WSA || UNITY_WP8)
+            AdjustWindows.GdprForgetMe();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
         }
 
         public static void appWillOpenUrl(string url)
@@ -514,6 +528,21 @@ namespace com.adjust.sdk
                 return true;
             #else
                 return false;
+            #endif
+        }
+
+        public static void SetTestOptions(AdjustTestOptions testOptions)
+        {
+            if (IsEditor()) { return; }
+
+            #if UNITY_IOS
+                AdjustiOS.SetTestOptions(testOptions);
+            #elif UNITY_ANDROID
+                AdjustAndroid.SetTestOptions(testOptions);
+            #elif (UNITY_WSA || UNITY_WP8)
+                AdjustWindows.SetTestOptions(testOptions);
+            #else
+                Debug.Log("Cannot run integration tests. None of the supported platforms selected.");
             #endif
         }
     }

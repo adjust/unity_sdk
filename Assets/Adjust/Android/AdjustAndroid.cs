@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
+using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.12.5";
-
+        private const string sdkPrefix = "unity4.13.0";
         private static bool launchDeferredDeeplink = true;
 
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+        // TODO: Check whether currentActivity should be disposed after usage.
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass
             ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
 
@@ -67,6 +68,9 @@ namespace com.adjust.sdk
                 }
             }
 
+            // Set unity SDK prefix.
+            ajoAdjustConfig.Call("setSdkPrefix", sdkPrefix);
+
             // Check if user has configured the delayed start option.
             if (adjustConfig.delayStart != null)
             {
@@ -102,6 +106,29 @@ namespace com.adjust.sdk
             if (adjustConfig.defaultTracker != null)
             {
                 ajoAdjustConfig.Call("setDefaultTracker", adjustConfig.defaultTracker);
+            }
+
+            // Check if user has set app secret.
+            if (IsAppSecretSet(adjustConfig))
+            {
+                ajoAdjustConfig.Call("setAppSecret",
+                    adjustConfig.secretId.Value,
+                    adjustConfig.info1.Value,
+                    adjustConfig.info2.Value,
+                    adjustConfig.info3.Value,
+                    adjustConfig.info4.Value);
+            }
+
+            // Check if user has set device as known.
+            if (adjustConfig.isDeviceKnown.HasValue)
+            {
+                ajoAdjustConfig.Call("setDeviceKnown", adjustConfig.isDeviceKnown.Value);
+            }
+
+            // Check if user has enabled reading of IMEI and MEID.
+            if (adjustConfig.readImei.HasValue)
+            {
+                ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value);
             }
 
             // Check attribution changed delagate setting.
@@ -146,34 +173,6 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setOnDeeplinkResponseListener", onDeferredDeeplinkListener);
             }
 
-            // Set unity SDK prefix.
-            ajoAdjustConfig.Call("setSdkPrefix", sdkPrefix);
-            
-            // Since INSTALL_REFERRER is not triggering SDK initialisation, call onResume after onCreate.
-            // OnApplicationPause doesn't get called first time the scene loads, so call to onResume is needed.
-
-			// Set App Secret
-			if (IsAppSecretSet(adjustConfig))
-            {
-				ajoAdjustConfig.Call("setAppSecret",
-                    adjustConfig.secretId.Value,
-					adjustConfig.info1.Value,
-                    adjustConfig.info2.Value,
-					adjustConfig.info3.Value,
-                    adjustConfig.info4.Value);
-			}
-
-			// Set device known
-			if (adjustConfig.isDeviceKnown.HasValue)
-            {
-				ajoAdjustConfig.Call("setDeviceKnown", adjustConfig.isDeviceKnown.Value);
-			}
-
-			if (adjustConfig.readImei.HasValue)
-            {
-				ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value);
-			}
-
             // Initialise and start the SDK.
             ajcAdjust.CallStatic("onCreate", ajoAdjustConfig);
             ajcAdjust.CallStatic("onResume");
@@ -183,38 +182,41 @@ namespace com.adjust.sdk
         {
             AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.eventToken);
 
+            // Check if user has set revenue for the event.
             if (adjustEvent.revenue != null)
             {
                 ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.revenue, adjustEvent.currency);
             }
 
+            // Check if user has added any callback parameters to the event.
             if (adjustEvent.callbackList != null)
             {
                 for (int i = 0; i < adjustEvent.callbackList.Count; i += 2)
                 {
                     string key = adjustEvent.callbackList[i];
                     string value = adjustEvent.callbackList[i + 1];
-
                     ajoAdjustEvent.Call("addCallbackParameter", key, value);
                 }
             }
 
+            // Check if user has added any partner parameters to the event.
             if (adjustEvent.partnerList != null)
             {
                 for (int i = 0; i < adjustEvent.partnerList.Count; i += 2)
                 {
                     string key = adjustEvent.partnerList[i];
                     string value = adjustEvent.partnerList[i + 1];
-
                     ajoAdjustEvent.Call("addPartnerParameter", key, value);
                 }
             }
 
+            // Check if user has added transaction ID to the event.
             if (adjustEvent.transactionId != null)
             {
                 ajoAdjustEvent.Call("setOrderId", adjustEvent.transactionId);
             }
 
+            // Track the event.
             ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
         }
 
@@ -240,7 +242,7 @@ namespace com.adjust.sdk
 
         public static void SetDeviceToken(string deviceToken)
         {
-            ajcAdjust.CallStatic("setPushToken", deviceToken);
+            ajcAdjust.CallStatic("setPushToken", deviceToken, ajoCurrentActivity);
         }
 
         public static string GetAdid()
@@ -248,12 +250,16 @@ namespace com.adjust.sdk
             return ajcAdjust.CallStatic<string>("getAdid");
         }
 
+        public static void GdprForgetMe()
+        {
+            ajcAdjust.CallStatic("gdprForgetMe", ajoCurrentActivity);
+        }
+
         public static AdjustAttribution GetAttribution()
         {
             try
             {
                 AndroidJavaObject ajoAttribution = ajcAdjust.CallStatic<AndroidJavaObject>("getAttribution");
-
                 if (null == ajoAttribution)
                 {
                     return null;
@@ -268,7 +274,6 @@ namespace com.adjust.sdk
                 adjustAttribution.creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
                 adjustAttribution.clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
                 adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
-
                 return adjustAttribution;
             }
             catch (Exception) {}
@@ -278,11 +283,10 @@ namespace com.adjust.sdk
 
         public static void AddSessionPartnerParameter(string key, string value)
         {
-			if (ajcAdjust == null)
+            if (ajcAdjust == null)
             {
-				ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-			}
-
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
             ajcAdjust.CallStatic("addSessionPartnerParameter", key, value);
         }
 
@@ -292,7 +296,6 @@ namespace com.adjust.sdk
             {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
-
             ajcAdjust.CallStatic("addSessionCallbackParameter", key, value);
         }
 
@@ -302,7 +305,6 @@ namespace com.adjust.sdk
             {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
-
             ajcAdjust.CallStatic("removeSessionPartnerParameter", key);
         }
 
@@ -312,7 +314,6 @@ namespace com.adjust.sdk
             {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
-
             ajcAdjust.CallStatic("removeSessionCallbackParameter", key);
         }
 
@@ -322,7 +323,6 @@ namespace com.adjust.sdk
             {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
-
             ajcAdjust.CallStatic("resetSessionPartnerParameters");
         }
 
@@ -332,11 +332,17 @@ namespace com.adjust.sdk
             {
                 ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
             }
-
             ajcAdjust.CallStatic("resetSessionCallbackParameters");
         }
 
-        // Android specific methods
+        public static void AppWillOpenUrl(string url) 
+        {
+            AndroidJavaClass ajcUri = new AndroidJavaClass ("android.net.Uri");
+            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
+            ajcAdjust.CallStatic("appWillOpenUrl", ajoUri);
+        }
+
+        // Android specific methods.
         public static void OnPause()
         {
             ajcAdjust.CallStatic("onPause");
@@ -349,36 +355,28 @@ namespace com.adjust.sdk
 
         public static void SetReferrer(string referrer)
         {
-            ajcAdjust.CallStatic("setReferrer", referrer);
+            ajcAdjust.CallStatic("setReferrer", referrer, ajoCurrentActivity);
         }
 
         public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 
-		{
+        {
             DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
             ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
         }
 
-		public static void AppWillOpenUrl(string url) 
-		{
-			AndroidJavaClass ajcUri = new AndroidJavaClass ("android.net.Uri");
-			AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
-			ajcAdjust.CallStatic("appWillOpenUrl", ajoUri);
-		}
-
-		public static string GetAmazonAdId()
-		{
-			return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
-		}
-
-        private static bool IsAppSecretSet(AdjustConfig adjustConfig)
+        public static string GetAmazonAdId()
         {
-            return adjustConfig.secretId.HasValue 
-            && adjustConfig.info1.HasValue
-            && adjustConfig.info2.HasValue
-            && adjustConfig.info3.HasValue
-            && adjustConfig.info4.HasValue;
+            return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
         }
 
+        // Used for testing only.
+        public static void SetTestOptions(AdjustTestOptions testOptions)
+        {
+            AndroidJavaObject ajoTestOptions = testOptions.ToAndroidJavaObject (ajoCurrentActivity);
+            ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
+        }
+
+        // Private & helper classes.
         private class AttributionChangeListener : AndroidJavaProxy
         {
             private Action<AdjustAttribution> callback;
@@ -388,6 +386,7 @@ namespace com.adjust.sdk
                 this.callback = pCallback;
             }
 
+            // Method must be lowercase to match Android method signature.
             public void onAttributionChanged(AndroidJavaObject attribution)
             {
                 if (callback == null)
@@ -404,7 +403,6 @@ namespace com.adjust.sdk
                 adjustAttribution.creative = attribution.Get<string>(AdjustUtils.KeyCreative);
                 adjustAttribution.clickLabel = attribution.Get<string>(AdjustUtils.KeyClickLabel);
                 adjustAttribution.adid = attribution.Get<string>(AdjustUtils.KeyAdid);
-
                 callback(adjustAttribution);
             }
         }
@@ -427,9 +425,7 @@ namespace com.adjust.sdk
                 }
 
                 string deeplinkURL = deeplink.Call<string>("toString");
-
                 callback(deeplinkURL);
-
                 return launchDeferredDeeplink;
             }
         }
@@ -450,7 +446,6 @@ namespace com.adjust.sdk
                 {
                     return;
                 }
-
                 if (eventSuccessData == null)
                 {
                     return;
@@ -461,7 +456,6 @@ namespace com.adjust.sdk
                 adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
                 adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
-
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -471,6 +465,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
+                    // Should not be happening as of v4.12.5.
+                    // Native Android SDK should send empty JSON object if none available.
                 }
 
                 callback(adjustEventSuccess);
@@ -493,7 +489,6 @@ namespace com.adjust.sdk
                 {
                     return;
                 }
-
                 if (eventFailureData == null)
                 {
                     return;
@@ -505,7 +500,6 @@ namespace com.adjust.sdk
                 adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
                 adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
-
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -515,6 +509,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
+                    // Should not be happening as of v4.12.5.
+                    // Native Android SDK should send empty JSON object if none available.
                 }
                 
                 callback(adjustEventFailure);
@@ -537,7 +533,6 @@ namespace com.adjust.sdk
                 {
                     return;
                 }
-
                 if (sessionSuccessData == null)
                 {
                     return;
@@ -547,7 +542,6 @@ namespace com.adjust.sdk
                 adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
                 adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
                 adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -557,6 +551,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
+                    // Should not be happening as of v4.12.5.
+                    // Native Android SDK should send empty JSON object if none available.
                 }
 
                 callback(adjustSessionSuccess);
@@ -579,7 +575,6 @@ namespace com.adjust.sdk
                 {
                     return;
                 }
-
                 if (sessionFailureData == null)
                 {
                     return;
@@ -590,7 +585,6 @@ namespace com.adjust.sdk
                 adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
                 adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
                 adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -600,6 +594,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
+                    // Should not be happening as of v4.12.5.
+                    // Native Android SDK should send empty JSON object if none available.
                 }
 
                 callback(adjustSessionFailure);
@@ -638,6 +634,16 @@ namespace com.adjust.sdk
 
                 this.onGoogleAdIdRead(ajoAdId.Call<string>("toString"));
             }
+        }
+
+        // Private & helper methods.
+        private static bool IsAppSecretSet(AdjustConfig adjustConfig)
+        {
+            return adjustConfig.secretId.HasValue 
+            && adjustConfig.info1.HasValue
+            && adjustConfig.info2.HasValue
+            && adjustConfig.info3.HasValue
+            && adjustConfig.info4.HasValue;
         }
     }
 #endif
