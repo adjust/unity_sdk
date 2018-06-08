@@ -89,31 +89,31 @@ namespace com.adjust.sdk.test
                 BasePath = _command.GetFirstParameterValue("basePath");
                 GdprPath = _command.GetFirstParameterValue("basePath");
             }
-
             if (_command.ContainsParameter("timerInterval"))
             {
                 long timerInterval = long.Parse(_command.GetFirstParameterValue("timerInterval"));
                 testOptions.TimerIntervalInMilliseconds = timerInterval;
             }
-
             if (_command.ContainsParameter("timerStart"))
             {
                 long timerStart = long.Parse(_command.GetFirstParameterValue("timerStart"));
                 testOptions.TimerStartInMilliseconds = timerStart;
             }
-
             if (_command.ContainsParameter("sessionInterval"))
             {
                 long sessionInterval = long.Parse(_command.GetFirstParameterValue("sessionInterval"));
                 testOptions.SessionIntervalInMilliseconds = sessionInterval;
             }
-
             if (_command.ContainsParameter("subsessionInterval"))
             {
                 long subsessionInterval = long.Parse(_command.GetFirstParameterValue("subsessionInterval"));
                 testOptions.SubsessionIntervalInMilliseconds = subsessionInterval;
             }
-
+            if (_command.ContainsParameter("noBackoffWait"))
+            {
+                bool noBackoffWait = bool.Parse(_command.GetFirstParameterValue("noBackoffWait"));
+                testOptions.NoBackoffWait = noBackoffWait;
+            }
             if (_command.ContainsParameter("teardown"))
             {
                 List<string> teardownOptions = _command.Parameters["teardown"];

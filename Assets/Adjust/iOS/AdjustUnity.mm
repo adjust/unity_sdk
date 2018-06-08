@@ -395,7 +395,8 @@ extern "C"
                                long sessionIntervalInMilliseconds,
                                long subsessionIntervalInMilliseconds,
                                int teardown,
-                               int deleteState) {
+                               int deleteState,
+                               int noBackoffWait) {
         AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
 
         NSString *stringBaseUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:baseUrl] : nil;
@@ -429,6 +430,9 @@ extern "C"
         }
         if (deleteState != -1) {
             [testOptions setDeleteState:(BOOL)deleteState];
+        }
+        if (noBackoffWait != -1) {
+            [testOptions setNoBackoffWait:(BOOL)noBackoffWait];
         }
 
         [Adjust setTestOptions:testOptions];

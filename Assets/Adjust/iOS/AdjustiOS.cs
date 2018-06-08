@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.13.0";
+        private const string sdkPrefix = "unity4.14.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -109,7 +109,8 @@ namespace com.adjust.sdk
             long sessionIntervalInMilliseconds,
             long subsessionIntervalInMilliseconds,
             int teardown,
-            int deleteState);
+            int deleteState,
+            int noBackoffWait);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackSubsessionStart();
@@ -287,6 +288,7 @@ namespace com.adjust.sdk
             long subsessionIntMls = testOptions.SubsessionIntervalInMilliseconds.HasValue ? testOptions.SubsessionIntervalInMilliseconds.Value : -1;
             bool teardown = testOptions.Teardown.HasValue ? testOptions.Teardown.Value : false;
             bool deleteState = testOptions.DeleteState.HasValue ? testOptions.DeleteState.Value : false;
+            bool noBackoffWait = testOptions.NoBackoffWait.HasValue ? testOptions.NoBackoffWait.Value : false;
 
             _AdjustSetTestOptions(
                 testOptions.BaseUrl,
@@ -298,7 +300,8 @@ namespace com.adjust.sdk
                 sessionIntMls,
                 subsessionIntMls, 
                 AdjustUtils.ConvertBool(teardown),
-                AdjustUtils.ConvertBool(deleteState));
+                AdjustUtils.ConvertBool(deleteState),
+                AdjustUtils.ConvertBool(noBackoffWait));
         }
 
         public static void TrackSubsessionStart()

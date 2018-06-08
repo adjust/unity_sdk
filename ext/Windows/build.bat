@@ -48,10 +48,10 @@ ECHO f | xcopy /f /y bridge\release\WindowsPcl.dll ..\..\Assets\Adjust\Windows\W
 ECHO f | xcopy /f /y bridge\release\WindowsUap.dll ..\..\Assets\Adjust\Windows\WindowsUap.dll
 
 REM ------------- STUBS
-ECHO f | xcopy /f /y bridge\release\stubs\Win10Interface.dll ..\..\Assets\Adjust\Windows\stubs\Win10Interface.dll
-ECHO f | xcopy /f /y bridge\release\stubs\Win81Interface.dll ..\..\Assets\Adjust\Windows\stubs\Win81Interface.dll
-ECHO f | xcopy /f /y bridge\release\stubs\WinWsInterface.dll ..\..\Assets\Adjust\Windows\stubs\WinWsInterface.dll
-ECHO f | xcopy /f /y bridge\release\stubs\TestLibraryInterface.dll ..\..\Assets\Adjust\Windows\stubs\TestLibraryInterface.dll
+ECHO f | xcopy /f /y bridge\release\stubs\Win10Interface.dll ..\..\Assets\Adjust\Windows\Stubs\Win10Interface.dll
+ECHO f | xcopy /f /y bridge\release\stubs\Win81Interface.dll ..\..\Assets\Adjust\Windows\Stubs\Win81Interface.dll
+ECHO f | xcopy /f /y bridge\release\stubs\WinWsInterface.dll ..\..\Assets\Adjust\Windows\Stubs\WinWsInterface.dll
+ECHO f | xcopy /f /y bridge\release\stubs\TestLibraryInterface.dll ..\..\Assets\Adjust\Windows\Stubs\TestLibraryInterface.dll
 
 REM ------------- WU10
 ECHO f | xcopy /f /y bridge\release\Win10Interface.dll ..\..\Assets\Adjust\Windows\WU10\Win10Interface.dll

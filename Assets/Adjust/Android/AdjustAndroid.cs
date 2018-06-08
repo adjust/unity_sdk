@@ -10,7 +10,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.13.0";
+        private const string sdkPrefix = "unity4.14.0";
         private static bool launchDeferredDeeplink = true;
 
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
@@ -337,9 +337,9 @@ namespace com.adjust.sdk
 
         public static void AppWillOpenUrl(string url) 
         {
-            AndroidJavaClass ajcUri = new AndroidJavaClass ("android.net.Uri");
+            AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
             AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
-            ajcAdjust.CallStatic("appWillOpenUrl", ajoUri);
+            ajcAdjust.CallStatic("appWillOpenUrl", ajoUri, ajoCurrentActivity);
         }
 
         // Android specific methods.
@@ -372,7 +372,7 @@ namespace com.adjust.sdk
         // Used for testing only.
         public static void SetTestOptions(AdjustTestOptions testOptions)
         {
-            AndroidJavaObject ajoTestOptions = testOptions.ToAndroidJavaObject (ajoCurrentActivity);
+            AndroidJavaObject ajoTestOptions = testOptions.ToAndroidJavaObject(ajoCurrentActivity);
             ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
         }
 

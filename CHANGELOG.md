@@ -1,3 +1,14 @@
+### Version 4.14.0 (8th June 2018)
+#### Added
+- Added deep link caching in case `appWillOpenUrl`/`AppWillOpenUrl` method is called natively before SDK is initialised.
+
+#### Native SDKs
+- [iOS@v4.14.0][ios_sdk_v4.14.0]
+- [Android@v4.14.0][android_sdk_v4.14.0]
+- [Windows@v4.14.0][windows_sdk_v4.14.0]
+
+---
+
 ### Version 4.13.0 (15th May 2018)
 #### Added
 - Added `Adjust.gdprForgetMe()` method to enable possibility for user to be forgotten in accordance with GDPR law.
@@ -484,6 +495,7 @@
 [ios_sdk_v4.12.2]: https://github.com/adjust/ios_sdk/tree/v4.12.2
 [ios_sdk_v4.12.3]: https://github.com/adjust/ios_sdk/tree/v4.12.3
 [ios_sdk_v4.13.0]: https://github.com/adjust/ios_sdk/tree/v4.13.0
+[ios_sdk_v4.14.0]: https://github.com/adjust/ios_sdk/tree/v4.14.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -500,6 +512,8 @@
 [android_sdk_v4.12.1]: https://github.com/adjust/android_sdk/tree/v4.12.1
 [android_sdk_v4.12.4]: https://github.com/adjust/android_sdk/tree/v4.12.4
 [android_sdk_v4.13.0]: https://github.com/adjust/android_sdk/tree/v4.13.0
+[android_sdk_v4.14.0]: https://github.com/adjust/android_sdk/tree/v4.14.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
+[windows_sdk_v4.14.0]: https://github.com/adjust/windows_sdk/tree/v4.14.0
