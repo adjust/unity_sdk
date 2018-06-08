@@ -337,9 +337,9 @@ namespace com.adjust.sdk
 
         public static void AppWillOpenUrl(string url) 
         {
-            AndroidJavaClass ajcUri = new AndroidJavaClass ("android.net.Uri");
+            AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
             AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
-            ajcAdjust.CallStatic("appWillOpenUrl", ajoUri);
+            ajcAdjust.CallStatic("appWillOpenUrl", ajoUri, ajoCurrentActivity);
         }
 
         // Android specific methods.
@@ -372,7 +372,7 @@ namespace com.adjust.sdk
         // Used for testing only.
         public static void SetTestOptions(AdjustTestOptions testOptions)
         {
-            AndroidJavaObject ajoTestOptions = testOptions.ToAndroidJavaObject (ajoCurrentActivity);
+            AndroidJavaObject ajoTestOptions = testOptions.ToAndroidJavaObject(ajoCurrentActivity);
             ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
         }
 
