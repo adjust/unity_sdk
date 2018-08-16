@@ -10,15 +10,3 @@
 	path = ext/windows/sdk
 	url = git@github.com:adjust/windows_sdk.git
 	branch = master
-[submodule "ext/android/sdk-dev"]
-	path = ext/android/sdk-dev
-	url = git@github.com:adjust/android_sdk_dev.git
-	branch = master
-[submodule "ext/ios/sdk-dev"]
-	path = ext/ios/sdk-dev
-	url = git@github.com:adjust/ios_sdk_dev.git
-	branch = master
-[submodule "ext/windows/sdk-dev"]
-	path = ext/windows/sdk-dev
-	url = git@github.com:adjust/windows_sdk_dev.git
-	branch = master
