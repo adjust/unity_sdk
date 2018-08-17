@@ -1,7 +1,7 @@
 ##
 ##  Various util python methods which can be utilized and shared among different scripts
 ##
-import os, shutil, glob, time, sys
+import os, shutil, glob, time, sys, platform
 
 def set_log_tag(t):
     global TAG
@@ -79,22 +79,34 @@ def rename_file(fileNamePattern, newFileName, sourceDir):
 
 def clear_dir(dir):
     shutil.rmtree(dir)
-    os.mkdir(dir)
+    os.mkdir(dir)    
 
 ############################################################
 ### debug messages util methods
 
 def debug(msg):
-    print(('{0}* [{1}][INFO]:{2} {3}').format(CBOLD, TAG, CEND, msg))
+    if not is_windows():
+        print(('{0}* [{1}][INFO]:{2} {3}').format(CBOLD, TAG, CEND, msg))
+    else:
+        print(('* [{0}][INFO]: {1}').format(TAG, msg))
 
 def debug_green(msg):
-    print(('{0}* [{1}][INFO]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CGREEN, msg, CEND))
+    if not is_windows():
+        print(('{0}* [{1}][INFO]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CGREEN, msg, CEND))
+    else:
+        print(('* [{0}][INFO]: {1}').format(TAG, msg))
 
 def error(msg):
-    print(('{0}* [{1}][ERROR]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CRED, msg, CEND))
+    if not is_windows():
+        print(('{0}* [{1}][ERROR]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CRED, msg, CEND))
+    else:
+        print(('* [{0}][ERROR]: {1}').format(TAG, msg))
 
 ############################################################
 ### nonsense, eyecandy and such
+
+def is_windows():
+    return platform.system().lower() == 'windows';
 
 def waiting_animation(duration, step):
     if(duration <= step):
