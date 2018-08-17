@@ -8,7 +8,7 @@ def set_log_tag(t):
     TAG = t
 
 ############################################################
-### colors for terminal
+### colors for terminal (does not work in Windows... of course)
 
 CEND = '\033[0m'
 
@@ -103,10 +103,18 @@ def error(msg):
         print(('* [{0}][ERROR]: {1}').format(TAG, msg))
 
 ############################################################
-### nonsense, eyecandy and such
+### util
+
+def check_submodule_dir(platform, submodule_dir):
+    if not os.path.isdir(submodule_dir) or not os.listdir(submodule_dir):
+        error('Submodule [{0}] folder empty. Did you forget to run >> git submodule update --init --recursive << ?'.format(platform))
+        exit()
 
 def is_windows():
     return platform.system().lower() == 'windows';
+
+############################################################
+### nonsense, eyecandy and such
 
 def waiting_animation(duration, step):
     if(duration <= step):
