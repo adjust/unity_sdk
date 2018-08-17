@@ -38,8 +38,8 @@ debug_green('Script start. Platform=[{0}]. With Test Library=[{1}]. Build Adjust
 # common paths
 script_dir              = os.path.dirname(os.path.realpath(__file__))
 root_dir                = os.path.dirname(os.path.normpath(script_dir))
-android_submodule_dir   = '{0}/ext/Android'.format(root_dir)
-ios_submodule_dir       = '{0}/ext/iOS'.format(root_dir)
+android_submodule_dir   = '{0}/ext/android'.format(root_dir)
+ios_submodule_dir       = '{0}/ext/ios'.format(root_dir)
 windows_submodule_dir   = '{0}/ext/windows'.format(root_dir)
 
 # ------------------------------------------------------------------
@@ -56,6 +56,8 @@ else:
     set_log_tag('WINDOWS-SDK-BUILD')
     check_submodule_dir('Windows', windows_submodule_dir + '/sdk')
     windows.build(root_dir, windows_submodule_dir)
+
+remove_files('*.pyc', script_dir, log=False)
 
 # ------------------------------------------------------------------
 # Script completed

@@ -67,9 +67,10 @@ def copy_files(fileNamePattern, sourceDir, destDir):
         debug('copying: {0} -> {1}'.format(file, destDir))
         shutil.copy(file, destDir)
 
-def remove_files(fileNamePattern, sourceDir):
+def remove_files(fileNamePattern, sourceDir, log=True):
     for file in glob.glob(sourceDir + '/' + fileNamePattern):
-        debug('deleting: ' + file)
+        if log:
+            debug('deleting: ' + file)
         os.remove(file)
 
 def rename_file(fileNamePattern, newFileName, sourceDir):
