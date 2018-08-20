@@ -43,7 +43,8 @@ namespace com.adjust.sdk
         public AdjustSessionFailure(string jsonString)
         {
             var jsonNode = JSON.Parse(jsonString);
-            if (jsonNode == null) {
+            if (jsonNode == null) 
+			{
                 return;
             }
 

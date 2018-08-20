@@ -30,11 +30,7 @@ namespace com.adjust.sdk.test
 #else
         public const string CLIENT_SDK = null;
 #endif
-        // private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;           // Android simulator
-        // private const string BASE_URL = PROTOCOL + "localhost" + PORT;          // Windows simulator
-        // private const string BASE_URL = PROTOCOL + "192.168.8.141" + PORT;      // Over WiFi
-        // private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;          // iOS simulator
-
+        
         void OnGUI()
         {
             if (GUI.Button(new Rect(0, Screen.height * 0 / 2, Screen.width, Screen.height / 2), "Start test"))
@@ -43,13 +39,13 @@ namespace com.adjust.sdk.test
             }
         }
 
-        private void StartTestSession() {
+        private void StartTestSession() 
+		{
             ITestFactory testFactory = GetPlatformSpecificTestLibrary ();
 
 #if UNITY_IOS
             _testFactoryiOS = testFactory as TestFactoryiOS;
 #endif
-
             // Set specific tests to run.
             // testFactory.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
             // testFactory.AddTest("current/gdpr/Test_GdprForgetMe_after_install");
