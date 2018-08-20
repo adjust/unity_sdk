@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
 using UnityEngine;
-using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
