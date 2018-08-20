@@ -20,13 +20,13 @@ namespace com.adjust.sdk.test
         private string _baseUrl;
         private string _gdprUrl;
         private Command _command;
-        private ITestFactory _testFactory;
+		private ITestLibrary _testLibrary;
 
-        public CommandExecutor(ITestFactory testFactory, string baseUrl, string gdprUrl)
+        public CommandExecutor(ITestLibrary testLibrary, string baseUrl, string gdprUrl)
         {
             _baseUrl = baseUrl;
             _gdprUrl = gdprUrl;
-            _testFactory = testFactory;
+            _testLibrary = testLibrary;
         }
             
         public void ExecuteCommand(string className, string methodName, Dictionary<string, List<string>> parameters)
@@ -338,15 +338,15 @@ namespace com.adjust.sdk.test
                 {
                     TestApp.Log("AttributionChanged, attribution = " + attribution);
 
-                    _testFactory.AddInfoToSend("trackerToken", attribution.trackerToken);
-                    _testFactory.AddInfoToSend("trackerName", attribution.trackerName);
-                    _testFactory.AddInfoToSend("network", attribution.network);
-                    _testFactory.AddInfoToSend("campaign", attribution.campaign);
-                    _testFactory.AddInfoToSend("adgroup", attribution.adgroup);
-                    _testFactory.AddInfoToSend("creative", attribution.creative);
-                    _testFactory.AddInfoToSend("clickLabel", attribution.clickLabel);
-                    _testFactory.AddInfoToSend("adid", attribution.adid);
-                    _testFactory.SendInfoToServer(localBasePath);
+                    _testLibrary.AddInfoToSend("trackerToken", attribution.trackerToken);
+                    _testLibrary.AddInfoToSend("trackerName", attribution.trackerName);
+                    _testLibrary.AddInfoToSend("network", attribution.network);
+                    _testLibrary.AddInfoToSend("campaign", attribution.campaign);
+                    _testLibrary.AddInfoToSend("adgroup", attribution.adgroup);
+                    _testLibrary.AddInfoToSend("creative", attribution.creative);
+                    _testLibrary.AddInfoToSend("clickLabel", attribution.clickLabel);
+                    _testLibrary.AddInfoToSend("adid", attribution.adid);
+                    _testLibrary.SendInfoToServer(localBasePath);
                 });
             }
 
@@ -357,14 +357,14 @@ namespace com.adjust.sdk.test
                 {
                     TestApp.Log("SesssionTrackingSucceeded, sessionSuccessResponseData = " + sessionSuccessResponseData);
 
-                    _testFactory.AddInfoToSend("message", sessionSuccessResponseData.Message);
-                    _testFactory.AddInfoToSend("timestamp", sessionSuccessResponseData.Timestamp);
-                    _testFactory.AddInfoToSend("adid", sessionSuccessResponseData.Adid);
+                    _testLibrary.AddInfoToSend("message", sessionSuccessResponseData.Message);
+                    _testLibrary.AddInfoToSend("timestamp", sessionSuccessResponseData.Timestamp);
+                    _testLibrary.AddInfoToSend("adid", sessionSuccessResponseData.Adid);
                     if (sessionSuccessResponseData.JsonResponse != null)
                     {
-                        _testFactory.AddInfoToSend("jsonResponse", sessionSuccessResponseData.GetJsonResponse());
+                        _testLibrary.AddInfoToSend("jsonResponse", sessionSuccessResponseData.GetJsonResponse());
                     }
-                    _testFactory.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localBasePath);
                 });
             }
 
@@ -375,15 +375,15 @@ namespace com.adjust.sdk.test
                 {
                     TestApp.Log("SesssionTrackingFailed, sessionFailureResponseData = " + sessionFailureResponseData);
 
-                    _testFactory.AddInfoToSend("message", sessionFailureResponseData.Message);
-                    _testFactory.AddInfoToSend("timestamp", sessionFailureResponseData.Timestamp);
-                    _testFactory.AddInfoToSend("adid", sessionFailureResponseData.Adid);
-                    _testFactory.AddInfoToSend("willRetry", sessionFailureResponseData.WillRetry.ToString().ToLower());
+                    _testLibrary.AddInfoToSend("message", sessionFailureResponseData.Message);
+                    _testLibrary.AddInfoToSend("timestamp", sessionFailureResponseData.Timestamp);
+                    _testLibrary.AddInfoToSend("adid", sessionFailureResponseData.Adid);
+                    _testLibrary.AddInfoToSend("willRetry", sessionFailureResponseData.WillRetry.ToString().ToLower());
                     if (sessionFailureResponseData.JsonResponse != null)
                     {
-                        _testFactory.AddInfoToSend("jsonResponse", sessionFailureResponseData.GetJsonResponse());
+                        _testLibrary.AddInfoToSend("jsonResponse", sessionFailureResponseData.GetJsonResponse());
                     }
-                    _testFactory.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localBasePath);
                 });
             }
 
@@ -394,15 +394,15 @@ namespace com.adjust.sdk.test
                 {
                     TestApp.Log("EventTrackingSucceeded, eventSuccessResponseData = " + eventSuccessResponseData);
 
-                    _testFactory.AddInfoToSend("message", eventSuccessResponseData.Message);
-                    _testFactory.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
-                    _testFactory.AddInfoToSend("adid", eventSuccessResponseData.Adid);
-                    _testFactory.AddInfoToSend("eventToken", eventSuccessResponseData.EventToken);
+                    _testLibrary.AddInfoToSend("message", eventSuccessResponseData.Message);
+                    _testLibrary.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
+                    _testLibrary.AddInfoToSend("adid", eventSuccessResponseData.Adid);
+                    _testLibrary.AddInfoToSend("eventToken", eventSuccessResponseData.EventToken);
                     if (eventSuccessResponseData.JsonResponse != null)
                     {
-                        _testFactory.AddInfoToSend("jsonResponse", eventSuccessResponseData.GetJsonResponse());
+                        _testLibrary.AddInfoToSend("jsonResponse", eventSuccessResponseData.GetJsonResponse());
                     }
-                    _testFactory.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localBasePath);
                 });
             }
 
@@ -413,16 +413,16 @@ namespace com.adjust.sdk.test
                 {
                     TestApp.Log("EventTrackingFailed, eventFailureResponseData = " + eventFailureResponseData);
 
-                    _testFactory.AddInfoToSend("message", eventFailureResponseData.Message);
-                    _testFactory.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
-                    _testFactory.AddInfoToSend("adid", eventFailureResponseData.Adid);
-                    _testFactory.AddInfoToSend("eventToken", eventFailureResponseData.EventToken);
-                    _testFactory.AddInfoToSend("willRetry", eventFailureResponseData.WillRetry.ToString().ToLower());
+                    _testLibrary.AddInfoToSend("message", eventFailureResponseData.Message);
+                    _testLibrary.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
+                    _testLibrary.AddInfoToSend("adid", eventFailureResponseData.Adid);
+                    _testLibrary.AddInfoToSend("eventToken", eventFailureResponseData.EventToken);
+                    _testLibrary.AddInfoToSend("willRetry", eventFailureResponseData.WillRetry.ToString().ToLower());
                     if (eventFailureResponseData.JsonResponse != null)
                     {
-                        _testFactory.AddInfoToSend("jsonResponse", eventFailureResponseData.GetJsonResponse());
+                        _testLibrary.AddInfoToSend("jsonResponse", eventFailureResponseData.GetJsonResponse());
                     }
-                    _testFactory.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localBasePath);
                 });
             }
         }
