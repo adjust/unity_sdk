@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
@@ -531,7 +530,7 @@ namespace com.adjust.sdk
             #endif
         }
 
-        public static void SetTestOptions(AdjustTestOptions testOptions)
+		public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
             if (IsEditor()) { return; }
 

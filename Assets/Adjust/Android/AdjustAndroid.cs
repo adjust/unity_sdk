@@ -370,9 +370,9 @@ namespace com.adjust.sdk
         }
 
         // Used for testing only.
-        public static void SetTestOptions(AdjustTestOptions testOptions)
+		public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
-            AndroidJavaObject ajoTestOptions = testOptions.ToAndroidJavaObject(ajoCurrentActivity);
+			AndroidJavaObject ajoTestOptions = AdjustUtils.Map2AndroidJavaObject (testOptions, ajoCurrentActivity);
             ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
         }
 

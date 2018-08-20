@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
 using UnityEngine;
-using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
@@ -280,21 +278,51 @@ namespace com.adjust.sdk
             return attribution;
         }
 
-        public static void SetTestOptions(AdjustTestOptions testOptions)
+		// Used for testing only.
+		public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
-            long timerIntervalMls = testOptions.TimerIntervalInMilliseconds.HasValue ? testOptions.TimerIntervalInMilliseconds.Value : -1;
-            long timerStartMls = testOptions.TimerStartInMilliseconds.HasValue ? testOptions.TimerStartInMilliseconds.Value : -1;
-            long sessionIntMls = testOptions.SessionIntervalInMilliseconds.HasValue ? testOptions.SessionIntervalInMilliseconds.Value : -1;
-            long subsessionIntMls = testOptions.SubsessionIntervalInMilliseconds.HasValue ? testOptions.SubsessionIntervalInMilliseconds.Value : -1;
-            bool teardown = testOptions.Teardown.HasValue ? testOptions.Teardown.Value : false;
-            bool deleteState = testOptions.DeleteState.HasValue ? testOptions.DeleteState.Value : false;
-            bool noBackoffWait = testOptions.NoBackoffWait.HasValue ? testOptions.NoBackoffWait.Value : false;
+            long timerIntervalMls = -1;
+            long timerStartMls = -1;
+            long sessionIntMls = -1;
+            long subsessionIntMls = -1;
+            bool teardown = false;
+            bool deleteState = false;
+            bool noBackoffWait = false;
+
+			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
+			{
+				timerIntervalMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds]);
+			}
+			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerStartInMilliseconds)) 
+			{
+				timerStartMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerStartInMilliseconds]);
+			}
+			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds))
+			{
+				sessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds]);
+			}
+			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds))
+			{
+				subsessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds]);
+			}
+			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTeardown))
+			{
+				teardown = testOptions [AdjustUtils.KeyTestOptionsTeardown].ToLower() == "true";
+			}
+			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsDeleteState))
+			{
+				deleteState = testOptions [AdjustUtils.KeyTestOptionsDeleteState].ToLower() == "true";
+			}
+			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsNoBackoffWait))
+			{
+				noBackoffWait = testOptions [AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
+			}
 
             _AdjustSetTestOptions(
-                testOptions.BaseUrl,
-                testOptions.BasePath,
-                testOptions.GdprUrl,
-                testOptions.GdprPath,
+				testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
+				testOptions[AdjustUtils.KeyTestOptionsBasePath],
+				testOptions[AdjustUtils.KeyTestOptionsGdprUrl],
+				testOptions[AdjustUtils.KeyTestOptionsGdprPath],
                 timerIntervalMls,
                 timerStartMls,
                 sessionIntMls,
