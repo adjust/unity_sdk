@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -28,6 +29,72 @@ public class AdjustEditor
         isPostProcessingEnabled = !isPostProcessingEnabled;
         EditorUtility.DisplayDialog ("adjust", "The post processing for adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
+
+	[MenuItem ("Assets/Adjust/Export Adjust Package")]
+	static void ExportAdjustUnityPackage()
+	{
+		string exportedFileName = "Adjust.unitypackage";
+		string assetsPath = "Assets/Adjust";
+		List<string> assetsToExport = new List<string> ();
+		// editor ////////////////////
+		assetsToExport.Add ("Assets/Editor/AdjustEditor.cs");
+
+		// adjust ////////////////////
+		assetsToExport.Add (assetsPath + "/Adjust.cs");
+		assetsToExport.Add (assetsPath + "/Adjust.prefab");
+		assetsToExport.Add (assetsPath + "/3rd Party/SimpleJSON.cs");
+
+		assetsToExport.Add (assetsPath + "/Android/adjust-android.jar");
+		assetsToExport.Add (assetsPath + "/Android/AdjustAndroid.cs");
+		assetsToExport.Add (assetsPath + "/Android/AdjustAndroidManifest.xml");
+
+		assetsToExport.Add (assetsPath + "/ExampleGUI/ExampleGUI.cs");
+		assetsToExport.Add (assetsPath + "/ExampleGUI/ExampleGUI.prefab");
+		assetsToExport.Add (assetsPath + "/ExampleGUI/ExampleGUI.unity");
+
+		assetsToExport.Add (assetsPath + "/iOS/ADJAttribution.h");
+		assetsToExport.Add (assetsPath + "/iOS/ADJConfig.h");
+		assetsToExport.Add (assetsPath + "/iOS/ADJEvent.h");
+		assetsToExport.Add (assetsPath + "/iOS/ADJEventFailure.h");
+		assetsToExport.Add (assetsPath + "/iOS/ADJEventSuccess.h");
+		assetsToExport.Add (assetsPath + "/iOS/ADJLogger.h");
+		assetsToExport.Add (assetsPath + "/iOS/ADJSessionFailure.h");
+		assetsToExport.Add (assetsPath + "/iOS/ADJSessionSuccess.h");
+		assetsToExport.Add (assetsPath + "/iOS/Adjust.h");
+		assetsToExport.Add (assetsPath + "/iOS/AdjustiOS.cs");
+		assetsToExport.Add (assetsPath + "/iOS/AdjustSdk.a");
+		assetsToExport.Add (assetsPath + "/iOS/AdjustUnity.h");
+		assetsToExport.Add (assetsPath + "/iOS/AdjustUnity.mm");
+		assetsToExport.Add (assetsPath + "/iOS/AdjustUnityDelegate.h");
+		assetsToExport.Add (assetsPath + "/iOS/AdjustUnityDelegate.mm");
+
+		assetsToExport.Add (assetsPath + "/Unity/AdjustAttribution.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustConfig.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustEnvironment.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustEvent.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustEventFailure.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustEventSuccess.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustLogLevel.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustSessionFailure.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustSessionSuccess.cs");
+		assetsToExport.Add (assetsPath + "/Unity/AdjustUtils.cs");
+
+		assetsToExport.Add (assetsPath + "/Windows/AdjustWindows.cs");
+		assetsToExport.Add (assetsPath + "/Windows/WindowsPcl.dll");
+		assetsToExport.Add (assetsPath + "/Windows/WindowsUap.dll");
+		assetsToExport.Add (assetsPath + "/Windows/Stubs/Win10Interface.dll");
+		assetsToExport.Add (assetsPath + "/Windows/Stubs/Win81Interface.dll");
+		assetsToExport.Add (assetsPath + "/Windows/Stubs/WinWsInterface.dll");
+		assetsToExport.Add (assetsPath + "/Windows/W81/AdjustWP81.dll");
+		assetsToExport.Add (assetsPath + "/Windows/W81/Win81Interface.dll");
+		assetsToExport.Add (assetsPath + "/Windows/WS/AdjustWS.dll");
+		assetsToExport.Add (assetsPath + "/Windows/WS/WinWsInterface.dll");
+		assetsToExport.Add (assetsPath + "/Windows/WU10/AdjustUAP10.dll");
+		assetsToExport.Add (assetsPath + "/Windows/WU10/Win10Interface.dll");
+
+		AssetDatabase.ExportPackage (assetsToExport.ToArray(), exportedFileName, 
+			ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
+	}
 
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string projectPath)
