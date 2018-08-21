@@ -278,8 +278,8 @@ namespace com.adjust.sdk
             return attribution;
         }
 
-		// Used for testing only.
-		public static void SetTestOptions(Dictionary<string, string> testOptions)
+        // Used for testing only.
+        public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
             long timerIntervalMls = -1;
             long timerStartMls = -1;
@@ -289,40 +289,40 @@ namespace com.adjust.sdk
             bool deleteState = false;
             bool noBackoffWait = false;
 
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
-			{
-				timerIntervalMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerStartInMilliseconds)) 
-			{
-				timerStartMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerStartInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds))
-			{
-				sessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds))
-			{
-				subsessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTeardown))
-			{
-				teardown = testOptions [AdjustUtils.KeyTestOptionsTeardown].ToLower() == "true";
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsDeleteState))
-			{
-				deleteState = testOptions [AdjustUtils.KeyTestOptionsDeleteState].ToLower() == "true";
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsNoBackoffWait))
-			{
-				noBackoffWait = testOptions [AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
-			}
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
+            {
+                timerIntervalMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerStartInMilliseconds)) 
+            {
+                timerStartMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerStartInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds))
+            {
+                sessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds))
+            {
+                subsessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTeardown))
+            {
+                teardown = testOptions [AdjustUtils.KeyTestOptionsTeardown].ToLower() == "true";
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsDeleteState))
+            {
+                deleteState = testOptions [AdjustUtils.KeyTestOptionsDeleteState].ToLower() == "true";
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsNoBackoffWait))
+            {
+                noBackoffWait = testOptions [AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
+            }
 
             _AdjustSetTestOptions(
-				testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
-				testOptions[AdjustUtils.KeyTestOptionsBasePath],
-				testOptions[AdjustUtils.KeyTestOptionsGdprUrl],
-				testOptions[AdjustUtils.KeyTestOptionsGdprPath],
+                testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
+                testOptions[AdjustUtils.KeyTestOptionsBasePath],
+                testOptions[AdjustUtils.KeyTestOptionsGdprUrl],
+                testOptions[AdjustUtils.KeyTestOptionsGdprPath],
                 timerIntervalMls,
                 timerStartMls,
                 sessionIntMls,

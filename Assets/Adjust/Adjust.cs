@@ -530,7 +530,7 @@ namespace com.adjust.sdk
             #endif
         }
 
-		public static void SetTestOptions(Dictionary<string, string> testOptions)
+        public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
             if (IsEditor()) { return; }
 

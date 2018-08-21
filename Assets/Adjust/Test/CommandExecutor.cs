@@ -20,7 +20,7 @@ namespace com.adjust.sdk.test
         private string _baseUrl;
         private string _gdprUrl;
         private Command _command;
-		private ITestLibrary _testLibrary;
+        private ITestLibrary _testLibrary;
 
         public CommandExecutor(ITestLibrary testLibrary, string baseUrl, string gdprUrl)
         {
@@ -80,9 +80,9 @@ namespace com.adjust.sdk.test
         {
             TestApp.Log("Configuring and setting Testing Options...");
 
-			Dictionary<string, string> testOptions = new Dictionary<string, string>();
-			testOptions[AdjustUtils.KeyTestOptionsBaseUrl] = _baseUrl;
-			testOptions[AdjustUtils.KeyTestOptionsGdprUrl] = _gdprUrl;
+            Dictionary<string, string> testOptions = new Dictionary<string, string>();
+            testOptions[AdjustUtils.KeyTestOptionsBaseUrl] = _baseUrl;
+            testOptions[AdjustUtils.KeyTestOptionsGdprUrl] = _gdprUrl;
 
             if (_command.ContainsParameter("basePath"))
             {
@@ -91,23 +91,23 @@ namespace com.adjust.sdk.test
             }
             if (_command.ContainsParameter("timerInterval"))
             {
-				testOptions[AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds] = _command.GetFirstParameterValue("timerInterval");
+                testOptions[AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds] = _command.GetFirstParameterValue("timerInterval");
             }
             if (_command.ContainsParameter("timerStart"))
             {
-				testOptions[AdjustUtils.KeyTestOptionsTimerStartInMilliseconds] = _command.GetFirstParameterValue("timerStart");
+                testOptions[AdjustUtils.KeyTestOptionsTimerStartInMilliseconds] = _command.GetFirstParameterValue("timerStart");
             }
             if (_command.ContainsParameter("sessionInterval"))
             {
-				testOptions[AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds] = _command.GetFirstParameterValue("sessionInterval");
+                testOptions[AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds] = _command.GetFirstParameterValue("sessionInterval");
             }
             if (_command.ContainsParameter("subsessionInterval"))
             {
-				testOptions[AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds] = _command.GetFirstParameterValue("subsessionInterval");
+                testOptions[AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds] = _command.GetFirstParameterValue("subsessionInterval");
             }
             if (_command.ContainsParameter("noBackoffWait"))
             {
-				testOptions[AdjustUtils.KeyTestOptionsNoBackoffWait] = _command.GetFirstParameterValue("noBackoffWait");
+                testOptions[AdjustUtils.KeyTestOptionsNoBackoffWait] = _command.GetFirstParameterValue("noBackoffWait");
             }
             if (_command.ContainsParameter("teardown"))
             {
@@ -116,39 +116,39 @@ namespace com.adjust.sdk.test
                 {
                     if (teardownOption == "resetSdk")
                     {
-						testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
-						testOptions[AdjustUtils.KeyTestOptionsBasePath] = BasePath;
-						testOptions[AdjustUtils.KeyTestOptionsGdprPath] = GdprPath;
-						testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "true";
+                        testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
+                        testOptions[AdjustUtils.KeyTestOptionsBasePath] = BasePath;
+                        testOptions[AdjustUtils.KeyTestOptionsGdprPath] = GdprPath;
+                        testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "true";
                     }
                     if (teardownOption == "deleteState")
                     {
-						testOptions[AdjustUtils.KeyTestOptionsDeleteState] = "true";
+                        testOptions[AdjustUtils.KeyTestOptionsDeleteState] = "true";
                     }
                     if (teardownOption == "resetTest")
                     {
                         _savedEvents = new Dictionary<int, AdjustEvent>();
                         _savedConfigs = new Dictionary<int, AdjustConfig>();
-						testOptions[AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds] = "-1";
-						testOptions[AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds] = "-1";
-						testOptions[AdjustUtils.KeyTestOptionsTimerStartInMilliseconds] = "-1";
-						testOptions[AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsTimerStartInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds] = "-1";
                     }
                     if (teardownOption == "sdk")
                     {
-						testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
-						testOptions[AdjustUtils.KeyTestOptionsBasePath] = null;
-						testOptions[AdjustUtils.KeyTestOptionsGdprPath] = null;
-						testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "false";
+                        testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
+                        testOptions[AdjustUtils.KeyTestOptionsBasePath] = null;
+                        testOptions[AdjustUtils.KeyTestOptionsGdprPath] = null;
+                        testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "false";
                     }
                     if (teardownOption == "test")
                     {
                         _savedEvents = null;
                         _savedConfigs = null;
-						testOptions[AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds] = "-1";
-						testOptions[AdjustUtils.KeyTestOptionsTimerStartInMilliseconds] = "-1";
-						testOptions[AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds] = "-1";
-						testOptions[AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsTimerStartInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds] = "-1";
+                        testOptions[AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds] = "-1";
                     }
                 }
             }
@@ -312,14 +312,14 @@ namespace com.adjust.sdk.test
 
             if (_command.ContainsParameter("deferredDeeplinkCallback"))
             {
-				bool launchDeferredDeeplink = _command.GetFirstParameterValue("deferredDeeplinkCallback") == "true";
-				adjustConfig.setLaunchDeferredDeeplink(launchDeferredDeeplink);
-				string localBasePath = BasePath;
+                bool launchDeferredDeeplink = _command.GetFirstParameterValue("deferredDeeplinkCallback") == "true";
+                adjustConfig.setLaunchDeferredDeeplink(launchDeferredDeeplink);
+                string localBasePath = BasePath;
                 adjustConfig.setDeferredDeeplinkDelegate(uri =>
                 {
-					TestApp.Log("deferred_deep_link = " + uri);
-					_testLibrary.AddInfoToSend("deeplink", uri);
-					_testLibrary.SendInfoToServer(localBasePath);
+                    TestApp.Log("deferred_deep_link = " + uri);
+                    _testLibrary.AddInfoToSend("deeplink", uri);
+                    _testLibrary.SendInfoToServer(localBasePath);
                 });
             }
 

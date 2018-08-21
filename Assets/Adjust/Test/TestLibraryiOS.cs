@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace com.adjust.sdk.test
 {
-	public class TestLibraryiOS : ITestLibrary
+    public class TestLibraryiOS : ITestLibrary
     {
 #if UNITY_IOS
         private CommandExecutor _commandExecutor;
@@ -16,7 +16,7 @@ namespace com.adjust.sdk.test
 
         public void StartTestSession() 
         {
-			TestApp.Log("TestLibrary -> StartTestSession()");
+            TestApp.Log("TestLibrary -> StartTestSession()");
             TestLibraryBridgeiOS.StartTestSession(TestApp.CLIENT_SDK);
         }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace com.adjust.sdk.test
 {
-	public class TestLibraryAndroid : ITestLibrary
+    public class TestLibraryAndroid : ITestLibrary
     {
         private AndroidJavaObject ajoTestLibrary;
         private CommandListenerAndroid onCommandReceivedListener;

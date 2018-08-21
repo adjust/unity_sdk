@@ -40,11 +40,11 @@ namespace com.adjust.sdk.test
         }
 
         private void StartTestSession() 
-		{
+        {
             ITestLibrary testLibrary = GetPlatformSpecificTestLibrary ();
 
 #if UNITY_IOS
-			_testLibraryiOS = testLibrary as TestLibraryiOS;
+            _testLibraryiOS = testLibrary as TestLibraryiOS;
 #endif
             // Set specific tests to run.
 			//testLibrary.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
@@ -52,10 +52,10 @@ namespace com.adjust.sdk.test
 			//testLibrary.AddTestDirectory ("current/deeplink-deferred");
 
             Log("Starting test session...");
-			testLibrary.StartTestSession();
+            testLibrary.StartTestSession();
         }
 
-		private ITestLibrary GetPlatformSpecificTestLibrary()
+        private ITestLibrary GetPlatformSpecificTestLibrary()
         {
             // gdpr url on sdk_test_server is the same as base url
             string gdprUrl = BASE_URL;

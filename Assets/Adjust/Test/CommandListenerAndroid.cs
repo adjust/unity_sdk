@@ -19,7 +19,7 @@ namespace com.adjust.sdk.test
         }
 
         public void executeCommand(string json) 
-		{
+        {
             if (json == null)
             {
                 return;

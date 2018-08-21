@@ -1,11 +1,11 @@
 ﻿namespace com.adjust.sdk.test
 {
-	public interface ITestLibrary
-	{
-		void StartTestSession();
-		void AddInfoToSend(string key, string paramValue);
-		void SendInfoToServer(string basePath);
-		void AddTest(string testName);
-		void AddTestDirectory(string testDirectory);
-	}
+    public interface ITestLibrary
+    {
+        void StartTestSession();
+        void AddInfoToSend(string key, string paramValue);
+        void SendInfoToServer(string basePath);
+        void AddTest(string testName);
+        void AddTestDirectory(string testDirectory);
+    }
 }

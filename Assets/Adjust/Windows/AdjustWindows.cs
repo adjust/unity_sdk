@@ -250,58 +250,58 @@ namespace com.adjust.sdk
             return AdjustWinInterface.GetWindowsAdId();
         }
 
-		public static void SetTestOptions(Dictionary<string, string> testOptions)
+        public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
-			long timerIntervalMls = -1;
-			long timerStartMls = -1;
-			long sessionIntMls = -1;
-			long subsessionIntMls = -1;
-			bool teardown = false;
-			bool deleteState = false;
-			bool noBackoffWait = false;
+            long timerIntervalMls = -1;
+            long timerStartMls = -1;
+            long sessionIntMls = -1;
+            long subsessionIntMls = -1;
+            bool teardown = false;
+            bool deleteState = false;
+            bool noBackoffWait = false;
 
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
-			{
-				timerIntervalMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerStartInMilliseconds)) 
-			{
-				timerStartMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerStartInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds))
-			{
-				sessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds))
-			{
-				subsessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds]);
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTeardown))
-			{
-				teardown = testOptions [AdjustUtils.KeyTestOptionsTeardown].ToLower() == "true";
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsDeleteState))
-			{
-				deleteState = testOptions [AdjustUtils.KeyTestOptionsDeleteState].ToLower() == "true";
-			}
-			if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsNoBackoffWait))
-			{
-				noBackoffWait = testOptions [AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
-			}
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
+            {
+                timerIntervalMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerStartInMilliseconds)) 
+            {
+                timerStartMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerStartInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds))
+            {
+                sessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds))
+            {
+                subsessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds]);
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTeardown))
+            {
+                teardown = testOptions [AdjustUtils.KeyTestOptionsTeardown].ToLower() == "true";
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsDeleteState))
+            {
+                deleteState = testOptions [AdjustUtils.KeyTestOptionsDeleteState].ToLower() == "true";
+            }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsNoBackoffWait))
+            {
+                noBackoffWait = testOptions [AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
+            }
 
             TestLibraryInterface.TestLibraryInterface.SetTestOptions(
                 new TestLibraryInterface.AdjustTestOptionsDto
                 {
-					BasePath = testOptions[AdjustUtils.KeyTestOptionsBasePath],
-					GdprPath = testOptions[AdjustUtils.KeyTestOptionsGdprPath],
-					BaseUrl = testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
-					GdprUrl = testOptions[AdjustUtils.KeyTestOptionsGdprUrl],
-					SessionIntervalInMilliseconds = sessionIntMls,
-					SubsessionIntervalInMilliseconds = subsessionIntMls,
-					TimerIntervalInMilliseconds = timerIntervalMls,
-					TimerStartInMilliseconds = timerStartMls,
-					DeleteState = deleteState,
-					Teardown = teardown
+                    BasePath = testOptions[AdjustUtils.KeyTestOptionsBasePath],
+                    GdprPath = testOptions[AdjustUtils.KeyTestOptionsGdprPath],
+                    BaseUrl = testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
+                    GdprUrl = testOptions[AdjustUtils.KeyTestOptionsGdprUrl],
+                    SessionIntervalInMilliseconds = sessionIntMls,
+                    SubsessionIntervalInMilliseconds = subsessionIntMls,
+                    TimerIntervalInMilliseconds = timerIntervalMls,
+                    TimerStartInMilliseconds = timerStartMls,
+                    DeleteState = deleteState,
+                    Teardown = teardown
                 });
         }
     }
