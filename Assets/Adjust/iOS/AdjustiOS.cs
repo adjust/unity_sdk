@@ -343,14 +343,20 @@ namespace com.adjust.sdk
                 AdjustUtils.ConvertBool(iAdFrameworkEnabled));
         }
 
-        public static void TrackSubsessionStart()
+        public static void TrackSubsessionStart(string testingArgument = null)
         {
-            _AdjustTrackSubsessionStart();
+            if (testingArgument == "test") 
+            {
+                _AdjustTrackSubsessionStart ();
+            }
         }
 
-        public static void TrackSubsessionEnd()
+        public static void TrackSubsessionEnd(string testingArgument = null)
         {
-            _AdjustTrackSubsessionEnd();
+            if (testingArgument == "test") 
+            {
+                _AdjustTrackSubsessionEnd();
+            }
         }
     }
 #endif

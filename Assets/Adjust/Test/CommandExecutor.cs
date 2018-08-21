@@ -517,7 +517,7 @@ namespace com.adjust.sdk.test
         private void Resume()
         {
 #if UNITY_IOS
-            AdjustiOS.TrackSubsessionStart();
+            AdjustiOS.TrackSubsessionStart("test");
 #elif UNITY_ANDROID
             AdjustAndroid.OnResume();
 #elif (UNITY_WSA || UNITY_WP8)
@@ -530,7 +530,7 @@ namespace com.adjust.sdk.test
         private void Pause()
         {
 #if UNITY_IOS
-            AdjustiOS.TrackSubsessionEnd();
+            AdjustiOS.TrackSubsessionEnd("test");
 #elif UNITY_ANDROID
             AdjustAndroid.OnPause();
 #elif (UNITY_WSA || UNITY_WP8)
