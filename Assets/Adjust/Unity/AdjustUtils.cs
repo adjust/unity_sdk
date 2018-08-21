@@ -21,19 +21,20 @@ namespace com.adjust.sdk
         public static string KeyTrackerToken = "trackerToken";
         public static string KeyJsonResponse = "jsonResponse";
 
-		// test options keys
-		public static string KeyTestOptionsBaseUrl = "baseUrl";
-		public static string KeyTestOptionsGdprUrl = "gdprUrl";
-		public static string KeyTestOptionsBasePath = "basePath";
-		public static string KeyTestOptionsGdprPath = "gdprPath";
-		public static string KeyTestOptionsDeleteState = "deleteState";
-		public static string KeyTestOptionsUseTestConnectionOptions = "useTestConnectionOptions";
-		public static string KeyTestOptionsTimerIntervalInMilliseconds = "timerIntervalInMilliseconds";
-		public static string KeyTestOptionsTimerStartInMilliseconds = "timerStartInMilliseconds";
-		public static string KeyTestOptionsSessionIntervalInMilliseconds = "sessionIntervalInMilliseconds";
-		public static string KeyTestOptionsSubsessionIntervalInMilliseconds = "subsessionIntervalInMilliseconds";
-		public static string KeyTestOptionsTeardown = "teardown";
-		public static string KeyTestOptionsNoBackoffWait = "noBackoffWait";
+        // test options keys
+        public static string KeyTestOptionsBaseUrl = "baseUrl";
+        public static string KeyTestOptionsGdprUrl = "gdprUrl";
+        public static string KeyTestOptionsBasePath = "basePath";
+        public static string KeyTestOptionsGdprPath = "gdprPath";
+        public static string KeyTestOptionsDeleteState = "deleteState";
+        public static string KeyTestOptionsUseTestConnectionOptions = "useTestConnectionOptions";
+        public static string KeyTestOptionsTimerIntervalInMilliseconds = "timerIntervalInMilliseconds";
+        public static string KeyTestOptionsTimerStartInMilliseconds = "timerStartInMilliseconds";
+        public static string KeyTestOptionsSessionIntervalInMilliseconds = "sessionIntervalInMilliseconds";
+        public static string KeyTestOptionsSubsessionIntervalInMilliseconds = "subsessionIntervalInMilliseconds";
+        public static string KeyTestOptionsTeardown = "teardown";
+        public static string KeyTestOptionsNoBackoffWait = "noBackoffWait";
+        public static string KeyTestOptionsiAdFrameworkEnabled = "iAdFrameworkEnabled";
 
         public static int ConvertLogLevel(AdjustLogLevel? logLevel)
         {
@@ -200,69 +201,69 @@ namespace com.adjust.sdk
         }
 
 #if UNITY_ANDROID
-		public static AndroidJavaObject Map2AndroidJavaObject(Dictionary<string, string> testOptionsMap, AndroidJavaObject ajoCurrentActivity)
-		{
-			AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
-			ajoTestOptions.Set<String>("baseUrl", testOptionsMap[KeyTestOptionsBaseUrl]);
-			ajoTestOptions.Set<String>("gdprUrl", testOptionsMap[KeyTestOptionsGdprUrl]);
+        public static AndroidJavaObject Map2AndroidJavaObject(Dictionary<string, string> testOptionsMap, AndroidJavaObject ajoCurrentActivity)
+        {
+            AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
+            ajoTestOptions.Set<String>("baseUrl", testOptionsMap[KeyTestOptionsBaseUrl]);
+            ajoTestOptions.Set<String>("gdprUrl", testOptionsMap[KeyTestOptionsGdprUrl]);
 
-			if (testOptionsMap.ContainsKey(KeyTestOptionsBasePath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsBasePath]))
-			{
-				ajoTestOptions.Set<String>("basePath", testOptionsMap[KeyTestOptionsBasePath]);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsGdprPath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsGdprPath]))
-			{
-				ajoTestOptions.Set<String>("gdprPath", testOptionsMap[KeyTestOptionsGdprPath]);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsDeleteState) && ajoCurrentActivity != null)
-			{
-				ajoTestOptions.Set<AndroidJavaObject>("context", ajoCurrentActivity);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsUseTestConnectionOptions)) 
-			{
-				bool useTestConnectionOptions = testOptionsMap [KeyTestOptionsUseTestConnectionOptions].ToLower () == "true";
-				AndroidJavaObject ajoUseTestConnectionOptions = new AndroidJavaObject("java.lang.Boolean", useTestConnectionOptions);
-				ajoTestOptions.Set<AndroidJavaObject>("useTestConnectionOptions", ajoUseTestConnectionOptions);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsTimerIntervalInMilliseconds)) 
-			{
-				var timerIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsTimerIntervalInMilliseconds]);
-				AndroidJavaObject ajoTimerIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", timerIntervalInMilliseconds);
-				ajoTestOptions.Set<AndroidJavaObject>("timerIntervalInMilliseconds", ajoTimerIntervalInMilliseconds);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsTimerStartInMilliseconds)) 
-			{
-				var timerStartInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsTimerStartInMilliseconds]);
-				AndroidJavaObject ajoTimerStartInMilliseconds = new AndroidJavaObject("java.lang.Long", timerStartInMilliseconds);
-				ajoTestOptions.Set<AndroidJavaObject>("timerStartInMilliseconds", ajoTimerStartInMilliseconds);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsSessionIntervalInMilliseconds)) 
-			{	
-				var sessionIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsSessionIntervalInMilliseconds]);
-				AndroidJavaObject ajoSessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", sessionIntervalInMilliseconds);
-				ajoTestOptions.Set<AndroidJavaObject>("sessionIntervalInMilliseconds", ajoSessionIntervalInMilliseconds);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsSubsessionIntervalInMilliseconds)) 
-			{
-				var subsessionIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsSubsessionIntervalInMilliseconds]);
-				AndroidJavaObject ajoSubsessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", subsessionIntervalInMilliseconds);
-				ajoTestOptions.Set<AndroidJavaObject>("subsessionIntervalInMilliseconds", ajoSubsessionIntervalInMilliseconds);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsTeardown))
-			{
-				bool teardown = testOptionsMap [KeyTestOptionsTeardown].ToLower () == "true";
-				AndroidJavaObject ajoTeardown = new AndroidJavaObject("java.lang.Boolean", teardown);
-				ajoTestOptions.Set<AndroidJavaObject>("teardown", ajoTeardown);
-			}
-			if (testOptionsMap.ContainsKey(KeyTestOptionsNoBackoffWait))
-			{
-				bool noBackoffWait = testOptionsMap [KeyTestOptionsNoBackoffWait].ToLower () == "true";
-				AndroidJavaObject ajoNoBackoffWait = new AndroidJavaObject("java.lang.Boolean", noBackoffWait);
-				ajoTestOptions.Set<AndroidJavaObject>("noBackoffWait", ajoNoBackoffWait);
-			}
+            if (testOptionsMap.ContainsKey(KeyTestOptionsBasePath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsBasePath]))
+            {
+                ajoTestOptions.Set<String>("basePath", testOptionsMap[KeyTestOptionsBasePath]);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsGdprPath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsGdprPath]))
+            {
+                ajoTestOptions.Set<String>("gdprPath", testOptionsMap[KeyTestOptionsGdprPath]);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsDeleteState) && ajoCurrentActivity != null)
+            {
+                ajoTestOptions.Set<AndroidJavaObject>("context", ajoCurrentActivity);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsUseTestConnectionOptions)) 
+            {
+                bool useTestConnectionOptions = testOptionsMap [KeyTestOptionsUseTestConnectionOptions].ToLower () == "true";
+                AndroidJavaObject ajoUseTestConnectionOptions = new AndroidJavaObject("java.lang.Boolean", useTestConnectionOptions);
+                ajoTestOptions.Set<AndroidJavaObject>("useTestConnectionOptions", ajoUseTestConnectionOptions);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsTimerIntervalInMilliseconds)) 
+            {
+                var timerIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsTimerIntervalInMilliseconds]);
+                AndroidJavaObject ajoTimerIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", timerIntervalInMilliseconds);
+                ajoTestOptions.Set<AndroidJavaObject>("timerIntervalInMilliseconds", ajoTimerIntervalInMilliseconds);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsTimerStartInMilliseconds)) 
+            {
+                var timerStartInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsTimerStartInMilliseconds]);
+                AndroidJavaObject ajoTimerStartInMilliseconds = new AndroidJavaObject("java.lang.Long", timerStartInMilliseconds);
+                ajoTestOptions.Set<AndroidJavaObject>("timerStartInMilliseconds", ajoTimerStartInMilliseconds);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsSessionIntervalInMilliseconds)) 
+            {   
+                var sessionIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsSessionIntervalInMilliseconds]);
+                AndroidJavaObject ajoSessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", sessionIntervalInMilliseconds);
+                ajoTestOptions.Set<AndroidJavaObject>("sessionIntervalInMilliseconds", ajoSessionIntervalInMilliseconds);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsSubsessionIntervalInMilliseconds)) 
+            {
+                var subsessionIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsSubsessionIntervalInMilliseconds]);
+                AndroidJavaObject ajoSubsessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", subsessionIntervalInMilliseconds);
+                ajoTestOptions.Set<AndroidJavaObject>("subsessionIntervalInMilliseconds", ajoSubsessionIntervalInMilliseconds);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsTeardown))
+            {
+                bool teardown = testOptionsMap [KeyTestOptionsTeardown].ToLower () == "true";
+                AndroidJavaObject ajoTeardown = new AndroidJavaObject("java.lang.Boolean", teardown);
+                ajoTestOptions.Set<AndroidJavaObject>("teardown", ajoTeardown);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsNoBackoffWait))
+            {
+                bool noBackoffWait = testOptionsMap [KeyTestOptionsNoBackoffWait].ToLower () == "true";
+                AndroidJavaObject ajoNoBackoffWait = new AndroidJavaObject("java.lang.Boolean", noBackoffWait);
+                ajoTestOptions.Set<AndroidJavaObject>("noBackoffWait", ajoNoBackoffWait);
+            }
 
-			return ajoTestOptions;
-		}
+            return ajoTestOptions;
+        }
 #endif
     }
 }

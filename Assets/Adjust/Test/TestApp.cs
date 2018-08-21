@@ -20,7 +20,7 @@ namespace com.adjust.sdk.test
         private const string PROTOCOL = "https://";
         private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;          // Android simulator
 #elif UNITY_IOS
-        public const string CLIENT_SDK = "unity4.14.1@ios4.14.1";
+        public const string CLIENT_SDK = "unity4.14.1@ios4.14.3";
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT;           // iOS simulator
@@ -47,9 +47,9 @@ namespace com.adjust.sdk.test
             _testLibraryiOS = testLibrary as TestLibraryiOS;
 #endif
             // Set specific tests to run.
-			//testLibrary.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
-			//testLibrary.AddTest("current/gdpr/Test_GdprForgetMe_after_install");
-			//testLibrary.AddTestDirectory ("current/deeplink-deferred");
+            //testLibrary.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
+            //testLibrary.AddTest("current/gdpr/Test_GdprForgetMe_after_install");
+            //testLibrary.AddTestDirectory ("current/deeplink-deferred");
 
             Log("Starting test session...");
             testLibrary.StartTestSession();

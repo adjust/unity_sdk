@@ -108,7 +108,8 @@ namespace com.adjust.sdk
             long subsessionIntervalInMilliseconds,
             int teardown,
             int deleteState,
-            int noBackoffWait);
+            int noBackoffWait,
+            int iAdFrameworkEnabled);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackSubsessionStart();
@@ -288,6 +289,7 @@ namespace com.adjust.sdk
             bool teardown = false;
             bool deleteState = false;
             bool noBackoffWait = false;
+            bool iAdFrameworkEnabled = false;
 
             if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
             {
@@ -317,6 +319,10 @@ namespace com.adjust.sdk
             {
                 noBackoffWait = testOptions [AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
             }
+            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsiAdFrameworkEnabled))
+            {
+                iAdFrameworkEnabled = testOptions [AdjustUtils.KeyTestOptionsiAdFrameworkEnabled].ToLower() == "true";
+            }
 
             _AdjustSetTestOptions(
                 testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
@@ -329,7 +335,8 @@ namespace com.adjust.sdk
                 subsessionIntMls, 
                 AdjustUtils.ConvertBool(teardown),
                 AdjustUtils.ConvertBool(deleteState),
-                AdjustUtils.ConvertBool(noBackoffWait));
+                AdjustUtils.ConvertBool(noBackoffWait),
+                AdjustUtils.ConvertBool(iAdFrameworkEnabled));
         }
 
         public static void TrackSubsessionStart()

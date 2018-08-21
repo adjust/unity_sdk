@@ -109,6 +109,11 @@ namespace com.adjust.sdk.test
             {
                 testOptions[AdjustUtils.KeyTestOptionsNoBackoffWait] = _command.GetFirstParameterValue("noBackoffWait");
             }
+            testOptions [AdjustUtils.KeyTestOptionsiAdFrameworkEnabled] = "false";  // false - iAd will not be used in test app by default
+            if (_command.ContainsParameter("iAdFrameworkEnabled"))
+            {
+                testOptions[AdjustUtils.KeyTestOptionsiAdFrameworkEnabled] = _command.GetFirstParameterValue("iAdFrameworkEnabled");
+            }
             if (_command.ContainsParameter("teardown"))
             {
                 List<string> teardownOptions = _command.Parameters["teardown"];

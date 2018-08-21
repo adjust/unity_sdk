@@ -396,7 +396,8 @@ extern "C"
                                long subsessionIntervalInMilliseconds,
                                int teardown,
                                int deleteState,
-                               int noBackoffWait) {
+                               int noBackoffWait,
+                               int iAdFrameworkEnabled) {
         AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
 
         NSString *stringBaseUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:baseUrl] : nil;
@@ -433,6 +434,9 @@ extern "C"
         }
         if (noBackoffWait != -1) {
             [testOptions setNoBackoffWait:(BOOL)noBackoffWait];
+        }
+        if (iAdFrameworkEnabled != -1) {
+            [testOptions setIAdFrameworkEnabled:(BOOL)iAdFrameworkEnabled];
         }
 
         [Adjust setTestOptions:testOptions];
