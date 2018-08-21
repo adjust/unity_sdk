@@ -312,22 +312,14 @@ namespace com.adjust.sdk.test
 
             if (_command.ContainsParameter("deferredDeeplinkCallback"))
             {
+				bool launchDeferredDeeplink = _command.GetFirstParameterValue("deferredDeeplinkCallback") == "true";
+				adjustConfig.setLaunchDeferredDeeplink(launchDeferredDeeplink);
+				string localBasePath = BasePath;
                 adjustConfig.setDeferredDeeplinkDelegate(uri =>
                 {
-                    if (uri == null)
-                    {
-                        TestApp.Log("DeeplinkResponse, uri = null");
-                        adjustConfig.setLaunchDeferredDeeplink(false);
-                    }
-
-                    TestApp.Log("DeeplinkResponse, uri = " + uri.ToString());
-
-                    if (!uri.StartsWith("adjusttest"))
-                    {
-                        adjustConfig.setLaunchDeferredDeeplink(false);
-                    }
-
-                    adjustConfig.setLaunchDeferredDeeplink(true);
+					TestApp.Log("deferred_deep_link = " + uri);
+					_testLibrary.AddInfoToSend("deeplink", uri);
+					_testLibrary.SendInfoToServer(localBasePath);
                 });
             }
 
