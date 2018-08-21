@@ -282,6 +282,10 @@ namespace com.adjust.sdk
         // Used for testing only.
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
+            string baseUrl = testOptions[AdjustUtils.KeyTestOptionsBaseUrl];
+            string gdprUrl = testOptions[AdjustUtils.KeyTestOptionsGdprUrl];
+            string basePath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsBasePath) ? testOptions[AdjustUtils.KeyTestOptionsBasePath] : null;
+            string gdprPath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsGdprPath) ? testOptions[AdjustUtils.KeyTestOptionsGdprPath] : null;
             long timerIntervalMls = -1;
             long timerStartMls = -1;
             long sessionIntMls = -1;
@@ -325,10 +329,10 @@ namespace com.adjust.sdk
             }
 
             _AdjustSetTestOptions(
-                testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
-                testOptions[AdjustUtils.KeyTestOptionsBasePath],
-                testOptions[AdjustUtils.KeyTestOptionsGdprUrl],
-                testOptions[AdjustUtils.KeyTestOptionsGdprPath],
+                baseUrl,
+                basePath,
+                gdprUrl,
+                gdprPath,
                 timerIntervalMls,
                 timerStartMls,
                 sessionIntMls,
