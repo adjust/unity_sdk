@@ -237,7 +237,6 @@ namespace com.adjust.sdk.test
 #if (UNITY_WSA || UNITY_WP8)
                 adjustConfig.logDelegate = msg => Debug.Log(msg);
 #endif
-
                 _savedConfigs.Add(configNumber, adjustConfig);
             }
 

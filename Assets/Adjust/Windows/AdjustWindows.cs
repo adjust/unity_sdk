@@ -252,6 +252,10 @@ namespace com.adjust.sdk
 
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
+            string basePath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsBasePath) ? 
+                testOptions[AdjustUtils.KeyTestOptionsBasePath] : null;
+            string gdprPath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsGdprPath) ?
+                testOptions[AdjustUtils.KeyTestOptionsGdprPath] : null;
             long timerIntervalMls = -1;
             long timerStartMls = -1;
             long sessionIntMls = -1;
@@ -292,16 +296,17 @@ namespace com.adjust.sdk
             TestLibraryInterface.TestLibraryInterface.SetTestOptions(
                 new TestLibraryInterface.AdjustTestOptionsDto
                 {
-                    BasePath = testOptions[AdjustUtils.KeyTestOptionsBasePath],
-                    GdprPath = testOptions[AdjustUtils.KeyTestOptionsGdprPath],
                     BaseUrl = testOptions[AdjustUtils.KeyTestOptionsBaseUrl],
                     GdprUrl = testOptions[AdjustUtils.KeyTestOptionsGdprUrl],
+                    BasePath = basePath,
+                    GdprPath = gdprPath,
                     SessionIntervalInMilliseconds = sessionIntMls,
                     SubsessionIntervalInMilliseconds = subsessionIntMls,
                     TimerIntervalInMilliseconds = timerIntervalMls,
                     TimerStartInMilliseconds = timerStartMls,
                     DeleteState = deleteState,
-                    Teardown = teardown
+                    Teardown = teardown,
+                    NoBackoffWait = noBackoffWait
                 });
         }
     }
