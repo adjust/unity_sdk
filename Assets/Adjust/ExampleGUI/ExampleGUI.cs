@@ -23,7 +23,7 @@ public class ExampleGUI : MonoBehaviour
     {
         if (showPopUp)
         {
-            GUI.Window(0, new Rect((Screen.width / 2) - 150, (Screen.height / 2) - 65, 300, 130), showGUI, "Is SDK enabled?");
+            GUI.Window(0, new Rect((Screen.width / 2) - 150, (Screen.height / 2) - 65, 300, 130), ShowGUI, "Is SDK enabled?");
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 0 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), txtManualLaunch))
@@ -112,7 +112,7 @@ public class ExampleGUI : MonoBehaviour
         }
     }
 
-    void showGUI(int windowID)
+    void ShowGUI(int windowID)
     {
         if (isEnabled)
         {
@@ -129,7 +129,7 @@ public class ExampleGUI : MonoBehaviour
         }
     }
 
-    public void handleGooglePlayId(String adId)
+    public void HandleGooglePlayId(String adId)
     {
         Debug.Log("Google Play Ad ID = " + adId);
     }

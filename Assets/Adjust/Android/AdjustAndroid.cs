@@ -12,7 +12,6 @@ namespace com.adjust.sdk
         private static bool launchDeferredDeeplink = true;
 
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-        // TODO: Check whether currentActivity should be disposed after usage.
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass
             ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
 
@@ -29,7 +28,7 @@ namespace com.adjust.sdk
             AndroidJavaObject ajoEnvironment = adjustConfig.environment == AdjustEnvironment.Sandbox ? 
                 new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_SANDBOX") :
                     new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_PRODUCTION");
-
+            
             // Create adjust config object.
             AndroidJavaObject ajoAdjustConfig;
 
@@ -370,7 +369,7 @@ namespace com.adjust.sdk
         // Used for testing only.
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
-            AndroidJavaObject ajoTestOptions = AdjustUtils.Map2AndroidJavaObject (testOptions, ajoCurrentActivity);
+            AndroidJavaObject ajoTestOptions = AdjustUtils.TestOptionsMap2AndroidJavaObject(testOptions, ajoCurrentActivity);
             ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
         }
 
@@ -638,10 +637,10 @@ namespace com.adjust.sdk
         private static bool IsAppSecretSet(AdjustConfig adjustConfig)
         {
             return adjustConfig.secretId.HasValue 
-            && adjustConfig.info1.HasValue
-            && adjustConfig.info2.HasValue
-            && adjustConfig.info3.HasValue
-            && adjustConfig.info4.HasValue;
+                && adjustConfig.info1.HasValue
+                && adjustConfig.info2.HasValue
+                && adjustConfig.info3.HasValue
+                && adjustConfig.info4.HasValue;
         }
     }
 #endif

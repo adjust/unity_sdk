@@ -85,6 +85,7 @@ namespace com.adjust.sdk
                 Debug.Log("Adjust: Missing config to start.");
                 return;
             }
+
             #if UNITY_IOS
                 Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
                 Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
@@ -185,15 +186,15 @@ namespace com.adjust.sdk
 
         public static void gdprForgetMe()
         {
-#if UNITY_IOS
-            AdjustiOS.GdprForgetMe();
-#elif UNITY_ANDROID
-            AdjustAndroid.GdprForgetMe();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.GdprForgetMe();
-#else
-            Debug.Log(errorMsgPlatform);
-#endif
+            #if UNITY_IOS
+                AdjustiOS.GdprForgetMe();
+            #elif UNITY_ANDROID
+                AdjustAndroid.GdprForgetMe();
+            #elif (UNITY_WSA || UNITY_WP8)
+                AdjustWindows.GdprForgetMe();
+            #else
+                Debug.Log(errorMsgPlatform);
+            #endif
         }
 
         public static void appWillOpenUrl(string url)
