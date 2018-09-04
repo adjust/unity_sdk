@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os, sys
 from scripting_utils import *
 import build_sdk_android    as android
