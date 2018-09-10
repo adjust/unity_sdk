@@ -123,9 +123,10 @@ namespace com.adjust.sdk
             }
 
             // Check if user has enabled reading of IMEI and MEID.
+            // Obsolete method.
             if (adjustConfig.readImei.HasValue)
             {
-                ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value);
+                // ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value);
             }
 
             // Check attribution changed delagate setting.
@@ -211,6 +212,12 @@ namespace com.adjust.sdk
             if (adjustEvent.transactionId != null)
             {
                 ajoAdjustEvent.Call("setOrderId", adjustEvent.transactionId);
+            }
+
+            // Check if user has added callback ID to the event.
+            if (adjustEvent.callbackId != null)
+            {
+                ajoAdjustEvent.Call("setCallbackId", adjustEvent.callbackId);
             }
 
             // Track the event.
@@ -453,6 +460,7 @@ namespace com.adjust.sdk
                 adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
                 adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -497,6 +505,7 @@ namespace com.adjust.sdk
                 adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
                 adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);

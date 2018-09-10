@@ -9,6 +9,7 @@ namespace com.adjust.sdk
         public string Message { get; set; }
         public string Timestamp { get; set; }
         public string EventToken { get; set; }
+        public string CallbackId { get; set; }
         public bool WillRetry { get; set; }
         public Dictionary<string, object> JsonResponse { get; set; }
 
@@ -25,6 +26,7 @@ namespace com.adjust.sdk
             Message = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyTimestamp);
             EventToken = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyEventToken);
+            CallbackId = AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyCallbackId);
 
             WillRetry = bool.Parse(AdjustUtils.TryGetValue(eventFailureDataMap, AdjustUtils.KeyWillRetry));
             bool willRetry;
@@ -54,6 +56,7 @@ namespace com.adjust.sdk
             Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
             EventToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyEventToken);
+            CallbackId = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCallbackId);
             WillRetry = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyWillRetry));
 
             var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];

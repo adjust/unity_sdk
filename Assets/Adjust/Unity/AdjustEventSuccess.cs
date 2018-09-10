@@ -9,6 +9,7 @@ namespace com.adjust.sdk
         public string Message { get; set; }
         public string Timestamp { get; set; }
         public string EventToken { get; set; }
+        public string CallbackId { get; set; }
 
         public Dictionary<string, object> JsonResponse { get; set; }
 
@@ -25,6 +26,7 @@ namespace com.adjust.sdk
             Message = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyTimestamp);
             EventToken = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyEventToken);
+            CallbackId = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyCallbackId);
 
             string jsonResponseString = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyJsonResponse);
             var jsonResponseNode = JSON.Parse(jsonResponseString);
@@ -47,6 +49,7 @@ namespace com.adjust.sdk
             Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
             EventToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyEventToken);
+            CallbackId = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCallbackId);
 
             var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
             if (jsonResponseNode == null)

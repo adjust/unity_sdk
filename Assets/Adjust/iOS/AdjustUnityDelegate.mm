@@ -110,6 +110,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:eventSuccessResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
     [self addValueOrEmpty:eventSuccessResponseData.adid forKey:@"adid" toDictionary:dictionary];
     [self addValueOrEmpty:eventSuccessResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.callbackId forKey:@"callbackId" toDictionary:dictionary];
     if (eventSuccessResponseData.jsonResponse != nil) {
         [dictionary setObject:eventSuccessResponseData.jsonResponse forKey:@"jsonResponse"];
     }
@@ -132,6 +133,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:eventFailureResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
     [self addValueOrEmpty:eventFailureResponseData.adid forKey:@"adid" toDictionary:dictionary];
     [self addValueOrEmpty:eventFailureResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.callbackId forKey:@"callbackId" toDictionary:dictionary];
     [dictionary setObject:(eventFailureResponseData.willRetry ? @"true" : @"false") forKey:@"willRetry"];
     if (eventFailureResponseData.jsonResponse != nil) {
         [dictionary setObject:eventFailureResponseData.jsonResponse forKey:@"jsonResponse"];

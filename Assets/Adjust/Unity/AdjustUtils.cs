@@ -15,6 +15,7 @@ namespace com.adjust.sdk
         public static string KeyCreative = "creative";
         public static string KeyWillRetry = "willRetry";
         public static string KeyTimestamp = "timestamp";
+        public static string KeyCallbackId = "callbackId";
         public static string KeyEventToken = "eventToken";
         public static string KeyClickLabel = "clickLabel";
         public static string KeyTrackerName = "trackerName";

@@ -191,6 +191,7 @@ extern "C"
                            const char* currency,
                            const char* receipt,
                            const char* transactionId,
+                           const char* callbackId,
                            int isReceiptSet,
                            const char* jsonCallbackParameters,
                            const char* jsonPartnerParameters) {
@@ -228,6 +229,12 @@ extern "C"
         if (transactionId != NULL) {
             NSString *stringTransactionId = [NSString stringWithUTF8String:transactionId];
             [event setTransactionId:stringTransactionId];
+        }
+
+        // Callback ID.
+        if (callbackId != NULL) {
+            NSString *stringCallbackId = [NSString stringWithUTF8String:callbackId];
+            [event setCallbackId:stringCallbackId];
         }
 
         // Receipt (legacy).

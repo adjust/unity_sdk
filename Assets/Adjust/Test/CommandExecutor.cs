@@ -394,6 +394,7 @@ namespace com.adjust.sdk.test
                     _testLibrary.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", eventSuccessResponseData.Adid);
                     _testLibrary.AddInfoToSend("eventToken", eventSuccessResponseData.EventToken);
+                    _testLibrary.AddInfoToSend("callbackId", eventSuccessResponseData.CallbackId);
                     if (eventSuccessResponseData.JsonResponse != null)
                     {
                         _testLibrary.AddInfoToSend("jsonResponse", eventSuccessResponseData.GetJsonResponse());
@@ -413,6 +414,7 @@ namespace com.adjust.sdk.test
                     _testLibrary.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", eventFailureResponseData.Adid);
                     _testLibrary.AddInfoToSend("eventToken", eventFailureResponseData.EventToken);
+                    _testLibrary.AddInfoToSend("callbackId", eventFailureResponseData.CallbackId);
                     _testLibrary.AddInfoToSend("willRetry", eventFailureResponseData.WillRetry.ToString().ToLower());
                     if (eventFailureResponseData.JsonResponse != null)
                     {
@@ -494,6 +496,12 @@ namespace com.adjust.sdk.test
             {
                 var orderId = _command.GetFirstParameterValue("orderId");
                 adjustEvent.setTransactionId(orderId);
+            }
+
+            if (_command.ContainsParameter("callbackId"))
+            {
+                var callbackId = _command.GetFirstParameterValue("callbackId");
+                adjustEvent.setCallbackId(callbackId);
             }
         }
 
