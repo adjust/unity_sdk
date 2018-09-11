@@ -8,13 +8,12 @@ namespace com.adjust.sdk
         internal string currency;
         internal string eventToken;
         internal string callbackId;
+        internal string transactionId;
         internal double? revenue;
         internal List<string> partnerList;
         internal List<string> callbackList;
-
         // iOS specific members
         internal string receipt;
-        internal string transactionId;
         internal bool isReceiptSet;
 
         public AdjustEvent(string eventToken)

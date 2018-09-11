@@ -127,22 +127,18 @@ namespace com.adjust.sdk
             string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : "ADJ_INVALID";
             string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : "ADJ_INVALID";
             string environment = adjustConfig.environment.ToLowercaseString();
-
             long info1 = AdjustUtils.ConvertLong(adjustConfig.info1);
             long info2 = AdjustUtils.ConvertLong(adjustConfig.info2);
             long info3 = AdjustUtils.ConvertLong(adjustConfig.info3);
             long info4 = AdjustUtils.ConvertLong(adjustConfig.info4);
             long secretId = AdjustUtils.ConvertLong(adjustConfig.secretId);
-
             double delayStart = AdjustUtils.ConvertDouble(adjustConfig.delayStart);
-
             int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.logLevel);
             int isDeviceKnown = AdjustUtils.ConvertBool(adjustConfig.isDeviceKnown);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool(adjustConfig.eventBufferingEnabled);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
-
             int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
             int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventSuccessDelegate() != null);
             int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventFailureDelegate() != null);
@@ -248,7 +244,6 @@ namespace com.adjust.sdk
             _AdjustResetSessionCallbackParameters();
         }
 
-        // iOS specific methods
         public static void SetDeviceToken(string deviceToken)
         {
             _AdjustSetDeviceToken(deviceToken);
@@ -288,46 +283,46 @@ namespace com.adjust.sdk
             string gdprUrl = testOptions[AdjustUtils.KeyTestOptionsGdprUrl];
             string basePath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsBasePath) ? testOptions[AdjustUtils.KeyTestOptionsBasePath] : null;
             string gdprPath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsGdprPath) ? testOptions[AdjustUtils.KeyTestOptionsGdprPath] : null;
-            long timerIntervalMls = -1;
-            long timerStartMls = -1;
-            long sessionIntMls = -1;
-            long subsessionIntMls = -1;
+            long timerIntervalMilis = -1;
+            long timerStartMilis = -1;
+            long sessionIntMilis = -1;
+            long subsessionIntMilis = -1;
             bool teardown = false;
             bool deleteState = false;
             bool noBackoffWait = false;
             bool iAdFrameworkEnabled = false;
 
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
             {
-                timerIntervalMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds]);
+                timerIntervalMilis = long.Parse(testOptions[AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds]);
             }
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTimerStartInMilliseconds)) 
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsTimerStartInMilliseconds)) 
             {
-                timerStartMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsTimerStartInMilliseconds]);
+                timerStartMilis = long.Parse(testOptions[AdjustUtils.KeyTestOptionsTimerStartInMilliseconds]);
             }
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds))
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds))
             {
-                sessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds]);
+                sessionIntMilis = long.Parse(testOptions[AdjustUtils.KeyTestOptionsSessionIntervalInMilliseconds]);
             }
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds))
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds))
             {
-                subsessionIntMls = long.Parse (testOptions [AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds]);
+                subsessionIntMilis = long.Parse(testOptions[AdjustUtils.KeyTestOptionsSubsessionIntervalInMilliseconds]);
             }
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsTeardown))
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsTeardown))
             {
-                teardown = testOptions [AdjustUtils.KeyTestOptionsTeardown].ToLower() == "true";
+                teardown = testOptions[AdjustUtils.KeyTestOptionsTeardown].ToLower() == "true";
             }
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsDeleteState))
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsDeleteState))
             {
-                deleteState = testOptions [AdjustUtils.KeyTestOptionsDeleteState].ToLower() == "true";
+                deleteState = testOptions[AdjustUtils.KeyTestOptionsDeleteState].ToLower() == "true";
             }
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsNoBackoffWait))
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsNoBackoffWait))
             {
-                noBackoffWait = testOptions [AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
+                noBackoffWait = testOptions[AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
             }
-            if (testOptions.ContainsKey (AdjustUtils.KeyTestOptionsiAdFrameworkEnabled))
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsiAdFrameworkEnabled))
             {
-                iAdFrameworkEnabled = testOptions [AdjustUtils.KeyTestOptionsiAdFrameworkEnabled].ToLower() == "true";
+                iAdFrameworkEnabled = testOptions[AdjustUtils.KeyTestOptionsiAdFrameworkEnabled].ToLower() == "true";
             }
 
             _AdjustSetTestOptions(
@@ -335,10 +330,10 @@ namespace com.adjust.sdk
                 basePath,
                 gdprUrl,
                 gdprPath,
-                timerIntervalMls,
-                timerStartMls,
-                sessionIntMls,
-                subsessionIntMls, 
+                timerIntervalMilis,
+                timerStartMilis,
+                sessionIntMilis,
+                subsessionIntMilis, 
                 AdjustUtils.ConvertBool(teardown),
                 AdjustUtils.ConvertBool(deleteState),
                 AdjustUtils.ConvertBool(noBackoffWait),
@@ -349,7 +344,7 @@ namespace com.adjust.sdk
         {
             if (testingArgument == "test") 
             {
-                _AdjustTrackSubsessionStart ();
+                _AdjustTrackSubsessionStart();
             }
         }
 

@@ -175,7 +175,7 @@ namespace com.adjust.sdk
         [Obsolete("This is an obsolete method.")]
         public void setReadMobileEquipmentIdentity(bool readMobileEquipmentIdentity)
         {
-            this.readImei = readMobileEquipmentIdentity;
+            // this.readImei = readMobileEquipmentIdentity;
         }
 
         // Windows specific methods.

@@ -10,11 +10,8 @@ namespace com.adjust.sdk
     {
         private const string sdkPrefix = "unity4.15.0";
         private static bool launchDeferredDeeplink = true;
-
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
-        private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass
-            ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
-
+        private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
         private static DeferredDeeplinkListener onDeferredDeeplinkListener;
         private static AttributionChangeListener onAttributionChangedListener;
         private static EventTrackingFailedListener onEventTrackingFailedListener;
@@ -49,7 +46,6 @@ namespace com.adjust.sdk
             if (adjustConfig.logLevel != null)
             {
                 AndroidJavaObject ajoLogLevel;
-
                 if (adjustConfig.logLevel.Value.ToUppercaseString().Equals("SUPPRESS"))
                 {
                     ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>("SUPRESS");
@@ -461,6 +457,7 @@ namespace com.adjust.sdk
                 adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
                 adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
+
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -470,8 +467,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
-                    // Should not be happening as of v4.12.5.
-                    // Native Android SDK should send empty JSON object if none available.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
                 }
 
                 callback(adjustEventSuccess);
@@ -506,6 +503,7 @@ namespace com.adjust.sdk
                 adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
                 adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
                 adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
+
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -515,8 +513,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
-                    // Should not be happening as of v4.12.5.
-                    // Native Android SDK should send empty JSON object if none available.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
                 }
                 
                 callback(adjustEventFailure);
@@ -548,6 +546,7 @@ namespace com.adjust.sdk
                 adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
                 adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
                 adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -557,8 +556,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
-                    // Should not be happening as of v4.12.5.
-                    // Native Android SDK should send empty JSON object if none available.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
                 }
 
                 callback(adjustSessionSuccess);
@@ -591,6 +590,7 @@ namespace com.adjust.sdk
                 adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
                 adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
                 adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+
                 try
                 {
                     AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
@@ -600,8 +600,8 @@ namespace com.adjust.sdk
                 catch (Exception)
                 {
                     // JSON response reading failed.
-                    // Should not be happening as of v4.12.5.
-                    // Native Android SDK should send empty JSON object if none available.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
                 }
 
                 callback(adjustSessionFailure);

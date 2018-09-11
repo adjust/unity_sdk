@@ -22,7 +22,7 @@ namespace com.adjust.sdk
         public static string KeyTrackerToken = "trackerToken";
         public static string KeyJsonResponse = "jsonResponse";
 
-        // test options keys
+        // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
         public static string KeyTestOptionsGdprUrl = "gdprUrl";
         public static string KeyTestOptionsBasePath = "basePath";
