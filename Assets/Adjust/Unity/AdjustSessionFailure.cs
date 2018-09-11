@@ -24,7 +24,6 @@ namespace com.adjust.sdk
             Message = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyTimestamp);
 
-            WillRetry = bool.Parse(AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyWillRetry));
             bool willRetry;
             if (bool.TryParse(AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyWillRetry), out willRetry))
             {
