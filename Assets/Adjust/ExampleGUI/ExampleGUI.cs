@@ -216,9 +216,9 @@ public class ExampleGUI : MonoBehaviour
         {
             Debug.Log("EventToken: " + eventFailureData.EventToken);
         }
-        if (eventSuccessData.CallbackId != null)
+        if (eventFailureData.CallbackId != null)
         {
-            Debug.Log("CallbackId: " + eventSuccessData.CallbackId);
+            Debug.Log("CallbackId: " + eventFailureData.CallbackId);
         }
         if (eventFailureData.JsonResponse != null)
         {
