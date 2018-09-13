@@ -1,4 +1,3 @@
-import os, subprocess
 from scripting_utils import *
 
 def build(root_dir, ios_submodule_dir, with_test_lib):
@@ -12,8 +11,8 @@ def build(root_dir, ios_submodule_dir, with_test_lib):
     # ------------------------------------------------------------------
     # Building AdjustStatic framework target
     debug_green('Building AdjustStatic framework target ...')
-    os.chdir(srcdir)
-    subprocess.call(['xcodebuild', '-target', 'AdjustStatic', '-configuration', 'Release', 'clean', 'build'])
+    change_dir(srcdir)
+    xcode_build('AdjustStatic')
     copy_file(sdk_static_framework + '/Versions/A/AdjustSdk', lib_out_dir + '/AdjustSdk.a')
     copy_files('*', sdk_static_framework + '/Versions/A/Headers/', lib_out_dir)
 
@@ -25,8 +24,7 @@ def build(root_dir, ios_submodule_dir, with_test_lib):
         waiting_animation(duration=4.0, step=0.025)
         test_static_framework = '{0}/Frameworks/Static/AdjustTestLibrary.framework'.format(srcdir)
 
-        os.chdir('{0}/AdjustTests/AdjustTestLibrary'.format(srcdir))
-        subprocess.call(['xcodebuild', '-target', 'AdjustTestLibraryStatic', '-configuration', 'Release', 'clean', 'build'])
+        change_dir('{0}/AdjustTests/AdjustTestLibrary'.format(srcdir))
+        xcode_build('AdjustTestLibraryStatic')
         copy_file(test_static_framework + '/Versions/A/AdjustTestLibrary', lib_out_dir_test + '/AdjustTestLibrary.a')
         copy_files('*', test_static_framework + '/Versions/A/Headers/', lib_out_dir_test)
-        

@@ -1,7 +1,7 @@
 ##
 ##  Various util python methods which can be utilized and shared among different scripts
 ##
-import os, shutil, glob, time, sys, platform
+import os, shutil, glob, time, sys, platform, subprocess
 
 def set_log_tag(t):
     global TAG
@@ -97,6 +97,12 @@ def debug_green(msg):
     else:
         print(('* [{0}][INFO]: {1}').format(TAG, msg))
 
+def debug_blue(msg):
+    if not is_windows():
+        print(('{0}* [{1}][INFO]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CBLUE, msg, CEND))
+    else:
+        print(('* [{0}][INFO]: {1}').format(TAG, msg))
+
 def error(msg):
     if not is_windows():
         print(('{0}* [{1}][ERROR]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CRED, msg, CEND))
@@ -106,6 +112,14 @@ def error(msg):
 ############################################################
 ### util
 
+def execute_command(cmd_params, log=True):
+    if log:
+        debug_blue('Executing: ' + str(cmd_params))
+    subprocess.call(cmd_params)
+
+def change_dir(dir):
+    os.chdir(dir)
+
 def check_submodule_dir(platform, submodule_dir):
     if not os.path.isdir(submodule_dir) or not os.listdir(submodule_dir):
         error('Submodule [{0}] folder empty. Did you forget to run >> git submodule update --init --recursive << ?'.format(platform))
@@ -113,6 +127,15 @@ def check_submodule_dir(platform, submodule_dir):
 
 def is_windows():
     return platform.system().lower() == 'windows';
+
+def xcode_build(target, configuration='Release'):
+    execute_command(['xcodebuild', '-target', target, '-configuration', configuration, 'clean', 'build'])
+
+def gradle_make_release_jar():
+    execute_command(['./gradlew', 'clean', 'makeReleaseJar'])
+
+def gradle_make_testlib_jar():
+    execute_command(['./gradlew', 'clean', ':testlibrary:makeJar'])
 
 ############################################################
 ### nonsense, eyecandy and such
