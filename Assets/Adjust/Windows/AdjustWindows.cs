@@ -144,6 +144,7 @@ namespace com.adjust.sdk
                 revenue: adjustEvent.revenue,
                 currency: adjustEvent.currency,
                 purchaseId: adjustEvent.transactionId,
+                callbackId: adjustEvent.callbackId,           
                 callbackList: adjustEvent.callbackList,
                 partnerList: adjustEvent.partnerList
             );
