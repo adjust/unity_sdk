@@ -3,6 +3,10 @@
 ##
 import os, shutil, glob, time, sys, platform, subprocess
 
+## windows specific paths
+nuget_dir  = 'C:/nuget'
+devenv_dir = 'C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/IDE'
+
 def set_log_tag(t):
     global TAG
     TAG = t
@@ -80,7 +84,15 @@ def rename_file(fileNamePattern, newFileName, sourceDir):
 
 def clear_dir(dir):
     shutil.rmtree(dir)
-    os.mkdir(dir)    
+    os.mkdir(dir)
+
+def recreate_dir(dir):
+    if os.path.exists(dir):
+        shutil.rmtree(dir)
+    os.mkdir(dir)
+
+def remove_dir_if_exists(path):
+    shutil.rmtree(path)
 
 ############################################################
 ### debug messages util methods
@@ -136,6 +148,12 @@ def gradle_make_release_jar():
 
 def gradle_make_testlib_jar():
     execute_command(['./gradlew', 'clean', ':testlibrary:makeJar'])
+
+def nuget_restore(project_path):
+    execute_command(['{0}/nuget.exe'.format(nuget_dir), 'restore', project_path])
+
+def devenv_build(solution_path, configuration='Release'):
+    execute_command(['{0}/devenv.exe'.format(devenv_dir), solution_path, '/build', configuration])    
 
 ############################################################
 ### nonsense, eyecandy and such

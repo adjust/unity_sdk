@@ -1,30 +1,24 @@
-import os, subprocess, shutil
 from scripting_utils import *
 
 def build(root_dir, windows_submodule_dir):
     # ------------------------------------------------------------------
     # paths
-    devenv_dir              = 'C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/IDE'
-    nuget_dir               = 'C:/nuget'
     lib_out_dir             = '{0}/Assets/Adjust/Windows'.format(root_dir)
     bridge_dlls_dir         = '{0}/bridge/adjust-dlls'.format(windows_submodule_dir)
     bridge_release_dlls_dir = '{0}/bridge/release'.format(windows_submodule_dir)
     windows_sdk_dir         = '{0}/sdk'.format(windows_submodule_dir)
 
-    if not os.path.isdir(bridge_dlls_dir):
-        os.mkdir(bridge_dlls_dir)
-    else:
-        clear_dir(bridge_dlls_dir)
+    recreate_dir(bridge_dlls_dir)
 
     # ------------------------------------------------------------------
     # Restoring Adjust SDK Nuget Packages
     debug_green('Restoring Adjust SDK Nuget Packages ...')
-    subprocess.call(['{0}/nuget.exe'.format(nuget_dir), 'restore', '{0}/sdk/Adjust'.format(windows_submodule_dir)])
+    nuget_restore('{0}/sdk/Adjust'.format(windows_submodule_dir))
 
     # ------------------------------------------------------------------
     # Making the Adjust SDK DLLs
     debug_green('Making the Adjust SDK DLLs ...')
-    subprocess.call(['{0}/devenv.exe'.format(devenv_dir), '{0}/sdk/Adjust/Adjust.sln'.format(windows_submodule_dir), '/build', 'Debug'])
+    devenv_build('{0}/sdk/Adjust/Adjust.sln'.format(windows_submodule_dir), 'Debug')
 
     # ------------------------------------------------------------------
     # Copying needed Adjust SDK DLLs
@@ -39,12 +33,12 @@ def build(root_dir, windows_submodule_dir):
     # ------------------------------------------------------------------
     # Restoring the bridge Nuget Packages
     debug_green('Restoring the bridge Nuget Packages ...')
-    subprocess.call(['{0}/nuget.exe'.format(nuget_dir), 'restore', '{0}/bridge/WinSdkUnityBridge/WinSdkUnityBridge.sln'.format(windows_submodule_dir)])
+    nuget_restore('{0}/bridge/WinSdkUnityBridge/WinSdkUnityBridge.sln'.format(windows_submodule_dir))
 
     # ------------------------------------------------------------------
     # Making the bridge (stubs and interfaces)
     debug_green('Making the bridge (stubs and interfaces) ...')
-    subprocess.call(['{0}/devenv.exe'.format(devenv_dir), '{0}/bridge/WinSdkUnityBridge/WinSdkUnityBridge.sln'.format(windows_submodule_dir), '/build', 'Release'])
+    devenv_build('{0}/bridge/WinSdkUnityBridge/WinSdkUnityBridge.sln'.format(windows_submodule_dir))
 
     # ------------------------------------------------------------------
     # At this point, we have stubs and interfaces DLLs in ".\bridge\release" folder
@@ -70,5 +64,5 @@ def build(root_dir, windows_submodule_dir):
 
     # ------------------------------------------------------------------
     # Remove used unnecessary files
-    shutil.rmtree(bridge_dlls_dir)
-    shutil.rmtree(bridge_release_dlls_dir)
+    remove_dir_if_exists(bridge_dlls_dir)
+    remove_dir_if_exists(bridge_release_dlls_dir)
