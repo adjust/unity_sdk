@@ -30,7 +30,6 @@ namespace com.adjust.sdk
 
         // Android specific members
         internal string processName;
-        internal bool? readImei;
         // Windows specific members
         internal Action<String> logDelegate;
 
