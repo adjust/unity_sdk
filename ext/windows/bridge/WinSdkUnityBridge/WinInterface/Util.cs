@@ -20,17 +20,19 @@ namespace WinInterface
         private const string WILL_RETRY = "willRetry";
         private const string JSON_RESPONSE = "jsonResponse";
         private const string EVENT_TOKEN = "eventToken";
+        private const string CALLBACK_ID = "callbackId";
 
-        public static Dictionary<string, string> ToDictionary(AdjustEventSuccess adjustSession)
+        public static Dictionary<string, string> ToDictionary(AdjustEventSuccess adjustEvent)
         {
-            var jsonResp = JsonConvert.SerializeObject(adjustSession.JsonResponse);
+            var jsonResp = JsonConvert.SerializeObject(adjustEvent.JsonResponse);
             return new Dictionary<string, string>
             {
-                {MESSAGE, adjustSession.Message},
-                {TIMESTAMP, adjustSession.Timestamp},
-                {ADID, adjustSession.Adid},
-                {EVENT_TOKEN, adjustSession.EventToken},
-                {JSON_RESPONSE, jsonResp}
+                {MESSAGE, adjustEvent.Message},
+                {TIMESTAMP, adjustEvent.Timestamp},
+                {ADID, adjustEvent.Adid},
+                {EVENT_TOKEN, adjustEvent.EventToken},
+                {JSON_RESPONSE, jsonResp},
+                {CALLBACK_ID, adjustEvent.CallbackId }
             };
         }
 
@@ -44,18 +46,19 @@ namespace WinInterface
                 {ADID, adjustEvent.Adid},
                 {EVENT_TOKEN, adjustEvent.EventToken},
                 {WILL_RETRY, adjustEvent.WillRetry.ToString()},
-                {JSON_RESPONSE, jsonResp}
+                {JSON_RESPONSE, jsonResp},
+                {CALLBACK_ID, adjustEvent.CallbackId }
             };
         }
 
-        public static Dictionary<string, string> ToDictionary(AdjustSessionSuccess adjustEvent)
+        public static Dictionary<string, string> ToDictionary(AdjustSessionSuccess adjustSession)
         {
-            var jsonResp = JsonConvert.SerializeObject(adjustEvent.JsonResponse);
+            var jsonResp = JsonConvert.SerializeObject(adjustSession.JsonResponse);
             return new Dictionary<string, string>
             {
-                {MESSAGE, adjustEvent.Message},
-                {TIMESTAMP, adjustEvent.Timestamp},
-                {ADID, adjustEvent.Adid},
+                {MESSAGE, adjustSession.Message},
+                {TIMESTAMP, adjustSession.Timestamp},
+                {ADID, adjustSession.Adid},
                 {JSON_RESPONSE, jsonResp}
             };
         }
