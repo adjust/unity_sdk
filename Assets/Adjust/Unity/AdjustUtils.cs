@@ -123,7 +123,16 @@ namespace com.adjust.sdk
                             logJsonResponse += ",";
                         }
 
-                        logJsonResponse += "\"" + pair.Key + "\"" + ":" + "\"" + valueString + "\"";
+                        // if the value is another JSON/complex-structure
+                        if (valueString.StartsWith("{") && valueString.EndsWith("}"))
+                        {
+                            logJsonResponse += "\"" + pair.Key + "\"" + ":" + valueString;
+                        }
+                        else
+                        {
+                            logJsonResponse += "\"" + pair.Key + "\"" + ":" + "\"" + valueString + "\"";
+                        }
+
                         continue;
                     }
 
