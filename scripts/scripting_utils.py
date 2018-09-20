@@ -141,7 +141,7 @@ def is_windows():
     return platform.system().lower() == 'windows';
 
 def xcode_build(target, configuration='Release'):
-    execute_command(['xcodebuild', '-target', target, '-configuration', configuration, 'clean', 'build'])
+    execute_command(['xcodebuild', '-target', target, '-configuration', configuration, '-UseModernBuildSystem=NO' 'clean', 'build'])
 
 def gradle_make_release_jar():
     execute_command(['./gradlew', 'clean', 'makeReleaseJar'])
