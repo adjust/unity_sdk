@@ -29,6 +29,7 @@ namespace com.adjust.sdk
         internal Action<AdjustAttribution> attributionChangedDelegate;
 
         // Android specific members
+        internal bool? readImei;
         internal string processName;
         // Windows specific members
         internal Action<String> logDelegate;

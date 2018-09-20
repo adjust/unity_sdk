@@ -118,6 +118,13 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setDeviceKnown", adjustConfig.isDeviceKnown.Value);
             }
 
+            // Check if user has enabled reading of IMEI and MEID.  
+            // Obsolete method. 
+            if (adjustConfig.readImei.HasValue) 
+            {   
+                // ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value); 
+            }
+
             // Check attribution changed delagate setting.
             if (adjustConfig.attributionChangedDelegate != null)
             {
