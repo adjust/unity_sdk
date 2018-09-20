@@ -15,7 +15,7 @@ namespace com.adjust.sdk.test
         private const string PROTOCOL = "http://";
         private const string BASE_URL = PROTOCOL + "localhost" + PORT;        // Windows simulator
 #elif UNITY_ANDROID
-        public const string CLIENT_SDK = "unity4.15.0@android4.15.0";
+        public const string CLIENT_SDK = "unity4.15.0@android4.15.1";
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
         private const string BASE_URL = PROTOCOL + "10.0.2.2" + PORT;          // Android simulator
