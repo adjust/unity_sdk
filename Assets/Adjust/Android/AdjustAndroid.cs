@@ -266,14 +266,22 @@ namespace com.adjust.sdk
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-                adjustAttribution.trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
+                adjustAttribution.trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
                 return adjustAttribution;
             }
             catch (Exception) {}
@@ -395,14 +403,22 @@ namespace com.adjust.sdk
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-                adjustAttribution.trackerName = attribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.trackerToken = attribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.network = attribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.campaign = attribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.adgroup = attribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.creative = attribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.clickLabel = attribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.adid = attribution.Get<string>(AdjustUtils.KeyAdid);
+                adjustAttribution.trackerName = attribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.trackerToken = attribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.network = attribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.campaign = attribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.adgroup = attribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.creative = attribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.clickLabel = attribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.adid = attribution.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyAdid);
                 callback(adjustAttribution);
             }
         }
@@ -452,11 +468,16 @@ namespace com.adjust.sdk
                 }
 
                 AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess();
-                adjustEventSuccess.Adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
+                adjustEventSuccess.Adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
 
                 try
                 {
@@ -497,12 +518,17 @@ namespace com.adjust.sdk
                 }
 
                 AdjustEventFailure adjustEventFailure = new AdjustEventFailure();
-                adjustEventFailure.Adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventFailure.Message = eventFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventFailure.Adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventFailure.Message = eventFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyMessage);
                 adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
+                adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
 
                 try
                 {
@@ -543,9 +569,12 @@ namespace com.adjust.sdk
                 }
 
                 AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess();
-                adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
 
                 try
                 {
@@ -586,10 +615,13 @@ namespace com.adjust.sdk
                 }
 
                 AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure();
-                adjustSessionFailure.Adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionFailure.Adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
                 adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
 
                 try
                 {
