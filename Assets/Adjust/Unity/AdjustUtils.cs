@@ -168,6 +168,12 @@ namespace com.adjust.sdk
                 return null;
             }
 
+            // https://github.com/adjust/unity_sdk/issues/137
+            if (nodeValue == "")
+            {
+                return null;
+            }
+
             return nodeValue.Value;
         }
 
@@ -198,15 +204,18 @@ namespace com.adjust.sdk
             }
         }
 
-        public static string TryGetValue(Dictionary<string, string> d, string key)
+        public static string TryGetValue(Dictionary<string, string> dictionary, string key)
         {
             string value;
-
-            if (d.TryGetValue(key, out value))
+            if (dictionary.TryGetValue(key, out value))
             {
+                // https://github.com/adjust/unity_sdk/issues/137
+                if (value == "")
+                {
+                    return null;
+                }
                 return value;
             }
-
             return null;
         }
 
