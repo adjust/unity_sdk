@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace com.adjust.sdk.test
 {
-    public class TestFactoryAndroid : ITestFactory
+    public class TestLibraryAndroid : ITestLibrary
     {
         private AndroidJavaObject ajoTestLibrary;
         private CommandListenerAndroid onCommandReceivedListener;
 
-        public TestFactoryAndroid(string baseUrl, string gdprUrl)
+        public TestLibraryAndroid(string baseUrl, string gdprUrl)
         {
             CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
             onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);

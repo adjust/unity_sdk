@@ -1,3 +1,23 @@
+### Version 4.15.0 (21st September 2018)
+#### Added
+- Added `setCallbackId` method on `AdjustEvent` object for users to set custom ID on event object which will later be reported in event success/failure callbacks.
+- Added `CallbackId` property to `AdjustEventSuccess` class.
+- Added `CallbackId` property to `AdjustEventFailure` class.
+
+#### Fixed
+- Fixed JNI issues when converting `null`-ed native Java objects to C# objects that were causing crashes on certain Unity IDE versions (more info: https://github.com/adjust/unity_sdk/issues/137)
+
+#### Changed
+- Marked `setReadMobileEquipmentIdentity` method of `AdjustConfig` object as deprecated.
+- SDK will now fire attribution request each time upon session tracking finished in case it lacks attribution info.
+
+#### Native SDKs
+- [iOS@v4.15.0][ios_sdk_v4.15.0]
+- [Android@v4.15.1][android_sdk_v4.15.1]
+- [Windows@v4.15.0][windows_sdk_v4.15.0]
+
+---
+
 ### Version 4.14.1 (18th June 2018)
 #### Changed
 - Updated the way how iOS native bridge handles push tokens from Unity interface - they are now being passed directly as strings to native iOS SDK.
@@ -508,6 +528,7 @@
 [ios_sdk_v4.13.0]: https://github.com/adjust/ios_sdk/tree/v4.13.0
 [ios_sdk_v4.14.0]: https://github.com/adjust/ios_sdk/tree/v4.14.0
 [ios_sdk_v4.14.1]: https://github.com/adjust/ios_sdk/tree/v4.14.1
+[ios_sdk_v4.15.0]: https://github.com/adjust/ios_sdk/tree/v4.15.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -525,7 +546,9 @@
 [android_sdk_v4.12.4]: https://github.com/adjust/android_sdk/tree/v4.12.4
 [android_sdk_v4.13.0]: https://github.com/adjust/android_sdk/tree/v4.13.0
 [android_sdk_v4.14.0]: https://github.com/adjust/android_sdk/tree/v4.14.0
+[android_sdk_v4.15.1]: https://github.com/adjust/android_sdk/tree/v4.15.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
 [windows_sdk_v4.14.0]: https://github.com/adjust/windows_sdk/tree/v4.14.0
+[windows_sdk_v4.15.0]: https://github.com/adjust/windows_sdk/tree/v4.15.0

@@ -8,16 +8,19 @@ namespace com.adjust.sdk
         internal string sceneName;
         internal string userAgent;
         internal string defaultTracker;
-
+        internal long? info1;
+        internal long? info2;
+        internal long? info3;
+        internal long? info4;
+        internal long? secretId;
+        internal double? delayStart;
         internal bool? isDeviceKnown;
         internal bool? sendInBackground;
         internal bool? eventBufferingEnabled;
         internal bool? allowSuppressLogLevel;
         internal bool launchDeferredDeeplink;
-
         internal AdjustLogLevel? logLevel;
         internal AdjustEnvironment environment;
-
         internal Action<string> deferredDeeplinkDelegate;
         internal Action<AdjustEventSuccess> eventSuccessDelegate;
         internal Action<AdjustEventFailure> eventFailureDelegate;
@@ -25,18 +28,9 @@ namespace com.adjust.sdk
         internal Action<AdjustSessionFailure> sessionFailureDelegate;
         internal Action<AdjustAttribution> attributionChangedDelegate;
 
-        internal long? info1;
-        internal long? info2;
-        internal long? info3;
-        internal long? info4;
-        internal long? secretId;
-
-        internal double? delayStart;
-
         // Android specific members
-        internal string processName;
         internal bool? readImei;
-
+        internal string processName;
         // Windows specific members
         internal Action<String> logDelegate;
 
@@ -178,9 +172,10 @@ namespace com.adjust.sdk
             this.processName = processName;
         }
 
+        [Obsolete("This is an obsolete method.")]
         public void setReadMobileEquipmentIdentity(bool readMobileEquipmentIdentity)
         {
-            this.readImei = readMobileEquipmentIdentity;
+            // this.readImei = readMobileEquipmentIdentity;
         }
 
         // Windows specific methods.

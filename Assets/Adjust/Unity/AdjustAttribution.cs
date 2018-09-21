@@ -41,24 +41,14 @@ namespace com.adjust.sdk
                 return;
             }
 
-            trackerName = TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerName);
-            trackerToken = TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerToken);
-            network = TryGetValue(dicAttributionData, AdjustUtils.KeyNetwork);
-            campaign = TryGetValue(dicAttributionData, AdjustUtils.KeyCampaign);
-            adgroup = TryGetValue(dicAttributionData, AdjustUtils.KeyAdgroup);
-            creative = TryGetValue(dicAttributionData, AdjustUtils.KeyCreative);
-            clickLabel = TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
-            adid = TryGetValue(dicAttributionData, AdjustUtils.KeyAdid);
-        }
-
-        private static string TryGetValue(Dictionary<string, string> dic, string key)
-        {
-            string value;
-            if (dic.TryGetValue(key, out value))
-            {
-                return value;
-            }
-            return null;
+            trackerName = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerName);
+            trackerToken = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerToken);
+            network = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyNetwork);
+            campaign = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCampaign);
+            adgroup = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdgroup);
+            creative = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCreative);
+            clickLabel = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
+            adid = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdid);
         }
     }
 }

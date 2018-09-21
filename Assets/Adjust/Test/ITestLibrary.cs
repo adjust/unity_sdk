@@ -1,6 +1,6 @@
 ﻿namespace com.adjust.sdk.test
 {
-    public interface ITestFactory
+    public interface ITestLibrary
     {
         void StartTestSession();
         void AddInfoToSend(string key, string paramValue);

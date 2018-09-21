@@ -123,7 +123,7 @@ namespace WinInterface
         }
 #endif
         public static void TrackEvent(string eventToken, double? revenue, string currency,
-            string purchaseId, List<string> callbackList, List<string> partnerList)
+            string purchaseId, string callbackId, List<string> callbackList, List<string> partnerList)
         {
 #if NETFX_CORE
             var adjustEvent = new AdjustEvent(eventToken)
@@ -132,6 +132,11 @@ namespace WinInterface
             if (revenue.HasValue)
             {
                 adjustEvent.SetRevenue(revenue.Value, currency);
+            }
+
+            if (!string.IsNullOrEmpty(callbackId))
+            {
+                adjustEvent.CallbackId = callbackId;
             }
 
             if (callbackList != null)

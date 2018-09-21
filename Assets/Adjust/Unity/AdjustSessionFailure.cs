@@ -24,7 +24,6 @@ namespace com.adjust.sdk
             Message = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyMessage);
             Timestamp = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyTimestamp);
 
-            WillRetry = bool.Parse(AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyWillRetry));
             bool willRetry;
             if (bool.TryParse(AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyWillRetry), out willRetry))
             {
@@ -43,7 +42,8 @@ namespace com.adjust.sdk
         public AdjustSessionFailure(string jsonString)
         {
             var jsonNode = JSON.Parse(jsonString);
-            if (jsonNode == null) {
+            if (jsonNode == null) 
+			{
                 return;
             }
 

@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 
 namespace com.adjust.sdk.test
 {
-    public class TestFactoryiOS : ITestFactory
+    public class TestLibraryiOS : ITestLibrary
     {
 #if UNITY_IOS
         private CommandExecutor _commandExecutor;
 
-        public TestFactoryiOS(string baseUrl, string gdprUrl)
+        public TestLibraryiOS(string baseUrl, string gdprUrl)
         {
             _commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
             TestLibraryBridgeiOS.Initialize(baseUrl);
@@ -16,7 +16,7 @@ namespace com.adjust.sdk.test
 
         public void StartTestSession() 
         {
-            TestApp.Log("TestFactory -> StartTestSession()");
+            TestApp.Log("TestLibrary -> StartTestSession()");
             TestLibraryBridgeiOS.StartTestSession(TestApp.CLIENT_SDK);
         }
 

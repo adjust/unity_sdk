@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using com.adjust.sdk.test;
 
 namespace com.adjust.sdk
 {
@@ -86,6 +85,7 @@ namespace com.adjust.sdk
                 Debug.Log("Adjust: Missing config to start.");
                 return;
             }
+
             #if UNITY_IOS
                 Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
                 Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
@@ -186,15 +186,15 @@ namespace com.adjust.sdk
 
         public static void gdprForgetMe()
         {
-#if UNITY_IOS
-            AdjustiOS.GdprForgetMe();
-#elif UNITY_ANDROID
-            AdjustAndroid.GdprForgetMe();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.GdprForgetMe();
-#else
-            Debug.Log(errorMsgPlatform);
-#endif
+            #if UNITY_IOS
+                AdjustiOS.GdprForgetMe();
+            #elif UNITY_ANDROID
+                AdjustAndroid.GdprForgetMe();
+            #elif (UNITY_WSA || UNITY_WP8)
+                AdjustWindows.GdprForgetMe();
+            #else
+                Debug.Log(errorMsgPlatform);
+            #endif
         }
 
         public static void appWillOpenUrl(string url)
@@ -531,7 +531,7 @@ namespace com.adjust.sdk
             #endif
         }
 
-        public static void SetTestOptions(AdjustTestOptions testOptions)
+        public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
             if (IsEditor()) { return; }
 

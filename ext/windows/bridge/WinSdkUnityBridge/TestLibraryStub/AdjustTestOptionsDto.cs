@@ -8,6 +8,7 @@ namespace TestLibraryInterface
         public string GdprPath { get; set; }
         public bool? Teardown { get; set; }
         public bool? DeleteState { get; set; }
+        public bool? NoBackoffWait { get; set; }
         public long? TimerIntervalInMilliseconds { get; set; }
         public long? TimerStartInMilliseconds { get; set; }
         public long? SessionIntervalInMilliseconds { get; set; }

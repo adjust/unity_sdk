@@ -7,16 +7,13 @@ namespace com.adjust.sdk
     {
         internal string currency;
         internal string eventToken;
-
+        internal string callbackId;
+        internal string transactionId;
+        internal double? revenue;
         internal List<string> partnerList;
         internal List<string> callbackList;
-
-        internal double? revenue;
-
         // iOS specific members
         internal string receipt;
-        internal string transactionId;
-
         internal bool isReceiptSet;
 
         public AdjustEvent(string eventToken)
@@ -37,7 +34,6 @@ namespace com.adjust.sdk
             {
                 callbackList = new List<string>();
             }
-
             callbackList.Add(key);
             callbackList.Add(value);
         }
@@ -48,7 +44,6 @@ namespace com.adjust.sdk
             {
                 partnerList = new List<string>();
             }
-
             partnerList.Add(key);
             partnerList.Add(value);
         }
@@ -56,6 +51,11 @@ namespace com.adjust.sdk
         public void setTransactionId(string transactionId)
         {
             this.transactionId = transactionId;
+        }
+
+        public void setCallbackId(string callbackId)
+        {
+            this.callbackId = callbackId;
         }
 
         // iOS specific methods

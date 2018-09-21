@@ -191,6 +191,7 @@ extern "C"
                            const char* currency,
                            const char* receipt,
                            const char* transactionId,
+                           const char* callbackId,
                            int isReceiptSet,
                            const char* jsonCallbackParameters,
                            const char* jsonPartnerParameters) {
@@ -228,6 +229,12 @@ extern "C"
         if (transactionId != NULL) {
             NSString *stringTransactionId = [NSString stringWithUTF8String:transactionId];
             [event setTransactionId:stringTransactionId];
+        }
+
+        // Callback ID.
+        if (callbackId != NULL) {
+            NSString *stringCallbackId = [NSString stringWithUTF8String:callbackId];
+            [event setCallbackId:stringCallbackId];
         }
 
         // Receipt (legacy).
@@ -396,7 +403,8 @@ extern "C"
                                long subsessionIntervalInMilliseconds,
                                int teardown,
                                int deleteState,
-                               int noBackoffWait) {
+                               int noBackoffWait,
+                               int iAdFrameworkEnabled) {
         AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
 
         NSString *stringBaseUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:baseUrl] : nil;
@@ -433,6 +441,9 @@ extern "C"
         }
         if (noBackoffWait != -1) {
             [testOptions setNoBackoffWait:(BOOL)noBackoffWait];
+        }
+        if (iAdFrameworkEnabled != -1) {
+            [testOptions setIAdFrameworkEnabled:(BOOL)iAdFrameworkEnabled];
         }
 
         [Adjust setTestOptions:testOptions];

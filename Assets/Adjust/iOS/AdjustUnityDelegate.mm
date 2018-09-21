@@ -110,7 +110,10 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:eventSuccessResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
     [self addValueOrEmpty:eventSuccessResponseData.adid forKey:@"adid" toDictionary:dictionary];
     [self addValueOrEmpty:eventSuccessResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
-    [self addValueOrEmpty:eventSuccessResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.callbackId forKey:@"callbackId" toDictionary:dictionary];
+    if (eventSuccessResponseData.jsonResponse != nil) {
+        [dictionary setObject:eventSuccessResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
 
     NSData *dataEventSuccess = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringEventSuccess = [[NSString alloc] initWithBytes:[dataEventSuccess bytes]
@@ -130,8 +133,11 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:eventFailureResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
     [self addValueOrEmpty:eventFailureResponseData.adid forKey:@"adid" toDictionary:dictionary];
     [self addValueOrEmpty:eventFailureResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
-    [self addValueOrEmpty:eventFailureResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.callbackId forKey:@"callbackId" toDictionary:dictionary];
     [dictionary setObject:(eventFailureResponseData.willRetry ? @"true" : @"false") forKey:@"willRetry"];
+    if (eventFailureResponseData.jsonResponse != nil) {
+        [dictionary setObject:eventFailureResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
 
     NSData *dataEventFailure = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringEventFailure = [[NSString alloc] initWithBytes:[dataEventFailure bytes]
@@ -150,7 +156,9 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:sessionSuccessResponseData.message forKey:@"message" toDictionary:dictionary];
     [self addValueOrEmpty:sessionSuccessResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
     [self addValueOrEmpty:sessionSuccessResponseData.adid forKey:@"adid" toDictionary:dictionary];
-    [self addValueOrEmpty:sessionSuccessResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
+    if (sessionSuccessResponseData.jsonResponse != nil) {
+        [dictionary setObject:sessionSuccessResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
 
     NSData *dataSessionSuccess = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringSessionSuccess = [[NSString alloc] initWithBytes:[dataSessionSuccess bytes]
@@ -169,8 +177,10 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:sessionFailureResponseData.message forKey:@"message" toDictionary:dictionary];
     [self addValueOrEmpty:sessionFailureResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
     [self addValueOrEmpty:sessionFailureResponseData.adid forKey:@"adid" toDictionary:dictionary];
-    [self addValueOrEmpty:sessionFailureResponseData.jsonResponse forKey:@"jsonResponse" toDictionary:dictionary];
     [dictionary setObject:(sessionFailureResponseData.willRetry ? @"true" : @"false") forKey:@"willRetry"];
+    if (sessionFailureResponseData.jsonResponse != nil) {
+        [dictionary setObject:sessionFailureResponseData.jsonResponse forKey:@"jsonResponse"];
+    }
 
     NSData *dataSessionFailure = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringSessionFailure = [[NSString alloc] initWithBytes:[dataSessionFailure bytes]
