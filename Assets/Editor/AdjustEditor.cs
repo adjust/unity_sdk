@@ -19,14 +19,14 @@ public class AdjustEditor
     [MenuItem("Assets/Adjust/Check post processing status")]
     public static void CheckPostProcessingPermission()
     {
-        EditorUtility.DisplayDialog("adjust", "The post processing for adjust is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog("Adjust", "The post processing for Adjust is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
     [MenuItem("Assets/Adjust/Change post processing status")]
     public static void ChangePostProcessingPermission()
     {
         isPostProcessingEnabled = !isPostProcessingEnabled;
-        EditorUtility.DisplayDialog("adjust", "The post processing for adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog("Adjust", "The post processing for Adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
     [MenuItem("Assets/Adjust/Export Adjust Package")]
@@ -102,8 +102,8 @@ public class AdjustEditor
         // If user disabled it, oh well, we won't do a thing.
         if (!isPostProcessingEnabled)
         {
-            UnityEngine.Debug.Log("Adjust: You have forbidden the adjust SDK to perform post processing tasks.");
-            UnityEngine.Debug.Log("Adjust: Skipping post processing tasks.");
+            UnityEngine.Debug.Log("[Adjust]: You have forbidden the Adjust SDK to perform post processing tasks.");
+            UnityEngine.Debug.Log("[Adjust]: Skipping post processing tasks.");
             return;
         }
 
@@ -114,13 +114,13 @@ public class AdjustEditor
     {
         if (target == BuildTarget.Android)
         {
-            UnityEngine.Debug.Log("Adjust: Starting to perform post build tasks for Android platform.");
+            UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for Android platform.");
             RunPostProcessTasksAndroid();
         }
         else if (target == BuildTarget.iOS)
         {
 #if UNITY_IOS
-            UnityEngine.Debug.Log("Adjust: Starting to perform post build tasks for iOS platform.");
+            UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
             
             string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
@@ -133,33 +133,33 @@ public class AdjustEditor
 
             string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
             
-            UnityEngine.Debug.Log("Adjust: Adding AdSupport.framework to Xcode project.");
+            UnityEngine.Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
-            UnityEngine.Debug.Log("Adjust: AdSupport.framework added successfully.");
+            UnityEngine.Debug.Log("[Adjust]: AdSupport.framework added successfully.");
 
-            UnityEngine.Debug.Log("Adjust: Adding iAd.framework to Xcode project.");
+            UnityEngine.Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
-            UnityEngine.Debug.Log("Adjust: iAd.framework added successfully.");
+            UnityEngine.Debug.Log("[Adjust]: iAd.framework added successfully.");
 
-            UnityEngine.Debug.Log("Adjust: Adding CoreTelephony.framework to Xcode project.");
+            UnityEngine.Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
-            UnityEngine.Debug.Log("Adjust: CoreTelephony.framework added successfully.");
+            UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
 
             // The adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
 
-            UnityEngine.Debug.Log("Adjust: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
+            UnityEngine.Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
             xcodeProject.AddBuildProperty(xcodeTarget, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
 
-            UnityEngine.Debug.Log("Adjust: Obj-C exceptions enabled successfully.");
+            UnityEngine.Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
 
             // The adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
             
-            UnityEngine.Debug.Log("Adjust: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
+            UnityEngine.Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
             xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
 
-            UnityEngine.Debug.Log("Adjust: -ObjC successfully added to other linker flags.");
+            UnityEngine.Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
 
             // Save the changes to Xcode project file.
             xcodeProject.WriteToFile(xcodeProjectPath);
@@ -188,12 +188,12 @@ public class AdjustEditor
             isAdjustManifestUsed = true;
             File.Copy(adjustManifestPath, appManifestPath);
 
-            UnityEngine.Debug.Log("Adjust: User defined AndroidManifest.xml file not found in Plugins/Android folder.");
-            UnityEngine.Debug.Log("Adjust: Creating default app's AndroidManifest.xml from AdjustAndroidManifest.xml file.");
+            UnityEngine.Debug.Log("[Adjust]: User defined AndroidManifest.xml file not found in Plugins/Android folder.");
+            UnityEngine.Debug.Log("[Adjust]: Creating default app's AndroidManifest.xml from AdjustAndroidManifest.xml file.");
         }
         else
         {
-            UnityEngine.Debug.Log("Adjust: User defined AndroidManifest.xml file located in Plugins/Android folder.");
+            UnityEngine.Debug.Log("[Adjust]: User defined AndroidManifest.xml file located in Plugins/Android folder.");
         }
 
         // If adjust manifest is used, we have already set up everything in it so that 
@@ -220,21 +220,21 @@ public class AdjustEditor
             // Clean the manifest file.
             CleanManifestFile(appManifestPath);
 
-            UnityEngine.Debug.Log("Adjust: App's AndroidManifest.xml file check and potential modification completed.");
-            UnityEngine.Debug.Log("Adjust: Please check if any error message was displayed during this process " 
-                + "and make sure to fix all issues in order to properly use the adjust SDK in your app.");
+            UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
+            UnityEngine.Debug.Log("[Adjust]: Please check if any error message was displayed during this process " 
+                + "and make sure to fix all issues in order to properly use the Adjust SDK in your app.");
         }
     }
 
     private static void AddPermissions(XmlDocument manifest)
     {
-        // The adjust SDK needs two permissions to be added to you app's manifest file:
+        // The Adjust SDK needs two permissions to be added to you app's manifest file:
         // <uses-permission android:name="android.permission.INTERNET" />
         // <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
         // <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
         // <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
 
-        UnityEngine.Debug.Log("Adjust: Checking if all permissions needed for the adjust SDK are present in the app's AndroidManifest.xml file.");
+        UnityEngine.Debug.Log("[Adjust]: Checking if all permissions needed for the Adjust SDK are present in the app's AndroidManifest.xml file.");
 
         bool hasInternetPermission = false;
         bool hasAccessWifiStatePermission = false;
@@ -276,11 +276,11 @@ public class AdjustEditor
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "android.permission.INTERNET");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("Adjust: android.permission.INTERNET permission successfully added to your app's AndroidManifest.xml file.");
+            UnityEngine.Debug.Log("[Adjust]: android.permission.INTERNET permission successfully added to your app's AndroidManifest.xml file.");
         }
         else
         {
-            UnityEngine.Debug.Log("Adjust: Your app's AndroidManifest.xml file already contains android.permission.INTERNET permission.");
+            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.INTERNET permission.");
         }
 
         // If android.permission.ACCESS_WIFI_STATE permission is missing, add it.
@@ -289,11 +289,11 @@ public class AdjustEditor
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "android.permission.ACCESS_WIFI_STATE");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("Adjust: android.permission.ACCESS_WIFI_STATE permission successfully added to your app's AndroidManifest.xml file.");
+            UnityEngine.Debug.Log("[Adjust]: android.permission.ACCESS_WIFI_STATE permission successfully added to your app's AndroidManifest.xml file.");
         }
         else
         {
-            UnityEngine.Debug.Log("Adjust: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_WIFI_STATE permission.");
+            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_WIFI_STATE permission.");
         }
 
         // If android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
@@ -302,11 +302,11 @@ public class AdjustEditor
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "android.permission.ACCESS_NETWORK_STATE");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("Adjust: android.permission.ACCESS_NETWORK_STATE permission successfully added to your app's AndroidManifest.xml file.");
+            UnityEngine.Debug.Log("[Adjust]: android.permission.ACCESS_NETWORK_STATE permission successfully added to your app's AndroidManifest.xml file.");
         }
         else
         {
-            UnityEngine.Debug.Log("Adjust: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_NETWORK_STATE permission.");
+            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_NETWORK_STATE permission.");
         }
 
         // If com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
@@ -315,11 +315,11 @@ public class AdjustEditor
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("Adjust: com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission successfully added to your app's AndroidManifest.xml file.");
+            UnityEngine.Debug.Log("[Adjust]: com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission successfully added to your app's AndroidManifest.xml file.");
         }
         else
         {
-            UnityEngine.Debug.Log("Adjust: Your app's AndroidManifest.xml file already contains com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission.");
+            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission.");
         }
     }
 
@@ -355,7 +355,7 @@ public class AdjustEditor
         //
         // </manifest>
 
-        UnityEngine.Debug.Log("Adjust: Checking if app's AndroidManifest.xml file contains receiver for INSTALL_REFERRER intent.");
+        UnityEngine.Debug.Log("[Adjust]: Checking if app's AndroidManifest.xml file contains receiver for INSTALL_REFERRER intent.");
 
         XmlElement manifestRoot = manifest.DocumentElement;
         XmlNode applicationNode = null;
@@ -373,8 +373,8 @@ public class AdjustEditor
         // If there's no applicatio node, something is really wrong with your AndroidManifest.xml.
         if (applicationNode == null)
         {
-            UnityEngine.Debug.LogError("Adjust: Your app's AndroidManifest.xml file does not contain \"<application>\" node.");
-            UnityEngine.Debug.LogError("Adjust: Unable to add the adjust broadcast receiver to AndroidManifest.xml.");
+            UnityEngine.Debug.LogError("[Adjust]: Your app's AndroidManifest.xml file does not contain \"<application>\" node.");
+            UnityEngine.Debug.LogError("[Adjust]: Unable to add the Adjust broadcast receiver to AndroidManifest.xml.");
             return;
         }
 
@@ -383,6 +383,7 @@ public class AdjustEditor
         // If that is already defined, don't force the adjust broadcast receiver to the manifest file.
         // If not, add the adjust broadcast receiver to the manifest file.
         bool isThereAnyCustomBroadcastReiver = false;
+        bool isUsedBroadcastReceiverOurs = false;
 
         foreach (XmlNode node in applicationNode.ChildNodes)
         {
@@ -398,39 +399,51 @@ public class AdjustEditor
                             {
                                 foreach (XmlAttribute attribute in subsubnode.Attributes)
                                 {
-                                    if (attribute.Value.Contains("INSTALL_REFERRER"))
+                                    if (attribute.Value.Contains("com.android.vending.INSTALL_REFERRER"))
                                     {
                                         isThereAnyCustomBroadcastReiver = true;
-                                        break;
                                     }
                                 }
                             }
-
-                            if (isThereAnyCustomBroadcastReiver)
-                            {
-                                break;
-                            }
                         }
                     }
+                }
 
-                    if (isThereAnyCustomBroadcastReiver)
+                // At this point we figured out if there is a broadcast receiver for INSTALL_REFERRER intent.
+                // In case there is one, let's check if that receiver is actually our broadcast receiver.
+                // If it is, no need to warn about usage of custom broadcast receiver.
+
+                if (!isThereAnyCustomBroadcastReiver)
+                {
+                    // If there's no custom broadcast receiver, that's it, that's all.
+                    break;
+                }
+                else
+                {
+                    // If there's custom broadcast receiver, let's iterate on "receiver" attributes a bit more to see if it's ours.
+                    foreach (XmlAttribute attribute in node.Attributes)
                     {
-                        break;
+                        if (attribute.Value.Contains("com.adjust.sdk.AdjustReferrerReceiver"))
+                        {
+                            isUsedBroadcastReceiverOurs = true;
+                        }
                     }
                 }
-            }
-
-            if (isThereAnyCustomBroadcastReiver)
-            {
-                break;
             }
         }
 
         // Let's see what we have found so far.
         if (isThereAnyCustomBroadcastReiver)
         {
-            UnityEngine.Debug.Log("Adjust: It seems like you are using your own broadcast receiver.");
-            UnityEngine.Debug.Log("Adjust: Please, add the calls to the adjust broadcast receiver like described in here: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md");
+            if (!isUsedBroadcastReceiverOurs)
+            {
+                UnityEngine.Debug.Log("[Adjust]: It seems like you are using your own broadcast receiver.");
+                UnityEngine.Debug.Log("[Adjust]: Please, add the calls to the Adjust broadcast receiver like described in here: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md");
+            }
+            else
+            {
+                UnityEngine.Debug.Log("[Adjust]: It seems like you are already using Adjust broadcast receiver. Yay.");
+            }
         }
         else
         {
@@ -448,7 +461,7 @@ public class AdjustEditor
             receiverElement.AppendChild(intentFilterElement);
             applicationNode.AppendChild(receiverElement);
 
-            UnityEngine.Debug.Log("Adjust: Adjust broadcast receiver successfully added to your app's AndroidManifest.xml file.");
+            UnityEngine.Debug.Log("[Adjust]: Adjust broadcast receiver successfully added to your app's AndroidManifest.xml file.");
         }
     }
 
@@ -474,7 +487,6 @@ public class AdjustEditor
     {
         int unityVersion;
         Int32.TryParse(Application.unityVersion[0].ToString(), out unityVersion);
-
         return unityVersion;
     }
 }
