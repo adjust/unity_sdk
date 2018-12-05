@@ -71,6 +71,9 @@ namespace com.adjust.sdk
         private static extern string _AdjustGetAdid();
 
         [DllImport("__Internal")]
+        private static extern string _AdjustGetSdkVersion();
+
+        [DllImport("__Internal")]
         private static extern void _AdjustGdprForgetMe();
 
         [DllImport("__Internal")]
@@ -257,6 +260,11 @@ namespace com.adjust.sdk
         public static string GetAdid()
         {
             return _AdjustGetAdid();
+        }
+
+        public static string GetSdkVersion()
+        {
+            return sdkPrefix + "@" + _AdjustGetAdid();
         }
 
         public static void GdprForgetMe()

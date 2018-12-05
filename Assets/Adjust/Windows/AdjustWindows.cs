@@ -230,6 +230,12 @@ namespace com.adjust.sdk
             return AdjustWinInterface.GetAdid();
         }
 
+        public static string GetSdkVersion()
+        {
+            // TODO: @2beens to add this functionality for Windows.
+            return string.Empty;
+        }
+
         public static AdjustAttribution GetAttribution()
         {
             var attributionMap = AdjustWinInterface.GetAttribution();

@@ -330,6 +330,21 @@ extern "C"
         return adidCStringCopy;
     }
 
+    char* _AdjustGetSdkVersion() {
+        NSString *sdkVersion = [Adjust sdkVersion];
+        if (nil == sdkVersion) {
+            return NULL;
+        }
+
+        const char* sdkVersionCString = [sdkVersion UTF8String];
+        if (NULL == sdkVersionCString) {
+            return NULL;
+        }
+
+        char* sdkVersionCStringCopy = strdup(sdkVersionCString);
+        return sdkVersionCStringCopy;
+    }
+
     char* _AdjustGetAttribution() {
         ADJAttribution *attribution = [Adjust attribution];
         if (nil == attribution) {

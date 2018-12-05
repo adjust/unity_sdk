@@ -17,7 +17,7 @@ namespace com.adjust.sdk.test
         public void StartTestSession() 
         {
             TestApp.Log("TestLibrary -> StartTestSession()");
-            TestLibraryBridgeiOS.StartTestSession(TestApp.CLIENT_SDK);
+            TestLibraryBridgeiOS.StartTestSession(Adjust.getSdkVersion());
         }
 
         public void AddInfoToSend(string key, string paramValue) 

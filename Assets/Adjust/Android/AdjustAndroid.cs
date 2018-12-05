@@ -377,6 +377,12 @@ namespace com.adjust.sdk
             return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
         }
 
+        public static string GetSdkVersion()
+        {
+            string nativeSdkVersion = ajcAdjust.CallStatic<string>("getSdkVersion");
+            return sdkPrefix + "@" + nativeSdkVersion;
+        }
+
         // Used for testing only.
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
