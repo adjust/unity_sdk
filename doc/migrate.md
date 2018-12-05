@@ -1,4 +1,4 @@
-## Migrate your Adjust SDK for Unity3d to 4.16.0 from 3.4.4
+## Migrate your Adjust SDK for Unity3d to 4.17.0 from 3.4.4
 
 ### Migration procedure
 
@@ -9,7 +9,7 @@ keeping in `Assets/Plugins` folder.
 
 For migration purposes, we have prepared the Adjust SDK uninstall script written in Python (`adjust_uninstall.py`).
 
-Migration to version 4.16.0 of our SDK requires the following steps:
+Migration to version 4.17.0 of our SDK requires the following steps:
 
 1. Copy the `adjust_uninstall.py` script to your root Unity project directory and run it. This script should
 delete all adjust source files from the previous SDK version you had.
