@@ -264,7 +264,7 @@ namespace com.adjust.sdk
 
         public static string GetSdkVersion()
         {
-            return sdkPrefix + "@" + _AdjustGetAdid();
+            return sdkPrefix + "@" + _AdjustGetSdkVersion();
         }
 
         public static void GdprForgetMe()
