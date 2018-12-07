@@ -12,7 +12,7 @@ namespace com.adjust.sdk.test
             CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
             onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);
             ajoTestLibrary = new AndroidJavaObject(
-                "com.adjust.testlibrary.TestLibrary",
+                "com.adjust.test.TestLibrary",
                 baseUrl,
                 onCommandReceivedListener);
         }

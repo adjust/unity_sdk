@@ -11,7 +11,7 @@ namespace com.adjust.sdk.test
         private static CommandExecutor _commandExecutor;
 #endif
 
-        public CommandListenerAndroid(CommandExecutor commandExecutor) : base("com.adjust.testlibrary.ICommandRawJsonListener")
+        public CommandListenerAndroid(CommandExecutor commandExecutor) : base("com.adjust.test.ICommandRawJsonListener")
         {
 #if UNITY_ANDROID
             _commandExecutor = commandExecutor;
