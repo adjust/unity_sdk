@@ -11,7 +11,7 @@ def build(root_dir, android_submodule_dir, with_test_lib):
     # Building Android SDK JAR in release mode.
     debug_green('Building Android SDK JAR in release mode ...')
     change_dir(src_dir)
-    gradle_make_release_jar()
+    gradle_make_sdk_jar_release()
 
     # ------------------------------------------------------------------
     # Copy Android SDK JAR to destination.
@@ -29,7 +29,7 @@ def build(root_dir, android_submodule_dir, with_test_lib):
         # ------------------------------------------------------------------
         # Building Android test library JAR in debug mode.
         debug_green('Building Adjust test library JAR in debug mode ...')
-        gradle_make_testlib_jar()
+        gradle_make_test_jar_debug()
 
         # ------------------------------------------------------------------
         # Copy Android test library JAR from to destination.

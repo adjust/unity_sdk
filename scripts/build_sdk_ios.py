@@ -12,7 +12,7 @@ def build(root_dir, ios_submodule_dir, with_test_lib):
     # Build AdjustStatic framework target.
     debug_green('Building AdjustStatic framework target ...')
     change_dir(src_dir)
-    xcode_build('AdjustStatic')
+    xcode_build_release('AdjustStatic')
     copy_file(sdk_static_framework + '/Versions/A/AdjustSdk', lib_out_dir + '/AdjustSdk.a')
     copy_files('*', sdk_static_framework + '/Versions/A/Headers/', lib_out_dir)
 
@@ -26,6 +26,6 @@ def build(root_dir, ios_submodule_dir, with_test_lib):
         set_log_tag('IOS-TEST-LIB-BUILD')
         debug_green('Building Test Library started ...')
         change_dir('{0}/AdjustTests/AdjustTestLibrary'.format(src_dir))
-        xcode_build('AdjustTestLibraryStatic')
+        xcode_build_debug('AdjustTestLibraryStatic')
         copy_file(test_static_framework + '/Versions/A/AdjustTestLibrary', lib_out_dir_test + '/AdjustTestLibrary.a')
         copy_files('*', test_static_framework + '/Versions/A/Headers/', lib_out_dir_test)
