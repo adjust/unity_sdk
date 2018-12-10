@@ -19,17 +19,17 @@ public class AdjustEditor
     [MenuItem("Assets/Adjust/Check post processing status")]
     public static void CheckPostProcessingPermission()
     {
-        EditorUtility.DisplayDialog("Adjust", "The post processing for Adjust is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog("[Adjust]", "The post processing for Adjust SDK is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
     [MenuItem("Assets/Adjust/Change post processing status")]
     public static void ChangePostProcessingPermission()
     {
         isPostProcessingEnabled = !isPostProcessingEnabled;
-        EditorUtility.DisplayDialog("Adjust", "The post processing for Adjust is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog("[Adjust]", "The post processing for Adjust SDK is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem("Assets/Adjust/Export Adjust Package")]
+    [MenuItem("Assets/Adjust/Export Unity Package")]
     static void ExportAdjustUnityPackage()
     {
         string exportedFileName = "Adjust.unitypackage";
@@ -91,14 +91,16 @@ public class AdjustEditor
         assetsToExport.Add(assetsPath + "/Windows/WU10/AdjustUAP10.dll");
         assetsToExport.Add(assetsPath + "/Windows/WU10/Win10Interface.dll");
 
-        AssetDatabase.ExportPackage(assetsToExport.ToArray(), exportedFileName, 
+        AssetDatabase.ExportPackage(
+            assetsToExport.ToArray(),
+            exportedFileName,
             ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
     }
 
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string projectPath)
     {
-        // Check what is user setting about allowing adjust SDK to perform post build tasks.
+        // Check what is user setting about allowing Adjust SDK to perform post build tasks.
         // If user disabled it, oh well, we won't do a thing.
         if (!isPostProcessingEnabled)
         {
@@ -127,7 +129,7 @@ public class AdjustEditor
             PBXProject xcodeProject = new PBXProject();
             xcodeProject.ReadFromFile(xcodeProjectPath);
 
-            // The adjust SDK needs two frameworks to be added to the project:
+            // The Adjust SDK needs two frameworks to be added to the project:
             // - AdSupport.framework
             // - iAd.framework
 
@@ -145,7 +147,7 @@ public class AdjustEditor
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
             UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
 
-            // The adjust SDK needs to have Obj-C exceptions enabled.
+            // The Adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
 
             UnityEngine.Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
@@ -153,7 +155,7 @@ public class AdjustEditor
 
             UnityEngine.Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
 
-            // The adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
+            // The Adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
             
             UnityEngine.Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
@@ -196,7 +198,7 @@ public class AdjustEditor
             UnityEngine.Debug.Log("[Adjust]: User defined AndroidManifest.xml file located in Plugins/Android folder.");
         }
 
-        // If adjust manifest is used, we have already set up everything in it so that 
+        // If Adjust manifest is used, we have already set up everything in it so that 
         // our native Android SDK can be used properly.
         if (!isAdjustManifestUsed)
         {
@@ -380,8 +382,8 @@ public class AdjustEditor
 
         // Okay, there's an application node in the AndroidManifest.xml file.
         // Let's now check if user has already defined a receiver which is listening to INSTALL_REFERRER intent.
-        // If that is already defined, don't force the adjust broadcast receiver to the manifest file.
-        // If not, add the adjust broadcast receiver to the manifest file.
+        // If that is already defined, don't force the Adjust broadcast receiver to the manifest file.
+        // If not, add the Adjust broadcast receiver to the manifest file.
         bool isThereAnyCustomBroadcastReiver = false;
         bool isUsedBroadcastReceiverOurs = false;
 
@@ -447,7 +449,7 @@ public class AdjustEditor
         }
         else
         {
-            // Generate adjust broadcast receiver entry and add it to the application node.
+            // Generate Adjust broadcast receiver entry and add it to the application node.
             XmlElement receiverElement = manifest.CreateElement("receiver");
             receiverElement.SetAttribute("android__name", "com.adjust.sdk.AdjustReferrerReceiver");
             receiverElement.SetAttribute("android__permission", "android.permission.INSTALL_PACKAGES");
@@ -481,12 +483,5 @@ public class AdjustEditor
         TextWriter manifestWriter = new StreamWriter(manifestPath);
         manifestWriter.Write(manifestContent);
         manifestWriter.Close();
-    }
-
-    private static int GetUnityIdeVersion()
-    {
-        int unityVersion;
-        Int32.TryParse(Application.unityVersion[0].ToString(), out unityVersion);
-        return unityVersion;
     }
 }
