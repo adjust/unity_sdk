@@ -100,7 +100,7 @@ public class AdjustImeiEditor
     {
         if (target == BuildTarget.Android)
         {
-            UnityEngine.Debug.Log("AdjustImei: Starting to perform post build tasks for Android platform.");
+            UnityEngine.Debug.Log("[AdjustImei]: Starting to perform post build tasks for Android platform.");
             RunPostProcessTasksAndroid();
         }
     }
