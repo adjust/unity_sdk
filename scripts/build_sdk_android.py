@@ -34,4 +34,4 @@ def build(root_dir, android_submodule_dir, with_test_lib):
         # ------------------------------------------------------------------
         # Copy Android test library JAR from to destination.
         debug_green('Copying generated Android test library JAR from {0} to {1} ...'.format(test_jar_in_dir, test_jar_out_dir))
-        copy_file('{0}/test-library-debug.jar'.format(test_jar_in_dir), '{0}/adjust-testing.jar'.format(test_jar_out_dir))
+        copy_file('{0}/test-library-debug.jar'.format(test_jar_in_dir), '{0}/adjust-test.jar'.format(test_jar_out_dir))
