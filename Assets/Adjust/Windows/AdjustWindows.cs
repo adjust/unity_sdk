@@ -232,8 +232,7 @@ namespace com.adjust.sdk
 
         public static string GetSdkVersion()
         {
-            // TODO: @2beens to add this functionality for Windows.
-            return string.Empty;
+            return sdkPrefix + "@" + AdjustWinInterface.GetSdkVersion();
         }
 
         public static AdjustAttribution GetAttribution()
