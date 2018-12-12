@@ -8,6 +8,7 @@ namespace com.adjust.sdk.imei
         private const string errorMsgEditor = "[AdjustImei]: Adjust IMEI plugin can not be used in Editor.";
         private const string errorMsgPlatform = "[AdjustImei]: Adjust IMEI plugin can only be used in Android apps.";
 
+        public bool startManually = true;
         public bool readImei = false;
 
         void Awake()
@@ -16,13 +17,16 @@ namespace com.adjust.sdk.imei
 
             DontDestroyOnLoad(transform.gameObject);
 
-            if (this.readImei)
+            if (!this.startManually)
             {
-                AdjustImei.ReadImei();
-            }
-            else
-            {
-                AdjustImei.DoNotReadImei();
+                if (this.readImei)
+                {
+                    AdjustImei.ReadImei();
+                }
+                else
+                {
+                    AdjustImei.DoNotReadImei();
+                }
             }
         }
 
