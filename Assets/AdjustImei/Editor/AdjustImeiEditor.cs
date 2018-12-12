@@ -80,9 +80,9 @@ public class AdjustImeiEditor
 
         assetsToExport.Add(assetsPath + "/Android/adjust-android-imei.jar");
         assetsToExport.Add(assetsPath + "/Android/AdjustImeiAndroid.cs");
-        assetsToExport.Add(assetsPath + "Editor/AdjustImeiEditor.cs");
-        assetsToExport.Add(assetsPath + "Prefab/AdjustImei.prefab");
-        assetsToExport.Add(assetsPath + "Unity/AdjustImei.cs");
+        assetsToExport.Add(assetsPath + "/Editor/AdjustImeiEditor.cs");
+        assetsToExport.Add(assetsPath + "/Prefab/AdjustImei.prefab");
+        assetsToExport.Add(assetsPath + "/Unity/AdjustImei.cs");
 
         AssetDatabase.ExportPackage(
             assetsToExport.ToArray(),
