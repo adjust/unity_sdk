@@ -156,6 +156,12 @@ If you are not using any tool which has Android SDK Manager, you should download
 
 Since now you have possibility to access separate parts of the Google Play Services library and not just the whole library like before, you can add just the part of the Google Play Services library which Adjust SDK needs - the basement part. Add the `play-services-basement-x.y.z.aar` file to your `Assets/Plugins/Android` folder and Google Play Services needed by the Adjust SDK should be successfully integrated.
 
+**Update**: As of Google Play Services library 15.0.0, Google has moved classes needed for obtaining of Google Advertising Identifier into [`play-services-ads-identifier`](https://mvnrepository.com/artifact/com.google.android.gms/play-services-ads-identifier) package, so if you are using version 15.0.0 or higher of the Google Play Services library, please make sure that you have this package added to your app. Also in addition to this, we have noticed certain inconsistencies when it comes to reading Google Advertising Identifier depending on Unity IDE version you are using. Regardless of the way you chose to add Google Play Services dependency into your app and Unity IDE you are using, **make sure to test if Google Advertising Identifier is being properly obtained by Adjust SDK**.
+
+To check whether the Google Play Services library has been successfully added to your app so that the Adjust SDK can read Google Advertising Identifier properly, you should start your app by configuring the SDK to run in `sandbox` mode and set the log level to `verbose`. After that, track a session or some events in your app and observe the list of parameters in the verbose logs which are being read once the session or event has been tracked. If you see a parameter called `gps_adid` in there, you have successfully added the Google Play Services library dependency to your app and our SDK is reading the necessary information from it.
+
+In case you encounter any issue with attempts to read Google Advertising Identifier, feel free to open an issue in our Github repository or write an email to support@adjust.com.
+
 ### <a id="android-proguard"></a>Proguard settings
 
 If you are using Proguard, add these lines to your Proguard file:
@@ -171,20 +177,6 @@ If you are using Proguard, add these lines to your Proguard file:
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
     java.lang.String getId();
     boolean isLimitAdTrackingEnabled();
-}
--keep class dalvik.system.VMRuntime {
-    java.lang.String getRuntime();
-}
--keep class android.os.Build {
-    java.lang.String[] SUPPORTED_ABIS;
-    java.lang.String CPU_ABI;
-}
--keep class android.content.res.Configuration {
-    android.os.LocaleList getLocales();
-    java.util.Locale locale;
-}
--keep class android.os.LocaledList {
-    java.util.Locale get(int);
 }
 -keep public class com.android.installreferrer.** { *; }
 ```
