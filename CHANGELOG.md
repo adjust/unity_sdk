@@ -1,3 +1,15 @@
+### Version 4.17.0 (12th December 2018)
+#### Added
+- Added `getSdkVersion()` method to `Adjust` interface to obtain current SDK version string.
+- Added `AdjustImei` Unity plugin to enable reading of IMEI and MEID identifiers for apps outside of Google Play Store which need this feature.
+
+#### Native SDKs
+- [iOS@v4.17.1][ios_sdk_v4.17.1]
+- [Android@v4.17.0][android_sdk_v4.17.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.15.0 (21st September 2018)
 #### Added
 - Added `setCallbackId` method on `AdjustEvent` object for users to set custom ID on event object which will later be reported in event success/failure callbacks.
