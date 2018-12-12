@@ -385,6 +385,22 @@ namespace com.adjust.sdk
             #endif
         }
 
+        public static string getSdkVersion()
+        {
+            if (IsEditor()) { return string.Empty; }
+
+            #if UNITY_IOS
+                return AdjustiOS.GetSdkVersion();
+            #elif UNITY_ANDROID
+                return AdjustAndroid.GetSdkVersion();
+            #elif (UNITY_WSA || UNITY_WP8)
+                return AdjustWindows.GetSdkVersion();
+            #else
+                Debug.Log(errorMsgPlatform);
+                return string.Empty;
+            #endif
+        }
+
         [Obsolete("This method is intended for testing purposes only. Do not use it.")]
         public static void setReferrer(string referrer)
         {

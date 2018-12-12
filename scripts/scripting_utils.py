@@ -1,9 +1,11 @@
 ##
-##  Various util python methods which can be utilized and shared among different scripts
+##  Various utility methods.
 ##
+
 import os, shutil, glob, time, sys, platform, subprocess
 
-## windows specific paths
+# ------------------------------------------------------------------
+# Windows specific paths.
 nuget_dir  = 'C:/nuget'
 devenv_dir = 'C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/IDE'
 
@@ -11,8 +13,8 @@ def set_log_tag(t):
     global TAG
     TAG = t
 
-############################################################
-### colors for terminal (does not work in Windows... of course)
+# ------------------------------------------------------------------
+# Colors for terminal (does not work in Windows).
 
 CEND = '\033[0m'
 
@@ -59,27 +61,27 @@ CVIOLETBG2 = '\33[105m'
 CBEIGEBG2  = '\33[106m'
 CWHITEBG2  = '\33[107m'
 
-############################################################
-### file system util methods
+# ------------------------------------------------------------------
+# File system methods.
 
 def copy_file(sourceFile, destFile):
-    debug('copying: {0} -> {1}'.format(sourceFile, destFile))
+    debug('Copying from {0} to {1}'.format(sourceFile, destFile))
     shutil.copyfile(sourceFile, destFile)
 
 def copy_files(fileNamePattern, sourceDir, destDir):
     for file in glob.glob(sourceDir + '/' + fileNamePattern):
-        debug('copying: {0} -> {1}'.format(file, destDir))
+        debug('Copying from {0} to {1}'.format(file, destDir))
         shutil.copy(file, destDir)
 
 def remove_files(fileNamePattern, sourceDir, log=True):
     for file in glob.glob(sourceDir + '/' + fileNamePattern):
         if log:
-            debug('deleting: ' + file)
+            debug('Deleting ' + file)
         os.remove(file)
 
 def rename_file(fileNamePattern, newFileName, sourceDir):
     for file in glob.glob(sourceDir + '/' + fileNamePattern):
-        debug('rename: {0} -> {1}'.format(file, newFileName))
+        debug('Renaming file {0} to {1}'.format(file, newFileName))
         os.rename(file, sourceDir + '/' + newFileName)
 
 def clear_dir(dir):
@@ -94,60 +96,70 @@ def recreate_dir(dir):
 def remove_dir_if_exists(path):
     shutil.rmtree(path)
 
-############################################################
-### debug messages util methods
-
-def debug(msg):
-    if not is_windows():
-        print(('{0}* [{1}][INFO]:{2} {3}').format(CBOLD, TAG, CEND, msg))
-    else:
-        print(('* [{0}][INFO]: {1}').format(TAG, msg))
-
-def debug_green(msg):
-    if not is_windows():
-        print(('{0}* [{1}][INFO]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CGREEN, msg, CEND))
-    else:
-        print(('* [{0}][INFO]: {1}').format(TAG, msg))
-
-def debug_blue(msg):
-    if not is_windows():
-        print(('{0}* [{1}][INFO]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CBLUE, msg, CEND))
-    else:
-        print(('* [{0}][INFO]: {1}').format(TAG, msg))
-
-def error(msg):
-    if not is_windows():
-        print(('{0}* [{1}][ERROR]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CRED, msg, CEND))
-    else:
-        print(('* [{0}][ERROR]: {1}').format(TAG, msg))
-
-############################################################
-### util
-
-def execute_command(cmd_params, log=True):
-    if log:
-        debug_blue('Executing: ' + str(cmd_params))
-    subprocess.call(cmd_params)
-
 def change_dir(dir):
     os.chdir(dir)
 
 def check_submodule_dir(platform, submodule_dir):
     if not os.path.isdir(submodule_dir) or not os.listdir(submodule_dir):
-        error('Submodule [{0}] folder empty. Did you forget to run >> git submodule update --init --recursive << ?'.format(platform))
+        error('Submodule [{0}] folder empty.')
+        error('Did you forget to run \'git submodule update --init --recursive\' ?'.format(platform))
         exit()
+
+# ------------------------------------------------------------------
+# Debug messages methods.
+
+def debug(msg):
+    if not is_windows():
+        print(('{0}[{1}][INFO]:{2} {3}').format(CBOLD, TAG, CEND, msg))
+    else:
+        print(('[{0}][INFO]: {1}').format(TAG, msg))
+
+def debug_green(msg):
+    if not is_windows():
+        print(('{0}[{1}][INFO]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CGREEN, msg, CEND))
+    else:
+        print(('[{0}][INFO]: {1}').format(TAG, msg))
+
+def debug_blue(msg):
+    if not is_windows():
+        print(('{0}[{1}][INFO]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CBLUE, msg, CEND))
+    else:
+        print(('[{0}][INFO]: {1}').format(TAG, msg))
+
+def error(msg):
+    if not is_windows():
+        print(('{0}[{1}][ERROR]:{2} {3}{4}{5}').format(CBOLD, TAG, CEND, CRED, msg, CEND))
+    else:
+        print(('[{0}][ERROR]: {1}').format(TAG, msg))
+
+# ------------------------------------------------------------------
+# Execution and platform methods.
 
 def is_windows():
     return platform.system().lower() == 'windows';
 
-def xcode_build(target, configuration='Release'):
-    execute_command(['xcodebuild', '-target', target, '-configuration', configuration, '-UseModernBuildSystem=NO' 'clean', 'build'])
+def execute_command(cmd_params, log=True):
+    if log:
+        debug_blue('Executing ' + str(cmd_params))
+    subprocess.call(cmd_params)
 
-def gradle_make_release_jar():
-    execute_command(['./gradlew', 'clean', 'makeReleaseJar'])
+def xcode_build_debug(target):
+    execute_command(['xcodebuild', '-target', target, '-configuration', 'Debug', '-UseModernBuildSystem=NO' 'clean', 'build'])
 
-def gradle_make_testlib_jar():
-    execute_command(['./gradlew', 'clean', ':testlibrary:makeJar'])
+def xcode_build_release(target):
+    execute_command(['xcodebuild', '-target', target, '-configuration', 'Release', '-UseModernBuildSystem=NO' 'clean', 'build'])
+
+def gradle_make_sdk_jar_debug():
+    execute_command(['./gradlew', 'clean', 'adjustSdkNonNativeJarDebug'])
+
+def gradle_make_sdk_jar_release():
+    execute_command(['./gradlew', 'clean', 'adjustSdkNonNativeJarRelease'])
+
+def gradle_make_test_jar_debug():
+    execute_command(['./gradlew', 'clean', ':test-library:adjustMakeJarDebug'])
+
+def gradle_make_test_jar_release():
+    execute_command(['./gradlew', 'clean', ':test-library:adjustMakeJarRelease'])
 
 def nuget_restore(project_path):
     execute_command(['{0}/nuget.exe'.format(nuget_dir), 'restore', project_path])
@@ -155,22 +167,3 @@ def nuget_restore(project_path):
 def devenv_build(solution_path, configuration='Release'):
     execute_command(['{0}/devenv.exe'.format(devenv_dir), solution_path, '/build', configuration])    
 
-############################################################
-### nonsense, eyecandy and such
-
-def waiting_animation(duration, step):
-    if(duration <= step):
-        return
-
-    line = '-'
-    line_killer = '\b'
-    while duration >= 0:
-        duration -= step
-        sys.stdout.write(line)
-        sys.stdout.flush()
-        sys.stdout.write(line_killer)
-        line += '-'
-        line_killer += '\b'
-        if len(line) > 65:
-            line = '-'
-        time.sleep(step)

@@ -58,6 +58,11 @@ namespace WinInterface
             return null;
         }
 
+        public static string GetSdkVersion()
+        {
+            return string.Empty;
+        }
+
         public static void GdprForgetMe()
         {
         }

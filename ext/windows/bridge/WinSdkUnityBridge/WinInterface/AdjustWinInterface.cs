@@ -236,6 +236,15 @@ namespace WinInterface
 #endif
         }
 
+        public static string GetSdkVersion()
+        {
+#if NETFX_CORE
+            return Adjust.GetSdkVersion();
+#else
+            return string.Empty;
+#endif
+        }
+
         public static void GdprForgetMe()
         {
 #if NETFX_CORE

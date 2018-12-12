@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.15.0";
+        private const string sdkPrefix = "unity4.17.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -375,6 +375,12 @@ namespace com.adjust.sdk
         public static string GetAmazonAdId()
         {
             return ajcAdjust.CallStatic<string>("getAmazonAdId", ajoCurrentActivity);
+        }
+
+        public static string GetSdkVersion()
+        {
+            string nativeSdkVersion = ajcAdjust.CallStatic<string>("getSdkVersion");
+            return sdkPrefix + "@" + nativeSdkVersion;
         }
 
         // Used for testing only.

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import os, sys
 from scripting_utils import *
 import build_sdk_android    as android
@@ -13,7 +14,7 @@ if __name__ != "__main__":
 
 # ------------------------------------------------------------------
 # get arguments
-usage_message = 'Usage >> python build_sdk.py [ios | android | windows] [otpional, to build test library too: --with-testlib | -tl]\n';
+usage_message = 'Usage: python build_sdk.py [ios | android | windows] [otpional, to build test library too: --with-testlib | -tl]\n';
 if len(sys.argv) < 2:
     error('Error. Platform not provided.')
     debug(usage_message)
@@ -36,7 +37,7 @@ elif len(sys.argv) == 3:
 debug_green('Script start. Platform=[{0}]. With Test Library=[{1}]. Build Adjust Unity SDK ...'.format(platform, with_test_lib))
 
 # ------------------------------------------------------------------
-# common paths
+# Paths
 script_dir              = os.path.dirname(os.path.realpath(__file__))
 root_dir                = os.path.dirname(os.path.normpath(script_dir))
 android_submodule_dir   = '{0}/ext/android'.format(root_dir)
@@ -44,7 +45,7 @@ ios_submodule_dir       = '{0}/ext/ios'.format(root_dir)
 windows_submodule_dir   = '{0}/ext/windows'.format(root_dir)
 
 # ------------------------------------------------------------------
-# call platform specific build method
+# Call platform specific build method.
 if platform == 'ios':
     set_log_tag('IOS-SDK-BUILD')
     check_submodule_dir('iOS', ios_submodule_dir + '/sdk')
@@ -61,5 +62,5 @@ else:
 remove_files('*.pyc', script_dir, log=False)
 
 # ------------------------------------------------------------------
-# Script completed
+# Script completed.
 debug_green('Script completed!')
