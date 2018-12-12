@@ -1,4 +1,4 @@
-### Version 4.17.0 (12th December 2018)
+### Version 4.17.0 (13th December 2018)
 #### Added
 - Added `getSdkVersion()` method to `Adjust` interface to obtain current SDK version string.
 - Added `AdjustImei` Unity plugin to enable reading of IMEI and MEID identifiers for apps outside of Google Play Store which need this feature.
