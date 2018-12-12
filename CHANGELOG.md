@@ -541,6 +541,7 @@
 [ios_sdk_v4.14.0]: https://github.com/adjust/ios_sdk/tree/v4.14.0
 [ios_sdk_v4.14.1]: https://github.com/adjust/ios_sdk/tree/v4.14.1
 [ios_sdk_v4.15.0]: https://github.com/adjust/ios_sdk/tree/v4.15.0
+[ios_sdk_v4.17.1]: https://github.com/adjust/ios_sdk/tree/v4.17.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -559,8 +560,10 @@
 [android_sdk_v4.13.0]: https://github.com/adjust/android_sdk/tree/v4.13.0
 [android_sdk_v4.14.0]: https://github.com/adjust/android_sdk/tree/v4.14.0
 [android_sdk_v4.15.1]: https://github.com/adjust/android_sdk/tree/v4.15.1
+[android_sdk_v4.17.0]: https://github.com/adjust/android_sdk/tree/v4.17.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
 [windows_sdk_v4.14.0]: https://github.com/adjust/windows_sdk/tree/v4.14.0
 [windows_sdk_v4.15.0]: https://github.com/adjust/windows_sdk/tree/v4.15.0
+[windows_sdk_v4.17.0]: https://github.com/adjust/windows_sdk/tree/v4.17.0
