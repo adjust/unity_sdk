@@ -12,20 +12,18 @@ namespace com.adjust.sdk.test
 #if (UNITY_WSA || UNITY_WP8)
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string BASE_URL = PROTOCOL + "localhost" + PORT; // Windows simulator
+        private const string BASE_URL = PROTOCOL + "localhost" + PORT;
         private const string GDPR_URL = PROTOCOL + "localhost" + PORT;
 #elif UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
-        private const string BASE_URL = PROTOCOL + "192.168.8.65" + PORT; // Android simulator
-        private const string GDPR_URL = PROTOCOL + "192.168.8.65" + PORT;
+        private const string BASE_URL = PROTOCOL + "192.168.8.197" + PORT;
+        private const string GDPR_URL = PROTOCOL + "192.168.8.197" + PORT;
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string BASE_URL = PROTOCOL + "127.0.0.1" + PORT; // iOS simulator
-        private const string GDPR_URL = PROTOCOL + "127.0.0.1" + PORT;
-        // private const string BASE_URL = PROTOCOL + "192.168.8.141" + PORT; // Over WiFi
-        // private const string GDPR_URL = PROTOCOL + "192.168.8.141" + PORT;
+        private const string BASE_URL = PROTOCOL + "192.168.8.197" + PORT;
+        private const string GDPR_URL = PROTOCOL + "192.168.8.197" + PORT;
         private TestLibraryiOS _testLibraryiOS;
 #endif
         
