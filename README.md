@@ -4,6 +4,8 @@ This is the Unity SDK of Adjust™. It supports iOS, Android, Windows Store 8.1,
 
 **Note**: As of version **4.12.0**, Adjust Unity SDK is compatible with **Unity 5 and newer** versions.
 
+Read this in other languages: [English][en-readme], [中文][zh-readme], [日本語][ja-readme], [한국어][ko-readme].
+
 ## Table of contents
 
 * [Basic integration](#basic-integration)
@@ -158,7 +160,7 @@ Since now you have possibility to access separate parts of the Google Play Servi
 
 **Update**: As of Google Play Services library 15.0.0, Google has moved classes needed for obtaining of Google Advertising Identifier into [`play-services-ads-identifier`](https://mvnrepository.com/artifact/com.google.android.gms/play-services-ads-identifier) package, so if you are using version 15.0.0 or higher of the Google Play Services library, please make sure that you have this package added to your app. Also in addition to this, we have noticed certain inconsistencies when it comes to reading Google Advertising Identifier depending on Unity IDE version you are using. Regardless of the way you chose to add Google Play Services dependency into your app and Unity IDE you are using, **make sure to test if Google Advertising Identifier is being properly obtained by Adjust SDK**.
 
-To check whether the Google Play Services library has been successfully added to your app so that the Adjust SDK can read Google Advertising Identifier properly, you should start your app by configuring the SDK to run in `sandbox` mode and set the log level to `verbose`. After that, track a session or some events in your app and observe the list of parameters in the verbose logs which are being read once the session or event has been tracked. If you see a parameter called `gps_adid` in there, you have successfully added the Google Play Services library dependency to your app and our SDK is reading the necessary information from it.
+To check whether the Adjust SDK is receiving the Google Advertising Identifier, start your app by configuring the SDK to run in `sandbox` mode and set the log level to `verbose`. After that, track a session or some events in your app and observe the list of parameters read in the verbose logs once the session or event has been tracked. If you see a parameter called `gps_adid`, our SDK has successfully read the Google Advertising Identifier.
 
 In case you encounter any issue with attempts to read Google Advertising Identifier, feel free to open an issue in our Github repository or write an email to support@adjust.com.
 
@@ -759,8 +761,13 @@ Even with the post build script it is possible that the project is not ready to 
 If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPhone` project. Click the `Build Settings` tab and search for `debug information`. There should be an `Debug Information Format` or `DEBUG_INFORMATION_FORMAT` option. Change it from `DWARF with dSYM File` to `DWARF`.
 
 
-[dashboard]:               http://adjust.com
-[adjust.com]:              http://adjust.com
+[dashboard]:  http://adjust.com
+[adjust.com]: http://adjust.com
+
+[en-readme]:  README.md
+[zh-readme]:  doc/chinese/README.md
+[ja-readme]:  doc/japanese/README.md
+[ko-readme]:  doc/korean/README.md
 
 [ios]:                     https://github.com/adjust/ios_sdk
 [android]:                 https://github.com/adjust/android_sdk
@@ -790,7 +797,7 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
 
 The Adjust SDK is licensed under the MIT License.
 
-Copyright (c) 2012-2018 Adjust GmbH, http://www.adjust.com
+Copyright (c) 2012-2019 Adjust GmbH, http://www.adjust.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
