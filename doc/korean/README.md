@@ -762,13 +762,13 @@ iOS 앱이 딥링크를 네이티브 수준에서 취급하도록 설정하려�
 필요한 경우 dSYM 파일을 사용하지 않도록 설정하십시오. `Project Navigator`에서 `Unity-iPhone` 프로젝트를 선택합니다. `Build Settings` 탭을 클릭하고 `debug information`을 검색합니다. `Debug Information Format` 또는 `DEBUG_INFORMATION_FORMAT` 옵션이 표시됩니다. 해당 옵션을 `DWARF with dSYM File`에서 `DWARF`로 변경하면 됩니다.
 
 
-[dashboard]:               http://adjust.com
-[adjust.com]:              http://adjust.com
+[dashboard]:  http://adjust.com
+[adjust.com]: http://adjust.com
 
 [en-readme]:  ../../README.md
-[zh-readme]: ../chinese/README.md
-[ja-readme]: ../japanese/README.md
-[ko-readme]: ../korean/README.md
+[zh-readme]:  ../chinese/README.md
+[ja-readme]:  ../japanese/README.md
+[ko-readme]:  ../korean/README.md
 
 
 [ios]:                     https://github.com/adjust/ios_sdk
@@ -799,7 +799,7 @@ mod_pbxproj.py 파일은 Apache License 2.0 버전(이하 "라이선스")에 따
 
 Adjust SDK는 MIT 라이선스에 따라 사용이 허가됩니다.
 
-Copyright (c) 2012-2018 adjust GmbH, http://www.adjust.com
+Copyright (c) 2012-2019 Adjust GmbH, http://www.adjust.com
 
 이로써 본 소프트웨어와 관련 문서 파일(이하 "소프트웨어")의 복사본을 받는 사람에게는 아래 조건에 따라 소프트웨어를 제한 없이 다룰 수 있는 권한이 무료로 부여됩니다. 이 권한에는 소프트웨어를 사용, 복사, 수정, 병합, 출판, 배포 및/또는 판매하거나 2차 사용권을 부여할 권리와 소프트웨어를 제공 받은 사람이 소프트웨어를 사용, 복사, 수정, 병합, 출판, 배포 및/또는 판매하거나 2차 사용권을 부여하는 것을 허가할 수 있는 권리가 제한 없이 포함됩니다.
 
