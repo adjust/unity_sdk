@@ -759,13 +759,13 @@ Adjust.start(adjustConfig);
 必要情况下请禁用dSYM文件。在`Project Navigator`中，选择`Unity-iPhone`项目。点击`Build Settings`，搜索`debug information`。您应当可以看到`Debug Information Format` 或者 `DEBUG_INFORMATION_FORMAT` 选项。将其从 `DWARF with dSYM File` 修改到`DWARF`。
 
 
-[dashboard]:               http://adjust.com
-[adjust.com]:              http://adjust.com
+[dashboard]:  http://adjust.com
+[adjust.com]: http://adjust.com
 
 [en-readme]:  ../../README.md
-[zh-readme]: ../chinese/README.md
-[ja-readme]: ../japanese/README.md
-[ko-readme]: ../korean/README.md
+[zh-readme]:  ../chinese/README.md
+[ja-readme]:  ../japanese/README.md
+[ko-readme]:  ../korean/README.md
 
 
 [ios]:                     https://github.com/adjust/ios_sdk
@@ -798,7 +798,7 @@ mod_pbxproj.py文件是在Apache License版本2.0（"License"）下授权许可�
 
 The Adjust SDK is licensed under the MIT License.
 
-Copyright (c) 2012-2018 Adjust GmbH, http://www.adjust.com
+Copyright (c) 2012-2019 Adjust GmbH, http://www.adjust.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
