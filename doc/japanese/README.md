@@ -710,13 +710,13 @@ iOSアプリでネイティブレベルでディープリンキングを設定�
 必要であれば、dSYMファイルを無効化してください。`Project Navigator`から`Unity-iPhone`プロジェクトを選び、`Build Settings`タブをクリックして`debug information`を検索してください。`Debug Information Format`もしくは`DEBUG_INFORMATION_FORMAT`オプションが見つかるはずです。`DWARF with dSYM File`を`DWARF`に変更してください。
 
 
-[dashboard]:               http://adjust.com
-[adjust.com]:              http://adjust.com
+[dashboard]:    http://adjust.com
+[adjust.com]:   http://adjust.com
 
-[en-readme]:  ../../README.md
-[zh-readme]: ../chinese/README.md
-[ja-readme]: ../japanese/README.md
-[ko-readme]: ../korean/README.md
+[en-readme]:    ../../README.md
+[zh-readme]:    ../chinese/README.md
+[ja-readme]:    ../japanese/README.md
+[ko-readme]:    ../korean/README.md
 
 [ios]:                     https://github.com/adjust/ios_sdk
 [android]:                 https://github.com/adjust/android_sdk
@@ -746,7 +746,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 adjust SDKはMITライセンスを適用しています。
 
-Copyright (c) 2012-2018 adjust GmbH,
+Copyright (c) 2012-2019 Adjust GmbH,
 http://www.adjust.com
 
 以下に定める条件に従い、本ソフトウェアおよび関連文書のファイル（以下「ソフトウェア」）の複製を取得するすべての人に対し、
