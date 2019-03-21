@@ -1,3 +1,14 @@
+### Version 4.17.1 (21st March 2019)
+#### Fixed
+- Fixed bug in `AdjustEditor.cs` which would add multiple instance of Adjust broadcast receiver to `AndroidManifest.xml` (https://github.com/adjust/unity_sdk/issues/144).
+
+#### Native SDKs
+- [iOS@v4.17.2][ios_sdk_v4.17.2]
+- [Android@v4.17.0][android_sdk_v4.17.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.17.0 (13th December 2018)
 #### Added
 - Added `getSdkVersion()` method to `Adjust` interface to obtain current SDK version string.
@@ -542,6 +553,7 @@
 [ios_sdk_v4.14.1]: https://github.com/adjust/ios_sdk/tree/v4.14.1
 [ios_sdk_v4.15.0]: https://github.com/adjust/ios_sdk/tree/v4.15.0
 [ios_sdk_v4.17.1]: https://github.com/adjust/ios_sdk/tree/v4.17.1
+[ios_sdk_v4.17.2]: https://github.com/adjust/ios_sdk/tree/v4.17.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0

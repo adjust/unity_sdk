@@ -384,60 +384,23 @@ public class AdjustEditor
         // Let's now check if user has already defined a receiver which is listening to INSTALL_REFERRER intent.
         // If that is already defined, don't force the Adjust broadcast receiver to the manifest file.
         // If not, add the Adjust broadcast receiver to the manifest file.
-        bool isThereAnyCustomBroadcastReiver = false;
-        bool isUsedBroadcastReceiverOurs = false;
 
-        foreach (XmlNode node in applicationNode.ChildNodes)
+        List<XmlNode> customBroadcastReceiversNodes = getCustomRecieverNodes(applicationNode);
+        if (customBroadcastReceiversNodes.Count > 0)
         {
-            if (node.Name == "receiver")
+            bool foundAdjustBroadcastReceiver = false;
+            for (int i = 0; i < customBroadcastReceiversNodes.Count; i += 1)
             {
-                foreach (XmlNode subnode in node.ChildNodes)
+                foreach (XmlAttribute attribute in customBroadcastReceiversNodes[i].Attributes)
                 {
-                    if (subnode.Name == "intent-filter")
+                    if (attribute.Value.Contains("com.adjust.sdk.AdjustReferrerReceiver"))
                     {
-                        foreach (XmlNode subsubnode in subnode.ChildNodes)
-                        {
-                            if (subsubnode.Name == "action")
-                            {
-                                foreach (XmlAttribute attribute in subsubnode.Attributes)
-                                {
-                                    if (attribute.Value.Contains("com.android.vending.INSTALL_REFERRER"))
-                                    {
-                                        isThereAnyCustomBroadcastReiver = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // At this point we figured out if there is a broadcast receiver for INSTALL_REFERRER intent.
-                // In case there is one, let's check if that receiver is actually our broadcast receiver.
-                // If it is, no need to warn about usage of custom broadcast receiver.
-
-                if (!isThereAnyCustomBroadcastReiver)
-                {
-                    // If there's no custom broadcast receiver, that's it, that's all.
-                    break;
-                }
-                else
-                {
-                    // If there's custom broadcast receiver, let's iterate on "receiver" attributes a bit more to see if it's ours.
-                    foreach (XmlAttribute attribute in node.Attributes)
-                    {
-                        if (attribute.Value.Contains("com.adjust.sdk.AdjustReferrerReceiver"))
-                        {
-                            isUsedBroadcastReceiverOurs = true;
-                        }
+                        foundAdjustBroadcastReceiver = true;
                     }
                 }
             }
-        }
 
-        // Let's see what we have found so far.
-        if (isThereAnyCustomBroadcastReiver)
-        {
-            if (!isUsedBroadcastReceiverOurs)
+            if (!foundAdjustBroadcastReceiver)
             {
                 UnityEngine.Debug.Log("[Adjust]: It seems like you are using your own broadcast receiver.");
                 UnityEngine.Debug.Log("[Adjust]: Please, add the calls to the Adjust broadcast receiver like described in here: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md");
@@ -483,5 +446,36 @@ public class AdjustEditor
         TextWriter manifestWriter = new StreamWriter(manifestPath);
         manifestWriter.Write(manifestContent);
         manifestWriter.Close();
+    }
+
+    private static List<XmlNode> getCustomRecieverNodes(XmlNode applicationNode)
+    {
+        List<XmlNode> nodes = new List<XmlNode>();
+        foreach (XmlNode node in applicationNode.ChildNodes)
+        {
+            if (node.Name == "receiver")
+            {
+                foreach (XmlNode subnode in node.ChildNodes)
+                {
+                    if (subnode.Name == "intent-filter")
+                    {
+                        foreach (XmlNode subsubnode in subnode.ChildNodes)
+                        {
+                            if (subsubnode.Name == "action")
+                            {
+                                foreach (XmlAttribute attribute in subsubnode.Attributes)
+                                {
+                                    if (attribute.Value.Contains("com.android.vending.INSTALL_REFERRER"))
+                                    {
+                                        nodes.Add(node);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return nodes;
     }
 }
