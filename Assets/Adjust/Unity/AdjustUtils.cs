@@ -240,43 +240,43 @@ namespace com.adjust.sdk
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsUseTestConnectionOptions)) 
             {
-                bool useTestConnectionOptions = testOptionsMap [KeyTestOptionsUseTestConnectionOptions].ToLower () == "true";
+                bool useTestConnectionOptions = testOptionsMap[KeyTestOptionsUseTestConnectionOptions].ToLower() == "true";
                 AndroidJavaObject ajoUseTestConnectionOptions = new AndroidJavaObject("java.lang.Boolean", useTestConnectionOptions);
                 ajoTestOptions.Set<AndroidJavaObject>("useTestConnectionOptions", ajoUseTestConnectionOptions);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsTimerIntervalInMilliseconds)) 
             {
-                var timerIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsTimerIntervalInMilliseconds]);
+                var timerIntervalInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsTimerIntervalInMilliseconds]);
                 AndroidJavaObject ajoTimerIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", timerIntervalInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("timerIntervalInMilliseconds", ajoTimerIntervalInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsTimerStartInMilliseconds)) 
             {
-                var timerStartInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsTimerStartInMilliseconds]);
+                var timerStartInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsTimerStartInMilliseconds]);
                 AndroidJavaObject ajoTimerStartInMilliseconds = new AndroidJavaObject("java.lang.Long", timerStartInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("timerStartInMilliseconds", ajoTimerStartInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsSessionIntervalInMilliseconds)) 
             {   
-                var sessionIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsSessionIntervalInMilliseconds]);
+                var sessionIntervalInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsSessionIntervalInMilliseconds]);
                 AndroidJavaObject ajoSessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", sessionIntervalInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("sessionIntervalInMilliseconds", ajoSessionIntervalInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsSubsessionIntervalInMilliseconds)) 
             {
-                var subsessionIntervalInMilliseconds = long.Parse (testOptionsMap [KeyTestOptionsSubsessionIntervalInMilliseconds]);
+                var subsessionIntervalInMilliseconds = long.Parse(testOptionsMap[KeyTestOptionsSubsessionIntervalInMilliseconds]);
                 AndroidJavaObject ajoSubsessionIntervalInMilliseconds = new AndroidJavaObject("java.lang.Long", subsessionIntervalInMilliseconds);
                 ajoTestOptions.Set<AndroidJavaObject>("subsessionIntervalInMilliseconds", ajoSubsessionIntervalInMilliseconds);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsTeardown))
             {
-                bool teardown = testOptionsMap [KeyTestOptionsTeardown].ToLower () == "true";
+                bool teardown = testOptionsMap[KeyTestOptionsTeardown].ToLower() == "true";
                 AndroidJavaObject ajoTeardown = new AndroidJavaObject("java.lang.Boolean", teardown);
                 ajoTestOptions.Set<AndroidJavaObject>("teardown", ajoTeardown);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsNoBackoffWait))
             {
-                bool noBackoffWait = testOptionsMap [KeyTestOptionsNoBackoffWait].ToLower () == "true";
+                bool noBackoffWait = testOptionsMap[KeyTestOptionsNoBackoffWait].ToLower() == "true";
                 AndroidJavaObject ajoNoBackoffWait = new AndroidJavaObject("java.lang.Boolean", noBackoffWait);
                 ajoTestOptions.Set<AndroidJavaObject>("noBackoffWait", ajoNoBackoffWait);
             }

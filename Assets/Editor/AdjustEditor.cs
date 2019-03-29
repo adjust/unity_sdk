@@ -90,6 +90,7 @@ public class AdjustEditor
         assetsToExport.Add(assetsPath + "/Windows/WS/WinWsInterface.dll");
         assetsToExport.Add(assetsPath + "/Windows/WU10/AdjustUAP10.dll");
         assetsToExport.Add(assetsPath + "/Windows/WU10/Win10Interface.dll");
+        assetsToExport.Add(assetsPath + "/Windows/Newtonsoft.Json.dll");
 
         AssetDatabase.ExportPackage(
             assetsToExport.ToArray(),
