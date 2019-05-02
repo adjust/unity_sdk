@@ -12,21 +12,21 @@ namespace com.adjust.sdk.test
 #if (UNITY_WSA || UNITY_WP8)
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string BASE_URL = PROTOCOL + "localhost" + PORT;
-        private const string GDPR_URL = PROTOCOL + "localhost" + PORT;
+        private const string IP = "localhost";
 #elif UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
-        private const string BASE_URL = PROTOCOL + "192.168.8.197" + PORT;
-        private const string GDPR_URL = PROTOCOL + "192.168.8.197" + PORT;
+        private const string IP = "192.168.8.98";
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string BASE_URL = PROTOCOL + "192.168.8.197" + PORT;
-        private const string GDPR_URL = PROTOCOL + "192.168.8.197" + PORT;
+        private const string IP = "192.168.8.98";
         private TestLibraryiOS _testLibraryiOS;
 #endif
-        
+        private const string BASE_URL = PROTOCOL + IP + PORT;
+        private const string GDPR_URL = PROTOCOL + IP + PORT;
+        private const string CONTROL_URL = "ws://" + IP + ":1987";
+
         void OnGUI()
         {
             if (GUI.Button(new Rect(0, Screen.height * 0 / 2, Screen.width, Screen.height / 2), "Start test"))
@@ -53,11 +53,11 @@ namespace com.adjust.sdk.test
         private ITestLibrary GetPlatformSpecificTestLibrary()
         {
 #if UNITY_IOS
-            return new TestLibraryiOS(BASE_URL, GDPR_URL);
+            return new TestLibraryiOS(BASE_URL, CONTROL_URL, GDPR_URL);
 #elif UNITY_ANDROID
-            return new TestLibraryAndroid(BASE_URL, GDPR_URL);
+            return new TestLibraryAndroid(BASE_URL, CONTROL_URL, GDPR_URL);
 #elif (UNITY_WSA || UNITY_WP8)
-            return new TestLibraryWindows(BASE_URL, GDPR_URL);
+            return new TestLibraryWindows(BASE_URL, CONTROL_URL, GDPR_URL);
 #else
             Debug.Log("Cannot run integration tests (Error in TestApp.GetPlatformSpecificTestLibrary(...)). None of the supported platforms selected.");
             return null;

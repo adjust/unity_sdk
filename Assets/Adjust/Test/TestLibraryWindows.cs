@@ -11,7 +11,7 @@ namespace com.adjust.sdk.test
         private readonly TestLibraryInterface.TestLibraryInterface _testLibraryInterface
             = new TestLibraryInterface.TestLibraryInterface();
 
-        public TestLibraryWindows(string baseUrl, string gdprUrl)
+        public TestLibraryWindows(string baseUrl, string controlUrl, string gdprUrl)
         {
             IAdjustCommandExecutor adjustCommandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
             _testLibraryInterface.Init(adjustCommandExecutor, baseUrl, UnityEngine.Debug.Log);
