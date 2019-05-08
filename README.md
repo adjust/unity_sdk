@@ -121,7 +121,7 @@ If want all your log output to be disabled, and if you are initialising the Adju
 
 ```cs
 string appToken = "{YourAppToken}";
-string environment = AdjustEnvironment.Sandbox;
+AdjustEnvironment environment = AdjustEnvironment.Sandbox;
 
 AdjustConfig config = new AdjustConfig(appToken, environment, true);
 config.setLogLevel(AdjustLogLevel.Suppress);
