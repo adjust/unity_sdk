@@ -31,10 +31,12 @@ static id<AdjustCommandDelegate> commandDelegate;
 
 extern "C"
 {
-    void _ATLInitialize(const char* baseUrl) {
+    void _ATLInitialize(const char* baseUrl, const char* controlUrl) {
         NSString *sBaseUrl = [NSString stringWithUTF8String:baseUrl];
+        NSString *sControlUrl = [NSString stringWithUTF8String:controlUrl];
         commandDelegate = [[AdjustUnityCommandExecutor alloc] init];
         testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:sBaseUrl
+                                               andControlUrl:sControlUrl
                                           andCommandDelegate:commandDelegate];
     }
 

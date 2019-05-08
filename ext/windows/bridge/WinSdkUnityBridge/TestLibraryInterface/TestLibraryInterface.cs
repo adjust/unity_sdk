@@ -9,7 +9,7 @@ namespace TestLibraryInterface
         private TestLibrary.TestLibrary _testLibrary;
         private Action<string> _logDelegate;
 
-        public void Init(IAdjustCommandExecutor adjustCommandExecutor, string baseUrl, Action<string> logDelegate = null)
+        public void Init(IAdjustCommandExecutor adjustCommandExecutor, string baseUrl, string controlUrl, Action<string> logDelegate = null)
         {
             _logDelegate = logDelegate;
             Log("Initializing...");
@@ -20,7 +20,7 @@ namespace TestLibraryInterface
             var commandListener = new WindowsCommandListener(adjustCommandExecutor);
 
             Log("Setting AdjustFactory.BaseUrl to: " + baseUrl);
-            _testLibrary = new TestLibrary.TestLibrary(baseUrl, commandListener, localIp, _logDelegate);
+            _testLibrary = new TestLibrary.TestLibrary(baseUrl, controlUrl, commandListener, _logDelegate);
             Log("Init finished.");
         }
 
