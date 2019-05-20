@@ -408,6 +408,13 @@ extern "C"
         [Adjust resetSessionCallbackParameters];
     }
 
+    void _AdjustTrackAdRevenue(const char* source, const char* payload) {
+        NSString *stringSource = [NSString stringWithUTF8String:source];
+        NSString *stringPayload = [NSString stringWithUTF8String:payload];
+        NSData *dataPayload = [stringPayload dataUsingEncoding:NSUTF8StringEncoding];
+        [Adjust trackAdRevenue:stringSource payload:dataPayload];
+    }
+
     void _AdjustSetTestOptions(const char* baseUrl,
                                const char* basePath,
                                const char* gdprUrl,

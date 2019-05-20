@@ -350,6 +350,16 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("appWillOpenUrl", ajoUri, ajoCurrentActivity);
         }
 
+        public static void TrackAdRevenue(string source, string payload)
+        {
+            if (ajcAdjust == null)
+            {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+            AndroidJavaObject jsonPayload = new AndroidJavaObject("org.json.JSONObject", payload);
+            ajcAdjust.CallStatic("trackAdRevenue", source, jsonPayload);
+        }
+
         // Android specific methods.
         public static void OnPause()
         {

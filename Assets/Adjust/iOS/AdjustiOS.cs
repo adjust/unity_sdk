@@ -101,6 +101,9 @@ namespace com.adjust.sdk
         private static extern void _AdjustResetSessionCallbackParameters();
 
         [DllImport("__Internal")]
+        private static extern void _AdjustTrackAdRevenue(string source, string payload);
+
+        [DllImport("__Internal")]
         private static extern void _AdjustSetTestOptions(
             string baseUrl,
             string basePath,
@@ -245,6 +248,11 @@ namespace com.adjust.sdk
         public static void ResetSessionCallbackParameters()
         {
             _AdjustResetSessionCallbackParameters();
+        }
+
+        public static void TrackAdRevenue(string source, string payload)
+        {
+            _AdjustTrackAdRevenue(source, payload);
         }
 
         public static void SetDeviceToken(string deviceToken)
