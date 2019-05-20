@@ -65,6 +65,7 @@ namespace com.adjust.sdk.test
                     case "openDeeplink": OpenDeepLink(); break;
                     case "sendReferrer": SetReferrer(); break;
                     case "gdprForgetMe": GdprForgetMe(); break;
+                    case "trackAdRevenue": TrackAdRevenue(); break;
 
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
@@ -680,6 +681,13 @@ namespace com.adjust.sdk.test
         {
             var deeplink = _command.GetFirstParameterValue("deeplink");
             Adjust.appWillOpenUrl(deeplink);
+        }
+
+        private void TrackAdRevenue()
+        {
+            string source = _command.GetFirstParameterValue("adRevenueSource");
+            string payload = _command.GetFirstParameterValue("adRevenueJsonString");
+            Adjust.trackAdRevenue(source, payload);
         }
 
         private void CommandNotFound(string className, string methodName)
