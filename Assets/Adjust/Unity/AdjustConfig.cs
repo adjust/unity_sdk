@@ -4,6 +4,8 @@ namespace com.adjust.sdk
 {
     public class AdjustConfig
     {
+        public const string AdjustAdRevenueSourceMopub = "mopub";
+
         internal string appToken;
         internal string sceneName;
         internal string userAgent;
