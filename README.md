@@ -32,6 +32,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Session partner parameters](#session-partner-parameters)
       * [Delay start](#delay-start)
    * [Attribution callback](#attribution-callback)
+   * [Ad revenue tracking](#ad-revenue)
    * [Session and event callbacks](#session-event-callbacks)
    * [Disable tracking](#disable-tracking)
    * [Offline mode](#offline-mode)
@@ -432,6 +433,23 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
+### <a id="ad-revenue"></a>Ad revenue tracking
+
+You can track ad revenue information with Adjust SDK by invoking following method:
+
+```csharp
+Adjust.trackAdRevenue(source, payload);
+```
+
+Parameters of the method which you need to pass are:
+
+- `source` - `string` object which indicates the source of ad revenue info.
+- `payload` - `string` object which contains ad revenue JSON in string form.
+
+Currently we support the below `source` parameter values:
+
+- `AdjustConfig.AdjustAdRevenueSourceMopub` - representing MoPub mediation platform (for more information, check [integration guide][sdk2sdk-mopub])
+
 ### <a id="session-event-callbacks"></a>Session and event callbacks
 
 You can register a callback to be notified of successful and failed events and/or sessions.
@@ -768,6 +786,8 @@ If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPho
 [zh-readme]:  doc/chinese/README.md
 [ja-readme]:  doc/japanese/README.md
 [ko-readme]:  doc/korean/README.md
+
+[sdk2sdk-mopub]:    doc/english/sdk-to-sdk/mopub.md
 
 [ios]:                     https://github.com/adjust/ios_sdk
 [android]:                 https://github.com/adjust/android_sdk
