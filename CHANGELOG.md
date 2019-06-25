@@ -1,4 +1,4 @@
-### Version 4.18.0 (20th May 2019)
+### Version 4.18.0 (26th June 2019)
 #### Added
 - Added `trackAdRevenue` method to `Adjust` interface to allow tracking of ad revenue. With this release added support for `MoPub` ad revenue tracking.
 - Added reading of Facebook anonymous ID if available on iOS platform.
