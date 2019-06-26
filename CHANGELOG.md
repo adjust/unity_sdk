@@ -1,3 +1,10 @@
+### Version 4.18.0 (26th June 2019)
+#### Added
+- Added `trackAdRevenue` method to `Adjust` interface to allow tracking of ad revenue. With this release added support for `MoPub` ad revenue tracking.
+- Added reading of Facebook anonymous ID if available on iOS platform.
+
+---
+
 ### Version 4.17.2 (29th March 2019)
 #### Fixed
 - Fixed bug in `AdjustWindows.cs` which prevented the project to be built for Universal Windows Platform.

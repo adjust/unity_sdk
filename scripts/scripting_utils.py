@@ -150,16 +150,16 @@ def xcode_build_release(target):
     execute_command(['xcodebuild', '-target', target, '-configuration', 'Release', '-UseModernBuildSystem=NO' 'clean', 'build'])
 
 def gradle_make_sdk_jar_debug():
-    execute_command(['./gradlew', 'clean', 'adjustSdkNonNativeJarDebug'])
+    execute_command(['./gradlew', 'clean', 'adjustCoreJarDebug'])
 
 def gradle_make_sdk_jar_release():
-    execute_command(['./gradlew', 'clean', 'adjustSdkNonNativeJarRelease'])
+    execute_command(['./gradlew', 'clean', 'adjustCoreJarRelease'])
 
 def gradle_make_test_jar_debug():
-    execute_command(['./gradlew', 'clean', ':test-library:adjustMakeJarDebug'])
+    execute_command(['./gradlew', 'clean', ':test-library:adjustTestLibraryJarDebug'])
 
 def gradle_make_test_jar_release():
-    execute_command(['./gradlew', 'clean', ':test-library:adjustMakeJarRelease'])
+    execute_command(['./gradlew', 'clean', ':test-library:adjustTestLibraryJarRelease'])
 
 def nuget_restore(project_path):
     execute_command(['{0}/nuget.exe'.format(nuget_dir), 'restore', project_path])

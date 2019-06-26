@@ -317,6 +317,21 @@ namespace com.adjust.sdk
             #endif
         }
 
+        public static void trackAdRevenue(string source, string payload)
+        {
+            if (IsEditor()) { return; }
+
+            #if UNITY_IOS
+                AdjustiOS.TrackAdRevenue(source, payload);
+            #elif UNITY_ANDROID
+                AdjustAndroid.TrackAdRevenue(source, payload);
+            #elif (UNITY_WSA || UNITY_WP8)
+                Debug.Log("Ad revenue tracking is only supported for Android and iOS platforms.")
+            #else
+                Debug.Log(errorMsgPlatform);
+            #endif
+        }
+
         public static string getAdid()
         {
             if (IsEditor()) { return string.Empty; }

@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.17.2";
+        private const string sdkPrefix = "unity4.18.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -348,6 +348,16 @@ namespace com.adjust.sdk
             AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
             AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
             ajcAdjust.CallStatic("appWillOpenUrl", ajoUri, ajoCurrentActivity);
+        }
+
+        public static void TrackAdRevenue(string source, string payload)
+        {
+            if (ajcAdjust == null)
+            {
+                ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
+            }
+            AndroidJavaObject jsonPayload = new AndroidJavaObject("org.json.JSONObject", payload);
+            ajcAdjust.CallStatic("trackAdRevenue", source, jsonPayload);
         }
 
         // Android specific methods.
