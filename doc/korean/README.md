@@ -32,6 +32,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [세션 파트너 파라미터](#session-partner-parameters)
       * [예약 시작(delay start)](#delay-start)
     * [어트리뷰션 콜백](#attribution-callback)
+    * [광고 매출 트래킹](#ad-revenue)
     * [세션 및 이벤트 콜백](#session-event-callbacks)
     * [추적 사용 중지](#disable-tracking)
     * [오프라인 모드](#offline-mode)
@@ -431,6 +432,23 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
+### <a id="ad-revenue"></a>광고 매출 트래킹
+
+다음 메서드를 호출하여 Adjust SDK로 광고 매출 정보를 트래킹할 수 있습니다.
+
+```csharp
+Adjust.trackAdRevenue(source, payload);
+```
+
+전달해야 하는 메서드 파라미터는 다음과 같습니다.
+
+- `source` - 광고 매출 정보의 소스를 나타내는`string`객체
+- `payload` - 광고 매출 JSON을 포함하는`string`객체
+
+애드저스트는 현재 다음의 `source` 파라미터 값을 지원합니다.
+
+- `AdjustConfig.AdjustAdRevenueSourceMopub` - MoPub 미디에이션 플랫폼을 나타냄(자세한 정보는 [연동 가이드][sdk2sdk-mopub] 확인)
+
 ### <a id="session-event-callbacks">세션 및 이벤트 콜백
 
 콜백을 등록하여 이벤트 및/또는 세션 추적 성공 또는 실패 시 알림을 받을 수 있습니다.
@@ -770,6 +788,7 @@ iOS 앱이 딥링크를 네이티브 수준에서 취급하도록 설정하려�
 [ja-readme]:  ../japanese/README.md
 [ko-readme]:  ../korean/README.md
 
+[sdk2sdk-mopub]:    ../korean/sdk-to-sdk/mopub.md
 
 [ios]:                     https://github.com/adjust/ios_sdk
 [android]:                 https://github.com/adjust/android_sdk
