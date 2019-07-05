@@ -384,6 +384,23 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
+### <a id="ad-revenue"></a>広告収益の計測
+
+Adjust SDKを利用して、以下のメソッドを呼び出し広告収益情報を計測することができます。
+
+```csharp
+Adjust.trackAdRevenue(source, payload);
+```
+
+Adjust SDKにパスするメソッドの引数は以下の通りです。
+
+- `source` - 広告収益情報のソースを指定する`string`オブジェクト
+- `payload` - 広告収益のJSONを格納する`string`オブジェクト
+
+現在、弊社は以下の`source`パラメータの値のみ対応しています。
+
+- `AdjustConfig.AdjustAdRevenueSourceMopub` - メディエーションプラットフォームのMoPubを示します。（詳細は、[統合ガイド][sdk2sdk-mopub]を参照ください）
+
 ### <a id="session-event-callbacks"></a>セッションとイベントのコールバック
 
 イベントとセッションの双方もしくはどちらかをトラッキングし、成功か失敗かの通知を受け取れるようリスナを登録することができます。
@@ -717,6 +734,8 @@ iOSアプリでネイティブレベルでディープリンキングを設定�
 [zh-readme]:    ../chinese/README.md
 [ja-readme]:    ../japanese/README.md
 [ko-readme]:    ../korean/README.md
+
+[sdk2sdk-mopub]:    ../japanese/sdk-to-sdk/mopub.md
 
 [ios]:                     https://github.com/adjust/ios_sdk
 [android]:                 https://github.com/adjust/android_sdk
