@@ -1,7 +1,23 @@
+### Version 4.18.1 (6th August 2019)
+#### Fixed
+- Fixed `Unity 2019.2.0` (and probably later versions as well) JNI bug in accessing native Android string constants causing Adjust environment not to be properly read. For anyone using `Unity 2019.2.0` or later, it is recommended to use this SDK version or newer.
+
+#### Native SDKs
+- [iOS@v4.18.0][ios_sdk_v4.18.0]
+- [Android@v4.18.0][android_sdk_v4.18.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.18.0 (26th June 2019)
 #### Added
 - Added `trackAdRevenue` method to `Adjust` interface to allow tracking of ad revenue. With this release added support for `MoPub` ad revenue tracking.
 - Added reading of Facebook anonymous ID if available on iOS platform.
+
+#### Native SDKs
+- [iOS@v4.18.0][ios_sdk_v4.18.0]
+- [Android@v4.18.0][android_sdk_v4.18.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
 
 ---
 
@@ -572,6 +588,7 @@
 [ios_sdk_v4.15.0]: https://github.com/adjust/ios_sdk/tree/v4.15.0
 [ios_sdk_v4.17.1]: https://github.com/adjust/ios_sdk/tree/v4.17.1
 [ios_sdk_v4.17.2]: https://github.com/adjust/ios_sdk/tree/v4.17.2
+[ios_sdk_v4.18.0]: https://github.com/adjust/ios_sdk/tree/v4.18.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -591,6 +608,7 @@
 [android_sdk_v4.14.0]: https://github.com/adjust/android_sdk/tree/v4.14.0
 [android_sdk_v4.15.1]: https://github.com/adjust/android_sdk/tree/v4.15.1
 [android_sdk_v4.17.0]: https://github.com/adjust/android_sdk/tree/v4.17.0
+[android_sdk_v4.18.0]: https://github.com/adjust/android_sdk/tree/v4.18.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
