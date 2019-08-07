@@ -32,6 +32,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [会话合作伙伴参数](#session-partner-parameters)
       * [延迟启动](#delay-start)
    * [归因回传](#attribution-callback)
+   * [广告收入跟踪](#ad-revenue)
    * [会话和事件回传](#session-event-callbacks)
    * [禁用跟踪](#disable-tracking)
    * [离线模式](#offline-mode)
@@ -432,6 +433,23 @@ public class ExampleGUI : MonoBehaviour {
 }
 ```
 
+### <a id="ad-revenue"></a>广告收入跟踪
+
+您可以通过调用以下方法，使用 Adjust SDK 对广告收入进行跟踪：
+
+```csharp
+Adjust.trackAdRevenue(source, payload);
+```
+
+您需要传递的方法参数包括：
+
+- `source` - 表明广告收入来源信息的`string`对象。
+- `payload` - 包含广告收入 JSON 的`string`对象。
+
+目前，我们支持以下 `source` 参数值：
+
+- `AdjustConfig.AdjustAdRevenueSourceMopub`- 代表 MoPub 广告聚合平台（更多相关信息，请查看 [集成指南][sdk2sdk-mopub]）
+
 ### <a id="session-event-callbacks"></a>会话和事件回传
 
 您可以注册一个回传，以在事件或者会话被跟踪时获取通知。
@@ -767,6 +785,7 @@ Adjust.start(adjustConfig);
 [ja-readme]:  ../japanese/README.md
 [ko-readme]:  ../korean/README.md
 
+[sdk2sdk-mopub]:    ../chinese/sdk-to-sdk/mopub.md
 
 [ios]:                     https://github.com/adjust/ios_sdk
 [android]:                 https://github.com/adjust/android_sdk
