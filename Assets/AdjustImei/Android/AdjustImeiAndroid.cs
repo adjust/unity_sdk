@@ -13,7 +13,7 @@ namespace com.adjust.sdk.imei
         {
             if (ajcAdjustImei == null)
             {
-                ajcAdjustImei = new AndroidJavaClass("com.adjust.sdk.Adjust");
+                ajcAdjustImei = new AndroidJavaClass("com.adjust.sdk.imei.AdjustImei");
             }
             ajcAdjustImei.CallStatic("readImei");
         }
@@ -22,7 +22,7 @@ namespace com.adjust.sdk.imei
         {
             if (ajcAdjustImei == null)
             {
-                ajcAdjustImei = new AndroidJavaClass("com.adjust.sdk.Adjust");
+                ajcAdjustImei = new AndroidJavaClass("com.adjust.sdk.imei.AdjustImei");
             }
             ajcAdjustImei.CallStatic("doNotReadImei");
         }
