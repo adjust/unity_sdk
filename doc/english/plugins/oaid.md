@@ -26,7 +26,11 @@ Adjust.start(config);
 
 To stop the SDK from reading OAID values, call `AdjustOaid.DoNotReadOaid()`.
 
-You can as well use the OAID plugin as prefab which is located under `AdjustOaid/Prefab` folder. If you want to solely rely on prefab, make sure that `Start Manually` option is **not checked** and then feel free to check `Read Oaid` option to enable OAID reading. It is important to be aware that if prefab is used, `AdjustOaid` prefab **must** be loaded **before** `Adjust` prefab, since instruction that OAID should be read must precede SDK initialisation.
+### Use the plugin as a Prefab
+
+To use the OAID plugin as a Prefab, first find it in the `AdjustOaid/Prefab` folder. To only use the Prefab to read OAID values, make sure the `Start Manually` option is **not checked**. Then check the `Read Oaid` option to turn on OAID reading. 
+
+With this option, the `AdjustOaid` Prefab must be loaded **before** the `Adjust` Prefab. This ensures the instruction to read the OAID precedes the SDK initialization.
 
 
 [readme]:    ../../../README.md
