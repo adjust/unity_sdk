@@ -4,9 +4,9 @@ OAID is a new advertising ID available in devices with HMS (Huawei Mobile Servic
 
 The OAID plugin lets the Adjust Unity SDK read a device’s OAID value *in addition* to the other device IDs it searches for by default. 
 
-Before getting started, make sure you have read the official [Unity SDK README][readme] and successfully integrated the Adjust SDK into your app.
+First, read the official [Unity SDK README][readme] and integrate the Adjust SDK into your app.
 
-To let the Adjust SDK collect and track OAID, follow these steps.
+To let the Adjust SDK collect and track the OAID, follow these steps.
 
 ### Add the OAID plugin to your app
 
@@ -28,10 +28,9 @@ To stop the SDK from reading OAID values, call `AdjustOaid.DoNotReadOaid()`.
 
 ### Use the plugin as a Prefab
 
-First, find it in the `AdjustOaid/Prefab` folder. To only use the Prefab to read OAID values, make sure the `Start Manually` option is **not checked**. Then check the `Read Oaid` option to turn on OAID reading. 
+First, find it in the `AdjustOaid/Prefab` folder. To only use the Prefab to read the OAID, make sure the `Start Manually` option is **not checked**. Then check the `Read Oaid` option to turn on OAID reading. 
 
 With this option, the `AdjustOaid` Prefab must be loaded **before** the `Adjust` Prefab. This ensures the instruction to read the OAID precedes the SDK initialization.
-
 
 [readme]:    ../../../README.md
 [releases]:  https://github.com/adjust/unity_sdk/releases
