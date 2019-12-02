@@ -197,6 +197,19 @@ namespace com.adjust.sdk
             #endif
         }
 
+        public static void disableThirdPartySharing()
+        {
+            #if UNITY_IOS
+                AdjustiOS.DisableThirdPartySharing();
+            #elif UNITY_ANDROID
+                AdjustAndroid.DisableThirdPartySharing();
+            #elif (UNITY_WSA || UNITY_WP8)
+                Debug.Log("Disable third party sharing is only supported for Android and iOS platforms.")
+            #else
+                Debug.Log(errorMsgPlatform);
+            #endif
+        }
+
         public static void appWillOpenUrl(string url)
         {
             if (IsEditor()) { return; }

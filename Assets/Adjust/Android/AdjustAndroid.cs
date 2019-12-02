@@ -258,6 +258,11 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("gdprForgetMe", ajoCurrentActivity);
         }
 
+        public static void DisableThirdPartySharing()
+        {
+            ajcAdjust.CallStatic("disableThirdPartySharing", ajoCurrentActivity);
+        }
+
         public static AdjustAttribution GetAttribution()
         {
             try

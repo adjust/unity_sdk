@@ -382,6 +382,10 @@ extern "C"
         [Adjust gdprForgetMe];
     }
 
+    void _AdjustDisableThirdPartySharing() {
+        [Adjust disableThirdPartySharing];
+    }
+
     void _AdjustAddSessionPartnerParameter(const char* key, const char* value) {
         if (key != NULL && value != NULL) {
             NSString *stringKey = [NSString stringWithUTF8String:key];

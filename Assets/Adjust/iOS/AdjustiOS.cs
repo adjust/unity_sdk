@@ -77,6 +77,9 @@ namespace com.adjust.sdk
         private static extern void _AdjustGdprForgetMe();
 
         [DllImport("__Internal")]
+        private static extern void _AdjustDisableThirdPartySharing();
+
+        [DllImport("__Internal")]
         private static extern string _AdjustGetAttribution();
 
         [DllImport("__Internal")]
@@ -278,6 +281,11 @@ namespace com.adjust.sdk
         public static void GdprForgetMe()
         {
             _AdjustGdprForgetMe();
+        }
+
+        public static void DisableThirdPartySharing()
+        {
+            _AdjustDisableThirdPartySharing();
         }
 
         public static AdjustAttribution GetAttribution()
