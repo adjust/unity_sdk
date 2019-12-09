@@ -68,6 +68,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
    * [Event buffering](#ad-event-buffering)
    * [Background tracking](#ad-background-tracking)
    * [GDPR right to be forgotten](#ad-gdpr-forget-me)
+   * [Disable third-party sharing](#ad-disable-third-party-sharing)
 
 ### Testing and troubleshooting
    * [Debug information in iOS](#tt-debug-ios)
@@ -811,6 +812,18 @@ Upon receiving this information, Adjust will erase the user's data and the Adjus
 
 Please note that even when testing, this decision is permanent. It is not reversible.
 
+
+### <a id="ad-disable-third-party-sharing"></a>Disable third-party sharing for specific users
+
+You can now notify Adjust when a user has exercised their right to stop sharing their data with partners for marketing partners, but has allowed it to be shared for statistics purposes. 
+
+Call the following method to instruct the Adjust SDK to communicate the user's choice to disable data sharing to the Adjust backend:
+
+```csharp
+Adjust.disableThirdPartySharing();
+```
+
+Upon receiving this information, Adjust will block the sharing of that specific user's data to partners and the Adjust SDK will continue to work as usual.
 
 ## Testing and troubleshooting
 

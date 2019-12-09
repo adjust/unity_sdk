@@ -66,6 +66,7 @@ namespace com.adjust.sdk.test
                     case "sendReferrer": SetReferrer(); break;
                     case "gdprForgetMe": GdprForgetMe(); break;
                     case "trackAdRevenue": TrackAdRevenue(); break;
+                    case "disableThirdPartySharing": DisableThirdPartySharing(); break;
 
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
@@ -557,6 +558,11 @@ namespace com.adjust.sdk.test
         public void GdprForgetMe()
         {
             Adjust.gdprForgetMe();
+        }
+
+        public void DisableThirdPartySharing()
+        {
+            Adjust.disableThirdPartySharing();
         }
 
         private void SetOfflineMode()

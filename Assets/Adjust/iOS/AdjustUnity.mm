@@ -281,23 +281,27 @@ extern "C"
     }
 
     void _AdjustSetDeviceToken(const char* deviceToken) {
-        NSString *stringDeviceToken = [NSString stringWithUTF8String:deviceToken];
-        [Adjust setPushToken:stringDeviceToken];
+        if (deviceToken != NULL) {
+            NSString *stringDeviceToken = [NSString stringWithUTF8String:deviceToken];
+            [Adjust setPushToken:stringDeviceToken];
+        }
     }
 
     void _AdjustAppWillOpenUrl(const char* url) {
-        NSString *stringUrl = [NSString stringWithUTF8String:url];
-        NSURL *nsUrl;
-        if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
-            nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
-        } else {
+        if (url != NULL) {
+            NSString *stringUrl = [NSString stringWithUTF8String:url];
+            NSURL *nsUrl;
+            if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
+                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
+            } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        }
+                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            }
 #pragma clang diagnostic pop
 
-        [Adjust appWillOpenUrl:nsUrl];
+            [Adjust appWillOpenUrl:nsUrl];
+        }
     }
 
     char* _AdjustGetIdfa() {
@@ -378,26 +382,38 @@ extern "C"
         [Adjust gdprForgetMe];
     }
 
+    void _AdjustDisableThirdPartySharing() {
+        [Adjust disableThirdPartySharing];
+    }
+
     void _AdjustAddSessionPartnerParameter(const char* key, const char* value) {
-        NSString *stringKey = [NSString stringWithUTF8String:key];
-        NSString *stringValue = [NSString stringWithUTF8String:value];
-        [Adjust addSessionPartnerParameter:stringKey value:stringValue];
+        if (key != NULL && value != NULL) {
+            NSString *stringKey = [NSString stringWithUTF8String:key];
+            NSString *stringValue = [NSString stringWithUTF8String:value];
+            [Adjust addSessionPartnerParameter:stringKey value:stringValue];
+        }
     }
 
     void _AdjustAddSessionCallbackParameter(const char* key, const char* value) {
-        NSString *stringKey = [NSString stringWithUTF8String:key];
-        NSString *stringValue = [NSString stringWithUTF8String:value];
-        [Adjust addSessionCallbackParameter:stringKey value:stringValue];
+        if (key != NULL && value != NULL) {
+            NSString *stringKey = [NSString stringWithUTF8String:key];
+            NSString *stringValue = [NSString stringWithUTF8String:value];
+            [Adjust addSessionCallbackParameter:stringKey value:stringValue];
+        }
     }
 
     void _AdjustRemoveSessionPartnerParameter(const char* key) {
-        NSString *stringKey = [NSString stringWithUTF8String:key];
-        [Adjust removeSessionPartnerParameter:stringKey];
+        if (key != NULL) {
+            NSString *stringKey = [NSString stringWithUTF8String:key];
+            [Adjust removeSessionPartnerParameter:stringKey];
+        }
     }
 
     void _AdjustRemoveSessionCallbackParameter(const char* key) {
-        NSString *stringKey = [NSString stringWithUTF8String:key];
-        [Adjust removeSessionCallbackParameter:stringKey];
+        if (key != NULL) {
+            NSString *stringKey = [NSString stringWithUTF8String:key];
+            [Adjust removeSessionCallbackParameter:stringKey];
+        }
     }
 
     void _AdjustResetSessionPartnerParameters() {
@@ -409,10 +425,12 @@ extern "C"
     }
 
     void _AdjustTrackAdRevenue(const char* source, const char* payload) {
-        NSString *stringSource = [NSString stringWithUTF8String:source];
-        NSString *stringPayload = [NSString stringWithUTF8String:payload];
-        NSData *dataPayload = [stringPayload dataUsingEncoding:NSUTF8StringEncoding];
-        [Adjust trackAdRevenue:stringSource payload:dataPayload];
+        if (source != NULL && payload != NULL) {
+            NSString *stringSource = [NSString stringWithUTF8String:source];
+            NSString *stringPayload = [NSString stringWithUTF8String:payload];
+            NSData *dataPayload = [stringPayload dataUsingEncoding:NSUTF8StringEncoding];
+            [Adjust trackAdRevenue:stringSource payload:dataPayload];
+        }
     }
 
     void _AdjustSetTestOptions(const char* baseUrl,

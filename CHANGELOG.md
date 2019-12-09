@@ -1,3 +1,14 @@
+### Version 4.19.0 (9th December 2019)
+#### Added
+- Added `disableThirdPartySharing` method to `Adjust` interface to allow disabling of data sharing with third parties outside of Adjust ecosystem.
+
+#### Native SDKs
+- [iOS@v4.19.0][ios_sdk_v4.19.0]
+- [Android@v4.19.0][android_sdk_v4.19.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.18.2 (7th October 2019)
 #### Added
 - Added `AdjustOaid` Unity plugin to enable reading of Huawei advertising identifier for apps outside of Google Play Store which need this feature.
@@ -601,6 +612,7 @@
 [ios_sdk_v4.17.2]: https://github.com/adjust/ios_sdk/tree/v4.17.2
 [ios_sdk_v4.18.0]: https://github.com/adjust/ios_sdk/tree/v4.18.0
 [ios_sdk_v4.18.3]: https://github.com/adjust/ios_sdk/tree/v4.18.3
+[ios_sdk_v4.19.0]: https://github.com/adjust/ios_sdk/tree/v4.19.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -622,6 +634,7 @@
 [android_sdk_v4.17.0]: https://github.com/adjust/android_sdk/tree/v4.17.0
 [android_sdk_v4.18.0]: https://github.com/adjust/android_sdk/tree/v4.18.0
 [android_sdk_v4.18.2]: https://github.com/adjust/android_sdk/tree/v4.18.2
+[android_sdk_v4.19.0]: https://github.com/adjust/android_sdk/tree/v4.19.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

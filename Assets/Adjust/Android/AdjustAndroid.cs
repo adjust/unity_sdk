@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.18.2";
+        private const string sdkPrefix = "unity4.19.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -256,6 +256,11 @@ namespace com.adjust.sdk
         public static void GdprForgetMe()
         {
             ajcAdjust.CallStatic("gdprForgetMe", ajoCurrentActivity);
+        }
+
+        public static void DisableThirdPartySharing()
+        {
+            ajcAdjust.CallStatic("disableThirdPartySharing", ajoCurrentActivity);
         }
 
         public static AdjustAttribution GetAttribution()

@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.18.2";
+        private const string sdkPrefix = "unity4.19.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -75,6 +75,9 @@ namespace com.adjust.sdk
 
         [DllImport("__Internal")]
         private static extern void _AdjustGdprForgetMe();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustDisableThirdPartySharing();
 
         [DllImport("__Internal")]
         private static extern string _AdjustGetAttribution();
@@ -278,6 +281,11 @@ namespace com.adjust.sdk
         public static void GdprForgetMe()
         {
             _AdjustGdprForgetMe();
+        }
+
+        public static void DisableThirdPartySharing()
+        {
+            _AdjustDisableThirdPartySharing();
         }
 
         public static AdjustAttribution GetAttribution()

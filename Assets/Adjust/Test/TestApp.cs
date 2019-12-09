@@ -9,18 +9,18 @@ namespace com.adjust.sdk.test
     {
         public static readonly string TAG = "[TestApp]";
 
-#if (UNITY_WSA || UNITY_WP8)
+#if (UNITY_STANDALONE_WIN)
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string IP = "localhost";
 #elif UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
-        private const string IP = "192.168.8.207";
+        private const string IP = "192.168.10.137";
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string IP = "192.168.8.207";
+        private const string IP = "192.168.10.137";
         private TestLibraryiOS _testLibraryiOS;
 #endif
         private const string BASE_URL = PROTOCOL + IP + PORT;
