@@ -288,7 +288,7 @@ extern "C"
     }
 
     void _AdjustAppWillOpenUrl(const char* url) {
-        if (deviceToken != NULL) {
+        if (url != NULL) {
             NSString *stringUrl = [NSString stringWithUTF8String:url];
             NSURL *nsUrl;
             if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
