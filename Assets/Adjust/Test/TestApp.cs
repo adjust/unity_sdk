@@ -9,7 +9,7 @@ namespace com.adjust.sdk.test
     {
         public static readonly string TAG = "[TestApp]";
 
-#if (UNITY_WSA || UNITY_WP8)
+#if (UNITY_STANDALONE_WIN)
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string IP = "localhost";
