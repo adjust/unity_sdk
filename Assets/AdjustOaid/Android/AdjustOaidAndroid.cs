@@ -8,6 +8,7 @@ namespace com.adjust.sdk.oaid
     public class AdjustOaidAndroid
     {
         private static AndroidJavaClass ajcAdjustOaid = new AndroidJavaClass("com.adjust.sdk.oaid.AdjustOaid");
+        private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
 
         public static void ReadOaid()
         {
@@ -15,7 +16,7 @@ namespace com.adjust.sdk.oaid
             {
                 ajcAdjustOaid = new AndroidJavaClass("com.adjust.sdk.oaid.AdjustOaid");
             }
-            ajcAdjustOaid.CallStatic("readOaid");
+            ajcAdjustOaid.CallStatic("readOaid", ajoCurrentActivity);
         }
 
         public static void DoNotReadOaid()

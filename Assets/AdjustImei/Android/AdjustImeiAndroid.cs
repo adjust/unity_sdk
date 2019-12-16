@@ -8,7 +8,6 @@ namespace com.adjust.sdk.imei
     public class AdjustImeiAndroid
     {
         private static AndroidJavaClass ajcAdjustImei = new AndroidJavaClass("com.adjust.sdk.imei.AdjustImei");
-        private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
 
         public static void ReadImei()
         {
@@ -16,7 +15,7 @@ namespace com.adjust.sdk.imei
             {
                 ajcAdjustImei = new AndroidJavaClass("com.adjust.sdk.imei.AdjustImei");
             }
-            ajcAdjustImei.CallStatic("readImei", ajoCurrentActivity);
+            ajcAdjustImei.CallStatic("readImei");
         }
 
         public static void DoNotReadImei()
