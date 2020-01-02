@@ -113,9 +113,9 @@ You can edit the Adjust script parameters in the prefab `Inspector menu` to set 
 
 <a id="environment">Depending on whether you are building your app for testing or for production, change the `Environment` setting to either 'Sandbox' or 'Production'.
 
-**Important:** Set the value to `Sandbox` if you or someone else is testing your app. Make sure to set the environment to `Production` before you publish the app. Set it back to `Sandbox` if you start testing again.
+**Important:** Set the value to `Sandbox` if you or someone else is testing your app. Make sure to set the environment to `Production` before you publish the app. Set it back to `Sandbox` if you start testing again. Also, have in mind that by default Adjust dashboard is showing production traffic of your app, so in case you want to see traffic you generated while testing in sandbox mode, make sure to switch to sandbox traffic view within dashboard.
 
-We use the environment setting to distinguish between real traffic and artificial traffic from test devices. Please make sure to keep your environment setting updated, especially if you are tracking revenue.
+We use the environment setting to distinguish between real traffic and artificial traffic from test devices. Please make sure to keep your environment setting updated.
 
 <a id="start-manually">If you don't want the Adjust SDK to start automatically with the app's `Awake` event, select `Start Manually`. With this option, you'll initialize and start the Adjust SDK from the within the code by calling the `Adjust.start` method with the `AdjustConfig` object as a parameter.
 

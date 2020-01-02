@@ -1,3 +1,17 @@
+### Version 4.19.1 (3rd January 2020)
+#### Fixed
+- Fixed compile time error on UWP platform (thanks to @e1iman).
+
+#### Added
+- Added support to Adjust OAID plugin for reading OAID identifier with usage of MSA SDK if present in app and supported on device.
+
+#### Native SDKs
+- [iOS@v4.19.0][ios_sdk_v4.19.0]
+- [Android@v4.19.1][android_sdk_v4.19.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.19.0 (9th December 2019)
 #### Added
 - Added `disableThirdPartySharing` method to `Adjust` interface to allow disabling of data sharing with third parties outside of Adjust ecosystem.
@@ -635,6 +649,7 @@
 [android_sdk_v4.18.0]: https://github.com/adjust/android_sdk/tree/v4.18.0
 [android_sdk_v4.18.2]: https://github.com/adjust/android_sdk/tree/v4.18.2
 [android_sdk_v4.19.0]: https://github.com/adjust/android_sdk/tree/v4.19.0
+[android_sdk_v4.19.1]: https://github.com/adjust/android_sdk/tree/v4.19.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

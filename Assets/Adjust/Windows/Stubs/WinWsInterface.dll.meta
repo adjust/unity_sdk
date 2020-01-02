@@ -14,7 +14,7 @@ PluginImporter:
       enabled: 0
       settings:
         Exclude Android: 1
-        Exclude Editor: 1
+        Exclude Editor: 0
         Exclude Linux: 1
         Exclude Linux64: 1
         Exclude LinuxUniversal: 1
@@ -35,6 +35,12 @@ PluginImporter:
         CPU: AnyCPU
         OS: AnyOS
   - first:
+      Android: Android
+    second:
+      enabled: 0
+      settings:
+        CPU: ARMv7
+  - first:
       Any: 
     second:
       enabled: 0
@@ -42,9 +48,11 @@ PluginImporter:
   - first:
       Editor: Editor
     second:
-      enabled: 0
+      enabled: 1
       settings:
+        CPU: AnyCPU
         DefaultValueInitialized: true
+        OS: AnyOS
   - first:
       Facebook: Win
     second:
@@ -115,6 +123,20 @@ PluginImporter:
         PlaceholderPath: 
         SDK: AnySDK
         ScriptingBackend: AnyScriptingBackend
+  - first:
+      iPhone: iOS
+    second:
+      enabled: 0
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
+  - first:
+      tvOS: tvOS
+    second:
+      enabled: 0
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 

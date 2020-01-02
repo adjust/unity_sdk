@@ -204,7 +204,7 @@ namespace com.adjust.sdk
             #elif UNITY_ANDROID
                 AdjustAndroid.DisableThirdPartySharing();
             #elif (UNITY_WSA || UNITY_WP8)
-                Debug.Log("Disable third party sharing is only supported for Android and iOS platforms.")
+                Debug.Log("Disable third party sharing is only supported for Android and iOS platforms.");
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
@@ -339,7 +339,7 @@ namespace com.adjust.sdk
             #elif UNITY_ANDROID
                 AdjustAndroid.TrackAdRevenue(source, payload);
             #elif (UNITY_WSA || UNITY_WP8)
-                Debug.Log("Ad revenue tracking is only supported for Android and iOS platforms.")
+                Debug.Log("Ad revenue tracking is only supported for Android and iOS platforms.");
             #else
                 Debug.Log(errorMsgPlatform);
             #endif
