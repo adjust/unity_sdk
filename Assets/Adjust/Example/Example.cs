@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using com.adjust.sdk;
 
-public class ExampleGUI : MonoBehaviour
+public class Example : MonoBehaviour
 {
     private int numberOfButtons = 8;
     private bool isEnabled;

@@ -16,17 +16,17 @@ public class AdjustEditor
 {
     private static bool isPostProcessingEnabled = true;
 
-    [MenuItem("Assets/Adjust/Check post processing status")]
+    [MenuItem("Assets/Adjust/Check Post Processing Permission")]
     public static void CheckPostProcessingPermission()
     {
-        EditorUtility.DisplayDialog("[Adjust]", "The post processing for Adjust SDK is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem("Assets/Adjust/Change post processing status")]
+    [MenuItem("Assets/Adjust/Change Post Processing Permission")]
     public static void ChangePostProcessingPermission()
     {
         isPostProcessingEnabled = !isPostProcessingEnabled;
-        EditorUtility.DisplayDialog("[Adjust]", "The post processing for Adjust SDK is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
+        EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
     [MenuItem("Assets/Adjust/Export Unity Package")]
@@ -36,20 +36,16 @@ public class AdjustEditor
         string assetsPath = "Assets/Adjust";
         List<string> assetsToExport = new List<string>();
 
-        // Adjust Editor script.
-        assetsToExport.Add("Assets/Editor/AdjustEditor.cs");
         // Adjust Assets.
-        assetsToExport.Add(assetsPath + "/Adjust.cs");
-        assetsToExport.Add(assetsPath + "/Adjust.prefab");
         assetsToExport.Add(assetsPath + "/3rd Party/SimpleJSON.cs");
 
         assetsToExport.Add(assetsPath + "/Android/adjust-android.jar");
         assetsToExport.Add(assetsPath + "/Android/AdjustAndroid.cs");
         assetsToExport.Add(assetsPath + "/Android/AdjustAndroidManifest.xml");
 
-        assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.cs");
-        assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.prefab");
-        assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.unity");
+        assetsToExport.Add(assetsPath + "/Example/Example.cs");
+        assetsToExport.Add(assetsPath + "/Example/Example.prefab");
+        assetsToExport.Add(assetsPath + "/Example/Example.unity");
 
         assetsToExport.Add(assetsPath + "/iOS/ADJAttribution.h");
         assetsToExport.Add(assetsPath + "/iOS/ADJConfig.h");
@@ -67,6 +63,9 @@ public class AdjustEditor
         assetsToExport.Add(assetsPath + "/iOS/AdjustUnityDelegate.h");
         assetsToExport.Add(assetsPath + "/iOS/AdjustUnityDelegate.mm");
 
+        assetsToExport.Add(assetsPath + "/Prefab/Adjust.prefab");
+
+        assetsToExport.Add(assetsPath + "/Unity/Adjust.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustAttribution.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustConfig.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustEnvironment.cs");
@@ -96,6 +95,74 @@ public class AdjustEditor
             assetsToExport.ToArray(),
             exportedFileName,
             ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
+    }
+
+    [MenuItem("Assets/Adjust/Sync Adjust Plugin Content")]
+    static void SyncAdjustPluginContent()
+    {
+        string pathOldAdjustEditor = "Assets/Editor/AdjustEditor.cs";
+        string pathOldAdjustCs = "Assets/Adjust/Adjust.cs";
+        string pathOldAdjustPrefab = "Assets/Adjust/Adjust.prefab";
+        string pathOldExampleGui = "Assets/Adjust/ExampleGUI";
+        string cleanupMessage = "";
+
+        bool isOldAdjustEditorThere = false;
+        bool isOldAdjustCsThere = false;
+        bool isOldAdjustPrefabThere = false;
+        bool isOldExampleGuiThere = false;
+
+        if (File.Exists(pathOldAdjustEditor))
+        {
+            isOldAdjustEditorThere = true;
+        }
+        if (File.Exists(pathOldAdjustCs))
+        {
+            isOldAdjustCsThere = true;
+        }
+        if (File.Exists(pathOldAdjustPrefab))
+        {
+            isOldAdjustPrefabThere = true;
+        }
+        if (Directory.Exists(pathOldExampleGui))
+        {
+            isOldExampleGuiThere = true;
+        }
+
+        if (isOldAdjustEditorThere == true
+            || isOldAdjustCsThere == true
+            || isOldAdjustPrefabThere == true
+            || isOldExampleGuiThere == true)
+        {
+            cleanupMessage += "Removed Adjust files from versions prior to v4.19.2:";
+        }
+        else
+        {
+            EditorUtility.DisplayDialog("Adjust SDK", "Plugn is up to date, no need to clean anything.", "OK");
+            return;
+        }
+
+        if (isOldAdjustEditorThere)
+        {
+            File.Delete(pathOldAdjustEditor);
+            cleanupMessage += "\nFile: " + pathOldAdjustEditor;
+        }
+        if (isOldAdjustCsThere)
+        {
+            File.Delete(pathOldAdjustCs);
+            cleanupMessage += "\nFile: " + pathOldAdjustCs;
+        }
+        if (isOldAdjustPrefabThere)
+        {
+            Directory.Delete(pathOldAdjustPrefab);
+            cleanupMessage += "\nFile: " + pathOldAdjustPrefab;
+        }
+        if (isOldExampleGuiThere)
+        {
+            Directory.Delete(pathOldExampleGui);
+            cleanupMessage += "\nDirectory: " + pathOldExampleGui;
+        }
+
+        EditorUtility.DisplayDialog("[Adjust]", cleanupMessage, "OK");
     }
 
     [PostProcessBuild]
