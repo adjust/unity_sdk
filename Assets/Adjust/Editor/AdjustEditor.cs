@@ -15,6 +15,7 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor : AssetPostprocessor
 {
     private static bool isPostProcessingEnabled = true;
+    private static bool isAssetsPostProcessingInProgress = false;
 
     [MenuItem("Assets/Adjust/Check Post Processing Permission")]
     public static void CheckPostProcessingPermission()
@@ -106,29 +107,27 @@ public class AdjustEditor : AssetPostprocessor
         // In this case, perform migration of files from old to new locations.
         // Inform user in debug logs and share link towards document which describes migration which was performed.
 
+        if (isAssetsPostProcessingInProgress == true)
+        {
+            return;
+        }
+        isAssetsPostProcessingInProgress = true;
+
         bool isMigrationDone = false;
         string oldAdjustEditorPath = "Assets/Editor/AdjustEditor.cs";
-        string oldAdjustEditorMetaPath = "Assets/Editor/AdjustEditor.cs.meta";
         string oldAdjustCsPath = "Assets/Adjust/Adjust.cs";
-        string oldAdjustCsMetaPath = "Assets/Adjust/Adjust.cs.meta";
         string oldAdjustPrefabPath = "Assets/Adjust/Adjust.prefab";
-        string oldAdjustPrefabMetaPath = "Assets/Adjust/Adjust.prefab.meta";
 
         if (File.Exists(oldAdjustEditorPath))
         {
-            string source1 = oldAdjustEditorPath;
-            string destination1 = "Assets/Adjust/Editor/AdjustEditor.cs";
-            string source2 = oldAdjustEditorMetaPath;
-            string destination2 = "Assets/Adjust/Editor/AdjustEditor.cs.meta";
+            string source = oldAdjustEditorPath;
+            string destination = "Assets/Adjust/Editor/AdjustEditor.cs";
 
             // Check if Assets/Adjust/Editor directory exists first. If not create one.
             Directory.CreateDirectory("Assets/Adjust/Editor");
 
             // Move AdjustEditor.cs file to new location.
-            File.Copy(source1, destination1, true);
-            File.Delete(source1);
-            File.Copy(source2, destination2, true);
-            File.Delete(source2);
+            AssetDatabase.MoveAsset(source, destination);
 
             // Inform about file being moved.
             UnityEngine.Debug.Log("[Adjust]: AdjustEditor.cs file moved from Assets/Editor to Assets/Adjust/Editor folder.");
@@ -137,18 +136,13 @@ public class AdjustEditor : AssetPostprocessor
 
         if (File.Exists(oldAdjustCsPath))
         {
-            string source1 = oldAdjustCsPath;
-            string destination1 = "Assets/Adjust/Unity/Adjust.cs";
-            string source2 = oldAdjustCsMetaPath;
-            string destination2 = "Assets/Adjust/Unity/Adjust.cs.meta";
+            string source = oldAdjustCsPath;
+            string destination = "Assets/Adjust/Unity/Adjust.cs";
 
             // Assets/Adjust/Unity folder should be present.
 
             // Move Adjust.cs file to new location.
-            File.Copy(source1, destination1, true);
-            File.Delete(source1);
-            File.Copy(source2, destination2, true);
-            File.Delete(source2);
+            AssetDatabase.MoveAsset(source, destination);
 
             // Inform about file being moved.
             UnityEngine.Debug.Log("[Adjust]: Adjust.cs file moved from Assets/Adjust to Assets/Adjust/Unity folder.");
@@ -157,19 +151,14 @@ public class AdjustEditor : AssetPostprocessor
 
         if (File.Exists(oldAdjustPrefabPath))
         {
-            string source1 = oldAdjustPrefabPath;
-            string source2 = oldAdjustPrefabMetaPath;
-            string destination1 = "Assets/Adjust/Prefab/Adjust.prefab";
-            string destination2 = "Assets/Adjust/Prefab/Adjust.prefab.meta";
+            string source = oldAdjustPrefabPath;
+            string destination = "Assets/Adjust/Prefab/Adjust.prefab";
 
             // Check if Assets/Adjust/Prefab directory exists first. If not create one.
             Directory.CreateDirectory("Assets/Adjust/Prefab");
 
             // Move Adjust.prefab file to new location.
-            File.Copy(source1, destination1, true);
-            File.Delete(source1);
-            File.Copy(source2, destination2, true);
-            File.Delete(source2);
+            AssetDatabase.MoveAsset(source, destination);
 
             // Inform about file being moved.
             UnityEngine.Debug.Log("[Adjust]: Adjust.prefab file moved from Assets/Adjust to Assets/Adjust/Prefab folder.");
