@@ -106,79 +106,82 @@ public class AdjustEditor : AssetPostprocessor
         // In this case, perform migration of files from old to new locations.
         // Inform user in debug logs and share link towards document which describes migration which was performed.
 
-        // Check if we ever attempted and performed migration.
-        int isMigrationDone = PlayerPrefs.GetInt("ADJ_MIGRATION_FROM_PRE4192_DONE", -1);
-
-        if (isMigrationDone != -1)
-        {
-            // Migration was already done, no need to check again.
-            return;
-        }
-
-        // Migration was never done. Check if it needs to be done.
+        bool isMigrationDone = false;
         string oldAdjustEditorPath = "Assets/Editor/AdjustEditor.cs";
+        string oldAdjustEditorMetaPath = "Assets/Editor/AdjustEditor.cs.meta";
         string oldAdjustCsPath = "Assets/Adjust/Adjust.cs";
+        string oldAdjustCsMetaPath = "Assets/Adjust/Adjust.cs.meta";
         string oldAdjustPrefabPath = "Assets/Adjust/Adjust.prefab";
+        string oldAdjustPrefabMetaPath = "Assets/Adjust/Adjust.prefab.meta";
 
         if (File.Exists(oldAdjustEditorPath))
         {
-            string source = oldAdjustEditorPath;
-            string destination = "Assets/Adjust/Editor/AdjustEditor.cs";
+            string source1 = oldAdjustEditorPath;
+            string destination1 = "Assets/Adjust/Editor/AdjustEditor.cs";
+            string source2 = oldAdjustEditorMetaPath;
+            string destination2 = "Assets/Adjust/Editor/AdjustEditor.cs.meta";
 
             // Check if Assets/Adjust/Editor directory exists first. If not create one.
             Directory.CreateDirectory("Assets/Adjust/Editor");
 
             // Move AdjustEditor.cs file to new location.
-            File.Copy(source, destination, true);
-            File.Delete(source);
+            File.Copy(source1, destination1, true);
+            File.Delete(source1);
+            File.Copy(source2, destination2, true);
+            File.Delete(source2);
 
             // Inform about file being moved.
             UnityEngine.Debug.Log("[Adjust]: AdjustEditor.cs file moved from Assets/Editor to Assets/Adjust/Editor folder.");
-            isMigrationDone = 1;
+            isMigrationDone = true;
         }
 
         if (File.Exists(oldAdjustCsPath))
         {
-            string source = oldAdjustCsPath;
-            string destination = "Assets/Adjust/Unity/Adjust.cs";
+            string source1 = oldAdjustCsPath;
+            string destination1 = "Assets/Adjust/Unity/Adjust.cs";
+            string source2 = oldAdjustCsMetaPath;
+            string destination2 = "Assets/Adjust/Unity/Adjust.cs.meta";
 
             // Assets/Adjust/Unity folder should be present.
 
             // Move Adjust.cs file to new location.
-            File.Copy(source, destination, true);
-            File.Delete(source);
+            File.Copy(source1, destination1, true);
+            File.Delete(source1);
+            File.Copy(source2, destination2, true);
+            File.Delete(source2);
 
             // Inform about file being moved.
             UnityEngine.Debug.Log("[Adjust]: Adjust.cs file moved from Assets/Adjust to Assets/Adjust/Unity folder.");
-            isMigrationDone = 1;
+            isMigrationDone = true;
         }
 
         if (File.Exists(oldAdjustPrefabPath))
         {
-            string source = oldAdjustPrefabPath;
-            string destination = "Assets/Adjust/Prefab/Adjust.prefab";
+            string source1 = oldAdjustPrefabPath;
+            string source2 = oldAdjustPrefabMetaPath;
+            string destination1 = "Assets/Adjust/Prefab/Adjust.prefab";
+            string destination2 = "Assets/Adjust/Prefab/Adjust.prefab.meta";
 
             // Check if Assets/Adjust/Prefab directory exists first. If not create one.
             Directory.CreateDirectory("Assets/Adjust/Prefab");
 
             // Move Adjust.prefab file to new location.
-            File.Copy(source, destination, true);
-            File.Delete(source);
+            File.Copy(source1, destination1, true);
+            File.Delete(source1);
+            File.Copy(source2, destination2, true);
+            File.Delete(source2);
 
             // Inform about file being moved.
             UnityEngine.Debug.Log("[Adjust]: Adjust.prefab file moved from Assets/Adjust to Assets/Adjust/Prefab folder.");
-            isMigrationDone = 1;
+            isMigrationDone = true;
         }
 
-        if (isMigrationDone == 1)
+        if (isMigrationDone == true)
         {
             // Inform why did we print file moving messages.
             UnityEngine.Debug.Log("[Adjust]: Above mentioned file(s) were moved as part of your migration to Adjust SDK v4.19.2 or higher.");
             UnityEngine.Debug.Log("[Adjust]: More details on this migration can be found in here: https://github.com/adjust/unity_sdk/blob/master/doc/english/migration/migrate.md");
         }
-
-        // Write to player prefs that migration has been performed.
-        PlayerPrefs.SetInt("ADJ_MIGRATION_FROM_PRE4192_DONE", 1);
     }
 
     [PostProcessBuild]
