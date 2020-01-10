@@ -34,32 +34,32 @@ namespace com.adjust.sdk.imei
         {
             if (IsEditor()) { return; }
 
-            #if UNITY_ANDROID
-                AdjustImeiAndroid.ReadImei();
-            #else
-                Debug.Log(errorMsgPlatform);
-            #endif
+#if UNITY_ANDROID
+            AdjustImeiAndroid.ReadImei();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
         }
 
         public static void DoNotReadImei()
         {
             if (IsEditor()) { return; }
 
-            #if UNITY_ANDROID
-                AdjustImeiAndroid.DoNotReadImei();
-            #else
-                Debug.Log(errorMsgPlatform);
-            #endif
+#if UNITY_ANDROID
+            AdjustImeiAndroid.DoNotReadImei();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
         }
 
         private static bool IsEditor()
         {
-            #if UNITY_EDITOR
-                Debug.Log(errorMsgEditor);
-                return true;
-            #else
-                return false;
-            #endif
+#if UNITY_EDITOR
+            Debug.Log(errorMsgEditor);
+            return true;
+#else
+            return false;
+#endif
         }
     }
 }
