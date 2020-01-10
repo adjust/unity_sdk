@@ -6,9 +6,9 @@ namespace com.adjust.sdk
 {
     public class Adjust : MonoBehaviour
     {
-        private const string errorMsgEditor = "Adjust: SDK can not be used in Editor.";
-        private const string errorMsgStart = "Adjust: SDK not started. Start it manually using the 'start' method.";
-        private const string errorMsgPlatform = "Adjust: SDK can only be used in Android, iOS, Windows Phone 8.1, Windows Store or Universal Windows apps.";
+        private const string errorMsgEditor = "[Adjust]: SDK can not be used in Editor.";
+        private const string errorMsgStart = "[Adjust]: SDK not started. Start it manually using the 'start' method.";
+        private const string errorMsgPlatform = "[Adjust]: SDK can only be used in Android, iOS, Windows Phone 8.1, Windows Store or Universal Windows apps.";
 
         public bool startManually = true;
         public bool eventBuffering = false;
@@ -82,7 +82,7 @@ namespace com.adjust.sdk
 
             if (adjustConfig == null)
             {
-                Debug.Log("Adjust: Missing config to start.");
+                Debug.Log("[Adjust]: Missing config to start.");
                 return;
             }
 
@@ -109,7 +109,7 @@ namespace com.adjust.sdk
 
             if (adjustEvent == null)
             {
-                Debug.Log("Adjust: Missing event to track.");
+                Debug.Log("[Adjust]: Missing event to track.");
                 return;
             }
 #if UNITY_IOS
@@ -382,10 +382,10 @@ namespace com.adjust.sdk
             if (IsEditor()) { return string.Empty; }
 
 #if UNITY_IOS
-            Debug.Log("Adjust: Error! Windows Advertising ID is not available on iOS platform.");
+            Debug.Log("[Adjust]: Error! Windows Advertising ID is not available on iOS platform.");
             return string.Empty;
 #elif UNITY_ANDROID
-            Debug.Log("Adjust: Error! Windows Advertising ID is not available on Android platform.");
+            Debug.Log("[Adjust]: Error! Windows Advertising ID is not available on Android platform.");
             return string.Empty;
 #elif (UNITY_WSA || UNITY_WP8)
             return AdjustWindows.GetWinAdId();
@@ -402,10 +402,10 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             return AdjustiOS.GetIdfa();
 #elif UNITY_ANDROID
-            Debug.Log("Adjust: Error! IDFA is not available on Android platform.");
+            Debug.Log("[Adjust]: Error! IDFA is not available on Android platform.");
             return string.Empty;
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("Adjust: Error! IDFA is not available on Windows platform.");
+            Debug.Log("[Adjust]: Error! IDFA is not available on Windows platform.");
             return string.Empty;
 #else
             Debug.Log(errorMsgPlatform);
@@ -435,11 +435,11 @@ namespace com.adjust.sdk
             if (IsEditor()) { return; }
 
 #if UNITY_IOS
-            Debug.Log("Adjust: Install referrer is not available on iOS platform.");
+            Debug.Log("[Adjust]: Install referrer is not available on iOS platform.");
 #elif UNITY_ANDROID
             AdjustAndroid.SetReferrer(referrer);
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("Adjust: Error! Install referrer is not available on Windows platform.");
+            Debug.Log("[Adjust]: Error! Install referrer is not available on Windows platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -450,12 +450,12 @@ namespace com.adjust.sdk
             if (IsEditor()) { return; }
 
 #if UNITY_IOS
-            Debug.Log("Adjust: Google Play Advertising ID is not available on iOS platform.");
+            Debug.Log("[Adjust]: Google Play Advertising ID is not available on iOS platform.");
             onDeviceIdsRead(string.Empty);
 #elif UNITY_ANDROID
             AdjustAndroid.GetGoogleAdId(onDeviceIdsRead);
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("Adjust: Google Play Advertising ID is not available on Windows platform.");
+            Debug.Log("[Adjust]: Google Play Advertising ID is not available on Windows platform.");
             onDeviceIdsRead(string.Empty);
 #else
             Debug.Log(errorMsgPlatform);
@@ -467,12 +467,12 @@ namespace com.adjust.sdk
             if (IsEditor()) { return string.Empty; }
 
 #if UNITY_IOS
-            Debug.Log("Adjust: Amazon Advertising ID is not available on iOS platform.");
+            Debug.Log("[Adjust]: Amazon Advertising ID is not available on iOS platform.");
             return string.Empty;
 #elif UNITY_ANDROID
             return AdjustAndroid.GetAmazonAdId();
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("Adjust: Amazon Advertising ID not available on Windows platform.");
+            Debug.Log("[Adjust]: Amazon Advertising ID not available on Windows platform.");
             return string.Empty;
 #else
             Debug.Log(errorMsgPlatform);
@@ -487,7 +487,7 @@ namespace com.adjust.sdk
 
             if (Adjust.attributionChangedDelegate == null)
             {
-                Debug.Log("Adjust: Attribution changed delegate was not set.");
+                Debug.Log("[Adjust]: Attribution changed delegate was not set.");
                 return;
             }
 
@@ -501,7 +501,7 @@ namespace com.adjust.sdk
 
             if (Adjust.eventSuccessDelegate == null)
             {
-                Debug.Log("Adjust: Event success delegate was not set.");
+                Debug.Log("[Adjust]: Event success delegate was not set.");
                 return;
             }
 
@@ -515,7 +515,7 @@ namespace com.adjust.sdk
 
             if (Adjust.eventFailureDelegate == null)
             {
-                Debug.Log("Adjust: Event failure delegate was not set.");
+                Debug.Log("[Adjust]: Event failure delegate was not set.");
                 return;
             }
 
@@ -529,7 +529,7 @@ namespace com.adjust.sdk
 
             if (Adjust.sessionSuccessDelegate == null)
             {
-                Debug.Log("Adjust: Session success delegate was not set.");
+                Debug.Log("[Adjust]: Session success delegate was not set.");
                 return;
             }
 
@@ -543,7 +543,7 @@ namespace com.adjust.sdk
 
             if (Adjust.sessionFailureDelegate == null)
             {
-                Debug.Log("Adjust: Session failure delegate was not set.");
+                Debug.Log("[Adjust]: Session failure delegate was not set.");
                 return;
             }
 
@@ -557,7 +557,7 @@ namespace com.adjust.sdk
 
             if (Adjust.deferredDeeplinkDelegate == null)
             {
-                Debug.Log("Adjust: Deferred deeplink delegate was not set.");
+                Debug.Log("[Adjust]: Deferred deeplink delegate was not set.");
                 return;
             }
 

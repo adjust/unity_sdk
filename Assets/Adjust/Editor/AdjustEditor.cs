@@ -15,7 +15,6 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor : AssetPostprocessor
 {
     private static bool isPostProcessingEnabled = true;
-    private static bool isAssetsPostProcessingInProgress = false;
 
     [MenuItem("Assets/Adjust/Check Post Processing Permission")]
     public static void CheckPostProcessingPermission()
@@ -98,79 +97,6 @@ public class AdjustEditor : AssetPostprocessor
             assetsToExport.ToArray(),
             exportedFileName,
             ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
-    }
-
-    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-    {
-        // Perform check if we can spot any files on old locations prior to Adjust SDK v4.19.2.
-        // If any of those found, it indicates that user imported Adjust SDK v4.19.2 over older version.
-        // In this case, perform migration of files from old to new locations.
-        // Inform user in debug logs and share link towards document which describes migration which was performed.
-
-        if (isAssetsPostProcessingInProgress == true)
-        {
-            return;
-        }
-        isAssetsPostProcessingInProgress = true;
-
-        bool isMigrationDone = false;
-        string oldAdjustEditorPath = "Assets/Editor/AdjustEditor.cs";
-        string oldAdjustCsPath = "Assets/Adjust/Adjust.cs";
-        string oldAdjustPrefabPath = "Assets/Adjust/Adjust.prefab";
-
-        if (File.Exists(oldAdjustEditorPath))
-        {
-            string source = oldAdjustEditorPath;
-            string destination = "Assets/Adjust/Editor/AdjustEditor.cs";
-
-            // Check if Assets/Adjust/Editor directory exists first. If not create one.
-            Directory.CreateDirectory("Assets/Adjust/Editor");
-
-            // Move AdjustEditor.cs file to new location.
-            AssetDatabase.MoveAsset(source, destination);
-
-            // Inform about file being moved.
-            UnityEngine.Debug.Log("[Adjust]: AdjustEditor.cs file moved from Assets/Editor to Assets/Adjust/Editor folder.");
-            isMigrationDone = true;
-        }
-
-        if (File.Exists(oldAdjustCsPath))
-        {
-            string source = oldAdjustCsPath;
-            string destination = "Assets/Adjust/Unity/Adjust.cs";
-
-            // Assets/Adjust/Unity folder should be present.
-
-            // Move Adjust.cs file to new location.
-            AssetDatabase.MoveAsset(source, destination);
-
-            // Inform about file being moved.
-            UnityEngine.Debug.Log("[Adjust]: Adjust.cs file moved from Assets/Adjust to Assets/Adjust/Unity folder.");
-            isMigrationDone = true;
-        }
-
-        if (File.Exists(oldAdjustPrefabPath))
-        {
-            string source = oldAdjustPrefabPath;
-            string destination = "Assets/Adjust/Prefab/Adjust.prefab";
-
-            // Check if Assets/Adjust/Prefab directory exists first. If not create one.
-            Directory.CreateDirectory("Assets/Adjust/Prefab");
-
-            // Move Adjust.prefab file to new location.
-            AssetDatabase.MoveAsset(source, destination);
-
-            // Inform about file being moved.
-            UnityEngine.Debug.Log("[Adjust]: Adjust.prefab file moved from Assets/Adjust to Assets/Adjust/Prefab folder.");
-            isMigrationDone = true;
-        }
-
-        if (isMigrationDone == true)
-        {
-            // Inform why did we print file moving messages.
-            UnityEngine.Debug.Log("[Adjust]: Above mentioned file(s) were moved as part of your migration to Adjust SDK v4.19.2 or higher.");
-            UnityEngine.Debug.Log("[Adjust]: More details on this migration can be found in here: https://github.com/adjust/unity_sdk/blob/master/doc/english/migration/migrate.md");
-        }
     }
 
     [PostProcessBuild]
