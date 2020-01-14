@@ -1,4 +1,4 @@
-### Version 4.19.2 (xxth January 2020)
+### Version 4.19.2 (14th January 2020)
 #### Added
 - Added Adjust SDK to Unity Asset Store. As of this version, you can get latest SDK version from Asset Store as well.
 
