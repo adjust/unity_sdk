@@ -1,6 +1,6 @@
 ### Version 4.19.2 (14th January 2020)
 #### Added
-- Added Adjust SDK to Unity Asset Store. As of this version, you can get latest SDK version from Asset Store as well.
+- Added Adjust SDK to Unity Asset Store. As of this version, you can get latest SDK version from Asset Store as well. As of this version, you can add Adjust SDK from [Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890) as well.
 
 #### Changed
 - Removed support for Unity 5. This version of SDK is built with `Unity 2017.1.1f1`.
