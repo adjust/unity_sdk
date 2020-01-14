@@ -34,32 +34,32 @@ namespace com.adjust.sdk.oaid
         {
             if (IsEditor()) { return; }
 
-            #if UNITY_ANDROID
-                AdjustOaidAndroid.ReadOaid();
-            #else
-                Debug.Log(errorMsgPlatform);
-            #endif
+#if UNITY_ANDROID
+            AdjustOaidAndroid.ReadOaid();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
         }
 
         public static void DoNotReadOaid()
         {
             if (IsEditor()) { return; }
 
-            #if UNITY_ANDROID
-                AdjustOaidAndroid.DoNotReadOaid();
-            #else
-                Debug.Log(errorMsgPlatform);
-            #endif
+#if UNITY_ANDROID
+            AdjustOaidAndroid.DoNotReadOaid();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
         }
 
         private static bool IsEditor()
         {
-            #if UNITY_EDITOR
-                Debug.Log(errorMsgEditor);
-                return true;
-            #else
-                return false;
-            #endif
+#if UNITY_EDITOR
+            Debug.Log(errorMsgEditor);
+            return true;
+#else
+            return false;
+#endif
         }
     }
 }

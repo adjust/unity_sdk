@@ -1,3 +1,18 @@
+### Version 4.19.2 (14th January 2020)
+#### Added
+- Added Adjust SDK to Unity Asset Store. As of this version, you can get latest SDK version from Asset Store as well. As of this version, you can add Adjust SDK from [Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890) as well.
+
+#### Changed
+- Removed support for Unity 5. This version of SDK is built with `Unity 2017.1.1f1`.
+- Changed plugin folder structure to make GitHub releases in sync with the ones from Unity Asset Store.
+
+#### Native SDKs
+- [iOS@v4.19.0][ios_sdk_v4.19.0]
+- [Android@v4.19.1][android_sdk_v4.19.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.19.1 (3rd January 2020)
 #### Fixed
 - Fixed compile time error on UWP platform (thanks to @e1iman).

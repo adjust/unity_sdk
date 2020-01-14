@@ -4,6 +4,8 @@ This is the Unity SDK of Adjust™. It supports iOS, Android, Windows Store 8.1,
 
 **Note**: As of version **4.12.0**, Adjust Unity SDK is compatible with **Unity 5 and newer** versions.
 
+**Note**: As of version **4.19.2**, Adjust Unity SDK is compatible with **Unity 2017.1.1 and newer** versions.
+
 Read this in other languages: [English][en-readme], [中文][zh-readme], [日本語][ja-readme], [한국어][ko-readme].
 
 ## Table of contents
@@ -85,7 +87,7 @@ To integrate the Adjust SDK into your Unity project, follow these steps.
 
 ### <a id="qs-get-sdk"></a>Get the SDK
 
-Download the latest version from our [releases page][releases].
+As of version `4.19.2`, you can add Adjust SDK from [Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890) to your app. Alternativly, you can download the latest version from our [releases page][releases].
 
 ### <a id="qs-add-sdk"></a>Add the SDK to your project
 

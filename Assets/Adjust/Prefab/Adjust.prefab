@@ -42,6 +42,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startManually: 1
   eventBuffering: 0
+  sendInBackground: 0
+  launchDeferredDeeplink: 1
   appToken: '{Your App Token}'
   logLevel: 3
   environment: 0
