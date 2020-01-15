@@ -104,6 +104,12 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setDefaultTracker", adjustConfig.defaultTracker);
             }
 
+            // Check if user has set external device identifier.
+            if (adjustConfig.externalDeviceId != null)
+            {
+                ajoAdjustConfig.Call("setExternalDeviceId", adjustConfig.externalDeviceId);
+            }
+
             // Check if user has set app secret.
             if (IsAppSecretSet(adjustConfig))
             {
