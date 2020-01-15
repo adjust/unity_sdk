@@ -1,3 +1,14 @@
+### Version 4.20.0 (16th January 2020)
+#### Added
+- Added external device ID support.
+
+#### Native SDKs
+- [iOS@v4.20.0][ios_sdk_v4.20.0]
+- [Android@v4.20.0][android_sdk_v4.20.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.19.2 (14th January 2020)
 #### Added
 - Added Adjust SDK to Unity Asset Store. As of this version, you can add Adjust SDK from [Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890) as well.
@@ -642,6 +653,7 @@
 [ios_sdk_v4.18.0]: https://github.com/adjust/ios_sdk/tree/v4.18.0
 [ios_sdk_v4.18.3]: https://github.com/adjust/ios_sdk/tree/v4.18.3
 [ios_sdk_v4.19.0]: https://github.com/adjust/ios_sdk/tree/v4.19.0
+[ios_sdk_v4.20.0]: https://github.com/adjust/ios_sdk/tree/v4.20.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -665,6 +677,7 @@
 [android_sdk_v4.18.2]: https://github.com/adjust/android_sdk/tree/v4.18.2
 [android_sdk_v4.19.0]: https://github.com/adjust/android_sdk/tree/v4.19.0
 [android_sdk_v4.19.1]: https://github.com/adjust/android_sdk/tree/v4.19.1
+[android_sdk_v4.20.0]: https://github.com/adjust/android_sdk/tree/v4.20.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
