@@ -136,7 +136,7 @@ namespace com.adjust.sdk
             string sceneName = adjustConfig.sceneName != null ? adjustConfig.sceneName : "ADJ_INVALID";
             string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : "ADJ_INVALID";
             string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : "ADJ_INVALID";
-            string extenralDeviceId = adjustConfig.extenralDeviceId != null ? adjustConfig.extenralDeviceId : "ADJ_INVALID";
+            string externalDeviceId = adjustConfig.externalDeviceId != null ? adjustConfig.externalDeviceId : "ADJ_INVALID";
             string environment = adjustConfig.environment.ToLowercaseString();
             long info1 = AdjustUtils.ConvertLong(adjustConfig.info1);
             long info2 = AdjustUtils.ConvertLong(adjustConfig.info2);
@@ -163,7 +163,7 @@ namespace com.adjust.sdk
                 sdkPrefix,
                 userAgent,
                 defaultTracker,
-                extenralDeviceId,
+                externalDeviceId,
                 sceneName,
                 allowSuppressLogLevel,
                 logLevel,
