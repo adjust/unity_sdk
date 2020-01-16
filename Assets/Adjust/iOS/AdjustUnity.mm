@@ -83,6 +83,7 @@ extern "C"
                           const char* sdkPrefix,
                           const char* userAgent,
                           const char* defaultTracker,
+                          const char* externalDeviceId,
                           const char* sceneName,
                           int allowSuppressLogLevel,
                           int logLevel,
@@ -107,6 +108,7 @@ extern "C"
         NSString *stringSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
         NSString *stringUserAgent = isStringValid(userAgent) == true ? [NSString stringWithUTF8String:userAgent] : nil;
         NSString *stringDefaultTracker = isStringValid(defaultTracker) == true ? [NSString stringWithUTF8String:defaultTracker] : nil;
+        NSString *stringExternalDeviceId = isStringValid(externalDeviceId) == true ? [NSString stringWithUTF8String:externalDeviceId] : nil;
         NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
 
         ADJConfig *adjustConfig;
@@ -174,6 +176,11 @@ extern "C"
         // Default tracker.
         if (stringDefaultTracker != nil) {
             [adjustConfig setDefaultTracker:stringDefaultTracker];
+        }
+
+        // External device identifier.
+        if (externalDeviceId != nil) {
+            [adjustConfig setExternalDeviceId:stringExternalDeviceId];
         }
 
         // App secret.

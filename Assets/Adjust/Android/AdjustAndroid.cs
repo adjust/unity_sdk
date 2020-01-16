@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.19.2";
+        private const string sdkPrefix = "unity4.20.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -102,6 +102,12 @@ namespace com.adjust.sdk
             if (adjustConfig.defaultTracker != null)
             {
                 ajoAdjustConfig.Call("setDefaultTracker", adjustConfig.defaultTracker);
+            }
+
+            // Check if user has set external device identifier.
+            if (adjustConfig.externalDeviceId != null)
+            {
+                ajoAdjustConfig.Call("setExternalDeviceId", adjustConfig.externalDeviceId);
             }
 
             // Check if user has set app secret.

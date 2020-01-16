@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.19.2";
+        private const string sdkPrefix = "unity4.20.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -17,6 +17,7 @@ namespace com.adjust.sdk
             string sdkPrefix,
             string userAgent,
             string defaultTracker,
+            string extenralDeviceId,
             string sceneName,
             int allowSuppressLogLevel,
             int logLevel,
@@ -135,6 +136,7 @@ namespace com.adjust.sdk
             string sceneName = adjustConfig.sceneName != null ? adjustConfig.sceneName : "ADJ_INVALID";
             string userAgent = adjustConfig.userAgent != null ? adjustConfig.userAgent : "ADJ_INVALID";
             string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : "ADJ_INVALID";
+            string externalDeviceId = adjustConfig.externalDeviceId != null ? adjustConfig.externalDeviceId : "ADJ_INVALID";
             string environment = adjustConfig.environment.ToLowercaseString();
             long info1 = AdjustUtils.ConvertLong(adjustConfig.info1);
             long info2 = AdjustUtils.ConvertLong(adjustConfig.info2);
@@ -161,6 +163,7 @@ namespace com.adjust.sdk
                 sdkPrefix,
                 userAgent,
                 defaultTracker,
+                externalDeviceId,
                 sceneName,
                 allowSuppressLogLevel,
                 logLevel,

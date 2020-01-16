@@ -10,6 +10,7 @@ namespace com.adjust.sdk
         internal string sceneName;
         internal string userAgent;
         internal string defaultTracker;
+        internal string externalDeviceId;
         internal long? info1;
         internal long? info2;
         internal long? info3;
@@ -61,6 +62,11 @@ namespace com.adjust.sdk
         public void setDefaultTracker(string defaultTracker)
         {
             this.defaultTracker = defaultTracker;
+        }
+
+        public void setExternalDeviceId(string externalDeviceId)
+        {
+            this.externalDeviceId = externalDeviceId;
         }
 
         public void setLaunchDeferredDeeplink(bool launchDeferredDeeplink)

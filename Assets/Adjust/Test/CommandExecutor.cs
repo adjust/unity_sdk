@@ -252,6 +252,11 @@ namespace com.adjust.sdk.test
                 adjustConfig.setDefaultTracker(_command.GetFirstParameterValue("defaultTracker"));
             }
 
+            if (_command.ContainsParameter("externalDeviceId"))
+            {
+                adjustConfig.setExternalDeviceId(_command.GetFirstParameterValue("externalDeviceId"));
+            }
+
             if (_command.ContainsParameter("delayStart"))
             {
                 var delayStartStr = _command.GetFirstParameterValue("delayStart");
