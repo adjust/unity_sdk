@@ -135,7 +135,11 @@ public class AdjustEditor : AssetPostprocessor
             // - AdSupport.framework
             // - iAd.framework
 
+#if UNITY_2019_3_OR_NEWER
+            string xcodeTarget = xcodeProject.GetUnityFrameworkTargetGuid();
+#else
             string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
+#endif
             
             UnityEngine.Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
