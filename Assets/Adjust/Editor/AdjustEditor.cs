@@ -234,8 +234,8 @@ public class AdjustEditor : AssetPostprocessor
             }
             else
             {
-                UnityEngine.Debug.Log($"[Adjust]: App's AndroidManifest.xml file check completed.");
-                UnityEngine.Debug.Log($"[Adjust]: Merge skipped due to app's AndroidManifest.xml file has compatibility.");
+                UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check completed.");
+                UnityEngine.Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
             }
         }
     }
