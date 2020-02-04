@@ -1,3 +1,15 @@
+### Version 4.20.1 (5th February 2020)
+#### Fixed
+- Fixed usage of deprecated `TargetGuidByName` API as of Unity 2019.3.0 (thanks to @epsmarkh).
+- Fixed unnecessary saving of `AndroidManifest.xml` file whose content was not changed during post build process (thanks to @nanasi880).
+
+#### Native SDKs
+- [iOS@v4.20.0][ios_sdk_v4.20.0]
+- [Android@v4.20.0][android_sdk_v4.20.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.20.0 (16th January 2020)
 #### Added
 - Added external device ID support.
