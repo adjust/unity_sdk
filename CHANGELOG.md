@@ -1,4 +1,4 @@
-### Version 4.20.1 (5th February 2020)
+### Version 4.20.1 (21st February 2020)
 #### Fixed
 - Fixed usage of deprecated `TargetGuidByName` API as of Unity 2019.3.0 (thanks to @epsmarkh).
 - Fixed unnecessary saving of `AndroidManifest.xml` file whose content was not changed during post build process (thanks to @nanasi880).
