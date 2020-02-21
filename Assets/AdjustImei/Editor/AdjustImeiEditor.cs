@@ -58,7 +58,7 @@ public class AdjustImeiEditor
         }
         else
         {
-            EditorUtility.DisplayDialog("Adjust IMEI Plugin", "Adjust IMEI plugin post build tasks from now on WON'T be performed each time you build your app."
+            EditorUtility.DisplayDialog("Adjust IMEI Plugin", "Adjust IMEI plugin post build tasks from now on WON’T be performed each time you build your app."
                 + "\n\nPlease, make sure that your app is compatible for usage of the Adjust IMEI plugin by selecting \"Is my app properly configured?\" option from menu.", "OK");
         }
     }
@@ -122,16 +122,16 @@ public class AdjustImeiEditor
             UnityEngine.Debug.Log("[AdjustImei]: User defined AndroidManifest.xml file located in Plugins/Android folder.");
         }
 
-        // Seems like you already have your own AndroidManifest.xml, we'll now run
+        // Seems like you already have your own AndroidManifest.xml, we’ll now run
         // some checks on it and tweak it a bit if needed to add some stuff which
         // our native Android IMEI plugin needs so that it can run properly.
 
-        // Let's open the app's AndroidManifest.xml file.
+        // Let’s open the app’s AndroidManifest.xml file.
         XmlDocument manifestFile = new XmlDocument();
         manifestFile.Load(appManifestPath);
 
         bool manifestHasChanged = false;
-        
+
         // Add needed permissions if they are missing.
         manifestHasChanged |= AddPermissions(manifestFile);
 
@@ -143,23 +143,23 @@ public class AdjustImeiEditor
             // Clean the manifest file.
             CleanManifestFile(appManifestPath);
 
-            UnityEngine.Debug.Log("[AdjustImei]: App's AndroidManifest.xml file check and potential modification completed.");
-            UnityEngine.Debug.Log("[AdjustImei]: Please check if any error message was displayed during this process " 
+            UnityEngine.Debug.Log("[AdjustImei]: App’s AndroidManifest.xml file check and potential modification completed.");
+            UnityEngine.Debug.Log("[AdjustImei]: Please check if any error message was displayed during this process "
                 + "and make sure to fix all issues in order to properly use the Adjust IMEI plugin in your app.");
         }
         else
         {
-            UnityEngine.Debug.Log("[AdjustImei]: App's AndroidManifest.xml file check completed.");
-            UnityEngine.Debug.Log("[AdjustImei]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
+            UnityEngine.Debug.Log("[AdjustImei]: App’s AndroidManifest.xml file check completed.");
+            UnityEngine.Debug.Log("[AdjustImei]: No modifications performed due to app’s AndroidManifest.xml file compatibility.");
         }
     }
 
     private static bool AddPermissions(XmlDocument manifest)
     {
-        // The Adjust IMEI plugin needs following permissions to be added to you app's manifest file:
+        // The Adjust IMEI plugin needs following permissions to be added to you app’s manifest file:
         // <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-        UnityEngine.Debug.Log("[AdjustImei]: Checking if all permissions needed for the Adjust IMEI plugin are present in the app's AndroidManifest.xml file.");
+        UnityEngine.Debug.Log("[AdjustImei]: Checking if all permissions needed for the Adjust IMEI plugin are present in the app’s AndroidManifest.xml file.");
 
         bool hasReadPhoneStatePermission = false;
         XmlElement manifestRoot = manifest.DocumentElement;
@@ -187,12 +187,12 @@ public class AdjustImeiEditor
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "android.permission.READ_PHONE_STATE");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[AdjustImei]: android.permission.READ_PHONE_STATE permission successfully added to your app's AndroidManifest.xml file.");
+            UnityEngine.Debug.Log("[AdjustImei]: android.permission.READ_PHONE_STATE permission successfully added to your app’s AndroidManifest.xml file.");
             manifestHasChanged = true;
         }
         else
         {
-            UnityEngine.Debug.Log("[AdjustImei]: Your app's AndroidManifest.xml file already contains android.permission.READ_PHONE_STATE permission.");
+            UnityEngine.Debug.Log("[AdjustImei]: Your app’s AndroidManifest.xml file already contains android.permission.READ_PHONE_STATE permission.");
             UnityEngine.Debug.Log("[AdjustImei]: All good.");
         }
 
@@ -229,9 +229,9 @@ public class AdjustImeiEditor
         }
 
         // Seems like you already have your own AndroidManifest.xml.
-        // We'll now check if all the permissions needed by the plugin are added.
+        // We’ll now check if all the permissions needed by the plugin are added.
 
-        // Let's open the app's AndroidManifest.xml file.
+        // Let’s open the app’s AndroidManifest.xml file.
         XmlDocument manifestFile = new XmlDocument();
         manifestFile.Load(appManifestPath);
 
