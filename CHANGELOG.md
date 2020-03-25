@@ -1,3 +1,16 @@
+### Version 4.21.0 (25th March 2020)
+#### Added
+- Added support for signature library as a plugin.
+- Added more aggressive sending retry logic for install session package.
+- Added additional parameters to `ad_revenue` package payload.
+
+#### Native SDKs
+- [iOS@v4.21.0][ios_sdk_v4.21.0]
+- [Android@v4.21.0][android_sdk_v4.21.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.20.1 (21st February 2020)
 #### Fixed
 - Fixed usage of deprecated `TargetGuidByName` API as of Unity 2019.3.0 (thanks to @epsmarkh).
@@ -666,6 +679,7 @@
 [ios_sdk_v4.18.3]: https://github.com/adjust/ios_sdk/tree/v4.18.3
 [ios_sdk_v4.19.0]: https://github.com/adjust/ios_sdk/tree/v4.19.0
 [ios_sdk_v4.20.0]: https://github.com/adjust/ios_sdk/tree/v4.20.0
+[ios_sdk_v4.21.0]: https://github.com/adjust/ios_sdk/tree/v4.21.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -690,6 +704,7 @@
 [android_sdk_v4.19.0]: https://github.com/adjust/android_sdk/tree/v4.19.0
 [android_sdk_v4.19.1]: https://github.com/adjust/android_sdk/tree/v4.19.1
 [android_sdk_v4.20.0]: https://github.com/adjust/android_sdk/tree/v4.20.0
+[android_sdk_v4.21.0]: https://github.com/adjust/android_sdk/tree/v4.21.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
