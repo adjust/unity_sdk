@@ -24,6 +24,8 @@ namespace com.adjust.sdk
             int isDeviceKnown,
             int eventBuffering,
             int sendInBackground,
+            int allowiAdInfoReading,
+            int allowIdfaReading,
             long secretId,
             long info1,
             long info2,
