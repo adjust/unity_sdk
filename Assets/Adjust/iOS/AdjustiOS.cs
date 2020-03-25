@@ -148,6 +148,8 @@ namespace com.adjust.sdk
             int isDeviceKnown = AdjustUtils.ConvertBool(adjustConfig.isDeviceKnown);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool(adjustConfig.eventBufferingEnabled);
+            int allowiAdInfoReading = AdjustUtils.ConvertBool(adjustConfig.allowiAdInfoReading);
+            int allowIdfaReading = AdjustUtils.ConvertBool(adjustConfig.allowIdfaReading);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
             int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
@@ -170,6 +172,8 @@ namespace com.adjust.sdk
                 isDeviceKnown,
                 eventBufferingEnabled,
                 sendInBackground,
+                allowiAdInfoReading,
+                allowIdfaReading,
                 secretId,
                 info1,
                 info2,
