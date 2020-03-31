@@ -308,6 +308,20 @@ namespace com.adjust.sdk.test
                 adjustConfig.sendInBackground = sendInBackground;
             }
 
+            if (_command.ContainsParameter("allowiAdInfoReading"))
+            {
+                var allowiAdInfoReadingS = _command.GetFirstParameterValue("allowiAdInfoReading");
+                var allowiAdInfoReading = allowiAdInfoReadingS.ToLower() == "true";
+                adjustConfig.allowiAdInfoReading = allowiAdInfoReading;
+            }
+
+            if (_command.ContainsParameter("allowIdfaReading"))
+            {
+                var allowIdfaReadingS = _command.GetFirstParameterValue("allowIdfaReading");
+                var allowIdfaReading = allowIdfaReadingS.ToLower() == "true";
+                adjustConfig.allowIdfaReading = allowIdfaReading;
+            }
+
             if (_command.ContainsParameter("userAgent"))
             {
                 var userAgent = _command.GetFirstParameterValue("userAgent");

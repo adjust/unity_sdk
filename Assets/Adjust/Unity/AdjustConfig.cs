@@ -34,6 +34,9 @@ namespace com.adjust.sdk
         // Android specific members
         internal bool? readImei;
         internal string processName;
+        // iOS specific members
+        internal bool? allowiAdInfoReading;
+        internal bool? allowIdfaReading;
         // Windows specific members
         internal Action<String> logDelegate;
 
@@ -172,6 +175,17 @@ namespace com.adjust.sdk
             this.info2 = info2;
             this.info3 = info3;
             this.info4 = info4;
+        }
+
+        // iOS specific methods.
+        public void setAllowiAdInfoReading(bool allowiAdInfoReading)
+        {
+            this.allowiAdInfoReading = allowiAdInfoReading;
+        }
+
+        public void setAllowIdfaReading(bool allowIdfaReading)
+        {
+            this.allowIdfaReading = allowIdfaReading;
         }
 
         // Android specific methods.

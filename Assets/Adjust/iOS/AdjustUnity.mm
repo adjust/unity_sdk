@@ -90,6 +90,8 @@ extern "C"
                           int isDeviceKnown,
                           int eventBuffering,
                           int sendInBackground,
+                          int allowiAdInfoReading,
+                          int allowIdfaReading,
                           int64_t secretId,
                           int64_t info1,
                           int64_t info2,
@@ -156,6 +158,16 @@ extern "C"
         // Send in background.
         if (sendInBackground != -1) {
             [adjustConfig setSendInBackground:(BOOL)sendInBackground];
+        }
+
+        // Allow iAd info reading.
+        if (allowiAdInfoReading != -1) {
+            [adjustConfig setAllowiAdInfoReading:(BOOL)allowiAdInfoReading];
+        }
+
+        // Allow IDFA reading.
+        if (allowIdfaReading != -1) {
+            [adjustConfig setAllowIdfaReading:(BOOL)allowIdfaReading];
         }
 
         // Device known.
