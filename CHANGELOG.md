@@ -4,6 +4,9 @@
 - Added more aggressive sending retry logic for install session package.
 - Added additional parameters to `ad_revenue` package payload.
 
+#### Changed
+- Built this SDK version with `Unity 2017.4.1`.
+
 #### Native SDKs
 - [iOS@v4.21.0][ios_sdk_v4.21.0]
 - [Android@v4.21.0][android_sdk_v4.21.0]
