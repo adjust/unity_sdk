@@ -1,3 +1,14 @@
+### Version 4.21.2 (15th April 2020)
+#### Fixed
+- Added check for iOS timer source and block existence prior to starting it.
+
+#### Native SDKs
+- [iOS@v4.21.2][ios_sdk_v4.21.2]
+- [Android@v4.21.1][android_sdk_v4.21.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.21.1 (9th April 2020)
 #### Added
 - Added support for Huawei App Gallery install referrer.
@@ -698,6 +709,7 @@
 [ios_sdk_v4.20.0]: https://github.com/adjust/ios_sdk/tree/v4.20.0
 [ios_sdk_v4.21.0]: https://github.com/adjust/ios_sdk/tree/v4.21.0
 [ios_sdk_v4.21.1]: https://github.com/adjust/ios_sdk/tree/v4.21.1
+[ios_sdk_v4.21.2]: https://github.com/adjust/ios_sdk/tree/v4.21.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
