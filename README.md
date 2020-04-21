@@ -22,6 +22,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Google Play Services](#qs-gps)
       * [Proguard settings](#qs-android-proguard)
       * [Google Install Referrer](#qs-install-referrer)
+      * [Huawei Referrer API](#qs-huawei-referrer-api)
       * [Post-build process](#qs-post-build-process)
         * [iOS post-build process](#qs-post-build-ios)
         * [Android post-build process](#qs-post-build-android)
@@ -214,6 +215,10 @@ Google introduced the Google Play Referrer API in order to provide a more reliab
 The Adjust post-build process catches the Google Play Store intent; you can take a few additional steps to add support for the new Google Play Referrer API.
 
 To add support for the Google Play Referrer API, download the [install referrer library][install-referrer-aar] from Maven repository and place the AAR file into your `Plugins/Android` folder.
+
+#### <a id="qs-huawei-referrer-api"></a>Huawei Referrer API
+
+As of v4.21.1, the Adjust SDK supports install tracking on Huawei devices with Huawei App Gallery version 10.4 and higher. No additional integration steps are needed to start using the Huawei Referrer API.
 
 ### <a id="qs-post-build-process"></a>Post-build process
 
