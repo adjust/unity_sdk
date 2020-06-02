@@ -25,8 +25,8 @@ namespace com.adjust.sdk
         // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
         public static string KeyTestOptionsGdprUrl = "gdprUrl";
-        public static string KeyTestOptionsBasePath = "basePath";
-        public static string KeyTestOptionsGdprPath = "gdprPath";
+        public static string KeyTestOptionsSubscriptionUrl = "subscriptionUrl";
+        public static string KeyTestOptionsExtraPath = "extraPath";
         public static string KeyTestOptionsDeleteState = "deleteState";
         public static string KeyTestOptionsUseTestConnectionOptions = "useTestConnectionOptions";
         public static string KeyTestOptionsTimerIntervalInMilliseconds = "timerIntervalInMilliseconds";

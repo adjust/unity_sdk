@@ -345,6 +345,36 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static void trackAppStoreSubscription(AdjustAppStoreSubscription subscription)
+        {
+            if (IsEditor()) { return; }
+
+#if UNITY_IOS
+            AdjustiOS.TrackAppStoreSubscription(subscription);
+#elif UNITY_ANDROID
+            Debug.Log("App Store subscription tracking is only supported for iOS platform.");
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("App Store subscription tracking is only supported for iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void trackPlayStoreSubscription(AdjustPlayStoreSubscription subscription)
+        {
+            if (IsEditor()) { return; }
+
+#if UNITY_IOS
+            Debug.Log("Play Store subscription tracking is only supported for Android platform.");
+#elif UNITY_ANDROID
+            AdjustiOS.TrackPlayStoreSubscription(subscription);
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("Play Store subscription tracking is only supported for Android platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static string getAdid()
         {
             if (IsEditor()) { return string.Empty; }

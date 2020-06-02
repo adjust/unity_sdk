@@ -452,10 +452,88 @@ extern "C"
         }
     }
 
+    void _AdjustTrackAppStoreSubscription(const char* price,
+                                          const char* currency,
+                                          const char* transactionId,
+                                          const char* receipt,
+                                          const char* billingStore,
+                                          const char* transactionDate,
+                                          const char* salesRegion,
+                                          const char* jsonCallbackParameters,
+                                          const char* jsonPartnerParameters) {
+        // Mandatory fields.
+        NSDecimalNumber *mPrice;
+        NSString *mCurrency;
+        NSString *mTransactionId;
+        NSData *mReceipt;
+        NSString *mBillingStore;
+        
+        if (price != NULL) {
+            mPrice = [NSDecimalNumber decimalNumberWithString:[NSString stringWithUTF8String:price]];
+        }
+        
+        if (currency != NULL) {
+            mCurrency = [NSString stringWithUTF8String:currency];
+        }
+        
+        if (transactionId != NULL) {
+            mTransactionId = [NSString stringWithUTF8String:transactionId];
+        }
+        
+        if (receipt != NULL) {
+            mReceipt = [[NSString stringWithUTF8String:receipt] dataUsingEncoding:NSUTF8StringEncoding];
+        }
+        
+        if (billingStore != NULL) {
+            mBillingStore = [NSString stringWithUTF8String:billingStore];
+        }
+        
+        ADJSubscription *subscription = [[ADJSubscription alloc] initWithPrice:mPrice
+                                                                      currency:mCurrency
+                                                                 transactionId:mTransactionId
+                                                                    andReceipt:mReceipt];
+
+        // Optional fields.
+        if (transactionDate != NULL) {
+            NSTimeInterval transactionDateInterval = [[NSString stringWithUTF8String:transactionDate] doubleValue];
+            NSDate *oTransactionDate = [NSDate dateWithTimeIntervalSince1970:transactionDateInterval];
+            [subscription setTransactionDate:oTransactionDate];
+        }
+        
+        if (salesRegion != NULL) {
+            NSString *oSalesRegion = [NSString stringWithUTF8String:salesRegion];
+            [subscription setSalesRegion:oSalesRegion];
+        }
+        
+        // Callback parameters.
+        NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
+        if (arrayCallbackParameters != nil) {
+            NSUInteger count = [arrayCallbackParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayCallbackParameters[i++];
+                NSString *value = arrayCallbackParameters[i++];
+                [subscription addCallbackParameter:key value:value];
+            }
+        }
+
+        NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
+        if (arrayPartnerParameters != nil) {
+            NSUInteger count = [arrayPartnerParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayPartnerParameters[i++];
+                NSString *value = arrayPartnerParameters[i++];
+                [subscription addPartnerParameter:key value:value];
+            }
+        }
+        
+        // Track subscription.
+        [Adjust trackSubscription:subscription];
+    }
+
     void _AdjustSetTestOptions(const char* baseUrl,
-                               const char* basePath,
                                const char* gdprUrl,
-                               const char* gdprPath,
+                               const char* subscriptionUrl,
+                               const char* extraPath,
                                long timerIntervalInMilliseconds,
                                long timerStartInMilliseconds,
                                long sessionIntervalInMilliseconds,
@@ -476,14 +554,14 @@ extern "C"
             [testOptions setGdprUrl:stringGdprUrl];
         }
 
-        NSString *stringBasePath = isStringValid(basePath) == true ? [NSString stringWithUTF8String:basePath] : nil;
-        if (stringBasePath != nil && [stringBasePath length] > 0) {
-            [testOptions setBasePath:stringBasePath];
+        NSString *stringSubscriptionUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:subscriptionUrl] : nil;
+        if (stringSubscriptionUrl != nil) {
+            [testOptions setSubscriptionUrl:stringSubscriptionUrl];
         }
 
-        NSString *stringGdprPath = isStringValid(gdprPath) == true ? [NSString stringWithUTF8String:gdprPath] : nil;
-        if (stringGdprPath != nil && [stringGdprPath length] > 0) {
-            [testOptions setGdprPath:stringGdprPath];
+        NSString *stringExtraPath = isStringValid(extraPath) == true ? [NSString stringWithUTF8String:extraPath] : nil;
+        if (stringExtraPath != nil && [stringExtraPath length] > 0) {
+            [testOptions setExtraPath:stringExtraPath];
         }
 
         testOptions.timerIntervalInMilliseconds = [NSNumber numberWithLong:timerIntervalInMilliseconds];

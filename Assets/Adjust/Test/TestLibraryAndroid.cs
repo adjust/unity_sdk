@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace com.adjust.sdk.test
 {
+#if UNITY_ANDROID
     public class TestLibraryAndroid : ITestLibrary
     {
         private AndroidJavaObject ajoTestLibrary;
@@ -43,4 +44,5 @@ namespace com.adjust.sdk.test
             ajoTestLibrary.Call("addTestDirectory", testDirectory);
         }
     }
+#endif
 }
