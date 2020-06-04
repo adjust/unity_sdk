@@ -367,7 +367,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             Debug.Log("Play Store subscription tracking is only supported for Android platform.");
 #elif UNITY_ANDROID
-            AdjustiOS.TrackPlayStoreSubscription(subscription);
+            AdjustAndroid.TrackPlayStoreSubscription(subscription);
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("Play Store subscription tracking is only supported for Android platform.");
 #else

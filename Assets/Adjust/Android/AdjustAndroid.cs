@@ -374,6 +374,48 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("trackAdRevenue", source, jsonPayload);
         }
 
+        public static void TrackPlayStoreSubscription(AdjustPlayStoreSubscription subscription)
+        {
+            AndroidJavaObject ajoSubscription = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStoreSubscription",
+                Convert.ToInt64(subscription.price),
+                subscription.currency,
+                subscription.sku,
+                subscription.orderId,
+                subscription.signature,
+                subscription.purchaseToken);
+
+            // Check if user has set purchase time for subscription.
+            if (subscription.purchaseTime != null)
+            {
+                ajoSubscription.Call("setPurchaseTime", Convert.ToInt64(subscription.purchaseTime));
+            }
+
+            // Check if user has added any callback parameters to the subscription.
+            if (subscription.callbackList != null)
+            {
+                for (int i = 0; i < subscription.callbackList.Count; i += 2)
+                {
+                    string key = subscription.callbackList[i];
+                    string value = subscription.callbackList[i + 1];
+                    ajoSubscription.Call("addCallbackParameter", key, value);
+                }
+            }
+
+            // Check if user has added any partner parameters to the subscription.
+            if (subscription.partnerList != null)
+            {
+                for (int i = 0; i < subscription.partnerList.Count; i += 2)
+                {
+                    string key = subscription.partnerList[i];
+                    string value = subscription.partnerList[i + 1];
+                    ajoSubscription.Call("addPartnerParameter", key, value);
+                }
+            }
+
+            // Track the subscription.
+            ajcAdjust.CallStatic("trackPlayStoreSubscription", ajoSubscription);
+        }
+
         // Android specific methods.
         public static void OnPause()
         {

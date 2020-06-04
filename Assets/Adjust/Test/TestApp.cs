@@ -56,7 +56,7 @@ namespace com.adjust.sdk.test
 #if UNITY_IOS
             return new TestLibraryiOS(BASE_URL, GDPR_URL, SUBSCRIPTION_URL, CONTROL_URL);
 #elif UNITY_ANDROID
-            return new TestLibraryAndroid(BASE_URL, CONTROL_URL, GDPR_URL);
+            return new TestLibraryAndroid(BASE_URL, GDPR_URL, SUBSCRIPTION_URL, CONTROL_URL);
 #elif (UNITY_WSA || UNITY_WP8)
             return new TestLibraryWindows(BASE_URL, CONTROL_URL, GDPR_URL);
 #else

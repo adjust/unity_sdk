@@ -757,7 +757,46 @@ namespace com.adjust.sdk.test
 
             Adjust.trackAppStoreSubscription(subscription);
 #elif UNITY_ANDROID
+            string price = _command.GetFirstParameterValue("revenue");
+            string currency = _command.GetFirstParameterValue("currency");
+            string purchaseTime = _command.GetFirstParameterValue("transactionDate");
+            string sku = _command.GetFirstParameterValue("productId");
+            string signature = _command.GetFirstParameterValue("receipt");
+            string purchaseToken = _command.GetFirstParameterValue("purchaseToken");
+            string orderId = _command.GetFirstParameterValue("transactionId");
 
+            AdjustPlayStoreSubscription subscription = new AdjustPlayStoreSubscription(
+                price,
+                currency,
+                sku,
+                orderId,
+                signature,
+                purchaseToken);
+            subscription.setPurchaseTime(purchaseTime);
+
+            if (_command.ContainsParameter("callbackParams"))
+            {
+                var callbackParams = _command.Parameters["callbackParams"];
+                for (var i = 0; i < callbackParams.Count; i = i + 2)
+                {
+                    var key = callbackParams[i];
+                    var value = callbackParams[i + 1];
+                    subscription.addCallbackParameter(key, value);
+                }
+            }
+
+            if (_command.ContainsParameter("partnerParams"))
+            {
+                var partnerParams = _command.Parameters["partnerParams"];
+                for (var i = 0; i < partnerParams.Count; i = i + 2)
+                {
+                    var key = partnerParams[i];
+                    var value = partnerParams[i + 1];
+                    subscription.addPartnerParameter(key, value);
+                }
+            }
+
+            Adjust.trackPlayStoreSubscription(subscription);
 #endif
         }
 
