@@ -13,9 +13,10 @@ namespace com.adjust.sdk.test
     public class CommandExecutor
 #endif
     {
+        public string ExtraPath { get; set; }
+
         private Dictionary<int, AdjustConfig> _savedConfigs = new Dictionary<int, AdjustConfig>();
         private Dictionary<int, AdjustEvent> _savedEvents = new Dictionary<int, AdjustEvent>();
-        public string ExtraPath { get; set; }
         private string _baseUrl;
         private string _gdprUrl;
         private string _subscriptionUrl;
@@ -39,7 +40,7 @@ namespace com.adjust.sdk.test
         {
             _command = command;
 
-            TestApp.Log(string.Format("\t>>> EXECUTING METHOD: [{0}.{1}] <<<", _command.ClassName, _command.MethodName));
+            TestApp.Log(string.Format("\tEXECUTING METHOD: [{0}.{1}]", _command.ClassName, _command.MethodName));
 
             try
             {
@@ -69,21 +70,18 @@ namespace com.adjust.sdk.test
                     case "trackAdRevenue": TrackAdRevenue(); break;
                     case "disableThirdPartySharing": DisableThirdPartySharing(); break;
                     case "trackSubscription": TrackSubscription(); break;
-
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
             catch (Exception ex)
             {
-                TestApp.LogError(string.Format("{0} ---- {1}",
+                TestApp.LogError(string.Format("{0} -- {1}",
                     "executeCommand: failed to parse command. Check commands' syntax", ex.ToString()));
             }
         }
 
         private void TestOptions()
         {
-            TestApp.Log("Configuring and setting Testing Options...");
-
             Dictionary<string, string> testOptions = new Dictionary<string, string>();
             testOptions[AdjustUtils.KeyTestOptionsBaseUrl] = _baseUrl;
             testOptions[AdjustUtils.KeyTestOptionsGdprUrl] = _gdprUrl;
@@ -261,15 +259,12 @@ namespace com.adjust.sdk.test
             {
                 var delayStartStr = _command.GetFirstParameterValue("delayStart");
                 var delayStart = double.Parse(delayStartStr);
-                TestApp.Log("Delay start set to: " + delayStart);
                 adjustConfig.setDelayStart(delayStart);
             }
 
             if (_command.ContainsParameter("appSecret"))
             {
                 var appSecretList = _command.Parameters["appSecret"];
-                TestApp.Log("Received AppSecret array: " + string.Join(",", appSecretList.ToArray()));
-
                 if (!string.IsNullOrEmpty(appSecretList[0]) && appSecretList.Count == 5)
                 {
                     long secretId, info1, info2, info3, info4;
@@ -280,10 +275,6 @@ namespace com.adjust.sdk.test
                     long.TryParse(appSecretList[4], out info4);
 
                     adjustConfig.setAppSecret(secretId, info1, info2, info3, info4);
-                }
-                else
-                {
-                    TestApp.LogError("App secret list does not contain 5 elements! Skip setting app secret.");
                 }
             }
 
@@ -342,7 +333,6 @@ namespace com.adjust.sdk.test
                 string localExtraPath = ExtraPath;
                 adjustConfig.setDeferredDeeplinkDelegate(uri =>
                 {
-                    TestApp.Log("deferred_deep_link = " + uri);
                     _testLibrary.AddInfoToSend("deeplink", uri);
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
@@ -353,8 +343,6 @@ namespace com.adjust.sdk.test
                 string localExtraPath = ExtraPath;
                 adjustConfig.setAttributionChangedDelegate(attribution =>
                 {
-                    TestApp.Log("AttributionChanged, attribution = " + attribution);
-
                     _testLibrary.AddInfoToSend("trackerToken", attribution.trackerToken);
                     _testLibrary.AddInfoToSend("trackerName", attribution.trackerName);
                     _testLibrary.AddInfoToSend("network", attribution.network);
@@ -372,8 +360,6 @@ namespace com.adjust.sdk.test
                 string localExtraPath = ExtraPath;
                 adjustConfig.setSessionSuccessDelegate(sessionSuccessResponseData =>
                 {
-                    TestApp.Log("SesssionTrackingSucceeded, sessionSuccessResponseData = " + sessionSuccessResponseData);
-
                     _testLibrary.AddInfoToSend("message", sessionSuccessResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", sessionSuccessResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", sessionSuccessResponseData.Adid);
@@ -390,8 +376,6 @@ namespace com.adjust.sdk.test
                 string localExtraPath = ExtraPath;
                 adjustConfig.setSessionFailureDelegate(sessionFailureResponseData =>
                 {
-                    TestApp.Log("SesssionTrackingFailed, sessionFailureResponseData = " + sessionFailureResponseData);
-
                     _testLibrary.AddInfoToSend("message", sessionFailureResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", sessionFailureResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", sessionFailureResponseData.Adid);
@@ -409,8 +393,6 @@ namespace com.adjust.sdk.test
                 string localExtraPath = ExtraPath;
                 adjustConfig.setEventSuccessDelegate(eventSuccessResponseData =>
                 {
-                    TestApp.Log("EventTrackingSucceeded, eventSuccessResponseData = " + eventSuccessResponseData);
-
                     _testLibrary.AddInfoToSend("message", eventSuccessResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", eventSuccessResponseData.Adid);
@@ -429,8 +411,6 @@ namespace com.adjust.sdk.test
                 string localExtraPath = ExtraPath;
                 adjustConfig.setEventFailureDelegate(eventFailureResponseData =>
                 {
-                    TestApp.Log("EventTrackingFailed, eventFailureResponseData = " + eventFailureResponseData);
-
                     _testLibrary.AddInfoToSend("message", eventFailureResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", eventFailureResponseData.Adid);
@@ -802,7 +782,7 @@ namespace com.adjust.sdk.test
 
         private void CommandNotFound(string className, string methodName)
         {
-            TestApp.Log("adjust test: Method '" + methodName + "' not found for class '" + className + "'");
+            TestApp.Log("Adjust Test: Method '" + methodName + "' not found for class '" + className + "'");
         }
     }
 }

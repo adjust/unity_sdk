@@ -467,44 +467,52 @@ extern "C"
         NSString *mTransactionId;
         NSData *mReceipt;
         NSString *mBillingStore;
-        
+
+        // Price.
         if (price != NULL) {
             mPrice = [NSDecimalNumber decimalNumberWithString:[NSString stringWithUTF8String:price]];
         }
-        
+
+        // Currency.
         if (currency != NULL) {
             mCurrency = [NSString stringWithUTF8String:currency];
         }
-        
+
+        // Transaction ID.
         if (transactionId != NULL) {
             mTransactionId = [NSString stringWithUTF8String:transactionId];
         }
-        
+
+        // Receipt.
         if (receipt != NULL) {
             mReceipt = [[NSString stringWithUTF8String:receipt] dataUsingEncoding:NSUTF8StringEncoding];
         }
-        
+
+        // Billing store (not used ATM, maybe in the future).
         if (billingStore != NULL) {
             mBillingStore = [NSString stringWithUTF8String:billingStore];
         }
-        
+
         ADJSubscription *subscription = [[ADJSubscription alloc] initWithPrice:mPrice
                                                                       currency:mCurrency
                                                                  transactionId:mTransactionId
                                                                     andReceipt:mReceipt];
 
         // Optional fields.
+
+        // Transaction date.
         if (transactionDate != NULL) {
             NSTimeInterval transactionDateInterval = [[NSString stringWithUTF8String:transactionDate] doubleValue];
             NSDate *oTransactionDate = [NSDate dateWithTimeIntervalSince1970:transactionDateInterval];
             [subscription setTransactionDate:oTransactionDate];
         }
-        
+
+        // Sales region.
         if (salesRegion != NULL) {
             NSString *oSalesRegion = [NSString stringWithUTF8String:salesRegion];
             [subscription setSalesRegion:oSalesRegion];
         }
-        
+
         // Callback parameters.
         NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
         if (arrayCallbackParameters != nil) {
@@ -516,6 +524,7 @@ extern "C"
             }
         }
 
+        // Partner parameters.
         NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
         if (arrayPartnerParameters != nil) {
             NSUInteger count = [arrayPartnerParameters count];

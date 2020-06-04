@@ -204,7 +204,7 @@ namespace com.adjust.sdk
 #elif UNITY_ANDROID
             AdjustAndroid.DisableThirdPartySharing();
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("Disable third party sharing is only supported for Android and iOS platforms.");
+            Debug.Log("[Adjust]: Disable third party sharing is only supported for Android and iOS platforms.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -339,7 +339,7 @@ namespace com.adjust.sdk
 #elif UNITY_ANDROID
             AdjustAndroid.TrackAdRevenue(source, payload);
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("Ad revenue tracking is only supported for Android and iOS platforms.");
+            Debug.Log("[Adjust]: Ad revenue tracking is only supported for Android and iOS platforms.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -352,9 +352,9 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.TrackAppStoreSubscription(subscription);
 #elif UNITY_ANDROID
-            Debug.Log("App Store subscription tracking is only supported for iOS platform.");
+            Debug.Log("[Adjust]: App Store subscription tracking is only supported for iOS platform.");
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("App Store subscription tracking is only supported for iOS platform.");
+            Debug.Log("[Adjust]: App Store subscription tracking is only supported for iOS platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -365,11 +365,11 @@ namespace com.adjust.sdk
             if (IsEditor()) { return; }
 
 #if UNITY_IOS
-            Debug.Log("Play Store subscription tracking is only supported for Android platform.");
+            Debug.Log("[Adjust]: Play Store subscription tracking is only supported for Android platform.");
 #elif UNITY_ANDROID
             AdjustAndroid.TrackPlayStoreSubscription(subscription);
 #elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("Play Store subscription tracking is only supported for Android platform.");
+            Debug.Log("[Adjust]: Play Store subscription tracking is only supported for Android platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -616,7 +616,7 @@ namespace com.adjust.sdk
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.SetTestOptions(testOptions);
 #else
-            Debug.Log("Cannot run integration tests. None of the supported platforms selected.");
+            Debug.Log("[Adjust]: Cannot run integration tests. None of the supported platforms selected.");
 #endif
         }
     }

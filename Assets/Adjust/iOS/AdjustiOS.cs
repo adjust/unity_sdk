@@ -212,10 +212,10 @@ namespace com.adjust.sdk
             string receipt = adjustEvent.receipt;
             string transactionId = adjustEvent.transactionId;
             string callbackId = adjustEvent.callbackId;
-            string stringJsonCallBackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
+            string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
 
-            _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, callbackId, isReceiptSet, stringJsonCallBackParameters, stringJsonPartnerParameters);
+            _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, callbackId, isReceiptSet, stringJsonCallbackParameters, stringJsonPartnerParameters);
         }        
 
         public static void SetEnabled(bool enabled)
