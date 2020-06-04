@@ -13,19 +13,21 @@ namespace com.adjust.sdk.test
     public class CommandExecutor
 #endif
     {
+        public string ExtraPath { get; set; }
+
         private Dictionary<int, AdjustConfig> _savedConfigs = new Dictionary<int, AdjustConfig>();
         private Dictionary<int, AdjustEvent> _savedEvents = new Dictionary<int, AdjustEvent>();
-        public string BasePath { get; set; }
-        public string GdprPath { get; set; }
         private string _baseUrl;
         private string _gdprUrl;
+        private string _subscriptionUrl;
         private Command _command;
         private ITestLibrary _testLibrary;
 
-        public CommandExecutor(ITestLibrary testLibrary, string baseUrl, string gdprUrl)
+        public CommandExecutor(ITestLibrary testLibrary, string baseUrl, string gdprUrl, string subscriptionUrl)
         {
             _baseUrl = baseUrl;
             _gdprUrl = gdprUrl;
+            _subscriptionUrl = subscriptionUrl;
             _testLibrary = testLibrary;
         }
             
@@ -38,7 +40,7 @@ namespace com.adjust.sdk.test
         {
             _command = command;
 
-            TestApp.Log(string.Format("\t>>> EXECUTING METHOD: [{0}.{1}] <<<", _command.ClassName, _command.MethodName));
+            TestApp.Log(string.Format("\tEXECUTING METHOD: [{0}.{1}]", _command.ClassName, _command.MethodName));
 
             try
             {
@@ -67,29 +69,27 @@ namespace com.adjust.sdk.test
                     case "gdprForgetMe": GdprForgetMe(); break;
                     case "trackAdRevenue": TrackAdRevenue(); break;
                     case "disableThirdPartySharing": DisableThirdPartySharing(); break;
-
+                    case "trackSubscription": TrackSubscription(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
             catch (Exception ex)
             {
-                TestApp.LogError(string.Format("{0} ---- {1}",
+                TestApp.LogError(string.Format("{0} -- {1}",
                     "executeCommand: failed to parse command. Check commands' syntax", ex.ToString()));
             }
         }
 
         private void TestOptions()
         {
-            TestApp.Log("Configuring and setting Testing Options...");
-
             Dictionary<string, string> testOptions = new Dictionary<string, string>();
             testOptions[AdjustUtils.KeyTestOptionsBaseUrl] = _baseUrl;
             testOptions[AdjustUtils.KeyTestOptionsGdprUrl] = _gdprUrl;
+            testOptions[AdjustUtils.KeyTestOptionsSubscriptionUrl] = _subscriptionUrl;
 
             if (_command.ContainsParameter("basePath"))
             {
-                BasePath = _command.GetFirstParameterValue("basePath");
-                GdprPath = _command.GetFirstParameterValue("basePath");
+                ExtraPath = _command.GetFirstParameterValue("basePath");
             }
             if (_command.ContainsParameter("timerInterval"))
             {
@@ -124,8 +124,7 @@ namespace com.adjust.sdk.test
                     if (teardownOption == "resetSdk")
                     {
                         testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
-                        testOptions[AdjustUtils.KeyTestOptionsBasePath] = BasePath;
-                        testOptions[AdjustUtils.KeyTestOptionsGdprPath] = GdprPath;
+                        testOptions[AdjustUtils.KeyTestOptionsExtraPath] = ExtraPath;
                         testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "true";
                     }
                     if (teardownOption == "deleteState")
@@ -144,8 +143,7 @@ namespace com.adjust.sdk.test
                     if (teardownOption == "sdk")
                     {
                         testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
-                        testOptions[AdjustUtils.KeyTestOptionsBasePath] = null;
-                        testOptions[AdjustUtils.KeyTestOptionsGdprPath] = null;
+                        testOptions[AdjustUtils.KeyTestOptionsExtraPath] = null;
                         testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "false";
                     }
                     if (teardownOption == "test")
@@ -261,15 +259,12 @@ namespace com.adjust.sdk.test
             {
                 var delayStartStr = _command.GetFirstParameterValue("delayStart");
                 var delayStart = double.Parse(delayStartStr);
-                TestApp.Log("Delay start set to: " + delayStart);
                 adjustConfig.setDelayStart(delayStart);
             }
 
             if (_command.ContainsParameter("appSecret"))
             {
                 var appSecretList = _command.Parameters["appSecret"];
-                TestApp.Log("Received AppSecret array: " + string.Join(",", appSecretList.ToArray()));
-
                 if (!string.IsNullOrEmpty(appSecretList[0]) && appSecretList.Count == 5)
                 {
                     long secretId, info1, info2, info3, info4;
@@ -280,10 +275,6 @@ namespace com.adjust.sdk.test
                     long.TryParse(appSecretList[4], out info4);
 
                     adjustConfig.setAppSecret(secretId, info1, info2, info3, info4);
-                }
-                else
-                {
-                    TestApp.LogError("App secret list does not contain 5 elements! Skip setting app secret.");
                 }
             }
 
@@ -339,22 +330,19 @@ namespace com.adjust.sdk.test
             {
                 bool launchDeferredDeeplink = _command.GetFirstParameterValue("deferredDeeplinkCallback") == "true";
                 adjustConfig.setLaunchDeferredDeeplink(launchDeferredDeeplink);
-                string localBasePath = BasePath;
+                string localExtraPath = ExtraPath;
                 adjustConfig.setDeferredDeeplinkDelegate(uri =>
                 {
-                    TestApp.Log("deferred_deep_link = " + uri);
                     _testLibrary.AddInfoToSend("deeplink", uri);
-                    _testLibrary.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
 
             if (_command.ContainsParameter("attributionCallbackSendAll"))
             {
-                string localBasePath = BasePath;
+                string localExtraPath = ExtraPath;
                 adjustConfig.setAttributionChangedDelegate(attribution =>
                 {
-                    TestApp.Log("AttributionChanged, attribution = " + attribution);
-
                     _testLibrary.AddInfoToSend("trackerToken", attribution.trackerToken);
                     _testLibrary.AddInfoToSend("trackerName", attribution.trackerName);
                     _testLibrary.AddInfoToSend("network", attribution.network);
@@ -363,17 +351,15 @@ namespace com.adjust.sdk.test
                     _testLibrary.AddInfoToSend("creative", attribution.creative);
                     _testLibrary.AddInfoToSend("clickLabel", attribution.clickLabel);
                     _testLibrary.AddInfoToSend("adid", attribution.adid);
-                    _testLibrary.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
 
             if (_command.ContainsParameter("sessionCallbackSendSuccess"))
             {
-                string localBasePath = BasePath;
+                string localExtraPath = ExtraPath;
                 adjustConfig.setSessionSuccessDelegate(sessionSuccessResponseData =>
                 {
-                    TestApp.Log("SesssionTrackingSucceeded, sessionSuccessResponseData = " + sessionSuccessResponseData);
-
                     _testLibrary.AddInfoToSend("message", sessionSuccessResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", sessionSuccessResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", sessionSuccessResponseData.Adid);
@@ -381,17 +367,15 @@ namespace com.adjust.sdk.test
                     {
                         _testLibrary.AddInfoToSend("jsonResponse", sessionSuccessResponseData.GetJsonResponse());
                     }
-                    _testLibrary.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
 
             if (_command.ContainsParameter("sessionCallbackSendFailure"))
             {
-                string localBasePath = BasePath;
+                string localExtraPath = ExtraPath;
                 adjustConfig.setSessionFailureDelegate(sessionFailureResponseData =>
                 {
-                    TestApp.Log("SesssionTrackingFailed, sessionFailureResponseData = " + sessionFailureResponseData);
-
                     _testLibrary.AddInfoToSend("message", sessionFailureResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", sessionFailureResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", sessionFailureResponseData.Adid);
@@ -400,17 +384,15 @@ namespace com.adjust.sdk.test
                     {
                         _testLibrary.AddInfoToSend("jsonResponse", sessionFailureResponseData.GetJsonResponse());
                     }
-                    _testLibrary.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
 
             if (_command.ContainsParameter("eventCallbackSendSuccess"))
             {
-                string localBasePath = BasePath;
+                string localExtraPath = ExtraPath;
                 adjustConfig.setEventSuccessDelegate(eventSuccessResponseData =>
                 {
-                    TestApp.Log("EventTrackingSucceeded, eventSuccessResponseData = " + eventSuccessResponseData);
-
                     _testLibrary.AddInfoToSend("message", eventSuccessResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", eventSuccessResponseData.Adid);
@@ -420,17 +402,15 @@ namespace com.adjust.sdk.test
                     {
                         _testLibrary.AddInfoToSend("jsonResponse", eventSuccessResponseData.GetJsonResponse());
                     }
-                    _testLibrary.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
 
             if (_command.ContainsParameter("eventCallbackSendFailure"))
             {
-                string localBasePath = BasePath;
+                string localExtraPath = ExtraPath;
                 adjustConfig.setEventFailureDelegate(eventFailureResponseData =>
                 {
-                    TestApp.Log("EventTrackingFailed, eventFailureResponseData = " + eventFailureResponseData);
-
                     _testLibrary.AddInfoToSend("message", eventFailureResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
                     _testLibrary.AddInfoToSend("adid", eventFailureResponseData.Adid);
@@ -441,7 +421,7 @@ namespace com.adjust.sdk.test
                     {
                         _testLibrary.AddInfoToSend("jsonResponse", eventFailureResponseData.GetJsonResponse());
                     }
-                    _testLibrary.SendInfoToServer(localBasePath);
+                    _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
         }
@@ -715,9 +695,94 @@ namespace com.adjust.sdk.test
             Adjust.trackAdRevenue(source, payload);
         }
 
+        private void TrackSubscription()
+        {
+#if UNITY_IOS
+            string price = _command.GetFirstParameterValue("revenue");
+            string currency = _command.GetFirstParameterValue("currency");
+            string transactionId = _command.GetFirstParameterValue("transactionId");
+            string receipt = _command.GetFirstParameterValue("receipt");
+            string transactionDate = _command.GetFirstParameterValue("transactionDate");
+            string salesRegion = _command.GetFirstParameterValue("salesRegion");
+
+            AdjustAppStoreSubscription subscription = new AdjustAppStoreSubscription(
+                price,
+                currency,
+                transactionId,
+                receipt);
+            subscription.setTransactionDate(transactionDate);
+            subscription.setSalesRegion(salesRegion);
+
+            if (_command.ContainsParameter("callbackParams"))
+            {
+                var callbackParams = _command.Parameters["callbackParams"];
+                for (var i = 0; i < callbackParams.Count; i = i + 2)
+                {
+                    var key = callbackParams[i];
+                    var value = callbackParams[i + 1];
+                    subscription.addCallbackParameter(key, value);
+                }
+            }
+
+            if (_command.ContainsParameter("partnerParams"))
+            {
+                var partnerParams = _command.Parameters["partnerParams"];
+                for (var i = 0; i < partnerParams.Count; i = i + 2)
+                {
+                    var key = partnerParams[i];
+                    var value = partnerParams[i + 1];
+                    subscription.addPartnerParameter(key, value);
+                }
+            }
+
+            Adjust.trackAppStoreSubscription(subscription);
+#elif UNITY_ANDROID
+            string price = _command.GetFirstParameterValue("revenue");
+            string currency = _command.GetFirstParameterValue("currency");
+            string purchaseTime = _command.GetFirstParameterValue("transactionDate");
+            string sku = _command.GetFirstParameterValue("productId");
+            string signature = _command.GetFirstParameterValue("receipt");
+            string purchaseToken = _command.GetFirstParameterValue("purchaseToken");
+            string orderId = _command.GetFirstParameterValue("transactionId");
+
+            AdjustPlayStoreSubscription subscription = new AdjustPlayStoreSubscription(
+                price,
+                currency,
+                sku,
+                orderId,
+                signature,
+                purchaseToken);
+            subscription.setPurchaseTime(purchaseTime);
+
+            if (_command.ContainsParameter("callbackParams"))
+            {
+                var callbackParams = _command.Parameters["callbackParams"];
+                for (var i = 0; i < callbackParams.Count; i = i + 2)
+                {
+                    var key = callbackParams[i];
+                    var value = callbackParams[i + 1];
+                    subscription.addCallbackParameter(key, value);
+                }
+            }
+
+            if (_command.ContainsParameter("partnerParams"))
+            {
+                var partnerParams = _command.Parameters["partnerParams"];
+                for (var i = 0; i < partnerParams.Count; i = i + 2)
+                {
+                    var key = partnerParams[i];
+                    var value = partnerParams[i + 1];
+                    subscription.addPartnerParameter(key, value);
+                }
+            }
+
+            Adjust.trackPlayStoreSubscription(subscription);
+#endif
+        }
+
         private void CommandNotFound(string className, string methodName)
         {
-            TestApp.Log("adjust test: Method '" + methodName + "' not found for class '" + className + "'");
+            TestApp.Log("Adjust Test: Method '" + methodName + "' not found for class '" + className + "'");
         }
     }
 }

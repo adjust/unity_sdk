@@ -2,14 +2,15 @@ using UnityEngine;
 
 namespace com.adjust.sdk.test
 {
+#if UNITY_ANDROID
     public class TestLibraryAndroid : ITestLibrary
     {
         private AndroidJavaObject ajoTestLibrary;
         private CommandListenerAndroid onCommandReceivedListener;
 
-        public TestLibraryAndroid(string baseUrl, string controlUrl, string gdprUrl)
+        public TestLibraryAndroid(string baseUrl, string gdprUrl, string subscriptionUrl, string controlUrl)
         {
-            CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
+            CommandExecutor commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl, subscriptionUrl);
             onCommandReceivedListener = new CommandListenerAndroid(commandExecutor);
             ajoTestLibrary = new AndroidJavaObject(
                 "com.adjust.test.TestLibrary",
@@ -43,4 +44,5 @@ namespace com.adjust.sdk.test
             ajoTestLibrary.Call("addTestDirectory", testDirectory);
         }
     }
+#endif
 }

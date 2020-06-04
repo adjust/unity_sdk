@@ -25,6 +25,8 @@ namespace com.adjust.sdk
         // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
         public static string KeyTestOptionsGdprUrl = "gdprUrl";
+        public static string KeyTestOptionsSubscriptionUrl = "subscriptionUrl";
+        public static string KeyTestOptionsExtraPath = "extraPath";
         public static string KeyTestOptionsBasePath = "basePath";
         public static string KeyTestOptionsGdprPath = "gdprPath";
         public static string KeyTestOptionsDeleteState = "deleteState";
@@ -225,14 +227,13 @@ namespace com.adjust.sdk
             AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
             ajoTestOptions.Set<String>("baseUrl", testOptionsMap[KeyTestOptionsBaseUrl]);
             ajoTestOptions.Set<String>("gdprUrl", testOptionsMap[KeyTestOptionsGdprUrl]);
+            ajoTestOptions.Set<String>("subscriptionUrl", testOptionsMap[KeyTestOptionsSubscriptionUrl]);
 
-            if (testOptionsMap.ContainsKey(KeyTestOptionsBasePath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsBasePath]))
+            if (testOptionsMap.ContainsKey(KeyTestOptionsExtraPath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsExtraPath]))
             {
-                ajoTestOptions.Set<String>("basePath", testOptionsMap[KeyTestOptionsBasePath]);
-            }
-            if (testOptionsMap.ContainsKey(KeyTestOptionsGdprPath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsGdprPath]))
-            {
-                ajoTestOptions.Set<String>("gdprPath", testOptionsMap[KeyTestOptionsGdprPath]);
+                ajoTestOptions.Set<String>("basePath", testOptionsMap[KeyTestOptionsExtraPath]);
+                ajoTestOptions.Set<String>("gdprPath", testOptionsMap[KeyTestOptionsExtraPath]);
+                ajoTestOptions.Set<String>("subscriptionPath", testOptionsMap[KeyTestOptionsExtraPath]);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsDeleteState) && ajoCurrentActivity != null)
             {

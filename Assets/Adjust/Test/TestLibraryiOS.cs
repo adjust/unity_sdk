@@ -8,9 +8,9 @@ namespace com.adjust.sdk.test
 #if UNITY_IOS
         private CommandExecutor _commandExecutor;
 
-        public TestLibraryiOS(string baseUrl, string controlUrl, string gdprUrl)
+        public TestLibraryiOS(string baseUrl, string gdprUrl, string subscriptionUrl, string controlUrl)
         {
-            _commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl);
+            _commandExecutor = new CommandExecutor(this, baseUrl, gdprUrl, subscriptionUrl);
             TestLibraryBridgeiOS.Initialize(baseUrl, controlUrl);
         }
 
