@@ -593,7 +593,7 @@ Currently we support the following `source` parameter values:
 
 - `AdjustConfig.AdjustAdRevenueSourceMopub` - represents the [MoPub mediation platform][sdk2sdk-mopub]
 
-### <a id="af-subscriptions"></a>Subscription tracking
+### <a id="ad-subscriptions"></a>Subscription tracking
 
 **Note**: This feature is only available in the SDK v4.22.0 and above.
 
@@ -987,7 +987,7 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
 
 The Adjust SDK is licensed under the MIT License.
 
-Copyright (c) 2012-2019 Adjust GmbH, http://www.adjust.com
+Copyright (c) 2012-2020 Adjust GmbH, http://www.adjust.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
