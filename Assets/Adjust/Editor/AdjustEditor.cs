@@ -57,6 +57,7 @@ public class AdjustEditor : AssetPostprocessor
         assetsToExport.Add(assetsPath + "/iOS/ADJLogger.h");
         assetsToExport.Add(assetsPath + "/iOS/ADJSessionFailure.h");
         assetsToExport.Add(assetsPath + "/iOS/ADJSessionSuccess.h");
+        assetsToExport.Add(assetsPath + "/iOS/ADJSubscription.h");
         assetsToExport.Add(assetsPath + "/iOS/Adjust.h");
         assetsToExport.Add(assetsPath + "/iOS/AdjustiOS.cs");
         assetsToExport.Add(assetsPath + "/iOS/AdjustSdk.a");
@@ -68,6 +69,7 @@ public class AdjustEditor : AssetPostprocessor
         assetsToExport.Add(assetsPath + "/Prefab/Adjust.prefab");
 
         assetsToExport.Add(assetsPath + "/Unity/Adjust.cs");
+        assetsToExport.Add(assetsPath + "/Unity/AdjustAppStoreSubscription.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustAttribution.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustConfig.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustEnvironment.cs");
@@ -75,6 +77,7 @@ public class AdjustEditor : AssetPostprocessor
         assetsToExport.Add(assetsPath + "/Unity/AdjustEventFailure.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustEventSuccess.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustLogLevel.cs");
+        assetsToExport.Add(assetsPath + "/Unity/AdjustPlayStoreSubscription.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustSessionFailure.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustSessionSuccess.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustUtils.cs");
