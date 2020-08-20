@@ -123,7 +123,7 @@ public class AdjustEditor : AssetPostprocessor
     {
         if (enabled != isBuildingForiOS14Enabled)
         {
-            UnityEngine.Debug.Log("[Adjust]: Togging iOS 14 build support to: " + enabled);
+            UnityEngine.Debug.Log("[Adjust]: Toggling iOS 14 build support to: " + enabled);
             Menu.SetChecked(ios14MenuEntryName, enabled);
             EditorPrefs.SetBool(ios14EditorPrefsKey, enabled);
             isBuildingForiOS14Enabled = enabled;
