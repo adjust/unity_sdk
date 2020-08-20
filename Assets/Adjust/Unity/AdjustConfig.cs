@@ -111,7 +111,7 @@ namespace com.adjust.sdk
             this.urlStrategy = urlStrategy;
         }
 
-        public void deactivateSkAdNetworkHandling()
+        public void deactivateSKAdNetworkHandling()
         {
             this.skAdNetworkHandling = true;
         }
