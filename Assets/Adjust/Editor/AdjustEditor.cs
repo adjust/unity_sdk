@@ -15,32 +15,31 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor : AssetPostprocessor
 {
     private static bool isPostProcessingEnabled = true;
-    private static bool isBuildingForiOS14Enabled = false;
-    private static String ios14EditorPrefsKey = "isBuildingForiOS14Enabled";
-    private const String ios14MenuEntryName = "Assets/Adjust/Build For iOS 14";
+    private static String ios14EditorPrefsKey = "adjustiOS14Support";
 
-    static AdjustEditor()
+    [MenuItem("Assets/Adjust/Is iOS 14 support enabled?")]
+    public static void IsiOS14SupportEnabled()
     {
-        EditorApplication.delayCall += () =>
-        {
-            ToggleiOS14Choice(EditorPrefs.GetBool(ios14EditorPrefsKey, false));
-        };
+        bool isEnabled = EditorPrefs.GetBool(ios14EditorPrefsKey, false);
+        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is " + (isEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem(ios14MenuEntryName)]
-    public static void BuildForIOS14()
+    [MenuItem("Assets/Adjust/Toggle iOS 14 support")]
+    public static void ToggleiOS14Support()
     {
-        ToggleiOS14Choice(!isBuildingForiOS14Enabled);
+        bool isEnabled = !EditorPrefs.GetBool(ios14EditorPrefsKey, false);
+        EditorPrefs.SetBool(ios14EditorPrefsKey, isEnabled);
+        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is now " + (isEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem("Assets/Adjust/Check Post Processing Permission")]
-    public static void CheckPostProcessingPermission()
+    [MenuItem("Assets/Adjust/Is Post Processing Enabled?")]
+    public static void IsPostProcessingEnabled()
     {
         EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem("Assets/Adjust/Change Post Processing Permission")]
-    public static void ChangePostProcessingPermission()
+    [MenuItem("Assets/Adjust/Toggle Post Processing Permission")]
+    public static void TogglePostProcessingPermission()
     {
         isPostProcessingEnabled = !isPostProcessingEnabled;
         EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
@@ -119,17 +118,6 @@ public class AdjustEditor : AssetPostprocessor
             ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
     }
 
-    public static void ToggleiOS14Choice(bool enabled)
-    {
-        if (enabled != isBuildingForiOS14Enabled)
-        {
-            UnityEngine.Debug.Log("[Adjust]: Toggling iOS 14 build support to: " + enabled);
-            Menu.SetChecked(ios14MenuEntryName, enabled);
-            EditorPrefs.SetBool(ios14EditorPrefsKey, enabled);
-            isBuildingForiOS14Enabled = enabled;
-        }
-    }
-
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string projectPath)
     {
@@ -189,7 +177,7 @@ public class AdjustEditor : AssetPostprocessor
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
             UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
 
-            if (isBuildingForiOS14Enabled)
+            if (EditorPrefs.GetBool(ios14EditorPrefsKey, false))
             {
                 UnityEngine.Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
 
