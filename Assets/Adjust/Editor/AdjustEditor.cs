@@ -15,6 +15,23 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor : AssetPostprocessor
 {
     private static bool isPostProcessingEnabled = true;
+    private static bool isBuildingForiOS14Enabled = false;
+    private static String ios14EditorPrefsKey = "isBuildingForiOS14Enabled";
+    private const String ios14MenuEntryName = "Assets/Adjust/Build For iOS 14";
+
+    static AdjustEditor()
+    {
+        EditorApplication.delayCall += () =>
+        {
+            ToggleiOS14Choice(EditorPrefs.GetBool(ios14EditorPrefsKey, false));
+        };
+    }
+
+    [MenuItem(ios14MenuEntryName)]
+    public static void BuildForIOS14()
+    {
+        ToggleiOS14Choice(!isBuildingForiOS14Enabled);
+    }
 
     [MenuItem("Assets/Adjust/Check Post Processing Permission")]
     public static void CheckPostProcessingPermission()
@@ -30,7 +47,7 @@ public class AdjustEditor : AssetPostprocessor
     }
 
     [MenuItem("Assets/Adjust/Export Unity Package")]
-    static void ExportAdjustUnityPackage()
+    public static void ExportAdjustUnityPackage()
     {
         string exportedFileName = "Adjust.unitypackage";
         string assetsPath = "Assets/Adjust";
@@ -102,6 +119,17 @@ public class AdjustEditor : AssetPostprocessor
             ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
     }
 
+    public static void ToggleiOS14Choice(bool enabled)
+    {
+        if (enabled != isBuildingForiOS14Enabled)
+        {
+            UnityEngine.Debug.Log("[Adjust]: Togging iOS 14 build support to: " + enabled);
+            Menu.SetChecked(ios14MenuEntryName, enabled);
+            EditorPrefs.SetBool(ios14EditorPrefsKey, enabled);
+            isBuildingForiOS14Enabled = enabled;
+        }
+    }
+
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string projectPath)
     {
@@ -134,9 +162,14 @@ public class AdjustEditor : AssetPostprocessor
             PBXProject xcodeProject = new PBXProject();
             xcodeProject.ReadFromFile(xcodeProjectPath);
 
-            // The Adjust SDK needs two frameworks to be added to the project:
-            // - AdSupport.framework
-            // - iAd.framework
+            // The Adjust SDK will try to add following frameworks to your project:
+            // - AdSupport.framework (needed for access to IDFA value)
+            // - iAd.framework (needed in case you are running ASA campaigns)
+            // - CoreTelephony.framework (needed to get information about network type user is connected to)
+            // - StoreKit.framework (needed for communication with SKAdNetwork framework)
+            // - AppTrackingTransparency.framework (needed for information about user's consent to be tracked)
+
+            // In case you don't need any of these, feel free to remove them from your app.
 
 #if UNITY_2019_3_OR_NEWER
             string xcodeTarget = xcodeProject.GetUnityFrameworkTargetGuid();
@@ -155,6 +188,19 @@ public class AdjustEditor : AssetPostprocessor
             UnityEngine.Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
             UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
+
+            if (isBuildingForiOS14Enabled)
+            {
+                UnityEngine.Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
+
+                UnityEngine.Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
+                UnityEngine.Debug.Log("[Adjust]: StoreKit.framework added successfully.");
+
+                UnityEngine.Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
+                UnityEngine.Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+            }
 
             // The Adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
