@@ -17,14 +17,14 @@ public class AdjustEditor : AssetPostprocessor
     private static bool isPostProcessingEnabled = true;
     private static String ios14EditorPrefsKey = "adjustiOS14Support";
 
-    [MenuItem("Assets/Adjust/Is iOS 14 support enabled?")]
+    [MenuItem("Assets/Adjust/Is iOS 14 Support Enabled?")]
     public static void IsiOS14SupportEnabled()
     {
         bool isEnabled = EditorPrefs.GetBool(ios14EditorPrefsKey, false);
         EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is " + (isEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem("Assets/Adjust/Toggle iOS 14 support")]
+    [MenuItem("Assets/Adjust/Toggle iOS 14 Support")]
     public static void ToggleiOS14Support()
     {
         bool isEnabled = !EditorPrefs.GetBool(ios14EditorPrefsKey, false);
