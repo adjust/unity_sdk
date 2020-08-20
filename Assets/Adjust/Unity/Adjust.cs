@@ -22,6 +22,7 @@ namespace com.adjust.sdk
 
 #if UNITY_IOS
         // Delegate references for iOS callback triggering
+        private static Action<int> authorizationStatusDelegate = null;
         private static Action<string> deferredDeeplinkDelegate = null;
         private static Action<AdjustEventSuccess> eventSuccessDelegate = null;
         private static Action<AdjustEventFailure> eventFailureDelegate = null;
@@ -375,6 +376,22 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static void requestTrackingAuthorizationWithCompletionHandler(Action<int> statusCallback)
+        {
+            if (IsEditor()) { return; }
+
+#if UNITY_IOS
+            Adjust.authorizationStatusDelegate = statusCallback;
+            AdjustiOS.RequestTrackingAuthorizationWithCompletionHandler();
+#elif UNITY_ANDROID
+            Debug.Log("[Adjust]: Requesting tracking authorization is only supported for iOS platform.");
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Requesting tracking authorization is only supported for iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static string getAdid()
         {
             if (IsEditor()) { return string.Empty; }
@@ -592,6 +609,20 @@ namespace com.adjust.sdk
             }
 
             Adjust.deferredDeeplinkDelegate(deeplinkURL);
+        }
+
+        public void GetAuthorizationStatus(string authorizationStatus)
+        {
+            if (IsEditor()) { return; }
+
+            if (Adjust.authorizationStatusDelegate == null)
+            {
+                Debug.Log("[Adjust]: Authorization status delegate was not set.");
+                return;
+            }
+
+            Adjust.authorizationStatusDelegate(Int16.Parse(authorizationStatus));
+            Adjust.authorizationStatusDelegate = null;
         }
 #endif
 
