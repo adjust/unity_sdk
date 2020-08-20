@@ -5,12 +5,15 @@ namespace com.adjust.sdk
     public class AdjustConfig
     {
         public const string AdjustAdRevenueSourceMopub = "mopub";
+        public const string AdjustUrlStrategyChina = "china";
+        public const string AdjustUrlStrategyIndia = "india";
 
         internal string appToken;
         internal string sceneName;
         internal string userAgent;
         internal string defaultTracker;
         internal string externalDeviceId;
+        internal string urlStrategy;
         internal long? info1;
         internal long? info2;
         internal long? info3;
@@ -21,6 +24,7 @@ namespace com.adjust.sdk
         internal bool? sendInBackground;
         internal bool? eventBufferingEnabled;
         internal bool? allowSuppressLogLevel;
+        internal bool? skAdNetworkHandling;
         internal bool launchDeferredDeeplink;
         internal AdjustLogLevel? logLevel;
         internal AdjustEnvironment environment;
@@ -100,6 +104,16 @@ namespace com.adjust.sdk
         public void setIsDeviceKnown(bool isDeviceKnown)
         {
             this.isDeviceKnown = isDeviceKnown;
+        }
+
+        public void setUrlStrategy(String urlStrategy)
+        {
+            this.urlStrategy = urlStrategy;
+        }
+
+        public void deactivateSKAdNetworkHandling()
+        {
+            this.skAdNetworkHandling = true;
         }
 
         public void setDeferredDeeplinkDelegate(Action<string> deferredDeeplinkDelegate, string sceneName = "Adjust")

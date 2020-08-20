@@ -22,6 +22,7 @@ namespace com.adjust.sdk
 
 #if UNITY_IOS
         // Delegate references for iOS callback triggering
+        private static List<Action<int>> authorizationStatusDelegates = null;
         private static Action<string> deferredDeeplinkDelegate = null;
         private static Action<AdjustEventSuccess> eventSuccessDelegate = null;
         private static Action<AdjustEventFailure> eventFailureDelegate = null;
@@ -375,6 +376,26 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static void requestTrackingAuthorizationWithCompletionHandler(Action<int> statusCallback)
+        {
+            if (IsEditor()) { return; }
+
+#if UNITY_IOS
+            if (Adjust.authorizationStatusDelegates == null)
+            {
+                Adjust.authorizationStatusDelegates = new List<Action<int>>();
+            }
+            Adjust.authorizationStatusDelegates.Add(statusCallback);
+            AdjustiOS.RequestTrackingAuthorizationWithCompletionHandler();
+#elif UNITY_ANDROID
+            Debug.Log("[Adjust]: Requesting tracking authorization is only supported for iOS platform.");
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Requesting tracking authorization is only supported for iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static string getAdid()
         {
             if (IsEditor()) { return string.Empty; }
@@ -592,6 +613,23 @@ namespace com.adjust.sdk
             }
 
             Adjust.deferredDeeplinkDelegate(deeplinkURL);
+        }
+
+        public void GetAuthorizationStatus(string authorizationStatus)
+        {
+            if (IsEditor()) { return; }
+
+            if (Adjust.authorizationStatusDelegates == null)
+            {
+                Debug.Log("[Adjust]: Authorization status delegates were not set.");
+                return;
+            }
+
+            foreach (Action<int> callback in Adjust.authorizationStatusDelegates)
+            {
+                callback(Int16.Parse(authorizationStatus));
+            }
+            Adjust.authorizationStatusDelegates.Clear();
         }
 #endif
 

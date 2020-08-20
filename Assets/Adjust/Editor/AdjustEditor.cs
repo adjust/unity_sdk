@@ -15,22 +15,38 @@ using UnityEditor.iOS.Xcode;
 public class AdjustEditor : AssetPostprocessor
 {
     private static bool isPostProcessingEnabled = true;
+    private static String ios14EditorPrefsKey = "adjustiOS14Support";
 
-    [MenuItem("Assets/Adjust/Check Post Processing Permission")]
-    public static void CheckPostProcessingPermission()
+    [MenuItem("Assets/Adjust/Is iOS 14 Support Enabled?")]
+    public static void IsiOS14SupportEnabled()
+    {
+        bool isEnabled = EditorPrefs.GetBool(ios14EditorPrefsKey, false);
+        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is " + (isEnabled ? "enabled." : "disabled."), "OK");
+    }
+
+    [MenuItem("Assets/Adjust/Toggle iOS 14 Support")]
+    public static void ToggleiOS14Support()
+    {
+        bool isEnabled = !EditorPrefs.GetBool(ios14EditorPrefsKey, false);
+        EditorPrefs.SetBool(ios14EditorPrefsKey, isEnabled);
+        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is now " + (isEnabled ? "enabled." : "disabled."), "OK");
+    }
+
+    [MenuItem("Assets/Adjust/Is Post Processing Enabled?")]
+    public static void IsPostProcessingEnabled()
     {
         EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
-    [MenuItem("Assets/Adjust/Change Post Processing Permission")]
-    public static void ChangePostProcessingPermission()
+    [MenuItem("Assets/Adjust/Toggle Post Processing Permission")]
+    public static void TogglePostProcessingPermission()
     {
         isPostProcessingEnabled = !isPostProcessingEnabled;
         EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is now " + (isPostProcessingEnabled ? "enabled." : "disabled."), "OK");
     }
 
     [MenuItem("Assets/Adjust/Export Unity Package")]
-    static void ExportAdjustUnityPackage()
+    public static void ExportAdjustUnityPackage()
     {
         string exportedFileName = "Adjust.unitypackage";
         string assetsPath = "Assets/Adjust";
@@ -134,9 +150,14 @@ public class AdjustEditor : AssetPostprocessor
             PBXProject xcodeProject = new PBXProject();
             xcodeProject.ReadFromFile(xcodeProjectPath);
 
-            // The Adjust SDK needs two frameworks to be added to the project:
-            // - AdSupport.framework
-            // - iAd.framework
+            // The Adjust SDK will try to add following frameworks to your project:
+            // - AdSupport.framework (needed for access to IDFA value)
+            // - iAd.framework (needed in case you are running ASA campaigns)
+            // - CoreTelephony.framework (needed to get information about network type user is connected to)
+            // - StoreKit.framework (needed for communication with SKAdNetwork framework)
+            // - AppTrackingTransparency.framework (needed for information about user's consent to be tracked)
+
+            // In case you don't need any of these, feel free to remove them from your app.
 
 #if UNITY_2019_3_OR_NEWER
             string xcodeTarget = xcodeProject.GetUnityFrameworkTargetGuid();
@@ -155,6 +176,19 @@ public class AdjustEditor : AssetPostprocessor
             UnityEngine.Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
             UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
+
+            if (EditorPrefs.GetBool(ios14EditorPrefsKey, false))
+            {
+                UnityEngine.Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
+
+                UnityEngine.Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
+                UnityEngine.Debug.Log("[Adjust]: StoreKit.framework added successfully.");
+
+                UnityEngine.Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
+                UnityEngine.Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+            }
 
             // The Adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
