@@ -110,6 +110,21 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setExternalDeviceId", adjustConfig.externalDeviceId);
             }
 
+            // Check if user has set custom URL strategy.
+            if (adjustConfig.urlStrategy != null)
+            {
+                if (adjustConfig.urlStrategy == AdjustConfig.AdjustUrlStrategyChina)
+                {
+                    AndroidJavaObject ajoUrlStrategyChina = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("URL_STRATEGY_CHINA");
+                    ajoAdjustConfig.Call("setUrlStrategy", ajoUrlStrategyChina);
+                }
+                else if (adjustConfig.urlStrategy == AdjustConfig.AdjustUrlStrategyIndia)
+                {
+                    AndroidJavaObject ajoUrlStrategyIndia = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("URL_STRATEGY_INDIA");
+                    ajoAdjustConfig.Call("setUrlStrategy", ajoUrlStrategyIndia);
+                }
+            }
+
             // Check if user has set app secret.
             if (IsAppSecretSet(adjustConfig))
             {
