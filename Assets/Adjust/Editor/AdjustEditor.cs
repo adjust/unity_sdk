@@ -206,6 +206,11 @@ public class AdjustEditor : AssetPostprocessor
 
             UnityEngine.Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
 
+            if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/iOS/AdjustSigSdk.a"))
+            {
+                xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-force_load $(PROJECT_DIR)/Libraries/Adjust/iOS/AdjustSigSdk.a");
+            }
+
             // Save the changes to Xcode project file.
             xcodeProject.WriteToFile(xcodeProjectPath);
 #endif
