@@ -8,7 +8,7 @@
 
 **注**：バージョン**4.21.0**以降より、Adjust Unity SDKは**Unity 2017.4.1以降**のバージョンと互換性があります。
 
-Read this in other languages：[English] [en-readme]、[中文] [zh-readme]、[日本語] [ja-readme]、[한국어] [ko-readme]
+Read this in other languages：[English][en-readme]、[中文][zh-readme]、[日本語][ja-readme]、[한국어][ko-readme]
 
 ## 目次
 
@@ -16,23 +16,23 @@ Read this in other languages：[English] [en-readme]、[中文] [zh-readme]、[�
 
    * [基本的な連携方法](#qs-getting-started)
       * [SDKダウンロード](#qs-get-sdk)
-      * [プロジェクトにSDKを追加](#sdk-add)
-      * [アプリにSDKを実装](#sdk-integrate)
-      * [Adjustログ](#adjust-logging)
-      * [Google Play 開発者サービス] (#qs-gps)
-      * [Proguardの設定] (#qs-android-proguard)
-      * [Google インストールリファラ] (#qs-install-referrer)
+      * [プロジェクトにSDKを追加](#qs-sdk-add)
+      * [アプリにSDKを実装](#qs-sdk-integrate)
+      * [Adjustログ](#qs-adjust-logging)
+      * [Google Play 開発者サービス](#qs-gps)
+      * [Proguardの設定](#qs-android-proguard)
+      * [Google インストールリファラ](#qs-install-referrer)
       * [Huawei リファラAPI](#qs-huawei-referrer-api)
-      * [ポストビルドプロセス] (#qs-post-build-process)
-        * [iOSポストビルドプロセス] (#qs-post-build-ios)
-        * [Androidポストビルドプロセス] (#qs-post-build-android)
-      * [SDK シグネチャー] (#sdk-signature)
+      * [ポストビルドプロセス](#qs-post-build-process)
+        * [iOSポストビルドプロセス](#qs-post-build-ios)
+        * [Androidポストビルドプロセス](#qs-post-build-android)
+      * [SDK シグネチャー](#qs-sdk-signature)
 
 ### ディープリンク
 
-   * [ディープリンクの概要] (#dl)
-   * [スタンダードディープリンク] (#deeplinking-standard)
-   * [ディファードディープリンク](#deeplinking-deferred)
+   * [ディープリンクの概要](#dl)
+   * [スタンダードディープリンク](#dl-standard)
+   * [ディファードディープリンク](#dl-deferred)
    * [Androidアプリでのディープリンク処理](#dl-app-android)
    * [iOSアプリでのディープリンク処理](#dl-app-ios)
       
@@ -40,7 +40,7 @@ Read this in other languages：[English] [en-readme]、[中文] [zh-readme]、[�
 
    * [イベントトラッキング](#et-tracking)
    * [収益のトラッキング](#et-revenue)
-   * [収益の重複排除](#revenue-deduplication)
+   * [収益の重複排除](#et-revenue-deduplication)
    * [アプリ内購入の検証](#et-purchase-verification)
 
 ### カスタムパラメータ
@@ -79,20 +79,20 @@ Read this in other languages：[English] [en-readme]、[中文] [zh-readme]、[�
    * [GDPRの忘れられる権利](#ad-gdpr-forget-me)
    * [サードパーティーとの共有を無効にする](#ad-disable-third-party-sharing)
 
-###テストとトラブルシューティング
+### テストとトラブルシューティング
    * [iOSデバッグ情報](#tt-debug-ios)
 
-###ライセンス
+### ライセンス
   * [ライセンス契約](#license)
 
 
 ## クイックスタート
 
-### <a id="qs-getting-started"> </a>基本的な連携方法
+### <a id="qs-getting-started"></a>基本的な連携方法
 
 Adjust SDKをUnityプロジェクトに連携させるステップをご説明します。
 
-### <a id="qs-get-sdk"> </a> SDKダウンロード
+### <a id="qs-get-sdk"></a>SDKダウンロード
 
 バージョン`4.19.2` 以降より、[Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890)からAdjust SDKをアプリに追加できます。または、[リリースページ][リリース]から最新バージョンをダウンロードすることもできます。
 
@@ -100,7 +100,7 @@ Adjust SDKをUnityプロジェクトに連携させるステップをご説明�
 
 Unityエディターでプロジェクトを開き、`Assets → Import Package → Custom Package` と進み、ダウンロードしたUnityパッケージファイルを選択してください。
 
-！[] [import_package]
+![][import_package]
 
 ### <a id="qs-integrate-sdk"></a>アプリにSDKを実装
 
@@ -116,7 +116,7 @@ Unityエディターでプロジェクトを開き、`Assets → Import Package 
 * [ログレベル](#adjust-logging)
 * [環境設定](#environment)
 
-！[] [adjust_editor]
+![][adjust_editor]
 
 <a id="app-token"> `{YourAppToken}`　にアプリトークンを入力してください。 [この手順](https://help.adjust.com/en/dashboard/apps/app-settings#view-your-app-token)は管理画面で確認できます。 
 
@@ -132,7 +132,7 @@ Unityエディターでプロジェクトを開き、`Assets → Import Package 
 
 このシーンのソースはAssets / Adjust / ExampleGUI / ExampleGUI.csにあります。
 
-### <a id="qs-adjust-logging"></a>Adjustロギング
+### <a id="qs-adjust-logging"></a> Adjustロギング
 
 `Log Level` に設定する値を次のいずれかに変更すると、記録するログの粒度を調節できます。
 
@@ -167,19 +167,19 @@ adjustConfig.setLogDelegate(msg=> Debug.Log(msg));
 Adjust.start(adjustConfig);
 ```
 
-### <a id="qs-gps"></a>Google Play 開発者サービス
+### <a id="qs-gps"></a> Google Play 開発者サービス
 
 2014年8月1日以降、Google Playストア内のアプリは、デバイスの特定のために[Google広告 ID][google_ad_id]の使用が義務付けられています。Adjust SDKでGoogle 広告 IDを使うためには、Google Play 開発者サービス[google_play_services]を連携させる必要があります。連携を行うには、`google-play-services_lib` フォルダ(Android SDKの一部)をUnityプロジェクトの`Assets/Plugins/Android` フォルダにコピーしてください。
 
 Android SDKをダウンロードするには主に2つの方法があります。`Android SDK Manager` が入ったツールをお使いの場合は、Android SDK toolのダウンロードとインストールができるクイックリンクが提供されています。インストールが完了したら、`SDK_FOLDER/extras/google/google_play_services/libproject/` フォルダのライブラリをご覧ください。
 
-！[] [android_sdk_location]
+![][android_sdk_location]
 
 Android SDK Managerの入ったツールをお使いでない場合は、公式ページから単独SDK[Android SDK] [android_sdk_download]をダウンロードしてください。次に、`Google が提供するSDK Readme.txt` の指示に従ってAndoird SDKツールをダウンロードしてください。これは、Android SDKフォルダ内にあります。
 
 **更新**：Android SDKの最新バージョンでは、GoogleはSDKのルートフォルダ内のGoogle Play 開発者サービスフォルダの構造を変更しています。新バージョンはこのように表示されます。
 
-！[] [android_sdk_location_new]
+![][android_sdk_location_new]
 
 Adjust SDKが必要とするGoogle Play 開発者サービスのライブラリの一部、つまり、basementのみを追加することができるようになりました。これを行うためには、`play-services-basement-x.y.z.aar` ファイルを``Assets/Plugins/Android``フォルダに追加してください。 
 
@@ -274,7 +274,7 @@ Adjust.start(adjustConfig);
 これでSDKシグネチャーがアプリに実装されました。 
 
 
-##ディープリンク
+## ディープリンク
 
 ### <a id="dl"> </a>ディープリンクの概要
 
@@ -349,7 +349,7 @@ Adjust.start(adjustConfig);
 
 ### <a id="et-tracking"></a>イベントのトラッキング
 
-Adjustを使ってアプリ内のイベントをトラッキングすることができます。例えば、ボタンのタップを毎回トラッキングされたい場合は、管理画面の[create a new event token](https://help.adjust.com/en/tracking/in-app-events/basic-event-setup#generate-event-tokens -in-the-adjust-dashboard)にてイベントトークンを作成します。仮にそのイベントトークンを`abc123`とします。クリックをトラッキングするため、ボタンのクリックハンドラーメソッドに以下のような記述を追加します。
+Adjustを使ってアプリ内のイベントをトラッキングすることができます。例えば、ボタンのタップを毎回トラッキングされたい場合は、管理画面の[create a new event token](https://help.adjust.com/en/tracking/in-app-events/basic-event-setup#generate-event-tokens-in-the-adjust-dashboard)にてイベントトークンを作成します。仮にそのイベントトークンを`abc123`とします。クリックをトラッキングするため、ボタンのクリックハンドラーメソッドに以下のような記述を追加します。
 
 ```cs
 AdjustEvent adjustEvent = new AdjustEvent("abc123");
@@ -1023,10 +1023,10 @@ Adjust.disableThirdPartySharing();
 [dashboard]:  http://dash.adjust.com
 [adjust.com]: http://adjust.com
 
-[en-readme]:  README.md
-[zh-readme]:  doc/chinese/README.md
-[ja-readme]:  doc/japanese/README.md
-[ko-readme]:  doc/korean/README.md
+[en-readme]:  ../../README.md
+[zh-readme]:  ../chinese/README.md
+[ja-readme]:  ../japanese/README.md
+[ko-readme]:  ../korean/README.md
 
 [sdk2sdk-mopub]:    doc/english/sdk-to-sdk/mopub.md
 
