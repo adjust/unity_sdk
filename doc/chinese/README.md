@@ -1020,8 +1020,8 @@ Adjust.disableThirdPartySharing();
 如果需要，请禁用 dSYM 文件。在 `Project Navigator `（项目导航器）中，选择 `Unity-iPhone` 项目。点击 `Build Settings`（创建设置）选项卡，然后搜索“调试信息”。此时应当出现 `Debug Information Format` （调试信息格式）或 `DEBUG_INFORMATION_FORMAT` 选项。将其从 `DWARF with dSYM File` 更改为 `DWARF`。
 
 
-[dashboard]：http://dash.adjust.com
-[adjust.com]：http://adjust.com
+[dashboard]:  http://dash.adjust.com
+[adjust.com]: http://adjust.com
 
 [en-readme]:  ../../README.md
 [zh-readme]:  ../chinese/README.md
