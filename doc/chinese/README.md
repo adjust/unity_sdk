@@ -98,7 +98,7 @@
 
 ### <a id="qs-add-sdk"></a>添加 SDK 至您的项目
 
-在 Unity 编辑器中打开您的项目，前往“`Assets → Import Package → Custom Package”，然后选择已下载的 Unity 包文件。
+在 Unity 编辑器中打开您的项目，前往 `Assets → Import Package → Custom Package`，然后选择已下载的 Unity 包文件。
 
 ![][import_package]
 
@@ -118,9 +118,9 @@
 
 ![][adjust_editor]
 
-<a id="app-token">利用实际的应用识别码替换 `{YourAppToken}`。在控制面板中按照 [以下步骤](https://help.adjust.com/en/dashboard/apps/app-settings#view-your-app-token) 即可找到该识别码。 
+<a id="app-token">利用实际的应用识别码替换`{YourAppToken}`。在控制面板中按照 [以下步骤](https://help.adjust.com/en/dashboard/apps/app-settings#view-your-app-token) 即可找到该识别码。 
 
-<a id="environment">取决于您创建应用的目的是测试还是生产，将“环境”设置更改为 “Sandbox” 或 “Production”。
+<a id="environment">取决于您创建应用的目的是测试还是生产，将`环境`设置更改为 `Sandbox` 或 `Production`。
 
 **重要提示：**如果您或其他人正在测试您的应用，请将该值设置为 “Sandbox”。在发布应用之前，请务必将环境设置为“Production”。如果再次开始测试，请将其重新设置为 “Sandbox”。此外还请注意，在默认情况下，Adjust 控制面板会显示应用的 Production (生产) 流量。如果您想查看在 Sandbox 模式下测试时产生的流量，请务必在控制面板中切换到 sandbox (沙盒) 流量视图。
 
@@ -136,13 +136,13 @@
 
 将“日志级别”的值更改为以下其中一项，即可增加或减低所看到的日志精细度：
 
--`Verbose` - 启用所有日志
--`Debug` - 禁用详细日志
--`Info` - 禁用调试日志（默认）
--`Warn` - 禁用信息日志
+- `Verbose` - 启用所有日志
+- `Debug` - 禁用详细日志
+- `Info` - 禁用调试日志（默认）
+- `Warn` - 禁用信息日志
 - `Error` - 禁用警告日志
--`Assert` - 禁用错误日志
--`Suppress` - 禁用所有日志
+- `Assert` - 禁用错误日志
+- `Suppress` - 禁用所有日志
 
 如果要在手动初始化 Adjust SDK 时禁用所有导出的日志，请将日志级别设置为禁止 (Suppress)，并对 `AdjustConfig` 对象使用构造函数。此函数会打开一个布尔参数，您可以在其中输入是否支持禁止日志级别：
 
@@ -550,7 +550,7 @@ adjustConfig.setDelayStart(5.5);
 
 **注意**：此功能仅限 iOS 平台。
 
-您可以使用 Adjust SDK 请求用户授权，让用户允许您访问他们的应用相关数据。基于 requestTrackingAuthorizationWithCompletionHandler:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/3547037-requesttrackingauthorizationwith?language=objc) 方法，Adjust SDK 打造了一个包装器，您可以定义回传方法，了解用户是否授予了数据跟踪许可。借助该包装器，只要用户回复弹出对话框，这一信息就能通过您定义的回传方式传递回来。SDK 也会通知后端用户的许可选择。`NSUInteger` 值将通过您的回传方法传递，不同值的含义如下：
+您可以使用 Adjust SDK 请求用户授权，让用户允许您访问他们的应用相关数据。基于[requestTrackingAuthorizationWithCompletionHandler:](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/3547037-requesttrackingauthorizationwith?language=objc)方法，Adjust SDK 打造了一个包装器，您可以定义回传方法，了解用户是否授予了数据跟踪许可。借助该包装器，只要用户回复弹出对话框，这一信息就能通过您定义的回传方式传递回来。SDK 也会通知后端用户的许可选择。`NSUInteger` 值将通过您的回传方法传递，不同值的含义如下：
 
 - 0: `ATTrackingManagerAuthorizationStatusNotDetermined` (授权状态待定)
 - 1: `ATTrackingManagerAuthorizationStatusRestricted` (授权状态受限)
@@ -1023,32 +1023,32 @@ Adjust.disableThirdPartySharing();
 [dashboard]：http://dash.adjust.com
 [adjust.com]：http://adjust.com
 
-[en-readme]：README.md
-[zh-readme]：doc/chinese/README.md
-[ja-readme]：doc/japanese/README.md
-[ko-readme]：doc/korean/README.md
+[en-readme]:  ../../README.md
+[zh-readme]:  ../chinese/README.md
+[ja-readme]:  ../japanese/README.md
+[ko-readme]:  ../korean/README.md
 
-[sdk2sdk-mopub]：doc/english/sdk-to-sdk/mopub.md
+[sdk2sdk-mopub]:    doc/english/sdk-to-sdk/mopub.md
 
-[ios]：https://github.com/adjust/ios_sdk
-[android]：https://github.com/adjust/android_sdk
-[releases]：https://github.com/adjust/adjust_unity_sdk/releases
-[google_ad_id]：https://developer.android.com/google/play-services/id.html
-[ios-deeplinking]：https://github.com/adjust/ios_sdk/#deeplinking-reattribution
-[attribution_data]：https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
-[special-partners]：https://docs.adjust.com/en/special-partners
-[unity-purchase-sdk]：https://github.com/adjust/unity_purchase_sdk
-[android-deeplinking]：https://github.com/adjust/android_sdk#deep-linking
-[google_play_services]：http://developer.android.com/google/play-services/setup.html
-[android_sdk_download]：https://developer.android.com/sdk/index.html#Other
-[install-referrer-aar]：https://maven.google.com/com/android/installreferrer/installreferrer/1.0/installreferrer-1.0.aar
-[android-custom-receiver]：https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md
+[ios]:                     https://github.com/adjust/ios_sdk
+[android]:                 https://github.com/adjust/android_sdk
+[releases]:                https://github.com/adjust/adjust_unity_sdk/releases
+[google_ad_id]:            https://developer.android.com/google/play-services/id.html
+[ios-deeplinking]:         https://github.com/adjust/ios_sdk/#deeplinking-reattribution
+[attribution_data]:        https://github.com/adjust/sdks/blob/master/doc/attribution-data.md
+[special-partners]:        https://docs.adjust.com/en/special-partners
+[unity-purchase-sdk]:      https://github.com/adjust/unity_purchase_sdk
+[android-deeplinking]:     https://github.com/adjust/android_sdk#deep-linking
+[google_play_services]:    http://developer.android.com/google/play-services/setup.html
+[android_sdk_download]:    https://developer.android.com/sdk/index.html#Other
+[install-referrer-aar]:    https://maven.google.com/com/android/installreferrer/installreferrer/1.0/installreferrer-1.0.aar
+[android-custom-receiver]: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md
 
-[menu_android]：https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
-[adjust_editor]：https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
-[import_package]：https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
-[android_sdk_location]：https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download.png
-[android_sdk_location_new]：https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download_new.png
+[menu_android]:             https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
+[adjust_editor]:            https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/adjust_editor.png
+[import_package]:           https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/import_package.png
+[android_sdk_location]:     https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download.png
+[android_sdk_location_new]: https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/android_sdk_download_new.png
 
 ## 许可
 
