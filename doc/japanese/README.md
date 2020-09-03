@@ -92,11 +92,11 @@ Read this in other languages：[English][en-readme]、[中文][zh-readme]、[日
 
 Adjust SDKをUnityプロジェクトに連携させるステップをご説明します。
 
-### <a id="qs-get-sdk"></a>SDKダウンロード
+### <a id="qs-get-sdk"></a> SDKダウンロード
 
 バージョン`4.19.2` 以降より、[Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890)からAdjust SDKをアプリに追加できます。または、[リリースページ][リリース]から最新バージョンをダウンロードすることもできます。
 
-### <a id="qs-add-sdk"></a>プロジェクトにSDKを追加
+### <a id="qs-add-sdk"></a> プロジェクトにSDKを追加
 
 Unityエディターでプロジェクトを開き、`Assets → Import Package → Custom Package` と進み、ダウンロードしたUnityパッケージファイルを選択してください。
 
@@ -175,13 +175,13 @@ Android SDKをダウンロードするには主に2つの方法があります�
 
 ![][android_sdk_location]
 
-Android SDK Managerの入ったツールをお使いでない場合は、公式ページから単独SDK[Android SDK] [android_sdk_download]をダウンロードしてください。次に、`Google が提供するSDK Readme.txt` の指示に従ってAndoird SDKツールをダウンロードしてください。これは、Android SDKフォルダ内にあります。
+Android SDK Managerの入ったツールをお使いでない場合は、公式ページから単独SDK[Android SDK][android_sdk_download]をダウンロードしてください。次に、`Google が提供するSDK Readme.txt` の指示に従ってAndoird SDKツールをダウンロードしてください。これは、Android SDKフォルダ内にあります。
 
 **更新**：Android SDKの最新バージョンでは、GoogleはSDKのルートフォルダ内のGoogle Play 開発者サービスフォルダの構造を変更しています。新バージョンはこのように表示されます。
 
 ![][android_sdk_location_new]
 
-Adjust SDKが必要とするGoogle Play 開発者サービスのライブラリの一部、つまり、basementのみを追加することができるようになりました。これを行うためには、`play-services-basement-x.y.z.aar` ファイルを``Assets/Plugins/Android``フォルダに追加してください。 
+Adjust SDKが必要とするGoogle Play 開発者サービスのライブラリの一部、つまり、basementのみを追加することができるようになりました。これを行うためには、`play-services-basement-x.y.z.aar` ファイルを`Assets/Plugins/Android`フォルダに追加してください。 
 
 Google Play 開発者サービスのライブラリバージョン15.0.0では、Googleは、Google 広告 IDの取得に必要なクラスを`play-services-ads-identifier` パッケージに移行しました。バージョン15.0.0以降のライブラリを使用している場合は、このパッケージをアプリに追加してください。追加が完了したら、Adjust SDKがGoogle 広告 IDを正しく取得しているかテスト確認を行ってください。使用されているUnity の開発環境 (IDE)のバージョンによっては、いくつかの乖離が発生することが分かっています。 
 
@@ -218,19 +218,19 @@ GoogleはGoogle Play リファラ APIを導入しました。インストール�
 
 Adjustのポストビルドプロセスにより、Google Play Storeインテントを受信します。いくつかの追加手順を実行するだけで、新しいGoogle Play リファラAPIをサポートできます。
 
-Google Play リファラ APIのサポートを追加するには、Mavenリポジトリから[install referrer library] [install-referrer-aar]をダウンロードし、AARファイルを`Plugins/Android` フォルダに入れてください。
+Google Play リファラ APIのサポートを追加するには、Mavenリポジトリから[install referrer library][install-referrer-aar]をダウンロードし、AARファイルを`Plugins/Android` フォルダに入れてください。
 
 #### <a id="qs-huawei-referrer-api"></a>HuaweiリファラAPI
 
 v4.21.1以降より、Adjust SDKはHuawei App Galleryバージョン10.4以降のHuawei端末へのインストール計測をサポートしています。HuaweiリファラAPIの使用を開始するために連携手順を追加で設定する必要はありません。
 
-### <a id="qs-post-build-process"> </a>ポストビルドプロセス
+### <a id="qs-post-build-process"></a>ポストビルドプロセス
 
 アプリのビルドプロセスが完了するには、Adjust Unityのパッケージでポストビルドプロセスが実行されます。アプリ内でAdjust SDKが正しく動作するようにするためです。 
 
 このプロセスは、`AdjustEditor.cs` の`OnPostprocessBuild` メソッドで実行されます。Unity IDEコンソールの出力ウィンドウに、ログメッセージが書き込まれます。
 
-#### <a id="qs-post-build-ios"> </a> iOSポストビルドプロセス
+#### <a id="qs-post-build-ios"></a> iOSポストビルドプロセス
 
 iOSポストビルドプロセスを適切に実行するためには、Unity 5以降を使用し、`iOS build support` をインストールしてください。iOSポストビルドプロセスは、生成したXcodeプロジェクト内で次のような変更を実行します。
 
@@ -245,7 +245,7 @@ iOS 14のサポート（`Assets/Adjust/Toggle iOS 14 Support`）を有効にし�
 - `AppTrackingTransparency.framework` を追加します（ユーザーにトラッキングへの同意を求め、その同意に関するステータスを取得する必要がある）
 - `StoreKit.framework` を追加します（SKAdNetworkフレームワークとの通信に必要）
 
-#### <a id="qs-post-build-android"> </a> Androidポストビルドプロセス
+#### <a id="qs-post-build-android"></a> Androidポストビルドプロセス
 
 Androidポストビルドプロセスは、`Assets/Plugins/Android/`にある`AndroidManifest.xml` ファイルの変更を実行します。また、Android プラグインフォルダにAndroidManifest.xmlファイルがあるかどうかを確認します。ファイルがない場合は、互換性のあるマニフェストファイル`AdjustAndroidManifest.xml` からコピーを作成してください。`すでにAndroidManifest.xml` ファイルがある場合は、次の内容を確認し、変更してください。
 
@@ -253,9 +253,9 @@ Androidポストビルドプロセスは、`Assets/Plugins/Android/`にある`An
 - `ACCESS_WIFI_STATE` のパーミッションを追加します (Play Store経由でアプリを公開しない場合に必要)
 - `ACCESS_NETWORK_STATE` のパーミッションを追加します（接続されているネットワーク機器の種類の読み取りに必要）
 - `BIND_GET_INSTALL_REFERRER_SERVICE` のパーミッションを追加します (新しいGoogle install リファラAPI が機能するのに必要)
-- Adjustのブロードキャストレシーバーを追加します (Google Play Storeインテント経由でインストールリファラ情報を取得するのに必要)。詳しくは、公式の[Android SDK README] [android]を参照してください。 
+- Adjustのブロードキャストレシーバーを追加します (Google Play Storeインテント経由でインストールリファラ情報を取得するのに必要)。詳しくは、公式の[Android SDK README][android]を参照してください。 
 
-**注意：**独自のブロードキャストレシーバを使用して`INSTALL_REFERRER`インテントを処理している場合には、manifest fileにAdjustブロードキャストレシーバを追加する必要はありません。これを削除し、代わりに独自のレシーバー内にAdjustブロードキャストレシーバへのコールを追加してください。詳しくは、[Androidガイド] [android-custom-receiver]をご覧ください。
+**注意：**独自のブロードキャストレシーバを使用して`INSTALL_REFERRER`インテントを処理している場合には、manifest fileにAdjustブロードキャストレシーバを追加する必要はありません。これを削除し、代わりに独自のレシーバー内にAdjustブロードキャストレシーバへのコールを追加してください。詳しくは、[Androidガイド][android-custom-receiver]をご覧ください。
 
 ### <a id="qs-sdk-signature"></a>SDKシグネチャー
 
@@ -335,7 +335,7 @@ Adjust.start(adjustConfig);
 
 ### <a id="dl-app-android"></a>Androidアプリでのディープリンク処理
 
-ネイティブレベルでAndroidアプリのディープリンクを設定するには、公式[Android SDK README] [android-deeplinking]の手順をご確認ください。
+ネイティブレベルでAndroidアプリのディープリンクを設定するには、公式[Android SDK README][android-deeplinking]の手順をご確認ください。
 
 この設定はネイティブのAndroid Studio もしくは Eclipseプロジェクトで行ってください。
 
@@ -343,7 +343,7 @@ Adjust.start(adjustConfig);
 
 **この設定はネイティブのXcodeプロジェクトで行ってください。**
 
-ネイティブレベルでiOSアプリのディープリンクを設定するには、ネイティブのXcodeプロジェクトを使用し、公式[iOS SDK README] [ios-deeplinking]の手順をご確認ください。
+ネイティブレベルでiOSアプリのディープリンクを設定するには、ネイティブのXcodeプロジェクトを使用し、公式[iOS SDK README][ios-deeplinking]の手順をご確認ください。
 
 ### イベントトラッキング
 
@@ -386,7 +386,7 @@ Adjust.trackEvent(adjustEvent);
 
 ### <a id="et-purchase-verification"></a>アプリ内購入の検証
 
-Adjustのサーバーサイドのレシート検証ツール[Adjust's Purchase Verification] [unity-purchase-sdk]を使って、アプリ内購入を確認できます。  
+Adjustのサーバーサイドのレシート検証ツール[Adjust's Purchase Verification][unity-purchase-sdk]を使って、アプリ内購入を確認できます。  
 
 ## カスタムパラメータ
 
@@ -439,7 +439,7 @@ adjustEvent.addPartnerParameter("foo","bar");
 Adjust.trackEvent(adjustEvent);
 ```
 
-スペシャルパートナーとの連携方法の詳細については、[スペシャルパートナーガイド] [スペシャルパートナー]をご覧ください。
+スペシャルパートナーとの連携方法の詳細については、[スペシャルパートナーガイド][スペシャルパートナー]をご覧ください。
 
 ### <a id="cp-event-callback-id"></a>イベントコールバックID
 
