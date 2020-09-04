@@ -98,13 +98,13 @@ Unity 프로젝트에 Adjust SDK를 연동하려면 다음과 같이 실행하�
 
 ### <a id="qs-add-sdk"></a>프로젝트에 SDK 추가
 
-Unity 에디터에서 프로젝트를 열고, Assets → Import Package → Custom Package`로 이동한 다음 다운로드한 Unity 패키지 파일을 선택합니다.
+Unity 에디터에서 프로젝트를 열고, `Assets → Import Package → Custom Package`로 이동한 다음 다운로드한 Unity 패키지 파일을 선택합니다.
 
 ![][import_package]
 
 ### <a id="qs-integrate-sdk"></a>앱에 SDK 연동
 
-첫 씬에 Assets/Adjust/Adjust.prefab`의 프리팹(prefab)을 추가합니다.
+첫 씬에 `Assets/Adjust/Adjust.prefab`의 프리팹(prefab)을 추가합니다.
 
 `Inspector menu` 프리팹의 Adjust 스크립트 파라미터를 수정하여 다음 옵션을 설정할 수 있습니다.
 
@@ -120,13 +120,13 @@ Unity 에디터에서 프로젝트를 열고, Assets → Import Package → Cust
 
 <a id="app-token">{YourAppToken}`을 실제 앱 토큰으로 교체합니다. 대시보드에서 앱 토큰을 찾으려면 [이 단계](https://help.adjust.com/en/dashboard/apps/app-settings#view-your-app-token)를 수행하세요. 
 
-<a id="environment">테스트와 배포 중 어느 목적으로 앱을 빌드하는지에 따라 환경 설정을 'Sandbox'나 'Production'으로 변경해야 합니다.
+<a id="environment">테스트와 배포 중 어느 목적으로 앱을 빌드하는지에 따라 환경 설정을 `Sandbox` 나 `Production` 으로 변경해야 합니다.
 
 **중요:** 앱을 테스트하는 경우 값을 `Sandbox`로 설정해야 합니다. 앱을 퍼블리시할 준비가 완료되면 환경 설정을 `Production`으로 변경하고, 앱 테스트를 새로 시작한다면 `Sandbox`로 다시 설정하세요. Adjust 대시보드는 기본적으로 앱의 Production 트래픽을 표시하므로, Sandbox 모드에서 테스트하는 동안 생성된 트래픽을 보려면 대시보드에서 Sandbox 트래픽 보기로 전환하세요.
 
 Adjust는 테스트 기기에서 발생하는 인위적 트래픽과 실제 트래픽을 구분하기 위해 환경 설정을 사용합니다. 환경 설정을 최신 상태로 유지하세요.
 
-<a id="start-manually">앱의 `Awake` 이벤트 실행 시 Adjust SDK를 자동으로 시작하려면 `Start Manually`를 선택합니다. 이 옵션을 선택하면 `AdjustConfig` 객체를 파라미터로 `Adjust.start` 메서드를 호출하여 코드 내에서 Adjust SDK를 초기화하고 시작합니다.
+<a id="start-manually">앱의 `Awake` 이벤트 실행 시 Adjust SDK를 자동으로 시작하려면 `Start Manually` 를 선택합니다. 이 옵션을 선택하면 `AdjustConfig` 객체를 파라미터로 `Adjust.start` 메서드를 호출하여 코드 내에서 Adjust SDK를 초기화하고 시작합니다.
 
 `Assets/Adjust/ExampleGUI/ExampleGUI.unity`.에서 버튼 메뉴가 있는 씬 예시를 확인할 수 있습니다. 
 
@@ -144,7 +144,7 @@ Adjust는 테스트 기기에서 발생하는 인위적 트래픽과 실제 트�
 - `Assert` - 오류 로그 비활성화
 - `Suppress` - 모든 로그 비활성화
 
-수동으로 Adjust SDK 초기화 시 모든 로그 출력을 비활성화하려면 로그 수준을 'Suppress'로 설정하고 AdjustConfig` 객체에 생성자를 사용하세요. 그러면 Suppress 로그 수준 지원 여부를 입력할 수 있는 부울자료 파라미터가 열립니다.
+수동으로 Adjust SDK 초기화 시 모든 로그 출력을 비활성화하려면 로그 수준을 `Suppress`로 설정하고 `AdjustConfig` 객체에 생성자를 사용하세요. 그러면 Suppress 로그 수준 지원 여부를 입력할 수 있는 부울자료 파라미터가 열립니다.
 
 ```cs
 string appToken = "{YourAppToken}";
@@ -171,7 +171,7 @@ Adjust.start(adjustConfig);
 
 2014년 8월 1일부터 고유 기기 식별을 위해 Google Play Store 앱에 대해 [Google 광고 식별자][google_ad_id] 사용이 의무화되었습니다. Adjust SDK가 Google 광고 식별자를 사용하도록 허용하려면 [Google Play 서비스][google_play_services]를 연동해야 합니다. 이를 위해서는 `google-play-services_lib` 폴더(Android SDK의 일부)를 Unity 프로젝트의 `Assets/Plugins/Android` 폴더로 복사합니다.
 
-주로 두 가지 방법으로 Android SDK를 다운로드할 수 있습니다. Android SDK Manager`를 사용하는 모든 도구에는 Android SDK 도구를 다운로드 및 설치할 수 있는 빠른 링크가 있습니다. Android SDK 도구를 설치한 후에는 `SDK_FOLDER/extras/google/google_play_services/libproject/` 폴더에서 라이브러리를 찾을 수 있습니다.
+주로 두 가지 방법으로 Android SDK를 다운로드할 수 있습니다. `Android SDK Manager`를 사용하는 모든 도구에는 Android SDK 도구를 다운로드 및 설치할 수 있는 빠른 링크가 있습니다. Android SDK 도구를 설치한 후에는 `SDK_FOLDER/extras/google/google_play_services/libproject/` 폴더에서 라이브러리를 찾을 수 있습니다.
 
 ![][android_sdk_location]
 
@@ -235,7 +235,7 @@ Adjust Unity 패키지를 사용하면 앱 빌드 절차를 완료하기 위해 
 iOS 빌드 후 절차를 올바르게 실행하려면 Unity 이후 버전을 사용하고`iOS build support`를 설치하세요. iOS 빌드 후 절차는 생성한 Xcode 프로젝트를 다음과 같이 변경합니다.
 
 - `iAd.framework` 추가 (Apple Search Ads 추적에 필요)
-- AdSupport.framework` 추가 (IDFA 읽기에 필요)
+- `AdSupport.framework` 추가 (IDFA 읽기에 필요)
 - `CoreTelephony.framework` 추가 (네트워크 기기의 읽기 유형 연결에 필요)
 - 다른 링커 플래그 `-ObjC` 추가(빌드 시간 동안 Objective-C 인식에 필요)
 - `Objective-C exceptions` 활성화
@@ -247,10 +247,10 @@ iOS 14 지원을 활성화하면(`Assets/Adjust/Toggle iOS 14 Support`), 두 개
 
 ### <a id="qs-post-build-android"></a>Android 빌드 후 절차
 
-Android 빌드 후 절차는 `Assets/Plugins/Android/`에 있는 AndroidManifest.xml` 파일을 변경하며, Android 플러그인 폴더에 AndroidManifest.xml` 파일이 있는지도 확인합니다. 파일이 없으면 빌드 후 절차가 호환되는 manifest 파일`AdjustAndroidManifest.xml`의 사본을 생성합니다. 이미 `AndroidManifest.xml` 파일이 있다면 빌드 후 절차는 파일을 다음과 같이 변경합니다.
+Android 빌드 후 절차는 `Assets/Plugins/Android/`에 있는 `AndroidManifest.xml` 파일을 변경하며, Android 플러그인 폴더에 `AndroidManifest.xml` 파일이 있는지도 확인합니다. 파일이 없으면 빌드 후 절차가 호환되는 manifest 파일`AdjustAndroidManifest.xml`의 사본을 생성합니다. 이미 `AndroidManifest.xml` 파일이 있다면 빌드 후 절차는 파일을 다음과 같이 변경합니다.
 
 - `INTERNET` 권한 추가(인터넷 연결에 필요)
-- ACCESS_WIFI_STATE` 권한 추가(Play Store를 통해 앱을 배포하지 않는 경우 필요)
+- `ACCESS_WIFI_STATE` 권한 추가(Play Store를 통해 앱을 배포하지 않는 경우 필요)
 - `ACCESS_NETWORK_STATE` 권한 추가(네트워크 기기의 읽기 유형 연결에 필요)
 - `BIND_GET_INSTALL_REFERRER_SERVICE` 권한 추가(새로운 Google install referrer API 작동에 필요)
 - Adjust 브로드캐스트 리시버 추가(Google Play Store intent를 통해 설치 참조자 정보를 획득하는 데 필요). 자세한 내용은 [Android SDK README][android]를 참조하세요. 
