@@ -57,7 +57,7 @@ public class AdjustEditor : AssetPostprocessor
         assetsToExport.Add(assetsPath + "/Android/AdjustAndroidManifest.xml");
 
         assetsToExport.Add(assetsPath + "/Editor/AdjustEditor.cs");
-        assetsToExport.Add(assetsPath + "/Editor/AdjustSettings.asset");
+        assetsToExport.Add(assetsPath + "/Editor/AdjustSettings.cs");
 
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.cs");
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.prefab");
