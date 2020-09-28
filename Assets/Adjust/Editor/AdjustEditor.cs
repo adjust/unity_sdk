@@ -175,7 +175,7 @@ public class AdjustEditor : AssetPostprocessor
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
             UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
 
-            if (EditorPrefs.GetBool(ios14EditorPrefsKey, false))
+            if (AdjustSettings.IsiOS14ProcessingEnabled)
             {
                 UnityEngine.Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
 
