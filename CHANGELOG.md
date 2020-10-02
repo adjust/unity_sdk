@@ -1,4 +1,18 @@
-### Version 4.23.1 (29th August 2020)
+### Version 4.23.2 (2nd October 2020)
+#### Added
+- Added note to `Assets/Adjust` menu toggling actions that project needs to be saved in order for actions to take effect.
+
+#### Changed
+- Switched to usage of relative paths when working with `AdjustSettings.asset` file.
+
+#### Native SDKs
+- [iOS@v4.23.2][ios_sdk_v4.23.2]
+- [Android@v4.24.1][android_sdk_v4.24.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
+### Version 4.23.1 (29th September 2020)
 #### Fixed
 - Fixed duplicate `ADJUrlStrategy` symbol error.
 
