@@ -22,8 +22,15 @@ public class AdjustSettings : ScriptableObject
 
             if (instance == null)
             {
+                // Create AdjustSettings.asset inside the folder in which AdjustSettings.cs reside.
                 instance = ScriptableObject.CreateInstance<AdjustSettings>();
-                AssetDatabase.CreateAsset(instance, "Assets/Adjust/Editor/AdjustSettings.asset");
+                var guids = AssetDatabase.FindAssets(string.Format("{0} t:script", "AdjustSettings"));
+                if (guids == null || guids.Length <= 0)
+                {
+                    return instance;
+                }
+                var assetPath = AssetDatabase.GUIDToAssetPath(guids[0]).Replace("AdjustSettings.cs", "AdjustSettings.asset");
+                AssetDatabase.CreateAsset(instance, assetPath);
 
                 // Before switching to AssetsDatabase, EditorPrefs were used to write 'adjustiOS14Support' key.
                 // Check if this key still exists in EditorPrefs.
@@ -48,7 +55,13 @@ public class AdjustSettings : ScriptableObject
         {
             if (instance == null)
             {
-                instance = (AdjustSettings)AssetDatabase.LoadAssetAtPath("Assets/Adjust/Editor/AdjustSettings.asset", typeof(AdjustSettings));
+                var guids = AssetDatabase.FindAssets(string.Format("{0} t:ScriptableObject", "AdjustSettings"));
+                if (guids == null || guids.Length <= 0)
+                {
+                    return instance;
+                }
+                var assetPath = AssetDatabase.GUIDToAssetPath(guids[0]);
+                instance = (AdjustSettings)AssetDatabase.LoadAssetAtPath(assetPath, typeof(AdjustSettings));
             }
 
             return instance;
