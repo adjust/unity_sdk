@@ -91,6 +91,9 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:attribution.adgroup forKey:@"adgroup" toDictionary:dictionary];
     [self addValueOrEmpty:attribution.clickLabel forKey:@"clickLabel" toDictionary:dictionary];
     [self addValueOrEmpty:attribution.adid forKey:@"adid" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.costType forKey:@"costType" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.costAmount forKey:@"costAmount" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.costCurrency forKey:@"costCurrency" toDictionary:dictionary];
 
     NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
     NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
@@ -221,7 +224,13 @@ static AdjustUnityDelegate *defaultInstance = nil;
                  forKey:(NSString *)key
            toDictionary:(NSMutableDictionary *)dictionary {
     if (nil != value) {
-        [dictionary setObject:[NSString stringWithFormat:@"%@", value] forKey:key];
+        if ([value isKindOfClass:[NSString class]]) {
+            [dictionary setObject:[NSString stringWithFormat:@"%@", value] forKey:key];
+        } else if ([value isKindOfClass:[NSNumber class]]) {
+            [dictionary setObject:[NSString stringWithFormat:@"%@", [((NSNumber *)value) stringValue]] forKey:key];
+        } else {
+            [dictionary setObject:@"" forKey:key];
+        }
     } else {
         [dictionary setObject:@"" forKey:key];
     }

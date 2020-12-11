@@ -86,6 +86,18 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setSendInBackground", adjustConfig.sendInBackground.Value);
             }
 
+            // Check if user wants to get cost data in attribution callback.
+            if (adjustConfig.needsCost != null)
+            {
+                ajoAdjustConfig.Call("setNeedsCost", adjustConfig.needsCost.Value);
+            }
+
+            // Check if user wants to run preinstall campaigns.
+            if (adjustConfig.preinstallTrackingEnabled != null)
+            {
+                ajoAdjustConfig.Call("setPreinstallTrackingEnabled", adjustConfig.preinstallTrackingEnabled.Value);
+            }
+
             // Check if user has set user agent value.
             if (adjustConfig.userAgent != null)
             {
@@ -311,6 +323,21 @@ namespace com.adjust.sdk
                     null : ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
                 adjustAttribution.adid = ajoAttribution.Get<string>(AdjustUtils.KeyAdid) == "" ?
                     null : ajoAttribution.Get<string>(AdjustUtils.KeyAdid);
+                adjustAttribution.costType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
+                AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
+                    null : ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount);
+                if (ajoCostAmount == null)
+                {
+                    adjustAttribution.costAmount = null;
+                }
+                else
+                {
+                    double costAmount = ajoCostAmount.Call<double>("doubleValue");
+                    adjustAttribution.costAmount = costAmount;
+                }
+                adjustAttribution.costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
                 return adjustAttribution;
             }
             catch (Exception) {}
@@ -506,6 +533,21 @@ namespace com.adjust.sdk
                     null : attribution.Get<string>(AdjustUtils.KeyClickLabel);
                 adjustAttribution.adid = attribution.Get<string>(AdjustUtils.KeyAdid) == "" ?
                     null : attribution.Get<string>(AdjustUtils.KeyAdid);
+                adjustAttribution.costType = attribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyCostType);
+                AndroidJavaObject ajoCostAmount = attribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
+                    null : attribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount);
+                if (ajoCostAmount == null)
+                {
+                    adjustAttribution.costAmount = null;
+                }
+                else
+                {
+                    double costAmount = ajoCostAmount.Call<double>("doubleValue");
+                    adjustAttribution.costAmount = costAmount;
+                }
+                adjustAttribution.costCurrency = attribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyCostCurrency);
                 callback(adjustAttribution);
             }
         }

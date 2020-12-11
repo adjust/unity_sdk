@@ -13,6 +13,9 @@ namespace com.adjust.sdk
         public string clickLabel { get; set; }
         public string trackerName { get; set; }
         public string trackerToken { get; set; }
+        public string costType { get; set; }
+        public double? costAmount { get; set; }
+        public string costCurrency { get; set; }
 
         public AdjustAttribution() {}
 
@@ -32,6 +35,10 @@ namespace com.adjust.sdk
             creative = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCreative);
             clickLabel = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyClickLabel);
             adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
+            costType = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostType);
+            costAmount = double.Parse(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostAmount),
+                System.Globalization.CultureInfo.InvariantCulture);
+            costCurrency = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostCurrency);
         }
 
         public AdjustAttribution(Dictionary<string, string> dicAttributionData)
@@ -49,6 +56,10 @@ namespace com.adjust.sdk
             creative = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCreative);
             clickLabel = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
             adid = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdid);
+            costType = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostType);
+            costAmount = double.Parse(AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostAmount),
+                System.Globalization.CultureInfo.InvariantCulture);
+            costCurrency = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostCurrency);
         }
     }
 }

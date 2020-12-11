@@ -21,6 +21,9 @@ namespace com.adjust.sdk
         public static string KeyTrackerName = "trackerName";
         public static string KeyTrackerToken = "trackerToken";
         public static string KeyJsonResponse = "jsonResponse";
+        public static string KeyCostType = "costType";
+        public static string KeyCostAmount = "costAmount";
+        public static string KeyCostCurrency = "costCurrency";
 
         // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
