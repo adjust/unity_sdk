@@ -16,11 +16,11 @@ namespace com.adjust.sdk.test
 #elif UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
-        private const string IP = "192.168.86.32";
+        private const string IP = "192.168.86.33";
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string IP = "192.168.86.32";
+        private const string IP = "192.168.86.33";
         private TestLibraryiOS _testLibraryiOS;
 #endif
         private const string BASE_URL = PROTOCOL + IP + PORT;

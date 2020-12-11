@@ -1,3 +1,17 @@
+### Version 4.24.0 (11th December 2020)
+#### Added
+- Added possibility to get cost data information in attribution callback.
+- Added `setNeedsCost` method to `AdjustConfig` to indicate if cost data is needed in attribution callback (by default cost data will not be part of attribution callback if not enabled with this setter method).
+- Added `setPreinstallTrackingEnabled` method to `AdjustConfig` to allow enabling of preintall tracking (this feature is OFF by default).
+- Added support for MSA SDK v1.0.23 in OAID plugin.
+
+#### Native SDKs
+- [iOS@v4.24.0][ios_sdk_v4.24.0]
+- [Android@v4.25.0][android_sdk_v4.25.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.23.2 (2nd October 2020)
 #### Added
 - Added note to `Assets/Adjust` menu toggling actions that project needs to be saved in order for actions to take effect.
@@ -794,6 +808,7 @@
 [ios_sdk_v4.22.1]: https://github.com/adjust/ios_sdk/tree/v4.22.1
 [ios_sdk_v4.23.0]: https://github.com/adjust/ios_sdk/tree/v4.23.0
 [ios_sdk_v4.23.2]: https://github.com/adjust/ios_sdk/tree/v4.23.2
+[ios_sdk_v4.24.0]: https://github.com/adjust/ios_sdk/tree/v4.24.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -823,6 +838,7 @@
 [android_sdk_v4.22.0]: https://github.com/adjust/android_sdk/tree/v4.22.0
 [android_sdk_v4.24.0]: https://github.com/adjust/android_sdk/tree/v4.24.0
 [android_sdk_v4.24.1]: https://github.com/adjust/android_sdk/tree/v4.24.1
+[android_sdk_v4.25.0]: https://github.com/adjust/android_sdk/tree/v4.25.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

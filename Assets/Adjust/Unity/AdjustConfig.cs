@@ -24,7 +24,7 @@ namespace com.adjust.sdk
         internal bool? sendInBackground;
         internal bool? eventBufferingEnabled;
         internal bool? allowSuppressLogLevel;
-        internal bool? skAdNetworkHandling;
+        internal bool? needsCost;
         internal bool launchDeferredDeeplink;
         internal AdjustLogLevel? logLevel;
         internal AdjustEnvironment environment;
@@ -37,10 +37,12 @@ namespace com.adjust.sdk
 
         // Android specific members
         internal bool? readImei;
+        internal bool? preinstallTrackingEnabled;
         internal string processName;
         // iOS specific members
         internal bool? allowiAdInfoReading;
         internal bool? allowIdfaReading;
+        internal bool? skAdNetworkHandling;
         // Windows specific members
         internal Action<String> logDelegate;
 
@@ -89,6 +91,11 @@ namespace com.adjust.sdk
         public void setEventBufferingEnabled(bool eventBufferingEnabled)
         {
             this.eventBufferingEnabled = eventBufferingEnabled;
+        }
+
+        public void setNeedsCost(bool needsCost)
+        {
+            this.needsCost = needsCost;
         }
 
         public void setDelayStart(double delayStart)
@@ -212,6 +219,11 @@ namespace com.adjust.sdk
         public void setReadMobileEquipmentIdentity(bool readMobileEquipmentIdentity)
         {
             // this.readImei = readMobileEquipmentIdentity;
+        }
+
+        public void setPreinstallTrackingEnabled(bool preinstallTrackingEnabled)
+        {
+            this.preinstallTrackingEnabled = preinstallTrackingEnabled;
         }
 
         // Windows specific methods.

@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.23.2";
+        private const string sdkPrefix = "unity4.24.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -28,6 +28,7 @@ namespace com.adjust.sdk
             int allowiAdInfoReading,
             int allowIdfaReading,
             int deactivateSkAdNetworkHandling,
+            int needsCost,
             long secretId,
             long info1,
             long info2,
@@ -173,6 +174,7 @@ namespace com.adjust.sdk
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
             int deactivateSkAdNetworkHandling = AdjustUtils.ConvertBool(adjustConfig.skAdNetworkHandling);
+            int needsCost = AdjustUtils.ConvertBool(adjustConfig.needsCost);
             int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
             int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventSuccessDelegate() != null);
             int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventFailureDelegate() != null);
@@ -197,6 +199,7 @@ namespace com.adjust.sdk
                 allowiAdInfoReading,
                 allowIdfaReading,
                 deactivateSkAdNetworkHandling,
+                needsCost,
                 secretId,
                 info1,
                 info2,

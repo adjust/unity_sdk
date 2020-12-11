@@ -161,6 +161,9 @@ def gradle_make_test_jar_debug():
 def gradle_make_test_jar_release():
     execute_command(['./gradlew', 'clean', ':test-library:adjustTestLibraryJarRelease'])
 
+def gradle_make_oaid_jar_release():
+    execute_command(['./gradlew', 'clean', ':sdk-plugin-oaid:adjustOaidAndroidJar'])
+
 def nuget_restore(project_path):
     execute_command(['{0}/nuget.exe'.format(nuget_dir), 'restore', project_path])
 

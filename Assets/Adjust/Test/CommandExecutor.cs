@@ -351,6 +351,9 @@ namespace com.adjust.sdk.test
                     _testLibrary.AddInfoToSend("creative", attribution.creative);
                     _testLibrary.AddInfoToSend("clickLabel", attribution.clickLabel);
                     _testLibrary.AddInfoToSend("adid", attribution.adid);
+                    _testLibrary.AddInfoToSend("costType", attribution.costType);
+                    _testLibrary.AddInfoToSend("costAmount", attribution.costAmount.ToString());
+                    _testLibrary.AddInfoToSend("costCurrency", attribution.costCurrency);
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
