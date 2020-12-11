@@ -648,6 +648,11 @@ The callback function will be called when the SDK receives final attribution dat
 - `string creative` the creative grouping level of the current attribution
 - `string clickLabel` the click label of the current attribution
 - `string adid` the Adjust device identifier
+- `string costType` the cost type string
+- `double? costAmount` the cost amount
+- `string costCurrency` the cost currency string
+
+**Note**: The cost data - `costType`, `costAmount` & `costCurrency` are only available when configured in `AdjustConfig` by calling `setNeedsCost` method. If not configured or configured, but not being part of the attribution, these fields will have value `null`. This feature is available in SDK v4.24.0 and above.
 
 ### <a id="ad-ad-revenue"></a>Ad revenue tracking
 
