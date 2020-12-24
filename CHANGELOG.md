@@ -1,3 +1,14 @@
+### Version 4.24.1 (24th December 2020)
+#### Fixed
+- Fixed handling of native `null` values for cost amount.
+
+#### Native SDKs
+- [iOS@v4.24.0][ios_sdk_v4.24.0]
+- [Android@v4.25.0][android_sdk_v4.25.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.24.0 (11th December 2020)
 #### Added
 - Added possibility to get cost data information in attribution callback.
