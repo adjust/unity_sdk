@@ -36,8 +36,16 @@ namespace com.adjust.sdk
             clickLabel = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyClickLabel);
             adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
             costType = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostType);
-            costAmount = double.Parse(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostAmount),
+            try
+            {
+                costAmount = double.Parse(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostAmount),
                 System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                // attribution response doesn't contain cost amount attached
+                // value will default to null
+            }
             costCurrency = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostCurrency);
         }
 
@@ -57,8 +65,16 @@ namespace com.adjust.sdk
             clickLabel = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
             adid = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdid);
             costType = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostType);
-            costAmount = double.Parse(AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostAmount),
+            try
+            {
+                costAmount = double.Parse(AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostAmount),
                 System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                // attribution response doesn't contain cost amount attached
+                // value will default to null
+            }
             costCurrency = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostCurrency);
         }
     }
