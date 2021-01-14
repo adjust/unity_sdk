@@ -1,5 +1,5 @@
 // Inspired by: https://github.com/facebook/facebook-sdk-for-unity/blob/master/Facebook.Unity.Settings/FacebookSettings.cs
-
+#if UNITY_EDITOR
 using System;
 using System.IO;
 using UnityEditor;
@@ -100,3 +100,4 @@ public class AdjustSettings : ScriptableObject
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.IO;
 using System.Xml;
 using System.Collections;
@@ -549,3 +550,4 @@ public class AdjustEditor : AssetPostprocessor
         return nodes;
     }
 }
+#endif
