@@ -711,7 +711,7 @@ Subscription tracking parameters for App Store subscription:
 - [price](https://developer.apple.com/documentation/storekit/skproduct/1506094-price?language=objc)
 - currency (you need to pass [currencyCode](https://developer.apple.com/documentation/foundation/nslocale/1642836-currencycode?language=objc) of the [priceLocale](https://developer.apple.com/documentation/storekit/skproduct/1506145-pricelocale?language=objc) object)
 - [transactionId](https://developer.apple.com/documentation/storekit/skpaymenttransaction/1411288-transactionidentifier?language=objc)
-- [receipt](https://developer.apple.com/documentation/foundation/nsbundle/1407276-appstorereceipturl)
+- receipt(you need to pass properly formatted JSON `receipt` field of your purchased object returned from Unity IAP API)
 - [transactionDate](https://developer.apple.com/documentation/storekit/skpaymenttransaction/1411273-transactiondate?language=objc)
 - salesRegion (you need to pass [countryCode](https://developer.apple.com/documentation/foundation/nslocale/1643060-countrycode?language=objc) of the [priceLocale](https://developer.apple.com/documentation/storekit/skproduct/1506145-pricelocale?language=objc) object)
 
