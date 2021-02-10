@@ -1,9 +1,11 @@
-### Version 4.26.0 (10th February 2021)
+### Version 4.26.0 (11th February 2021)
 #### Added
 - Added support for Apple Search Ads attribution with usage of `AdServices.framework`.
 - Added `setAllowAdServicesInfoReading` method to `AdjustConfig` to allow option for users to prevent SDK from performing any tasks related to Apple Search Ads attribution with usage of `AdServices.framework`.
 - Added wrapper method `updateConversionValue` method to `Adjust` to allow updating SKAdNetwork conversion value via SDK API.
 - Added `getAppTrackingAuthorizationStatus` getter to `Adjust` instance to be able to get current iOS app tracking status.
+- Added improved measurement consent management and third party sharing mechanism.
+- Added public constants to be used as sources for ad revenue tracking with `trackAdRevenue` method.
 
 #### Fixed
 - Fixed hardcoded scene name under the hood of `requestTrackingAuthorizationWithCompletionHandler` method which caused that game object was always expected to be named "Adjust".
