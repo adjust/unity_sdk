@@ -4,9 +4,28 @@ namespace com.adjust.sdk
 {
     public class AdjustConfig
     {
-        public const string AdjustAdRevenueSourceMopub = "mopub";
         public const string AdjustUrlStrategyChina = "china";
         public const string AdjustUrlStrategyIndia = "india";
+
+        public const string AdjustAdRevenueSourceMopub = "mopub";
+        public const string AdjustAdRevenueSourceAdmob = "admob";
+        public const string AdjustAdRevenueSourceFbNativeAd = "facebook_native_ad";
+        public const string AdjustAdRevenueSourceFbAudienceNetwork = "facebook_audience_network";
+        public const string AdjustAdRevenueSourceIronsource = "ironsource";
+        public const string AdjustAdRevenueSourceFyber = "fyber";
+        public const string AdjustAdRevenueSourceAerserv = "aerserv";
+        public const string AdjustAdRevenueSourceAppodeal = "appodeal";
+        public const string AdjustAdRevenueSourceAdincube = "adincube";
+        public const string AdjustAdRevenueSourceFusePowered = "fusepowered";
+        public const string AdjustAdRevenueSourceAddaptr = "addapptr";
+        public const string AdjustAdRevenueSourceMillenialMediation = "millennial_mediation";
+        public const string AdjustAdRevenueSourceFlurry = "flurry";
+        public const string AdjustAdRevenueSourceAdmost = "admost";
+        public const string AdjustAdRevenueSourceDeltadna = "deltadna";
+        public const string AdjustAdRevenueSourceUpsight = "upsight";
+        public const string AdjustAdRevenueSourceUnityads = "unityads";
+        public const string AdjustAdRevenueSourceAdtoapp = "adtoapp";
+        public const string AdjustAdRevenueSourceTapdaq = "tapdaq";
 
         internal string appToken;
         internal string sceneName;
