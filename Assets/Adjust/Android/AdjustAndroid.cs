@@ -458,6 +458,39 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("trackPlayStoreSubscription", ajoSubscription);
         }
 
+        public static void TrackThirdPartySharing(AdjustThirdPartySharing thirdPartySharing)
+        {
+            AndroidJavaObject ajoIsEnabled;
+            AndroidJavaObject ajoAdjustThirdPartySharing;
+            if (thirdPartySharing.isEnabled != null)
+            {
+                ajoIsEnabled = new AndroidJavaObject("java.lang.Boolean", thirdPartySharing.isEnabled.Value);
+                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", ajoIsEnabled);
+            }
+            else
+            {
+                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", null);
+            }
+
+            if (thirdPartySharing.granularOptions != null)
+            {
+                foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.granularOptions)
+                {
+                    for (int i = 0; i < entry.Value.Count;)
+                    {
+                        ajoAdjustThirdPartySharing.Call("addGranularOption", entry.Key, entry.Value[i++], entry.Value[i++]);
+                    }
+                }
+            }
+
+            ajcAdjust.CallStatic("trackThirdPartySharing", ajoAdjustThirdPartySharing);
+        }
+
+        public static void TrackMeasurementConsent(bool measurementConsent)
+        {
+            ajcAdjust.CallStatic("trackMeasurementConsent", measurementConsent);
+        }
+
         // Android specific methods.
         public static void OnPause()
         {

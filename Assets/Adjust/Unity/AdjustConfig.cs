@@ -41,6 +41,7 @@ namespace com.adjust.sdk
         internal string processName;
         // iOS specific members
         internal bool? allowiAdInfoReading;
+        internal bool? allowAdServicesInfoReading;
         internal bool? allowIdfaReading;
         internal bool? skAdNetworkHandling;
         // Windows specific members
@@ -202,6 +203,11 @@ namespace com.adjust.sdk
         public void setAllowiAdInfoReading(bool allowiAdInfoReading)
         {
             this.allowiAdInfoReading = allowiAdInfoReading;
+        }
+
+        public void setAllowAdServicesInfoReading(bool allowAdServicesInfoReading)
+        {
+            this.allowAdServicesInfoReading = allowAdServicesInfoReading;
         }
 
         public void setAllowIdfaReading(bool allowIdfaReading)

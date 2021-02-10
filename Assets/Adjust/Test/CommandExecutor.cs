@@ -70,6 +70,8 @@ namespace com.adjust.sdk.test
                     case "trackAdRevenue": TrackAdRevenue(); break;
                     case "disableThirdPartySharing": DisableThirdPartySharing(); break;
                     case "trackSubscription": TrackSubscription(); break;
+                    case "thirdPartySharing": ThirdPartySharing(); break;
+                    case "measurementConsent": MeasurementConsent(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -111,11 +113,21 @@ namespace com.adjust.sdk.test
             {
                 testOptions[AdjustUtils.KeyTestOptionsNoBackoffWait] = _command.GetFirstParameterValue("noBackoffWait");
             }
-            testOptions [AdjustUtils.KeyTestOptionsiAdFrameworkEnabled] = "false";  // false - iAd will not be used in test app by default
+            // iAd.framework will not be used in test app by default
+            testOptions [AdjustUtils.KeyTestOptionsiAdFrameworkEnabled] = "false";
             if (_command.ContainsParameter("iAdFrameworkEnabled"))
             {
                 testOptions[AdjustUtils.KeyTestOptionsiAdFrameworkEnabled] = _command.GetFirstParameterValue("iAdFrameworkEnabled");
             }
+            // AdServices.framework will not be used in test app by default
+            testOptions [AdjustUtils.KeyTestOptionsAdServicesFrameworkEnabled] = "false";
+            if (_command.ContainsParameter("adServicesFrameworkEnabled"))
+            {
+                testOptions[AdjustUtils.KeyTestOptionsAdServicesFrameworkEnabled] = _command.GetFirstParameterValue("adServicesFrameworkEnabled");
+            }
+#if UNITY_ANDROID
+            bool useTestConnectionOptions = false;
+#endif
             if (_command.ContainsParameter("teardown"))
             {
                 List<string> teardownOptions = _command.Parameters["teardown"];
@@ -125,7 +137,12 @@ namespace com.adjust.sdk.test
                     {
                         testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
                         testOptions[AdjustUtils.KeyTestOptionsExtraPath] = ExtraPath;
+#if UNITY_IOS
                         testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "true";
+#endif
+#if UNITY_ANDROID
+                        useTestConnectionOptions = true;
+#endif
                     }
                     if (teardownOption == "deleteState")
                     {
@@ -144,7 +161,9 @@ namespace com.adjust.sdk.test
                     {
                         testOptions[AdjustUtils.KeyTestOptionsTeardown] = "true";
                         testOptions[AdjustUtils.KeyTestOptionsExtraPath] = null;
+#if UNITY_IOS
                         testOptions[AdjustUtils.KeyTestOptionsUseTestConnectionOptions] = "false";
+#endif
                     }
                     if (teardownOption == "test")
                     {
@@ -159,6 +178,12 @@ namespace com.adjust.sdk.test
             }
 
             Adjust.SetTestOptions(testOptions);
+#if UNITY_ANDROID
+            if (useTestConnectionOptions)
+            {
+                TestConnectionOptions.SetTestConnectionOptions();
+            }
+#endif
         }
 
         private void Config()
@@ -304,6 +329,13 @@ namespace com.adjust.sdk.test
                 var allowiAdInfoReadingS = _command.GetFirstParameterValue("allowiAdInfoReading");
                 var allowiAdInfoReading = allowiAdInfoReadingS.ToLower() == "true";
                 adjustConfig.allowiAdInfoReading = allowiAdInfoReading;
+            }
+
+            if (_command.ContainsParameter("allowAdServicesInfoReading"))
+            {
+                var allowAdServicesInfoReadingS = _command.GetFirstParameterValue("allowAdServicesInfoReading");
+                var allowAdServicesInfoReading = allowAdServicesInfoReadingS.ToLower() == "true";
+                adjustConfig.allowAdServicesInfoReading = allowAdServicesInfoReading;
             }
 
             if (_command.ContainsParameter("allowIdfaReading"))
@@ -781,6 +813,38 @@ namespace com.adjust.sdk.test
 
             Adjust.trackPlayStoreSubscription(subscription);
 #endif
+        }
+
+        private void ThirdPartySharing()
+        {
+            string enabled = _command.GetFirstParameterValue("isEnabled");
+            bool? isEnabled = null;
+            if (enabled != null)
+            {
+                isEnabled = bool.Parse(enabled);
+            }
+
+            AdjustThirdPartySharing adjustThirdPartySharing = new AdjustThirdPartySharing(isEnabled);
+
+            if (_command.ContainsParameter("granularOptions"))
+            {
+                var granularOptions = _command.Parameters["granularOptions"];
+                for (var i = 0; i < granularOptions.Count; i += 3)
+                {
+                    var partnerName = granularOptions[i];
+                    var key = granularOptions[i+1];
+                    var value = granularOptions[i+2];
+                    adjustThirdPartySharing.addGranularOption(partnerName, key, value);
+                }
+            }
+
+            Adjust.trackThirdPartySharing(adjustThirdPartySharing);
+        }
+
+        private void MeasurementConsent()
+        {
+            var enabled = bool.Parse(_command.GetFirstParameterValue("isEnabled"));
+            Adjust.trackMeasurementConsent(enabled);
         }
 
         private void CommandNotFound(string className, string methodName)
