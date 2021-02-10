@@ -59,7 +59,9 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
 
    * [AppTrackingTransparency framework](#ad-att-framework)
       * [App-tracking authorisation wrapper](#ad-ata-wrapper)
+      * [Get current authorisation status](#ad-ata-getter)
    * [SKAdNetwork framework](#ad-skadn-framework)
+      * [Update SKAdNetwork conversion value](#ad-skadn-update-conversion-value)
    * [Push token (uninstall tracking)](#ad-push-token)
    * [Attribution callback](#ad-attribution-callback)
    * [Ad revenue tracking](#ad-ad-revenue)
@@ -580,6 +582,18 @@ Adjust.requestTrackingAuthorizationWithCompletionHandler((status) =>
 });
 ```
 
+### <a id="ad-ata-getter"></a>Get current authorisation status
+
+**Note**: This feature exists only in iOS platform.
+
+To get the current app tracking authorization status you can call `getAppTrackingAuthorizationStatus` method of `Adjust` class that will return one of the following possibilities:
+
+* `0`: The user hasn't been asked yet
+* `1`: The user device is restricted
+* `2`: The user denied access to IDFA
+* `3`: The user authorized access to IDFA
+* `-1`: The status is not available
+
 ### <a id="ad-skadn-framework"></a>SKAdNetwork framework
 
 **Note**: This feature exists only in iOS platform.
@@ -590,6 +604,16 @@ In case you don't want the Adjust SDK to automatically communicate with SKAdNetw
 
 ```csharp
 adjustConfig.deactivateSKAdNetworkHandling();
+```
+
+### <a id="ad-skadn-update-conversion-value"></a>Update SKAdNetwork conversion value
+
+**Note**: This feature exists only in iOS platform.
+
+You can use Adjust SDK wrapper method `updateConversionValue` to update SKAdNetwork conversion value for your user:
+
+```csharp
+Adjust.updateConversionValue(6);
 ```
 
 ### <a id="ad-push-token"></a>Push token (uninstall tracking)
