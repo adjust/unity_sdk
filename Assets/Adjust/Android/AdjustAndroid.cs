@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.24.1";
+        private const string sdkPrefix = "unity4.26.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -456,6 +456,39 @@ namespace com.adjust.sdk
 
             // Track the subscription.
             ajcAdjust.CallStatic("trackPlayStoreSubscription", ajoSubscription);
+        }
+
+        public static void TrackThirdPartySharing(AdjustThirdPartySharing thirdPartySharing)
+        {
+            AndroidJavaObject ajoIsEnabled;
+            AndroidJavaObject ajoAdjustThirdPartySharing;
+            if (thirdPartySharing.isEnabled != null)
+            {
+                ajoIsEnabled = new AndroidJavaObject("java.lang.Boolean", thirdPartySharing.isEnabled.Value);
+                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", ajoIsEnabled);
+            }
+            else
+            {
+                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", null);
+            }
+
+            if (thirdPartySharing.granularOptions != null)
+            {
+                foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.granularOptions)
+                {
+                    for (int i = 0; i < entry.Value.Count;)
+                    {
+                        ajoAdjustThirdPartySharing.Call("addGranularOption", entry.Key, entry.Value[i++], entry.Value[i++]);
+                    }
+                }
+            }
+
+            ajcAdjust.CallStatic("trackThirdPartySharing", ajoAdjustThirdPartySharing);
+        }
+
+        public static void TrackMeasurementConsent(bool measurementConsent)
+        {
+            ajcAdjust.CallStatic("trackMeasurementConsent", measurementConsent);
         }
 
         // Android specific methods.

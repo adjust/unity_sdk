@@ -1,3 +1,22 @@
+### Version 4.26.0 (11th February 2021)
+#### Added
+- Added support for Apple Search Ads attribution with usage of `AdServices.framework`.
+- Added `setAllowAdServicesInfoReading` method to `AdjustConfig` to allow option for users to prevent SDK from performing any tasks related to Apple Search Ads attribution with usage of `AdServices.framework`.
+- Added wrapper method `updateConversionValue` method to `Adjust` to allow updating SKAdNetwork conversion value via SDK API.
+- Added `getAppTrackingAuthorizationStatus` getter to `Adjust` instance to be able to get current iOS app tracking status.
+- Added improved measurement consent management and third party sharing mechanism.
+- Added public constants to be used as sources for ad revenue tracking with `trackAdRevenue` method.
+
+#### Fixed
+- Fixed hardcoded scene name under the hood of `requestTrackingAuthorizationWithCompletionHandler` method which caused that game object was always expected to be named "Adjust".
+
+#### Native SDKs
+- [iOS@v4.26.2][ios_sdk_v4.26.2]
+- [Android@v4.26.1][android_sdk_v4.26.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.24.1 (24th December 2020)
 #### Fixed
 - Fixed handling of native `null` values for cost amount.
@@ -820,6 +839,7 @@
 [ios_sdk_v4.23.0]: https://github.com/adjust/ios_sdk/tree/v4.23.0
 [ios_sdk_v4.23.2]: https://github.com/adjust/ios_sdk/tree/v4.23.2
 [ios_sdk_v4.24.0]: https://github.com/adjust/ios_sdk/tree/v4.24.0
+[ios_sdk_v4.26.2]: https://github.com/adjust/ios_sdk/tree/v4.26.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -850,6 +870,7 @@
 [android_sdk_v4.24.0]: https://github.com/adjust/android_sdk/tree/v4.24.0
 [android_sdk_v4.24.1]: https://github.com/adjust/android_sdk/tree/v4.24.1
 [android_sdk_v4.25.0]: https://github.com/adjust/android_sdk/tree/v4.25.0
+[android_sdk_v4.26.1]: https://github.com/adjust/android_sdk/tree/v4.26.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

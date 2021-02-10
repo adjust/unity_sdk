@@ -153,6 +153,7 @@ public class AdjustEditor : AssetPostprocessor
             // The Adjust SDK will try to add following frameworks to your project:
             // - AdSupport.framework (needed for access to IDFA value)
             // - iAd.framework (needed in case you are running ASA campaigns)
+            // - AdServices.framework (needed in case you are running ASA campaigns)
             // - CoreTelephony.framework (needed to get information about network type user is connected to)
             // - StoreKit.framework (needed for communication with SKAdNetwork framework)
             // - AppTrackingTransparency.framework (needed for information about user's consent to be tracked)
@@ -172,6 +173,10 @@ public class AdjustEditor : AssetPostprocessor
             UnityEngine.Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
             UnityEngine.Debug.Log("[Adjust]: iAd.framework added successfully.");
+
+            UnityEngine.Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
+            xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
+            UnityEngine.Debug.Log("[Adjust]: AdServices.framework added successfully.");
 
             UnityEngine.Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);

@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.24.1";
+        private const string sdkPrefix = "unity4.26.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -26,6 +26,7 @@ namespace com.adjust.sdk
             int eventBuffering,
             int sendInBackground,
             int allowiAdInfoReading,
+            int allowAdServicesInfoReading,
             int allowIdfaReading,
             int deactivateSkAdNetworkHandling,
             int needsCost,
@@ -125,6 +126,12 @@ namespace com.adjust.sdk
             string jsonPartnerParameters);
 
         [DllImport("__Internal")]
+        private static extern void _AdjustTrackThirdPartySharing(int enabled, string jsonGranularOptions);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustTrackMeasurementConsent(int enabled);
+
+        [DllImport("__Internal")]
         private static extern void _AdjustSetTestOptions(
             string baseUrl,
             string gdprUrl,
@@ -137,10 +144,17 @@ namespace com.adjust.sdk
             int teardown,
             int deleteState,
             int noBackoffWait,
-            int iAdFrameworkEnabled);
+            int iAdFrameworkEnabled,
+            int adServicesFrameworkEnabled);
 
         [DllImport("__Internal")]
-        private static extern void _AdjustRequestTrackingAuthorizationWithCompletionHandler();
+        private static extern void _AdjustRequestTrackingAuthorizationWithCompletionHandler(string sceneName);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustUpdateConversionValue(int conversionValue);
+
+        [DllImport("__Internal")]
+        private static extern int _AdjustGetAppTrackingAuthorizationStatus();
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackSubsessionStart();
@@ -170,6 +184,7 @@ namespace com.adjust.sdk
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool(adjustConfig.eventBufferingEnabled);
             int allowiAdInfoReading = AdjustUtils.ConvertBool(adjustConfig.allowiAdInfoReading);
+            int allowAdServicesInfoReading = AdjustUtils.ConvertBool(adjustConfig.allowAdServicesInfoReading);
             int allowIdfaReading = AdjustUtils.ConvertBool(adjustConfig.allowIdfaReading);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
@@ -197,6 +212,7 @@ namespace com.adjust.sdk
                 eventBufferingEnabled,
                 sendInBackground,
                 allowiAdInfoReading,
+                allowAdServicesInfoReading,
                 allowIdfaReading,
                 deactivateSkAdNetworkHandling,
                 needsCost,
@@ -315,9 +331,38 @@ namespace com.adjust.sdk
                 stringJsonPartnerParameters);
         }
 
-        public static void RequestTrackingAuthorizationWithCompletionHandler()
+        public static void TrackThirdPartySharing(AdjustThirdPartySharing thirdPartySharing)
         {
-            _AdjustRequestTrackingAuthorizationWithCompletionHandler();
+            int enabled = AdjustUtils.ConvertBool(thirdPartySharing.isEnabled);
+            List<string> jsonGranularOptions = new List<string>();
+            foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.granularOptions)
+            {
+                jsonGranularOptions.Add(entry.Key);
+                jsonGranularOptions.Add(AdjustUtils.ConvertListToJson(entry.Value));
+            }
+
+            _AdjustTrackThirdPartySharing(enabled, AdjustUtils.ConvertListToJson(jsonGranularOptions));
+        }
+
+        public static void TrackMeasurementConsent(bool enabled)
+        {
+            _AdjustTrackMeasurementConsent(AdjustUtils.ConvertBool(enabled));
+        }
+
+        public static void RequestTrackingAuthorizationWithCompletionHandler(string sceneName)
+        {
+            string cSceneName = sceneName != null ? sceneName : "ADJ_INVALID";
+            _AdjustRequestTrackingAuthorizationWithCompletionHandler(cSceneName);
+        }
+
+        public static void UpdateConversionValue(int conversionValue)
+        {
+            _AdjustUpdateConversionValue(conversionValue);
+        }
+
+        public static int GetAppTrackingAuthorizationStatus()
+        {
+            return _AdjustGetAppTrackingAuthorizationStatus();
         }
 
         public static void SetDeviceToken(string deviceToken)
@@ -377,6 +422,7 @@ namespace com.adjust.sdk
             bool deleteState = false;
             bool noBackoffWait = false;
             bool iAdFrameworkEnabled = false;
+            bool adServicesFrameworkEnabled = false;
 
             if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
             {
@@ -410,6 +456,10 @@ namespace com.adjust.sdk
             {
                 iAdFrameworkEnabled = testOptions[AdjustUtils.KeyTestOptionsiAdFrameworkEnabled].ToLower() == "true";
             }
+            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsAdServicesFrameworkEnabled))
+            {
+                adServicesFrameworkEnabled = testOptions[AdjustUtils.KeyTestOptionsAdServicesFrameworkEnabled].ToLower() == "true";
+            }
 
             _AdjustSetTestOptions(
                 baseUrl,
@@ -423,7 +473,8 @@ namespace com.adjust.sdk
                 AdjustUtils.ConvertBool(teardown),
                 AdjustUtils.ConvertBool(deleteState),
                 AdjustUtils.ConvertBool(noBackoffWait),
-                AdjustUtils.ConvertBool(iAdFrameworkEnabled));
+                AdjustUtils.ConvertBool(iAdFrameworkEnabled),
+                AdjustUtils.ConvertBool(adServicesFrameworkEnabled));
         }
 
         public static void TrackSubsessionStart(string testingArgument = null)
