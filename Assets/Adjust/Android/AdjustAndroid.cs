@@ -469,7 +469,8 @@ namespace com.adjust.sdk
             }
             else
             {
-                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", null);
+                string[] parameters = null;
+                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", parameters);
             }
 
             if (thirdPartySharing.granularOptions != null)
