@@ -1,3 +1,14 @@
+### Version 4.26.1 (12th February 2021)
+#### Fixed
+- Fixed ambiguous API invocation error in certain Unity IDE setups.
+
+#### Native SDKs
+- [iOS@v4.26.2][ios_sdk_v4.26.2]
+- [Android@v4.26.1][android_sdk_v4.26.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.26.0 (11th February 2021)
 #### Added
 - Added support for Apple Search Ads attribution with usage of `AdServices.framework`.

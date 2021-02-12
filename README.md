@@ -240,6 +240,7 @@ This process is performed by the `OnPostprocessBuild` method in `AdjustEditor.cs
 To execute the iOS post-build process properly, use Unity 5 or later and have `iOS build support` installed. The iOS post-build process makes the following changes to your generated Xcode project:
 
 - Adds the `iAd.framework` (needed for Apple Search Ads tracking)
+- Adds the `AdServices.framework` (needed for Apple Search Ads tracking)
 - Adds the `AdSupport.framework` (needed for reading IDFA)
 - Adds the `CoreTelephony.framework` (needed for reading type of network device is connected to)
 - Adds the other linker flag `-ObjC` (needed to recognize Adjust Objective-C categories during build time)
