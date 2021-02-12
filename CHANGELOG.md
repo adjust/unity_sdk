@@ -1,4 +1,4 @@
-### Version 4.26.1 (11th February 2021)
+### Version 4.26.1 (12th February 2021)
 #### Fixed
 - Fixed ambiguous API invocation error in certain Unity IDE setups.
 
