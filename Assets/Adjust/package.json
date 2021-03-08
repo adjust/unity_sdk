@@ -1,0 +1,11 @@
+{
+  "name": "funzygames.adjust",
+  "displayName": "Adjust",
+  "version": "4.26.1",
+  "unity": "2018.4",
+  "description": "This is the Unity SDK of Adjust™. It supports iOS, Android, Windows Store 8.1, Windows Phone 8.1 and Windows 10 targets. You can read more about Adjust™ at [adjust.com]",
+  "keywords": [],
+  "license": "MIT",
+  "category": "",
+  "dependencies": {}
+}

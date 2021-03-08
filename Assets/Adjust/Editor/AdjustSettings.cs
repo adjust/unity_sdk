@@ -29,7 +29,7 @@ public class AdjustSettings : ScriptableObject
                 {
                     return instance;
                 }
-                var assetPath = AssetDatabase.GUIDToAssetPath(guids[0]).Replace("AdjustSettings.cs", "AdjustSettings.asset");
+                var assetPath = $"Assets/Resources/{nameof(AdjustSettings)}.asset";
                 AssetDatabase.CreateAsset(instance, assetPath);
 
                 // Before switching to AssetsDatabase, EditorPrefs were used to write 'adjustiOS14Support' key.
