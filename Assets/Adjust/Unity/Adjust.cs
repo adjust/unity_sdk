@@ -14,8 +14,24 @@ namespace com.adjust.sdk
         public bool eventBuffering = false;
         public bool sendInBackground = false;
         public bool launchDeferredDeeplink = true;
+        public bool isDeviceKnown = false;
+        public bool needsCost = false;
 
         public string appToken = "{Your App Token}";
+        public string userAgent = "";
+        public string defaultTracker = "";
+        public string externalDeviceId = "";
+        public string urlStrategy = "";
+
+        [Header("App Secret:")]
+        public long secretId = 0;
+        public long info1 = 0;
+        public long info2 = 0;
+        public long info3 = 0;
+        public long info4 = 0;
+        [Space(20)]
+
+        public double startDelay = 0;
 
         public AdjustLogLevel logLevel = AdjustLogLevel.Info;
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
@@ -48,6 +64,14 @@ namespace com.adjust.sdk
                 adjustConfig.setSendInBackground(this.sendInBackground);
                 adjustConfig.setEventBufferingEnabled(this.eventBuffering);
                 adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
+                adjustConfig.setDefaultTracker(this.defaultTracker);
+                adjustConfig.setExternalDeviceId(this.externalDeviceId);
+                adjustConfig.setUrlStrategy(this.urlStrategy);
+                adjustConfig.setUserAgent(this.userAgent);
+                adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
+                adjustConfig.setDelayStart(this.startDelay);
+                adjustConfig.setIsDeviceKnown(this.isDeviceKnown);
+                adjustConfig.setNeedsCost(this.needsCost);
                 Adjust.start(adjustConfig);
             }
         }
