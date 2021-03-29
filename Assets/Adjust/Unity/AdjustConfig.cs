@@ -7,6 +7,8 @@ namespace com.adjust.sdk
         public const string AdjustUrlStrategyChina = "china";
         public const string AdjustUrlStrategyIndia = "india";
 
+        public const string AdjustDataResidencyEU = "data-residency-eu";
+
         public const string AdjustAdRevenueSourceMopub = "mopub";
         public const string AdjustAdRevenueSourceAdmob = "admob";
         public const string AdjustAdRevenueSourceFbNativeAd = "facebook_native_ad";
