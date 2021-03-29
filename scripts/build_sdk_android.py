@@ -35,15 +35,26 @@ def build(root_dir, android_submodule_dir, with_test_lib):
         # Paths.
         set_log_tag('ANDROID-TEST-LIB-BUILD')
         debug_green('Building Test Library started ...')
-        test_jar_in_dir  = '{0}/test-library/build/libs'.format(src_dir)
-        test_jar_out_dir = '{0}/Assets/Adjust/Android/Test'.format(root_dir)
+        test_library_in_dir  = '{0}/test-library/build/outputs/aar'.format(src_dir)
+        test_options_in_dir  = '{0}/test-options/build/outputs/aar'.format(src_dir)
+        test_unity_out_dir = '{0}/Assets/Adjust/Android/Test'.format(root_dir)
 
         # ------------------------------------------------------------------
-        # Building Android test library JAR in debug mode.
-        debug_green('Building Adjust test library JAR in debug mode ...')
-        gradle_make_test_jar_debug()
+        # Building Android test library AAR in debug mode.
+        debug_green('Building Adjust test library AAR in debug mode ...')
+        gradle_make_test_library_aar_debug()
 
         # ------------------------------------------------------------------
-        # Copy Android test library JAR from to destination.
-        debug_green('Copying generated Android test library JAR from {0} to {1} ...'.format(test_jar_in_dir, test_jar_out_dir))
-        copy_file('{0}/test-library-debug.jar'.format(test_jar_in_dir), '{0}/adjust-test.jar'.format(test_jar_out_dir))
+        # Copy Android test library AAR from to destination.
+        debug_green('Copying generated Android test library AAR from {0} to {1} ...'.format(test_library_in_dir, test_unity_out_dir))
+        copy_file('{0}/test-library-debug.aar'.format(test_library_in_dir), '{0}/adjust-test-library.aar'.format(test_unity_out_dir))
+
+        # ------------------------------------------------------------------
+        # Building Android test options AAR in debug mode.
+        debug_green('Building Adjust test options AAR in debug mode ...')
+        gradle_make_test_options_aar_debug()
+
+        # ------------------------------------------------------------------
+        # Copy Android test options AAR from to destination.
+        debug_green('Copying generated Android test options AAR from {0} to {1} ...'.format(test_options_in_dir, test_unity_out_dir))
+        copy_file('{0}/test-options-debug.aar'.format(test_options_in_dir), '{0}/adjust-test-options.aar'.format(test_unity_out_dir))

@@ -161,6 +161,18 @@ def gradle_make_test_jar_debug():
 def gradle_make_test_jar_release():
     execute_command(['./gradlew', 'clean', ':test-library:adjustTestLibraryJarRelease'])
 
+def gradle_make_test_library_aar_debug():
+    execute_command(['./gradlew', 'clean', ':test-library:assembleDebug'])
+
+def gradle_make_test_library_aar_release():
+    execute_command(['./gradlew', 'clean', ':test-library:assembleRelease'])
+
+def gradle_make_test_options_aar_debug():
+    execute_command(['./gradlew', 'clean', ':test-options:assembleDebug'])
+
+def gradle_make_test_options_aar_release():
+    execute_command(['./gradlew', 'clean', ':test-options:assembleRelease'])
+
 def gradle_make_oaid_jar_release():
     execute_command(['./gradlew', 'clean', ':sdk-plugin-oaid:adjustOaidAndroidJar'])
 
