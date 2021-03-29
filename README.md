@@ -73,7 +73,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Google Play Services advertising identifier](#ad-gps-adid)
       * [Amazon advertising identifier](#ad-amazon-adid)
       * [Adjust device identifier](#ad-adid)
-   * [Pre-installed trackers](#ad-pre-installed-trackers)
+   * [Preinstalled apps](#ad-preinstalled-apps)
    * [Offline mode](#ad-offline-mode)
    * [Disable tracking](#ad-disable-tracking)
    * [Event buffering](#ad-event-buffering)
@@ -83,6 +83,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Disable third-party sharing](#ad-disable-third-party-sharing)
       * [Enable third-party sharing](#ad-enable-third-party-sharing)
    * [Measurement consent](#ad-measurement-consent)
+   * [Data residency](#ad-data-residency)
 
 ### Testing and troubleshooting
    * [Debug information in iOS](#tt-debug-ios)
@@ -946,28 +947,76 @@ String adid = Adjust.getAdid();
 
 Information about the adid is only available after our backend tracks the app install. It is not possible to access the adid value before the SDK has been initialized and the installation of your app has been successfully tracked.
 
-### <a id="ad-pre-installed-trackers"></a>Pre-installed trackers
+### <a id="ad-preinstalled-apps"></a>Preinstalled apps
 
-To use the Adjust SDK to recognize users whose devices came with your app pre-installed, follow these steps:
+You can use the Adjust SDK to recognize users whose devices had your app preinstalled during manufacturing. Adjust offers two solutions: one which uses the system payload, and one which uses a default tracker. 
 
-1. Create a new tracker in your [dashboard].
-2. Set the default tracker of your `AdjustConfig`:
+In general, we recommend using the system payload solution. However, there are certain use cases which may require the tracker. First check the available [implementation methods](https://help.adjust.com/en/article/pre-install-tracking#Implementation_methods) and your preinstall partner’s preferred method. If you are unsure which solution to implement, reach out to integration@adjust.com
 
-  ```cs
-  AdjustConfig adjustConfig = new AdjustConfig(appToken, environment);
+#### Use the system payload
+
+- The Content Provider, System Properties, or File System method is supported from SDK v4.23.0 and above.
+
+- The System Installer Receiver method is supported from SDK v4.27.0 and above.
+
+Enable the Adjust SDK to recognise preinstalled apps by calling `setPreinstallTrackingEnabled` with the parameter `true` after creating the config object:
+
+
+```csharp
+adjustConfig.setPreinstallTrackingEnabled(true);
+```
+
+Depending upon your implmentation method, you may need to make a change to your `AndroidManifest.xml` file. Find the required code change using the table below.
+
+<table>
+<tr>
+<td>
+  <b>Method</b>
+</td>
+<td>
+  <b>AndroidManifest.xml change</b>
+</td>
+</tr>
+<tr>
+<td>Content Provider</td>
+<td>Add permission:</br>
+
+```
+<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
+```
+</td>
+</tr>
+<tr>
+<td>System Installer Receiver</td>
+<td>Declare receiver:</br>
+
+```
+<receiver android:name="com.adjust.sdk.AdjustPreinstallReferrerReceiver">
+    <intent-filter>
+        <action android:name="com.attribution.SYSTEM_INSTALLER_REFERRER" />
+    </intent-filter>
+</receiver>
+```
+</td>
+</tr>
+</table>
+
+#### Use a default tracker
+
+- Create a new tracker in your [dashboard].
+- Open your app delegate and set the default tracker of your config:
+
+  ```csharp
   adjustConfig.setDefaultTracker("{TrackerToken}");
-  Adjust.start(adjustConfig);
   ```
 
-  Replace `{TrackerToken}` with the tracker token you created in step 2. E.g. `{abc123}`
-  
-Although the dashboard displays a tracker URL (including `http://app.adjust.com/`), in your source code you should only enter the six or seven-character token and not the entire URL.
+- Replace `{TrackerToken}` with the tracker token you created in step one. Please note that the dashboard displays a tracker URL (including `http://app.adjust.com/`). In your source code, you should specify only the six or seven-character token and not the entire URL.
 
-3. Build and run your app. You should see a line like the following in the log output:
+- Build and run your app. You should see a line like the following in your LogCat:
 
-    ```
-    Default tracker: 'abc123'
-    ```
+  ```
+  Default tracker: 'abc123'
+  ```
 
 ### <a id="ad-offline-mode"></a>Offline mode
 
@@ -1077,6 +1126,14 @@ Adjust.trackMeasurementConsent(true);
 ```
 
 Upon receiving this information, Adjust changes sharing the specific user's data to partners. The Adjust SDK will continue to work as expected.
+
+### <a id="ad-data-residency"></a>Data residency
+
+In order to enable data residency feature, make sure to make a call to `setUrlStrategy` method of the `AdjustConfig` instance with one of the following constants:
+
+```csharp
+adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyEU); // for EU data residency region
+```
 
 ## Testing and troubleshooting
 
