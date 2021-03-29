@@ -227,6 +227,8 @@ extern "C"
                 [adjustConfig setUrlStrategy:ADJUrlStrategyChina];
             } else if ([stringUrlStrategy isEqualToString:@"india"]) {
                 [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
+            } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
+                [adjustConfig setUrlStrategy:ADJDataResidencyEU];
             }
         }
 
