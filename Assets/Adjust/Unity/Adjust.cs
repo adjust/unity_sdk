@@ -14,14 +14,15 @@ namespace com.adjust.sdk
         public bool eventBuffering = false;
         public bool sendInBackground = false;
         public bool launchDeferredDeeplink = true;
-        public bool isDeviceKnown = false;
         public bool needsCost = false;
+        public bool allowSuppressLogLevel = false;
 
         public string appToken = "{Your App Token}";
-        public string userAgent = "";
         public string defaultTracker = "";
         public string externalDeviceId = "";
-        public string urlStrategy = "";
+
+        [Tooltip("URL Strategy is a specific property for India and China. Just leave it Unset for other countries")]
+        public UrlStrategy URLStrategy = UrlStrategy.Unset;
 
         [Header("App Secret:")]
         public long secretId = 0;
@@ -35,6 +36,16 @@ namespace com.adjust.sdk
 
         public AdjustLogLevel logLevel = AdjustLogLevel.Info;
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
+
+        [Header("Android specific features:")]
+        public bool preinstallTrackingEnabled = false;
+
+        [Header("iOS specific features:")]
+        public bool allowAdInfoReading = true;
+        public bool allowAdServicesInfoReading = true;
+        public bool allowIDFAInfoReading = true;
+        public bool SKAdNetworkHandling = true;
+
 
 #if UNITY_IOS
         // Delegate references for iOS callback triggering
@@ -64,14 +75,18 @@ namespace com.adjust.sdk
                 adjustConfig.setSendInBackground(this.sendInBackground);
                 adjustConfig.setEventBufferingEnabled(this.eventBuffering);
                 adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
+                adjustConfig.setAllowSuppressLogLevel(this.allowSuppressLogLevel);
                 adjustConfig.setDefaultTracker(this.defaultTracker);
                 adjustConfig.setExternalDeviceId(this.externalDeviceId);
-                adjustConfig.setUrlStrategy(this.urlStrategy);
-                adjustConfig.setUserAgent(this.userAgent);
+                adjustConfig.setUrlStrategy(this.URLStrategy.ToLowerCaseString());
                 adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
                 adjustConfig.setDelayStart(this.startDelay);
-                adjustConfig.setIsDeviceKnown(this.isDeviceKnown);
                 adjustConfig.setNeedsCost(this.needsCost);
+                adjustConfig.setPreinstallTrackingEnabled(this.preinstallTrackingEnabled);
+                adjustConfig.setAllowiAdInfoReading(this.allowAdInfoReading);
+                adjustConfig.setAllowAdServicesInfoReading(this.allowAdServicesInfoReading);
+                adjustConfig.setAllowIdfaReading(this.allowIDFAInfoReading);
+                adjustConfig.setSKAdNetworkHandling(this.SKAdNetworkHandling);
                 Adjust.start(adjustConfig);
             }
         }
