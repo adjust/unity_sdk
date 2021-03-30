@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace com.adjust.sdk
@@ -46,6 +47,8 @@ namespace com.adjust.sdk
         public bool allowIDFAInfoReading = true;
         public bool SKAdNetworkHandling = true;
 
+        private UrlStrategy previousSelectedURLStrategy = UrlStrategy.Unset;
+
 
 #if UNITY_IOS
         // Delegate references for iOS callback triggering
@@ -58,6 +61,16 @@ namespace com.adjust.sdk
         private static Action<AdjustAttribution> attributionChangedDelegate = null;
         private static Action<int> conversionValueUpdatedDelegate = null;
 #endif
+
+        void OnValidate()
+        {
+            if (previousSelectedURLStrategy == UrlStrategy.Unset && URLStrategy != UrlStrategy.Unset)
+            {
+                EditorUtility.DisplayDialog("Are you sure that you want to change URL strategy?", "Please find related information in Readme!", "Ok");
+            }
+
+            this.previousSelectedURLStrategy = this.URLStrategy;
+        }
 
         void Awake()
         {
