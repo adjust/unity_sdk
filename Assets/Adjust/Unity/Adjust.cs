@@ -58,6 +58,16 @@ namespace com.adjust.sdk
         private static Action<int> conversionValueUpdatedDelegate = null;
 #endif
 
+        void OnValidate()
+        {
+            if (previousSelectedURLStrategy == UrlStrategy.Unset && URLStrategy != UrlStrategy.Unset)
+            {
+                EditorUtility.DisplayDialog("Are you sure that you want to change URL strategy?", "Please find related information in Readme!", "Ok");
+            }
+
+            this.previousSelectedURLStrategy = this.URLStrategy;
+        }
+
         void Awake()
         {
             if (IsEditor()) 
