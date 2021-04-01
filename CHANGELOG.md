@@ -1,3 +1,14 @@
+### Version 4.28.0 (1th April 2021)
+#### Changed
+- Removed native iOS legacy code.
+
+#### Native SDKs
+- [iOS@v4.28.0][ios_sdk_v4.28.0]
+- [Android@v4.27.0][android_sdk_v4.27.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.27.0 (29th March 2021)
 #### Added
 - Added data residency feature. Support for EU data residency region is added. You can choose this setting by calling `setUrlStrategy` method of `AdjustConfig` instance with `AdjustConfig.AdjustDataResidencyEU` parameter.
@@ -868,6 +879,7 @@
 [ios_sdk_v4.24.0]: https://github.com/adjust/ios_sdk/tree/v4.24.0
 [ios_sdk_v4.26.2]: https://github.com/adjust/ios_sdk/tree/v4.26.2
 [ios_sdk_v4.27.1]: https://github.com/adjust/ios_sdk/tree/v4.27.1
+[ios_sdk_v4.28.0]: https://github.com/adjust/ios_sdk/tree/v4.28.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
