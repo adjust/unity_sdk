@@ -7,7 +7,6 @@ namespace com.adjust.sdk
     [ExecuteInEditMode]
     public class Adjust : MonoBehaviour
     {
-        [SerializeField]
         [HideInInspector]
         public static List<string> deeplinkingParameters = new List<string>();
 
