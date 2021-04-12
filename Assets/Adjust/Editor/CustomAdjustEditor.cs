@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+namespace com.adjust.sdk {
+	[CustomEditor(typeof(Adjust))]
+	public class CustomAdjustEditor : Editor
+	{
+		List<string> deeplinkingParameters;
+		void OnEnable()
+        {
+			deeplinkingParameters = Adjust.deeplinkingParameters;
+        }
+		// Use this for initialization
+		public override void OnInspectorGUI()
+		{
+			base.OnInspectorGUI();
+
+			GUILayout.Space(20f);
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Edit Info.plist properties", EditorStyles.boldLabel);
+			if (GUILayout.Button("+"))
+			{
+				deeplinkingParameters.Add("");
+			}
+            if (GUILayout.Button("-"))
+            {
+				deeplinkingParameters.RemoveAt(deeplinkingParameters.Count - 1);
+            }
+			GUILayout.EndHorizontal();
+
+			for (int i = 0; i < deeplinkingParameters.Count; i++)
+			{
+				string newKeyProperty = deeplinkingParameters[i];
+				deeplinkingParameters[i] = EditorGUILayout.TextField("New Deeplink " + i, newKeyProperty);
+				EditorGUILayout.Space();
+			}
+			
+			serializedObject.ApplyModifiedProperties();
+		}
+	}
+}

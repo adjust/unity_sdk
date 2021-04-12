@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.iOS.Xcode;
+using com.adjust.sdk;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
 #endif
@@ -60,6 +62,7 @@ public class AdjustEditor : AssetPostprocessor
 
         assetsToExport.Add(assetsPath + "/Editor/AdjustEditor.cs");
         assetsToExport.Add(assetsPath + "/Editor/AdjustSettings.cs");
+        assetsToExport.Add(assetsPath + "/Editor/CustomAdjustEditor.cs");
 
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.cs");
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.prefab");
@@ -142,6 +145,81 @@ public class AdjustEditor : AssetPostprocessor
         }
         else if (target == BuildTarget.iOS)
         {
+            PlistElementArray defferredDeeplinksArray = null;
+            PlistElementDict defferredDeeplinksItems = null;
+            PlistElementArray defferredDeeplinksSchemesArray = null;
+
+            List<string> defferredLinks = new List<string>(Adjust.deeplinkingParameters);
+            string plistPath = projectPath + "/Info.plist";
+            PlistDocument plist = new PlistDocument();
+            plist.ReadFromFile(plistPath);
+            var plistRoot = plist.root;
+
+            // Set Array for futher deeplink values.
+            if (plistRoot.values.ContainsKey("DefferedDeeplinkData"))
+            {
+                defferredDeeplinksArray = plistRoot.CreateArray("DefferedDeeplinkData");
+            }
+            else
+            {
+                defferredDeeplinksArray = plistRoot.values["DefferedDeeplinkData"].AsArray();
+                if (defferredDeeplinksArray == null)
+                {
+                    defferredDeeplinksArray = plistRoot.CreateArray("CFBundleURLTypes");
+                }
+            }
+
+            // Array will contains just one deeplink dictionary
+            if(defferredDeeplinksArray.values.Count == 0)
+            {
+                defferredDeeplinksItems = defferredDeeplinksArray.AddDict();
+            }
+            else
+            {
+                defferredDeeplinksItems = defferredDeeplinksArray.values[0].AsDict();
+                if(defferredDeeplinksItems == null)
+                {
+                    defferredDeeplinksItems = defferredDeeplinksArray.AddDict();
+                }
+            }
+
+            if (!defferredDeeplinksItems.values.ContainsKey("DefferredDeeplinksURLSchemes"))
+            {
+                defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("DefferredDeeplinksURLSchemes");
+            }
+            else
+            {
+                defferredDeeplinksSchemesArray = defferredDeeplinksItems.values["DefferredDeeplinksURLSchemes"].AsArray();
+
+                if (defferredDeeplinksSchemesArray == null)
+                {
+                    defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("DefferredDeeplinksURLSchemes");
+                }
+            }
+
+            // Delete old defferred deeplinks URIs
+            foreach (PlistElement element in defferredDeeplinksSchemesArray.values)
+            {
+                if (element.AsString() != null && element.AsString().Equals(defferredLinks[0]))
+                {
+                    defferredDeeplinksSchemesArray.values.Remove(element);
+                    break;
+                }
+            }
+
+            foreach (PlistElement element in defferredDeeplinksSchemesArray.values)
+            {
+                if (element.AsString() != null && element.AsString().Equals(defferredLinks[1]))
+                {
+                    defferredDeeplinksSchemesArray.values.Remove(element);
+                    break;
+                }
+            }
+
+            defferredDeeplinksSchemesArray.AddString(defferredLinks[0]);
+            defferredDeeplinksSchemesArray.AddString(defferredLinks[1]);
+
+            File.WriteAllText(plistPath, plist.WriteToString());
 #if UNITY_IOS
             UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
             
