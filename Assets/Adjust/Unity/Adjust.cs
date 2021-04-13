@@ -23,8 +23,11 @@ namespace com.adjust.sdk
         public string defaultTracker = "";
 
         public UrlStrategy URLStrategy = UrlStrategy.Default;
+<<<<<<< HEAD
 
         public double startDelay = 0;
+=======
+>>>>>>> 93c5806 (fix: Fixed comments)
 
         [Header("APP SECRET:")]
         [Space(5)]
@@ -35,6 +38,14 @@ namespace com.adjust.sdk
         public long info4 = 0;
         [Space(20)]
 
+<<<<<<< HEAD
+=======
+        public double startDelay = 0;
+
+        public AdjustLogLevel logLevel = AdjustLogLevel.Info;
+        public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
+
+>>>>>>> 93c5806 (fix: Fixed comments)
         [Header("ANDROID SPECIFIC FEATURES:")]
         [Space(5)]
         public bool preinstallTrackingEnabled = false;
@@ -58,16 +69,6 @@ namespace com.adjust.sdk
         private static Action<int> conversionValueUpdatedDelegate = null;
 #endif
 
-        void OnValidate()
-        {
-            if (previousSelectedURLStrategy == UrlStrategy.Unset && URLStrategy != UrlStrategy.Unset)
-            {
-                EditorUtility.DisplayDialog("Are you sure that you want to change URL strategy?", "Please find related information in Readme!", "Ok");
-            }
-
-            this.previousSelectedURLStrategy = this.URLStrategy;
-        }
-
         void Awake()
         {
             if (IsEditor()) 
@@ -84,6 +85,10 @@ namespace com.adjust.sdk
                 adjustConfig.setSendInBackground(this.sendInBackground);
                 adjustConfig.setEventBufferingEnabled(this.eventBuffering);
                 adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
+<<<<<<< HEAD
+=======
+                adjustConfig.allowSuppressLogLevel = this.allowSuppressLogLevel;
+>>>>>>> 93c5806 (fix: Fixed comments)
                 adjustConfig.setDefaultTracker(this.defaultTracker);
                 adjustConfig.setUrlStrategy(this.URLStrategy.ToLowerCaseString());
                 adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
