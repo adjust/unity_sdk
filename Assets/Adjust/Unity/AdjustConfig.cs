@@ -260,15 +260,5 @@ namespace com.adjust.sdk
         {
             this.logDelegate = logDelegate;
         }
-
-        public void setAllowSuppressLogLevel(bool allowSuppressLogLevel)
-        {
-            this.allowSuppressLogLevel = allowSuppressLogLevel;
-        }
-
-        public void setSKAdNetworkHandling(bool skAdNetworkHandling)
-        {
-            this.skAdNetworkHandling = skAdNetworkHandling;
-        }
     }
 }

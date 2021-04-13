@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum UrlStrategy
 {
-    Unset,
+    Default,
+    DataResidencyEU,
     India,
     China,
 }
@@ -17,6 +18,7 @@ public static class UrlStrategyExtension
         {
             case UrlStrategy.India: return "india";
             case UrlStrategy.China: return "china";
+            case UrlStrategy.DataResidencyEU: return "data-residency-eu";
             default: return string.Empty;
         }
     }

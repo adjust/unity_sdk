@@ -22,10 +22,10 @@ namespace com.adjust.sdk
         public string defaultTracker = "";
         public string externalDeviceId = "";
 
-        [Tooltip("URL Strategy is a specific property for India and China. Just leave it Unset for other countries")]
-        public UrlStrategy URLStrategy = UrlStrategy.Unset;
+        public UrlStrategy URLStrategy = UrlStrategy.Default;
 
-        [Header("App Secret:")]
+        [Header("APP SECRET:")]
+        [Space(5)]
         public long secretId = 0;
         public long info1 = 0;
         public long info2 = 0;
@@ -38,17 +38,16 @@ namespace com.adjust.sdk
         public AdjustLogLevel logLevel = AdjustLogLevel.Info;
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
 
-        [Header("Android specific features:")]
+        [Header("ANDROID SPECIFIC FEATURES:")]
+        [Space(5)]
         public bool preinstallTrackingEnabled = false;
 
-        [Header("iOS specific features:")]
+        [Header("iOS SPECIFIC FEATURES:")]
+        [Space(5)]
         public bool allowAdInfoReading = true;
         public bool allowAdServicesInfoReading = true;
         public bool allowIDFAInfoReading = true;
-        public bool SKAdNetworkHandling = true;
-
-        private UrlStrategy previousSelectedURLStrategy = UrlStrategy.Unset;
-
+        public bool skAdNetworkHandling = true;
 
 #if UNITY_IOS
         // Delegate references for iOS callback triggering
@@ -61,16 +60,6 @@ namespace com.adjust.sdk
         private static Action<AdjustAttribution> attributionChangedDelegate = null;
         private static Action<int> conversionValueUpdatedDelegate = null;
 #endif
-
-        void OnValidate()
-        {
-            if (previousSelectedURLStrategy == UrlStrategy.Unset && URLStrategy != UrlStrategy.Unset)
-            {
-                EditorUtility.DisplayDialog("Are you sure that you want to change URL strategy?", "Please find related information in Readme!", "Ok");
-            }
-
-            this.previousSelectedURLStrategy = this.URLStrategy;
-        }
 
         void Awake()
         {
@@ -88,7 +77,7 @@ namespace com.adjust.sdk
                 adjustConfig.setSendInBackground(this.sendInBackground);
                 adjustConfig.setEventBufferingEnabled(this.eventBuffering);
                 adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
-                adjustConfig.setAllowSuppressLogLevel(this.allowSuppressLogLevel);
+                adjustConfig.allowSuppressLogLevel = this.allowSuppressLogLevel;
                 adjustConfig.setDefaultTracker(this.defaultTracker);
                 adjustConfig.setExternalDeviceId(this.externalDeviceId);
                 adjustConfig.setUrlStrategy(this.URLStrategy.ToLowerCaseString());
@@ -99,7 +88,8 @@ namespace com.adjust.sdk
                 adjustConfig.setAllowiAdInfoReading(this.allowAdInfoReading);
                 adjustConfig.setAllowAdServicesInfoReading(this.allowAdServicesInfoReading);
                 adjustConfig.setAllowIdfaReading(this.allowIDFAInfoReading);
-                adjustConfig.setSKAdNetworkHandling(this.SKAdNetworkHandling);
+                if(!skAdNetworkHandling)
+                    adjustConfig.deactivateSKAdNetworkHandling();
                 Adjust.start(adjustConfig);
             }
         }
