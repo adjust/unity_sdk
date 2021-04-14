@@ -156,16 +156,16 @@ public class AdjustEditor : AssetPostprocessor
             var plistRoot = plist.root;
 
             // Set Array for futher deeplink values.
-            if (plistRoot.values.ContainsKey("DefferedDeeplinkData"))
+            if (plistRoot.values.ContainsKey("URLTypes"))
             {
-                defferredDeeplinksArray = plistRoot.CreateArray("DefferedDeeplinkData");
+                defferredDeeplinksArray = plistRoot.CreateArray("URLTypes");
             }
             else
             {
-                defferredDeeplinksArray = plistRoot.values["DefferedDeeplinkData"].AsArray();
+                defferredDeeplinksArray = plistRoot.values["URLTypes"].AsArray();
                 if (defferredDeeplinksArray == null)
                 {
-                    defferredDeeplinksArray = plistRoot.CreateArray("CFBundleURLTypes");
+                    defferredDeeplinksArray = plistRoot.CreateArray("URLTypes");
                 }
             }
 
@@ -183,17 +183,17 @@ public class AdjustEditor : AssetPostprocessor
                 }
             }
 
-            if (!defferredDeeplinksItems.values.ContainsKey("DefferredDeeplinksURLSchemes"))
+            if (!defferredDeeplinksItems.values.ContainsKey("URLSchemes"))
             {
-                defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("DefferredDeeplinksURLSchemes");
+                defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("URLSchemes");
             }
             else
             {
-                defferredDeeplinksSchemesArray = defferredDeeplinksItems.values["DefferredDeeplinksURLSchemes"].AsArray();
+                defferredDeeplinksSchemesArray = defferredDeeplinksItems.values["URLSchemes"].AsArray();
 
                 if (defferredDeeplinksSchemesArray == null)
                 {
-                    defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("DefferredDeeplinksURLSchemes");
+                    defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("URLSchemes");
                 }
             }
 
