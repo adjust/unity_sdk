@@ -114,6 +114,18 @@ namespace com.adjust.sdk
         private static extern void _AdjustTrackAdRevenue(string source, string payload);
 
         [DllImport("__Internal")]
+        private static extern void _AdjustTrackAdRevenueNew(
+            string source,
+            double revenue,
+            string currency,
+            int adImpressionsCount,
+            string adRevenueNetwork,
+            string adRevenueUnit,
+            string adRevenuePlacement,
+            string jsonCallbackParameters,
+            string jsonPartnerParameters);
+
+        [DllImport("__Internal")]
         private static extern void _AdjustTrackAppStoreSubscription(
             string price,
             string currency,
@@ -305,6 +317,30 @@ namespace com.adjust.sdk
         public static void TrackAdRevenue(string source, string payload)
         {
             _AdjustTrackAdRevenue(source, payload);
+        }
+
+        public static void TrackAdRevenue(AdjustAdRevenue adRevenue)
+        {
+            string source = adRevenue.source;
+            double revenue = AdjustUtils.ConvertDouble(adRevenue.revenue);
+            string currency = adRevenue.currency;
+            int adImpressionsCount = AdjustUtils.ConvertInt(adRevenue.adImpressionsCount);
+            string adRevenueNetwork = adRevenue.adRevenueNetwork;
+            string adRevenueUnit = adRevenue.adRevenueUnit;
+            string adRevenuePlacement = adRevenue.adRevenuePlacement;
+            string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(adRevenue.callbackList);
+            string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adRevenue.partnerList);
+
+            _AdjustTrackAdRevenueNew(
+                source,
+                revenue,
+                currency,
+                adImpressionsCount,
+                adRevenueNetwork,
+                adRevenueUnit,
+                adRevenuePlacement,
+                stringJsonCallbackParameters,
+                stringJsonPartnerParameters);
         }
 
         public static void TrackAppStoreSubscription(AdjustAppStoreSubscription subscription)

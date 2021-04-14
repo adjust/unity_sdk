@@ -492,6 +492,72 @@ extern "C"
         }
     }
 
+    void _AdjustTrackAdRevenueNew(const char* source,
+                                  double revenue,
+                                  const char* currency,
+                                  int adImpressionsCount,
+                                  const char* adRevenueNetwork,
+                                  const char* adRevenueUnit,
+                                  const char* adRevenuePlacement,
+                                  const char* jsonCallbackParameters,
+                                  const char* jsonPartnerParameters) {
+        NSString *stringSource = isStringValid(source) == true ? [NSString stringWithUTF8String:source] : nil;
+        ADJAdRevenue *adRevenue = [[ADJAdRevenue alloc] initWithSource:stringSource];
+
+        // Revenue and currency.
+        if (revenue != -1 && currency != NULL) {
+            NSString *stringCurrency = [NSString stringWithUTF8String:currency];
+            [adRevenue setRevenue:revenue currency:stringCurrency];
+        }
+
+        // Ad impressions count.
+        if (adImpressionsCount != -1) {
+            [adRevenue setAdImpressionsCount:[NSNumber numberWithInt:adImpressionsCount]];
+        }
+
+        // Ad revenue network.
+        if (adRevenueNetwork != NULL) {
+            NSString *stringAdRevenueNetwork = [NSString stringWithUTF8String:adRevenueNetwork];
+            [adRevenue setAdRevenueNetwork:stringAdRevenueNetwork];
+        }
+
+        // Ad revenue unit.
+        if (adRevenueUnit != NULL) {
+            NSString *stringAdRevenueUnit = [NSString stringWithUTF8String:adRevenueUnit];
+            [adRevenue setAdRevenueUnit:stringAdRevenueUnit];
+        }
+
+        // Ad revenue placement.
+        if (adRevenuePlacement != NULL) {
+            NSString *stringAdRevenuePlacement = [NSString stringWithUTF8String:adRevenuePlacement];
+            [adRevenue setAdRevenuePlacement:stringAdRevenuePlacement];
+        }
+
+        // Callback parameters.
+        NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
+        if (arrayCallbackParameters != nil) {
+            NSUInteger count = [arrayCallbackParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayCallbackParameters[i++];
+                NSString *value = arrayCallbackParameters[i++];
+                [adRevenue addCallbackParameter:key value:value];
+            }
+        }
+
+        NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
+        if (arrayPartnerParameters != nil) {
+            NSUInteger count = [arrayPartnerParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayPartnerParameters[i++];
+                NSString *value = arrayPartnerParameters[i++];
+                [adRevenue addPartnerParameter:key value:value];
+            }
+        }
+
+        // Track ad revenue.
+        [Adjust trackAdRevenue:adRevenue];
+    }
+
     void _AdjustTrackAppStoreSubscription(const char* price,
                                           const char* currency,
                                           const char* transactionId,
