@@ -12,6 +12,7 @@
 #import "ADJAttribution.h"
 #import "ADJSubscription.h"
 #import "ADJThirdPartySharing.h"
+#import "ADJAdRevenue.h"
 
 @interface AdjustTestOptions : NSObject
 
@@ -42,6 +43,7 @@ extern NSString * __nonnull const ADJEnvironmentProduction;
 /**
  * Constants for supported ad revenue sources.
  */
+extern NSString * __nonnull const ADJAdRevenueSourceAppLovinMax;
 extern NSString * __nonnull const ADJAdRevenueSourceMopub;
 extern NSString * __nonnull const ADJAdRevenueSourceAdmob;
 extern NSString * __nonnull const ADJAdRevenueSourceFbNativeAd;
@@ -281,6 +283,8 @@ extern NSString * __nonnull const ADJDataResidencyEU;
 
 + (void)trackMeasurementConsent:(BOOL)enabled;
 
++ (void)trackAdRevenue:(nonnull ADJAdRevenue *)adRevenue;
+
 /**
  * @brief Track subscription.
  *
@@ -294,12 +298,12 @@ extern NSString * __nonnull const ADJDataResidencyEU;
 
 + (void)updateConversionValue:(NSInteger)conversionValue;
 
++ (void)setTestOptions:(nullable AdjustTestOptions *)testOptions;
+
 /**
  * Obtain singleton Adjust object.
  */
 + (nullable id)getInstance;
-
-+ (void)setTestOptions:(nullable AdjustTestOptions *)testOptions;
 
 - (void)appDidLaunch:(nullable ADJConfig *)adjustConfig;
 
@@ -358,5 +362,11 @@ extern NSString * __nonnull const ADJDataResidencyEU;
 - (int)appTrackingAuthorizationStatus;
 
 - (void)updateConversionValue:(NSInteger)conversionValue;
+
+- (void)trackThirdPartySharing:(nonnull ADJThirdPartySharing *)thirdPartySharing;
+
+- (void)trackMeasurementConsent:(BOOL)enabled;
+
+- (void)trackAdRevenue:(nonnull ADJAdRevenue *)adRevenue;
 
 @end
