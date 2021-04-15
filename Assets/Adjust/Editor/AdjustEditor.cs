@@ -402,6 +402,9 @@ public class AdjustEditor : AssetPostprocessor
             // Add intent filter to main activity if it is missing.
             manifestHasChanged |= AddBroadcastReceiver(manifestFile);
 
+            // Add intent filter to URL schemes for deeplinking
+            manifestHasChanged |= AddURLSchemes(manifestFile);
+
             if (manifestHasChanged)
             {
                 // Save the changes.
@@ -420,6 +423,44 @@ public class AdjustEditor : AssetPostprocessor
                 UnityEngine.Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
             }
         }
+    }
+
+    private static bool AddURLSchemes(XmlDocument manifest)
+    {
+        bool hasAndroidScheme = false;
+
+        XmlElement manifestRoot = manifest.DocumentElement;
+
+        foreach (XmlNode node in manifestRoot.ChildNodes)
+        {
+            if (node.Name == "uses-permission")
+            {
+                foreach(XmlNode innerNode in node.ChildNodes)
+                {
+                    if (innerNode.Attributes != null && innerNode.Attributes["android:scheme"] != null)
+                    {
+                        hasAndroidScheme = true;
+                    }
+                    
+                }
+            }
+        }
+
+        bool manifestHasChanged = false;
+
+        if (!hasAndroidScheme)
+        {
+            XmlElement usesPermissionNode = manifest.CreateElement("uses-permission");
+            XmlElement androidSchemeNode = manifest.CreateElement("data");
+            androidSchemeNode.SetAttribute("android:scheme", "Sample");
+            usesPermissionNode.AppendChild(androidSchemeNode);
+            manifestRoot.AppendChild(usesPermissionNode);
+            UnityEngine.Debug.Log("[Adjust]: Android deeplink URL scheme successfully added to your app's AndroidManifest.xml file.");
+            manifestHasChanged = true;
+
+        }
+
+        return manifestHasChanged;
     }
 
     private static bool AddPermissions(XmlDocument manifest)
