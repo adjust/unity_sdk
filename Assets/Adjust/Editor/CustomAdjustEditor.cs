@@ -11,7 +11,7 @@ namespace com.adjust.sdk {
 		List<string> deeplinkingParameters;
 		void OnEnable()
         {
-			deeplinkingParameters = Adjust.deeplinkingParameters;
+			deeplinkingParameters = Adjust.iOSDeeplinkingURLSchemes;
         }
 		// Use this for initialization
 		public override void OnInspectorGUI()
@@ -20,7 +20,7 @@ namespace com.adjust.sdk {
 
 			GUILayout.Space(20f);
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Edit Info.plist properties", EditorStyles.boldLabel);
+			GUILayout.Label("Add URL schemes for deeplinking", EditorStyles.boldLabel);
 			if (GUILayout.Button("+"))
 			{
 				deeplinkingParameters.Add("");

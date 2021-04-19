@@ -200,24 +200,17 @@ public class AdjustEditor : AssetPostprocessor
             // Delete old defferred deeplinks URIs
             foreach (PlistElement element in defferredDeeplinksSchemesArray.values)
             {
-                if (element.AsString() != null && element.AsString().Equals(defferredLinks[0]))
+                if (element.AsString() != null && defferredLinks.Contains(element.AsString()))
                 {
                     defferredDeeplinksSchemesArray.values.Remove(element);
                     break;
                 }
             }
 
-            foreach (PlistElement element in defferredDeeplinksSchemesArray.values)
+            foreach (var link in defferredLinks)
             {
-                if (element.AsString() != null && element.AsString().Equals(defferredLinks[1]))
-                {
-                    defferredDeeplinksSchemesArray.values.Remove(element);
-                    break;
-                }
+                defferredDeeplinksSchemesArray.AddString(link);
             }
-
-            defferredDeeplinksSchemesArray.AddString(defferredLinks[0]);
-            defferredDeeplinksSchemesArray.AddString(defferredLinks[1]);
 
             File.WriteAllText(plistPath, plist.WriteToString());
 #if UNITY_IOS
