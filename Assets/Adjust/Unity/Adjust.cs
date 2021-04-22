@@ -8,7 +8,9 @@ namespace com.adjust.sdk
     public class Adjust : MonoBehaviour
     {
         [HideInInspector]
-        public static List<string> deeplinkingParameters = new List<string>();
+        public static List<string> iOSDeeplinkingURLSchemes = new List<string>();
+
+        public static string NSUserTrackingUsageDescription = "";
 
         private const string errorMsgEditor = "[Adjust]: SDK can not be used in Editor.";
         private const string errorMsgStart = "[Adjust]: SDK not started. Start it manually using the 'start' method.";

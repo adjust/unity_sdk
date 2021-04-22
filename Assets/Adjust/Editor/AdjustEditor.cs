@@ -149,11 +149,13 @@ public class AdjustEditor : AssetPostprocessor
             PlistElementDict defferredDeeplinksItems = null;
             PlistElementArray defferredDeeplinksSchemesArray = null;
 
-            List<string> defferredLinks = new List<string>(Adjust.deeplinkingParameters);
+            List<string> defferredLinks = new List<string>(Adjust.iOSDeeplinkingURLSchemes);
             string plistPath = projectPath + "/Info.plist";
             PlistDocument plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
             var plistRoot = plist.root;
+
+            plistRoot.SetString("NSUserTrackingUsageDescription", Adjust.NSUserTrackingUsageDescription);
 
             // Set Array for futher deeplink values.
             if (plistRoot.values.ContainsKey("URLTypes"))
