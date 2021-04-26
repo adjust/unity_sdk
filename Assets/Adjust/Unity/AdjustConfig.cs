@@ -9,7 +9,7 @@ namespace com.adjust.sdk
 
         public const string AdjustDataResidencyEU = "data-residency-eu";
 
-        public const string AdjustAdRevenueSourceAppLovinMax = "applovin_max_sdk";
+        public const string AdjustAdRevenueSourceAppLovinMAX = "applovin_max_sdk";
         public const string AdjustAdRevenueSourceMopub = "mopub";
         public const string AdjustAdRevenueSourceAdmob = "admob";
         public const string AdjustAdRevenueSourceFbNativeAd = "facebook_native_ad";
