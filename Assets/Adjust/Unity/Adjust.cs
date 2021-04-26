@@ -12,17 +12,19 @@ namespace com.adjust.sdk
         private const string errorMsgPlatform = "[Adjust]: SDK can only be used in Android, iOS, Windows Phone 8.1, Windows Store or Universal Windows apps.";
 
         public bool startManually = true;
+        public string appToken = "{Your App Token}";
+        public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
+        public AdjustLogLevel logLevel = AdjustLogLevel.Info;
         public bool eventBuffering = false;
         public bool sendInBackground = false;
         public bool launchDeferredDeeplink = true;
         public bool needsCost = false;
-        public bool allowSuppressLogLevel = false;
-
-        public string appToken = "{Your App Token}";
+        
         public string defaultTracker = "";
-        public string externalDeviceId = "";
 
         public UrlStrategy URLStrategy = UrlStrategy.Default;
+
+        public double startDelay = 0;
 
         [Header("APP SECRET:")]
         [Space(5)]
@@ -32,11 +34,6 @@ namespace com.adjust.sdk
         public long info3 = 0;
         public long info4 = 0;
         [Space(20)]
-
-        public double startDelay = 0;
-
-        public AdjustLogLevel logLevel = AdjustLogLevel.Info;
-        public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
 
         [Header("ANDROID SPECIFIC FEATURES:")]
         [Space(5)]
@@ -77,9 +74,7 @@ namespace com.adjust.sdk
                 adjustConfig.setSendInBackground(this.sendInBackground);
                 adjustConfig.setEventBufferingEnabled(this.eventBuffering);
                 adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
-                adjustConfig.allowSuppressLogLevel = this.allowSuppressLogLevel;
                 adjustConfig.setDefaultTracker(this.defaultTracker);
-                adjustConfig.setExternalDeviceId(this.externalDeviceId);
                 adjustConfig.setUrlStrategy(this.URLStrategy.ToLowerCaseString());
                 adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
                 adjustConfig.setDelayStart(this.startDelay);
