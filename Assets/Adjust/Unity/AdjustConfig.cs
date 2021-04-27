@@ -8,26 +8,12 @@ namespace com.adjust.sdk
         public const string AdjustUrlStrategyIndia = "india";
 
         public const string AdjustDataResidencyEU = "data-residency-eu";
+        public const string AdjustDataResidencyTR = "data-residency-tr";
 
+        public const string AdjustAdRevenueSourceAppLovinMAX = "applovin_max_sdk";
         public const string AdjustAdRevenueSourceMopub = "mopub";
-        public const string AdjustAdRevenueSourceAdmob = "admob";
-        public const string AdjustAdRevenueSourceFbNativeAd = "facebook_native_ad";
-        public const string AdjustAdRevenueSourceFbAudienceNetwork = "facebook_audience_network";
-        public const string AdjustAdRevenueSourceIronsource = "ironsource";
-        public const string AdjustAdRevenueSourceFyber = "fyber";
-        public const string AdjustAdRevenueSourceAerserv = "aerserv";
-        public const string AdjustAdRevenueSourceAppodeal = "appodeal";
-        public const string AdjustAdRevenueSourceAdincube = "adincube";
-        public const string AdjustAdRevenueSourceFusePowered = "fusepowered";
-        public const string AdjustAdRevenueSourceAddaptr = "addapptr";
-        public const string AdjustAdRevenueSourceMillenialMediation = "millennial_mediation";
-        public const string AdjustAdRevenueSourceFlurry = "flurry";
-        public const string AdjustAdRevenueSourceAdmost = "admost";
-        public const string AdjustAdRevenueSourceDeltadna = "deltadna";
-        public const string AdjustAdRevenueSourceUpsight = "upsight";
-        public const string AdjustAdRevenueSourceUnityads = "unityads";
-        public const string AdjustAdRevenueSourceAdtoapp = "adtoapp";
-        public const string AdjustAdRevenueSourceTapdaq = "tapdaq";
+        public const string AdjustAdRevenueSourceAdMob = "admob_sdk";
+        public const string AdjustAdRevenueSourceIronSource = "ironsource_sdk";
 
         internal string appToken;
         internal string sceneName;
@@ -55,6 +41,7 @@ namespace com.adjust.sdk
         internal Action<AdjustSessionSuccess> sessionSuccessDelegate;
         internal Action<AdjustSessionFailure> sessionFailureDelegate;
         internal Action<AdjustAttribution> attributionChangedDelegate;
+        internal Action<int> conversionValueUpdatedDelegate;
 
         // Android specific members
         internal bool? readImei;
@@ -209,6 +196,17 @@ namespace com.adjust.sdk
         public Action<AdjustSessionFailure> getSessionFailureDelegate()
         {
             return this.sessionFailureDelegate;
+        }
+
+        public void setConversionValueUpdatedDelegate(Action<int> conversionValueUpdatedDelegate, string sceneName = "Adjust")
+        {
+            this.conversionValueUpdatedDelegate = conversionValueUpdatedDelegate;
+            this.sceneName = sceneName;
+        }
+
+        public Action<int> getConversionValueUpdatedDelegate()
+        {
+            return this.conversionValueUpdatedDelegate;
         }
 
         public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)

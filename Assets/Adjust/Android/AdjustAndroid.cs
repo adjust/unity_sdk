@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.28.0";
+        private const string sdkPrefix = "unity4.29.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -139,6 +139,11 @@ namespace com.adjust.sdk
                 {
                     AndroidJavaObject ajoDataResidencyEU = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("DATA_RESIDENCY_EU");
                     ajoAdjustConfig.Call("setUrlStrategy", ajoDataResidencyEU);
+                }
+                else if (adjustConfig.urlStrategy == AdjustConfig.AdjustDataResidencyTR)
+                {
+                    AndroidJavaObject ajoDataResidencyTR = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("DATA_RESIDENCY_TR");
+                    ajoAdjustConfig.Call("setUrlStrategy", ajoDataResidencyTR);
                 }
             }
 
@@ -419,6 +424,68 @@ namespace com.adjust.sdk
             }
             AndroidJavaObject jsonPayload = new AndroidJavaObject("org.json.JSONObject", payload);
             ajcAdjust.CallStatic("trackAdRevenue", source, jsonPayload);
+        }
+
+        public static void TrackAdRevenue(AdjustAdRevenue adRevenue)
+        {
+            AndroidJavaObject ajoAdjustAdRevenue = new AndroidJavaObject("com.adjust.sdk.AdjustAdRevenue", adRevenue.source);
+
+            // Check if user has set revenue.
+            if (adRevenue.revenue != null)
+            {
+                AndroidJavaObject ajoRevenue = new AndroidJavaObject("java.lang.Double", adRevenue.revenue);
+                ajoAdjustAdRevenue.Call("setRevenue", ajoRevenue, adRevenue.currency);
+            }
+
+            // Check if user has set ad impressions count.
+            if (adRevenue.adImpressionsCount != null)
+            {
+                AndroidJavaObject ajoAdImpressionsCount = new AndroidJavaObject("java.lang.Integer", adRevenue.adImpressionsCount);
+                ajoAdjustAdRevenue.Call("setAdImpressionsCount", ajoAdImpressionsCount);
+            }
+
+            // Check if user has set ad revenue network.
+            if (adRevenue.adRevenueNetwork != null)
+            {
+                ajoAdjustAdRevenue.Call("setAdRevenueNetwork", adRevenue.adRevenueNetwork);
+            }
+
+            // Check if user has set ad revenue unit.
+            if (adRevenue.adRevenueUnit != null)
+            {
+                ajoAdjustAdRevenue.Call("setAdRevenueUnit", adRevenue.adRevenueUnit);
+            }
+
+            // Check if user has set ad revenue placement.
+            if (adRevenue.adRevenuePlacement != null)
+            {
+                ajoAdjustAdRevenue.Call("setAdRevenuePlacement", adRevenue.adRevenuePlacement);
+            }
+
+            // Check if user has added any callback parameters.
+            if (adRevenue.callbackList != null)
+            {
+                for (int i = 0; i < adRevenue.callbackList.Count; i += 2)
+                {
+                    string key = adRevenue.callbackList[i];
+                    string value = adRevenue.callbackList[i + 1];
+                    ajoAdjustAdRevenue.Call("addCallbackParameter", key, value);
+                }
+            }
+
+            // Check if user has added any partner parameters.
+            if (adRevenue.partnerList != null)
+            {
+                for (int i = 0; i < adRevenue.partnerList.Count; i += 2)
+                {
+                    string key = adRevenue.partnerList[i];
+                    string value = adRevenue.partnerList[i + 1];
+                    ajoAdjustAdRevenue.Call("addPartnerParameter", key, value);
+                }
+            }
+
+            // Track ad revenue.
+            ajcAdjust.CallStatic("trackAdRevenue", ajoAdjustAdRevenue);
         }
 
         public static void TrackPlayStoreSubscription(AdjustPlayStoreSubscription subscription)

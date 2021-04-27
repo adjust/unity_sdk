@@ -72,6 +72,7 @@ namespace com.adjust.sdk.test
                     case "trackSubscription": TrackSubscription(); break;
                     case "thirdPartySharing": ThirdPartySharing(); break;
                     case "measurementConsent": MeasurementConsent(); break;
+                    case "trackAdRevenueV2": TrackAdRevenueV2(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -845,6 +846,68 @@ namespace com.adjust.sdk.test
         {
             var enabled = bool.Parse(_command.GetFirstParameterValue("isEnabled"));
             Adjust.trackMeasurementConsent(enabled);
+        }
+
+        private void TrackAdRevenueV2()
+        {
+            string source = _command.GetFirstParameterValue("adRevenueSource");
+            AdjustAdRevenue adRevenue = new AdjustAdRevenue(source);
+
+            if (_command.ContainsParameter("revenue"))
+            {
+                var revenueParams = _command.Parameters["revenue"];
+                var currency = revenueParams[0];
+                var revenue = double.Parse(revenueParams[1]);
+                adRevenue.setRevenue(revenue, currency);
+            }
+
+            if (_command.ContainsParameter("adImpressionsCount"))
+            {
+                int adImpressionsCount = int.Parse(_command.GetFirstParameterValue("adImpressionsCount"));
+                adRevenue.setAdImpressionsCount(adImpressionsCount);
+            }
+
+            if (_command.ContainsParameter("adRevenueUnit"))
+            {
+                string adRevenueUnit = _command.GetFirstParameterValue("adRevenueUnit");
+                adRevenue.setAdRevenueUnit(adRevenueUnit);
+            }
+
+            if (_command.ContainsParameter("adRevenuePlacement"))
+            {
+                string adRevenuePlacement = _command.GetFirstParameterValue("adRevenuePlacement");
+                adRevenue.setAdRevenuePlacement(adRevenuePlacement);
+            }
+
+            if (_command.ContainsParameter("adRevenueNetwork"))
+            {
+                string adRevenueNetwork = _command.GetFirstParameterValue("adRevenueNetwork");
+                adRevenue.setAdRevenueNetwork(adRevenueNetwork);
+            }
+
+            if (_command.ContainsParameter("callbackParams"))
+            {
+                var callbackParams = _command.Parameters["callbackParams"];
+                for (var i = 0; i < callbackParams.Count; i = i + 2)
+                {
+                    var key = callbackParams[i];
+                    var value = callbackParams[i + 1];
+                    adRevenue.addCallbackParameter(key, value);
+                }
+            }
+
+            if (_command.ContainsParameter("partnerParams"))
+            {
+                var partnerParams = _command.Parameters["partnerParams"];
+                for (var i = 0; i < partnerParams.Count; i = i + 2)
+                {
+                    var key = partnerParams[i];
+                    var value = partnerParams[i + 1];
+                    adRevenue.addPartnerParameter(key, value);
+                }
+            }
+
+            Adjust.trackAdRevenue(adRevenue);
         }
 
         private void CommandNotFound(string className, string methodName)

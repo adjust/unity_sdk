@@ -114,7 +114,8 @@ extern "C"
                           int isEventFailureCallbackImplemented,
                           int isSessionSuccessCallbackImplemented,
                           int isSessionFailureCallbackImplemented,
-                          int isDeferredDeeplinkCallbackImplemented) {
+                          int isDeferredDeeplinkCallbackImplemented,
+                          int isConversionValueUpdatedCallbackImplemented) {
         NSString *stringAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *stringEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
         NSString *stringSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
@@ -144,7 +145,8 @@ extern "C"
             || isEventFailureCallbackImplemented
             || isSessionSuccessCallbackImplemented
             || isSessionFailureCallbackImplemented
-            || isDeferredDeeplinkCallbackImplemented) {
+            || isDeferredDeeplinkCallbackImplemented
+            || isConversionValueUpdatedCallbackImplemented) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
                                                             eventSuccessCallback:isEventSuccessCallbackImplemented
@@ -152,6 +154,7 @@ extern "C"
                                                           sessionSuccessCallback:isSessionSuccessCallbackImplemented
                                                           sessionFailureCallback:isSessionFailureCallbackImplemented
                                                         deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
+                                                  conversionValueUpdatedCallback:isConversionValueUpdatedCallbackImplemented
                                                     shouldLaunchDeferredDeeplink:launchDeferredDeeplink
                                                         withAdjustUnitySceneName:stringSceneName]];
         }
@@ -229,6 +232,8 @@ extern "C"
                 [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
                 [adjustConfig setUrlStrategy:ADJDataResidencyEU];
+            } else if ([stringUrlStrategy isEqualToString:@"data-residency-tr"]) {
+                [adjustConfig setUrlStrategy:ADJDataResidencyTR];
             }
         }
 
@@ -490,6 +495,72 @@ extern "C"
             NSData *dataPayload = [stringPayload dataUsingEncoding:NSUTF8StringEncoding];
             [Adjust trackAdRevenue:stringSource payload:dataPayload];
         }
+    }
+
+    void _AdjustTrackAdRevenueNew(const char* source,
+                                  double revenue,
+                                  const char* currency,
+                                  int adImpressionsCount,
+                                  const char* adRevenueNetwork,
+                                  const char* adRevenueUnit,
+                                  const char* adRevenuePlacement,
+                                  const char* jsonCallbackParameters,
+                                  const char* jsonPartnerParameters) {
+        NSString *stringSource = isStringValid(source) == true ? [NSString stringWithUTF8String:source] : nil;
+        ADJAdRevenue *adRevenue = [[ADJAdRevenue alloc] initWithSource:stringSource];
+
+        // Revenue and currency.
+        if (revenue != -1 && currency != NULL) {
+            NSString *stringCurrency = [NSString stringWithUTF8String:currency];
+            [adRevenue setRevenue:revenue currency:stringCurrency];
+        }
+
+        // Ad impressions count.
+        if (adImpressionsCount != -1) {
+            [adRevenue setAdImpressionsCount:adImpressionsCount];
+        }
+
+        // Ad revenue network.
+        if (adRevenueNetwork != NULL) {
+            NSString *stringAdRevenueNetwork = [NSString stringWithUTF8String:adRevenueNetwork];
+            [adRevenue setAdRevenueNetwork:stringAdRevenueNetwork];
+        }
+
+        // Ad revenue unit.
+        if (adRevenueUnit != NULL) {
+            NSString *stringAdRevenueUnit = [NSString stringWithUTF8String:adRevenueUnit];
+            [adRevenue setAdRevenueUnit:stringAdRevenueUnit];
+        }
+
+        // Ad revenue placement.
+        if (adRevenuePlacement != NULL) {
+            NSString *stringAdRevenuePlacement = [NSString stringWithUTF8String:adRevenuePlacement];
+            [adRevenue setAdRevenuePlacement:stringAdRevenuePlacement];
+        }
+
+        // Callback parameters.
+        NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
+        if (arrayCallbackParameters != nil) {
+            NSUInteger count = [arrayCallbackParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayCallbackParameters[i++];
+                NSString *value = arrayCallbackParameters[i++];
+                [adRevenue addCallbackParameter:key value:value];
+            }
+        }
+
+        NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
+        if (arrayPartnerParameters != nil) {
+            NSUInteger count = [arrayPartnerParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayPartnerParameters[i++];
+                NSString *value = arrayPartnerParameters[i++];
+                [adRevenue addPartnerParameter:key value:value];
+            }
+        }
+
+        // Track ad revenue.
+        [Adjust trackAdRevenue:adRevenue];
     }
 
     void _AdjustTrackAppStoreSubscription(const char* price,
