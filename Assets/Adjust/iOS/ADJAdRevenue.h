@@ -63,7 +63,7 @@
 
 - (void)setRevenue:(double)amount currency:(nonnull NSString *)currency;
 
-- (void)setAdImpressionsCount:(nonnull NSNumber *)adImpressionsCount;
+- (void)setAdImpressionsCount:(int)adImpressionsCount;
 
 - (void)setAdRevenueNetwork:(nonnull NSString *)adRevenueNetwork;
 
