@@ -140,6 +140,11 @@ namespace com.adjust.sdk
                     AndroidJavaObject ajoDataResidencyEU = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("DATA_RESIDENCY_EU");
                     ajoAdjustConfig.Call("setUrlStrategy", ajoDataResidencyEU);
                 }
+                else if (adjustConfig.urlStrategy == AdjustConfig.AdjustDataResidencyTR)
+                {
+                    AndroidJavaObject ajoDataResidencyTR = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("DATA_RESIDENCY_TR");
+                    ajoAdjustConfig.Call("setUrlStrategy", ajoDataResidencyTR);
+                }
             }
 
             // Check if user has set app secret.

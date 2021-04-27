@@ -229,6 +229,8 @@ extern "C"
                 [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
                 [adjustConfig setUrlStrategy:ADJDataResidencyEU];
+            } else if ([stringUrlStrategy isEqualToString:@"data-residency-tr"]) {
+                [adjustConfig setUrlStrategy:ADJDataResidencyTR];
             }
         }
 
