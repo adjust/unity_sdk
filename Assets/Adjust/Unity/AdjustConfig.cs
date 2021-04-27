@@ -41,6 +41,7 @@ namespace com.adjust.sdk
         internal Action<AdjustSessionSuccess> sessionSuccessDelegate;
         internal Action<AdjustSessionFailure> sessionFailureDelegate;
         internal Action<AdjustAttribution> attributionChangedDelegate;
+        internal Action<int> conversionValueUpdatedDelegate;
 
         // Android specific members
         internal bool? readImei;
@@ -195,6 +196,17 @@ namespace com.adjust.sdk
         public Action<AdjustSessionFailure> getSessionFailureDelegate()
         {
             return this.sessionFailureDelegate;
+        }
+
+        public void setConversionValueUpdatedDelegate(Action<int> conversionValueUpdatedDelegate, string sceneName = "Adjust")
+        {
+            this.conversionValueUpdatedDelegate = conversionValueUpdatedDelegate;
+            this.sceneName = sceneName;
+        }
+
+        public Action<int> getConversionValueUpdatedDelegate()
+        {
+            return this.conversionValueUpdatedDelegate;
         }
 
         public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)

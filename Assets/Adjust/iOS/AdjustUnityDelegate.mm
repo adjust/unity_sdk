@@ -32,8 +32,9 @@ static AdjustUnityDelegate *defaultInstance = nil;
                            sessionSuccessCallback:(BOOL)swizzleSessionSuccessCallback
                            sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
                          deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
+                   conversionValueUpdatedCallback:(BOOL)swizzleConversionValueUpdatedCallback
                      shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
-                         withAdjustUnitySceneName:(NSString *)adjustUnitySceneName {
+                         withAdjustUnitySceneName:(NSString *)adjustUnitySceneName; {
     dispatch_once(&onceToken, ^{
         defaultInstance = [[AdjustUnityDelegate alloc] init];
 
@@ -61,6 +62,10 @@ static AdjustUnityDelegate *defaultInstance = nil;
         if (swizzleDeferredDeeplinkCallback) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustDeeplinkResponse:)
                                         withSelector:@selector(adjustDeeplinkResponseWannabe:)];
+        }
+        if (swizzleConversionValueUpdatedCallback) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustConversionValueUpdated:)
+                                        withSelector:@selector(adjustConversionValueUpdatedWannabe:)];
         }
 
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
@@ -198,6 +203,12 @@ static AdjustUnityDelegate *defaultInstance = nil;
     const char* charDeeplink = [stringDeeplink UTF8String];
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeDeferredDeeplink", charDeeplink);
     return _shouldLaunchDeferredDeeplink;
+}
+
+- (void)adjustConversionValueUpdatedWannabe:(NSNumber *)conversionValue {
+    NSString *stringConversionValue = [conversionValue stringValue];
+    const char* charConversionValue = [stringConversionValue UTF8String];
+    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeConversionValueUpdated", charConversionValue);
 }
 
 - (void)swizzleOriginalSelector:(SEL)originalSelector

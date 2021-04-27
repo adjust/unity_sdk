@@ -114,7 +114,8 @@ extern "C"
                           int isEventFailureCallbackImplemented,
                           int isSessionSuccessCallbackImplemented,
                           int isSessionFailureCallbackImplemented,
-                          int isDeferredDeeplinkCallbackImplemented) {
+                          int isDeferredDeeplinkCallbackImplemented,
+                          int isConversionValueUpdatedCallbackImplemented) {
         NSString *stringAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *stringEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
         NSString *stringSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
@@ -144,7 +145,8 @@ extern "C"
             || isEventFailureCallbackImplemented
             || isSessionSuccessCallbackImplemented
             || isSessionFailureCallbackImplemented
-            || isDeferredDeeplinkCallbackImplemented) {
+            || isDeferredDeeplinkCallbackImplemented
+            || isConversionValueUpdatedCallbackImplemented) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
                                                             eventSuccessCallback:isEventSuccessCallbackImplemented
@@ -152,6 +154,7 @@ extern "C"
                                                           sessionSuccessCallback:isSessionSuccessCallbackImplemented
                                                           sessionFailureCallback:isSessionFailureCallbackImplemented
                                                         deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
+                                                  conversionValueUpdatedCallback:isConversionValueUpdatedCallbackImplemented
                                                     shouldLaunchDeferredDeeplink:launchDeferredDeeplink
                                                         withAdjustUnitySceneName:stringSceneName]];
         }
@@ -514,7 +517,7 @@ extern "C"
 
         // Ad impressions count.
         if (adImpressionsCount != -1) {
-            [adRevenue setAdImpressionsCount:[NSNumber numberWithInt:adImpressionsCount]];
+            [adRevenue setAdImpressionsCount:adImpressionsCount];
         }
 
         // Ad revenue network.
