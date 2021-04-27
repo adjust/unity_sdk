@@ -62,6 +62,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Get current authorisation status](#ad-ata-getter)
    * [SKAdNetwork framework](#ad-skadn-framework)
       * [Update SKAdNetwork conversion value](#ad-skadn-update-conversion-value)
+      * [Conversion value updated callback](#ad-skadn-cv-updated-callback)
    * [Push token (uninstall tracking)](#ad-push-token)
    * [Attribution callback](#ad-attribution-callback)
    * [Ad revenue tracking](#ad-ad-revenue)
@@ -83,7 +84,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Disable third-party sharing](#ad-disable-third-party-sharing)
       * [Enable third-party sharing](#ad-enable-third-party-sharing)
    * [Measurement consent](#ad-measurement-consent)
-   * [Data residency](#ad-data-residency)
+   * [[beta] Data residency](#ad-data-residency)
 
 ### Testing and troubleshooting
    * [Debug information in iOS](#tt-debug-ios)
@@ -621,6 +622,32 @@ You can use Adjust SDK wrapper method `updateConversionValue` to update SKAdNetw
 Adjust.updateConversionValue(6);
 ```
 
+### <a id="ad-skadn-cv-updated-callback"></a>Conversion value updated callback
+
+You can register callback to get notified each time when Adjust SDK updates conversion value for the user.
+
+```cs
+using com.adjust.sdk;
+
+public class ExampleGUI : MonoBehaviour {
+    void OnGUI() {
+        if (GUI.Button(new Rect(0, 0, Screen.width, Screen.height), "callback")) {
+            AdjustConfig adjustConfig = new AdjustConfig("{Your App Token}", AdjustEnvironment.Sandbox);
+            adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
+            adjustConfig.setConversionValueUpdatedDelegate(ConversionValueUpdatedCallback);
+
+            Adjust.start(adjustConfig);
+        }
+    }
+
+    private void ConversionValueUpdatedCallback(int conversionValue)
+    {
+        Debug.Log("Conversion value update reported!");
+        Debug.Log("Conversion value: " + conversionValue);
+    }
+}
+```
+
 ### <a id="ad-push-token"></a>Push token (uninstall tracking)
 
 Push tokens are used for Audience Builder and client callbacks; they are also required for uninstall and reinstall tracking.
@@ -685,20 +712,35 @@ The callback function will be called when the SDK receives final attribution dat
 
 ### <a id="ad-ad-revenue"></a>Ad revenue tracking
 
-You can track ad revenue information with the Adjust SDK by using the following method:
+**Note**: This ad revenue tracking API is available only in the native SDK v4.29.0 and above.
 
-```csharp
-Adjust.trackAdRevenue(source, payload);
+You can track ad revenue information with Adjust SDK by invoking the following method:
+
+```objc
+// initialise with AppLovin MAX source
+AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue("source");
+// set revenue and currency
+adjustAdRevenue.setRevenue(1.00, "USD");
+// optional parameters
+adjustAdRevenue.setAdImpressionsCount(10);
+adjustAdRevenue.setAdRevenueNetwork("network");
+adjustAdRevenue.setAdRevenueUnit("unit");
+adjustAdRevenue.setAdRevenuePlacement("placement");
+// callback & partner parameters
+adjustAdRevenue.addCallbackParameter("key", "value");
+adjustAdRevenue.addPartnerParameter("key", "value");
+// track ad revenue
+Adjust.trackAdRevenue(adjustAdRevenue);
 ```
 
-The method parameters you need to pass are:
+Currently we support the below `source` parameter values:
 
-- `source` - `string` object which indicates the source of ad revenue info.
-- `payload` - `string` object which contains ad revenue JSON in string form.
+- `AdjustConfig.AdjustAdRevenueSourceAppLovinMAX` - representing AppLovin MAX platform.
+- `AdjustConfig.AdjustAdRevenueSourceMopub` - representing MoPub platform.
+- `AdjustConfig.AdjustAdRevenueSourceAdMob` - representing AdMob platform.
+- `AdjustConfig.AdjustAdRevenueSourceIronSource` - representing IronSource platform.
 
-Currently we support the following `source` parameter values:
-
-- `AdjustConfig.AdjustAdRevenueSourceMopub` - represents the [MoPub mediation platform][sdk2sdk-mopub]
+**Note**: Additional documentation which explains detailed integration with every of the supported sources will be provided outside of this README. Also, in order to use this feature, additional setup is needed for your app in Adjust dashboard, so make sure to get in touch with our support team to make sure that everything is set up correctly before you start to use this feature.
 
 ### <a id="ad-subscriptions"></a>Subscription tracking
 
@@ -1127,13 +1169,16 @@ Adjust.trackMeasurementConsent(true);
 
 Upon receiving this information, Adjust changes sharing the specific user's data to partners. The Adjust SDK will continue to work as expected.
 
-### <a id="ad-data-residency"></a>Data residency
+### <a id="ad-data-residency"></a>[beta] Data residency
 
-In order to enable data residency feature, make sure to make a call to `setUrlStrategy` method of the `AdjustConfig` instance with one of the following constants:
+In order to enable data residency feature, make sure to make a call to `setUrlStrategy:` method of the `ADJConfig` instance with one of the following constants:
 
-```csharp
+```objc
 adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyEU); // for EU data residency region
+adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyTR); // for Turkey data residency region
 ```
+
+**Note:** This feature is currently in beta testing phase. If you are interested in getting access to it, please contact your dedicated account manager or write an email to support@adjust.com. Please, do not turn this setting on before making sure with the support team that this feature is enabled for your app because otherwise SDK traffic will get dropped.
 
 ## Testing and troubleshooting
 
