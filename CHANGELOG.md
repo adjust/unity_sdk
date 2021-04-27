@@ -1,3 +1,15 @@
+### Version 4.29.0 (27th April 2021)
+#### Added
+- Added `conversionValueUpdatedDelegate` callback to `AdjustConfig` which can be used to get information when Adjust SDK updates conversion value for the user.
+- [beta] Added data residency support for Turkey region. You can choose this setting by calling `setUrlStrategy` method of `AdjustConfig` instance with `AdjustConfig.AdjustDataResidencyTR` parameter.
+- Added `trackAdRevenue(AdjustAdRevenue)` method to `Adjust` interface to allow tracking of ad revenue by passing `AdjustAdRevenue` object as parameter. 
+- Added support for `AppLovin MAX` ad revenue tracking.
+
+#### Changed
+- Removed unused ad revenue constants.
+
+---
+
 ### Version 4.28.0 (1th April 2021)
 #### Changed
 - Removed native iOS legacy code.
