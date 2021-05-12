@@ -1,3 +1,17 @@
+### Version 4.29.1 (13th May 2021)
+#### Added
+- [beta] Added data residency support for US region. You can choose this setting by calling `setUrlStrategy` method of `AdjustConfig` instance with `AdjustConfig.AdjustDataResidencyUS` parameter.
+
+#### Fixed
+- Removed 5 decimal places formatting for ad revenue value.
+
+#### Native SDKs
+- [iOS@v4.29.2][ios_sdk_v4.29.2]
+- [Android@v4.28.1][android_sdk_v4.28.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.29.0 (27th April 2021)
 #### Added
 - Added `conversionValueUpdatedDelegate` callback to `AdjustConfig` which can be used to get information when Adjust SDK updates conversion value for the user.
@@ -7,6 +21,11 @@
 
 #### Changed
 - Removed unused ad revenue constants.
+
+#### Native SDKs
+- [iOS@v4.29.0][ios_sdk_v4.29.0]
+- [Android@v4.28.0][android_sdk_v4.28.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
 
 ---
 
@@ -892,6 +911,8 @@
 [ios_sdk_v4.26.2]: https://github.com/adjust/ios_sdk/tree/v4.26.2
 [ios_sdk_v4.27.1]: https://github.com/adjust/ios_sdk/tree/v4.27.1
 [ios_sdk_v4.28.0]: https://github.com/adjust/ios_sdk/tree/v4.28.0
+[ios_sdk_v4.29.0]: https://github.com/adjust/ios_sdk/tree/v4.29.0
+[ios_sdk_v4.29.2]: https://github.com/adjust/ios_sdk/tree/v4.29.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -924,6 +945,8 @@
 [android_sdk_v4.25.0]: https://github.com/adjust/android_sdk/tree/v4.25.0
 [android_sdk_v4.26.1]: https://github.com/adjust/android_sdk/tree/v4.26.1
 [android_sdk_v4.27.0]: https://github.com/adjust/android_sdk/tree/v4.27.0
+[android_sdk_v4.28.0]: https://github.com/adjust/android_sdk/tree/v4.28.0
+[android_sdk_v4.28.1]: https://github.com/adjust/android_sdk/tree/v4.28.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
