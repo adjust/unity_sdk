@@ -1171,11 +1171,12 @@ Upon receiving this information, Adjust changes sharing the specific user's data
 
 ### <a id="ad-data-residency"></a>[beta] Data residency
 
-In order to enable data residency feature, make sure to make a call to `setUrlStrategy:` method of the `ADJConfig` instance with one of the following constants:
+In order to enable data residency feature, make sure to make a call to `setUrlStrategy` method of the `AdjustConfig` instance with one of the following constants:
 
 ```objc
 adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyEU); // for EU data residency region
 adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyTR); // for Turkey data residency region
+adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyUS); // for US data residency region
 ```
 
 **Note:** This feature is currently in beta testing phase. If you are interested in getting access to it, please contact your dedicated account manager or write an email to support@adjust.com. Please, do not turn this setting on before making sure with the support team that this feature is enabled for your app because otherwise SDK traffic will get dropped.
@@ -1210,7 +1211,7 @@ If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPho
 [android-deeplinking]:     https://github.com/adjust/android_sdk#deep-linking
 [google_play_services]:    http://developer.android.com/google/play-services/setup.html
 [android_sdk_download]:    https://developer.android.com/sdk/index.html#Other
-[install-referrer-aar]:    https://maven.google.com/com/android/installreferrer/installreferrer/1.0/installreferrer-1.0.aar
+[install-referrer-aar]:    https://maven.google.com/com/android/installreferrer/installreferrer/2.2/installreferrer-2.2.aar
 [android-custom-receiver]: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md
 
 [menu_android]:             https://raw.github.com/adjust/adjust_sdk/master/Resources/unity/v4/menu_android.png
@@ -1221,7 +1222,7 @@ If needed, disable dSYM File. In the `Project Navigator`, select the `Unity-iPho
 
 ## License
 
-### <a id="license"></a>License agreement
+### <a id="license"></a>License
 
 The file mod_pbxproj.py is licensed under the Apache License, Version 2.0 (the "License").
 You may not use this file except in compliance with the License.
@@ -1229,7 +1230,7 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
 
 The Adjust SDK is licensed under the MIT License.
 
-Copyright (c) 2012-2020 Adjust GmbH, http://www.adjust.com
+Copyright (c) 2012-2021 Adjust GmbH, http://www.adjust.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
