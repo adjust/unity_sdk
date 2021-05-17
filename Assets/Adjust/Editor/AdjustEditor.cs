@@ -158,16 +158,16 @@ public class AdjustEditor : AssetPostprocessor
             plistRoot.SetString("NSUserTrackingUsageDescription", Adjust.NSUserTrackingUsageDescription);
 
             // Set Array for futher deeplink values.
-            if (!plistRoot.values.ContainsKey("URLTypes"))
+            if (!plistRoot.values.ContainsKey("CFBundleURLTypes"))
             {
-                defferredDeeplinksArray = plistRoot.CreateArray("URLTypes");
+                defferredDeeplinksArray = plistRoot.CreateArray("CFBundleURLTypes");
             }
             else
             {
-                defferredDeeplinksArray = plistRoot.values["URLTypes"].AsArray();
+                defferredDeeplinksArray = plistRoot.values["CFBundleURLTypes"].AsArray();
                 if (defferredDeeplinksArray == null)
                 {
-                    defferredDeeplinksArray = plistRoot.CreateArray("URLTypes");
+                    defferredDeeplinksArray = plistRoot.CreateArray("CFBundleURLTypes");
                 }
             }
 
@@ -185,17 +185,17 @@ public class AdjustEditor : AssetPostprocessor
                 }
             }
 
-            if (!defferredDeeplinksItems.values.ContainsKey("URLSchemes"))
+            if (!defferredDeeplinksItems.values.ContainsKey("CFBundleURLSchemes"))
             {
-                defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("URLSchemes");
+                defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("CFBundleURLSchemes");
             }
             else
             {
-                defferredDeeplinksSchemesArray = defferredDeeplinksItems.values["URLSchemes"].AsArray();
+                defferredDeeplinksSchemesArray = defferredDeeplinksItems.values["CFBundleURLSchemes"].AsArray();
 
                 if (defferredDeeplinksSchemesArray == null)
                 {
-                    defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("URLSchemes");
+                    defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("CFBundleURLSchemes");
                 }
             }
 
