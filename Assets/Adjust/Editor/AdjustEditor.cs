@@ -158,7 +158,7 @@ public class AdjustEditor : AssetPostprocessor
             plistRoot.SetString("NSUserTrackingUsageDescription", Adjust.NSUserTrackingUsageDescription);
 
             // Set Array for futher deeplink values.
-            if (plistRoot.values.ContainsKey("URLTypes"))
+            if (!plistRoot.values.ContainsKey("URLTypes"))
             {
                 defferredDeeplinksArray = plistRoot.CreateArray("URLTypes");
             }
