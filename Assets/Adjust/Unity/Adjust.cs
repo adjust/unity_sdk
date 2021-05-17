@@ -74,7 +74,6 @@ namespace com.adjust.sdk
                 adjustConfig.setSendInBackground(this.sendInBackground);
                 adjustConfig.setEventBufferingEnabled(this.eventBuffering);
                 adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
-                adjustConfig.allowSuppressLogLevel = this.allowSuppressLogLevel;
                 adjustConfig.setDefaultTracker(this.defaultTracker);
                 adjustConfig.setUrlStrategy(this.URLStrategy.ToLowerCaseString());
                 adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
