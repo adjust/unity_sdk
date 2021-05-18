@@ -129,7 +129,7 @@ public class AdjustEditor : AssetPostprocessor
             return;
         }
 
-        RunPostBuildScript(target:target, preBuild:false, projectPath:projectPath);
+        RunPostBuildScript(target: target, preBuild: false, projectPath: projectPath);
     }
 
     private static void RunPostBuildScript(BuildTarget target, bool preBuild, string projectPath = "")
@@ -145,7 +145,7 @@ public class AdjustEditor : AssetPostprocessor
             AddUrlSchemesIOS(projectPath);
 
             UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
-            
+
             string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
             PBXProject xcodeProject = new PBXProject();
@@ -166,7 +166,7 @@ public class AdjustEditor : AssetPostprocessor
 #else
             string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
 #endif
-            
+
             UnityEngine.Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
             UnityEngine.Debug.Log("[Adjust]: AdSupport.framework added successfully.");
@@ -206,7 +206,7 @@ public class AdjustEditor : AssetPostprocessor
 
             // The Adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
-            
+
             UnityEngine.Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
             xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
 
@@ -223,7 +223,9 @@ public class AdjustEditor : AssetPostprocessor
         }
     }
 
-    private static void AddUrlSchemesIOS(string projectPath) {
+#if UNITY_IOS
+    private static void AddUrlSchemesIOS(string projectPath)
+    {
         const string CFBundleURLTypes = "CFBundleURLTypes";
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
@@ -237,51 +239,33 @@ public class AdjustEditor : AssetPostprocessor
         plist.ReadFromFile(plistPath);
         var plistRoot = plist.root;
 
+        Debug.Log("[Adjust]: Creating NSUserTrackingUsageDescription element in Info.plist");
         plistRoot.SetString("NSUserTrackingUsageDescription", AdjustSettings.UserTrackingUsageDescription);
 
         // Set Array for futher deeplink values.
-        if (!plistRoot.values.ContainsKey(CFBundleURLTypes))
-        {
-            deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
-        }
-        else
-        {
-            deferredDeeplinksArray = plistRoot.values[CFBundleURLTypes].AsArray();
-            if (deferredDeeplinksArray == null)
-            {
-                deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
-            }
-        }
+        deferredDeeplinksArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
 
         // Array will contains just one deeplink dictionary
         if (deferredDeeplinksArray.values.Count == 0)
         {
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain deictionary for deeplinks. Creating a new one.");
             deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
         }
         else
         {
             deferredDeeplinksItems = deferredDeeplinksArray.values[0].AsDict();
+            Debug.Log("Reading deeplinks array");
             if (deferredDeeplinksItems == null)
             {
+                Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
                 deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
             }
         }
 
-        if (!deferredDeeplinksItems.values.ContainsKey(CFBundleURLSchemes))
-        {
-            deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
-        }
-        else
-        {
-            deferredDeeplinksSchemesArray = deferredDeeplinksItems.values[CFBundleURLSchemes].AsArray();
+        deferredDeeplinksSchemesArray = CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
 
-            if (deferredDeeplinksSchemesArray == null)
-            {
-                deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
-            }
-        }
-
-        // Delete old defferred deeplinks URIs
+        // Delete old deferred deeplinks URIs
+        Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
         foreach (PlistElement element in deferredDeeplinksSchemesArray.values)
         {
             if (element.AsString() != null && defferredLinks.Contains(element.AsString()))
@@ -291,6 +275,7 @@ public class AdjustEditor : AssetPostprocessor
             }
         }
 
+        Debug.Log("[Adjust]: Adding new deep links.");
         foreach (var link in defferredLinks)
         {
             deferredDeeplinksSchemesArray.AddString(link);
@@ -299,8 +284,19 @@ public class AdjustEditor : AssetPostprocessor
         File.WriteAllText(plistPath, plist.WriteToString());
     }
 
+    private static PlistElementArray CreatePlistElementArray(PlistElementDict root, string key)
+    {
+        if (!root.values.ContainsKey(key))
+        {
+            Debug.Log("[Adjust]: " + key + " not found in Info.plist. Creating a new one.");
+            return root.CreateArray(key);
+        }
+        var result = root.values[key].AsArray();
+        return result != null ? result : root.CreateArray(key);
+    }
+#endif
 
-    private static void RunPostProcessTasksiOS(string projectPath) {}
+    private static void RunPostProcessTasksiOS(string projectPath) { }
 
     private static void RunPostProcessTasksAndroid()
     {
@@ -340,9 +336,9 @@ public class AdjustEditor : AssetPostprocessor
             // Let's open the app's AndroidManifest.xml file.
             XmlDocument manifestFile = new XmlDocument();
             manifestFile.Load(appManifestPath);
-            
+
             bool manifestHasChanged = false;
-            
+
             // Add needed permissions if they are missing.
             manifestHasChanged |= AddPermissions(manifestFile);
 
@@ -358,8 +354,8 @@ public class AdjustEditor : AssetPostprocessor
                 CleanManifestFile(appManifestPath);
 
                 UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
-                UnityEngine.Debug.Log("[Adjust]: Please check if any error message was displayed during this process " 
-                                      + "and make sure to fix all issues in order to properly use the Adjust SDK in your app.");                
+                UnityEngine.Debug.Log("[Adjust]: Please check if any error message was displayed during this process "
+                                      + "and make sure to fix all issues in order to properly use the Adjust SDK in your app.");
             }
             else
             {
@@ -512,7 +508,7 @@ public class AdjustEditor : AssetPostprocessor
         XmlNode applicationNode = null;
 
         // Let's find the application node.
-        foreach(XmlNode node in manifestRoot.ChildNodes)
+        foreach (XmlNode node in manifestRoot.ChildNodes)
         {
             if (node.Name == "application")
             {
