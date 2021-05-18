@@ -9,10 +9,6 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using com.adjust.sdk;
-#if UNITY_IOS
-using UnityEditor.iOS.Xcode;
-#endif
 
 public class AdjustEditor : AssetPostprocessor
 {
@@ -145,77 +141,81 @@ public class AdjustEditor : AssetPostprocessor
         }
         else if (target == BuildTarget.iOS)
         {
-            PlistElementArray defferredDeeplinksArray = null;
-            PlistElementDict defferredDeeplinksItems = null;
-            PlistElementArray defferredDeeplinksSchemesArray = null;
+#if UNITY_IOS
+            const string CFBundleURLTypes = "CFBundleURLTypes";
+            const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
-            List<string> defferredLinks = new List<string>(Adjust.iOSDeeplinkingURLSchemes);
-            string plistPath = projectPath + "/Info.plist";
-            PlistDocument plist = new PlistDocument();
+            PlistElementArray deferredDeeplinksArray = null;
+            PlistElementDict deferredDeeplinksItems = null;
+            PlistElementArray deferredDeeplinksSchemesArray = null;
+
+            var defferredLinks = new List<string>(AdjustSettings.UrlSchemes);
+            var plistPath = projectPath + "/Info.plist";
+            var plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
             var plistRoot = plist.root;
 
-            plistRoot.SetString("NSUserTrackingUsageDescription", Adjust.NSUserTrackingUsageDescription);
+            plistRoot.SetString("NSUserTrackingUsageDescription", AdjustSettings.UserTrackingUsageDescription);
 
             // Set Array for futher deeplink values.
-            if (!plistRoot.values.ContainsKey("CFBundleURLTypes"))
+            if (!plistRoot.values.ContainsKey(CFBundleURLTypes))
             {
-                defferredDeeplinksArray = plistRoot.CreateArray("CFBundleURLTypes");
+                deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
             }
             else
             {
-                defferredDeeplinksArray = plistRoot.values["CFBundleURLTypes"].AsArray();
-                if (defferredDeeplinksArray == null)
+                deferredDeeplinksArray = plistRoot.values[CFBundleURLTypes].AsArray();
+                if (deferredDeeplinksArray == null)
                 {
-                    defferredDeeplinksArray = plistRoot.CreateArray("CFBundleURLTypes");
+                    deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
                 }
             }
 
             // Array will contains just one deeplink dictionary
-            if(defferredDeeplinksArray.values.Count == 0)
+            if(deferredDeeplinksArray.values.Count == 0)
             {
-                defferredDeeplinksItems = defferredDeeplinksArray.AddDict();
+                deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
             }
             else
             {
-                defferredDeeplinksItems = defferredDeeplinksArray.values[0].AsDict();
-                if(defferredDeeplinksItems == null)
+                deferredDeeplinksItems = deferredDeeplinksArray.values[0].AsDict();
+                if(deferredDeeplinksItems == null)
                 {
-                    defferredDeeplinksItems = defferredDeeplinksArray.AddDict();
+                    deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
                 }
             }
 
-            if (!defferredDeeplinksItems.values.ContainsKey("CFBundleURLSchemes"))
+            if (!deferredDeeplinksItems.values.ContainsKey(CFBundleURLSchemes))
             {
-                defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("CFBundleURLSchemes");
+                deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
             }
             else
             {
-                defferredDeeplinksSchemesArray = defferredDeeplinksItems.values["CFBundleURLSchemes"].AsArray();
+                deferredDeeplinksSchemesArray = deferredDeeplinksItems.values[CFBundleURLSchemes].AsArray();
 
-                if (defferredDeeplinksSchemesArray == null)
+                if (deferredDeeplinksSchemesArray == null)
                 {
-                    defferredDeeplinksSchemesArray = defferredDeeplinksItems.CreateArray("CFBundleURLSchemes");
+                    deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
                 }
             }
 
             // Delete old defferred deeplinks URIs
-            foreach (PlistElement element in defferredDeeplinksSchemesArray.values)
+            foreach (PlistElement element in deferredDeeplinksSchemesArray.values)
             {
                 if (element.AsString() != null && defferredLinks.Contains(element.AsString()))
                 {
-                    defferredDeeplinksSchemesArray.values.Remove(element);
+                    deferredDeeplinksSchemesArray.values.Remove(element);
                     break;
                 }
             }
 
             foreach (var link in defferredLinks)
             {
-                defferredDeeplinksSchemesArray.AddString(link);
+                deferredDeeplinksSchemesArray.AddString(link);
             }
 
             File.WriteAllText(plistPath, plist.WriteToString());
-#if UNITY_IOS
+
             UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
             
             string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";

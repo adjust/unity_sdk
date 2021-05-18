@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
@@ -10,13 +8,15 @@ namespace com.adjust.sdk {
 	{
 		List<string> deeplinkingParameters;
 		void OnEnable()
-        {
-			deeplinkingParameters = Adjust.iOSDeeplinkingURLSchemes;
-        }
-		// Use this for initialization
+		{
+			deeplinkingParameters = AdjustSettings.UrlSchemes;
+		}
+
 		public override void OnInspectorGUI()
 		{
 			base.OnInspectorGUI();
+
+			EditorGUILayout.TextField("User Tracking Usage Description", AdjustSettings.UserTrackingUsageDescription);
 
 			GUILayout.Space(20f);
 			GUILayout.BeginHorizontal();
@@ -25,10 +25,10 @@ namespace com.adjust.sdk {
 			{
 				deeplinkingParameters.Add("");
 			}
-            if (GUILayout.Button("-"))
-            {
+			if (GUILayout.Button("-"))
+			{
 				deeplinkingParameters.RemoveAt(deeplinkingParameters.Count - 1);
-            }
+			}
 			GUILayout.EndHorizontal();
 
 			for (int i = 0; i < deeplinkingParameters.Count; i++)

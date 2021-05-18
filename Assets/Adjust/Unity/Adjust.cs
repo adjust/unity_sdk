@@ -7,11 +7,6 @@ namespace com.adjust.sdk
     [ExecuteInEditMode]
     public class Adjust : MonoBehaviour
     {
-        [HideInInspector]
-        public static List<string> iOSDeeplinkingURLSchemes = new List<string>();
-
-        public static string NSUserTrackingUsageDescription = "";
-
         private const string errorMsgEditor = "[Adjust]: SDK can not be used in Editor.";
         private const string errorMsgStart = "[Adjust]: SDK not started. Start it manually using the 'start' method.";
         private const string errorMsgPlatform = "[Adjust]: SDK can only be used in Android, iOS, Windows Phone 8.1, Windows Store or Universal Windows apps.";
@@ -49,8 +44,6 @@ namespace com.adjust.sdk
         public bool adServicesInfoReading = true;
         public bool IDFAInfoReading = true;
         public bool skAdNetworkHandling = true;
-
-        public Dictionary<string, string> keyValuePairs;
 
 #if UNITY_IOS
         // Delegate references for iOS callback triggering

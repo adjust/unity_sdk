@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +14,10 @@ public class AdjustSettings : ScriptableObject
     private bool isPostProcessingEnabled = true;
     [SerializeField]
     private bool isiOS14ProcessingEnabled = false;
+    [SerializeField]
+    private List<string> urlSchemes = new List<string>();
+    [SerializeField]
+    private string userTrackingUsageDescription = "";
 
     public static AdjustSettings Instance
     {
@@ -96,6 +101,29 @@ public class AdjustSettings : ScriptableObject
             if (Instance.isiOS14ProcessingEnabled != value)
             {
                 Instance.isiOS14ProcessingEnabled = value;
+            }
+        }
+    }
+
+    public static List<string> UrlSchemes
+    {
+        get
+        {
+            return Instance.urlSchemes;
+        }
+    }
+
+    public static string UserTrackingUsageDescription
+    {
+        get
+        {
+            return Instance.userTrackingUsageDescription;
+        }
+        set
+        {
+            if (!Instance.userTrackingUsageDescription.Equals(value))
+            {
+                Instance.userTrackingUsageDescription = value;
             }
         }
     }
