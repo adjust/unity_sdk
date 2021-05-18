@@ -1,26 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum UrlStrategy
+﻿namespace com.adjust.sdk
 {
-    Default,
-    DataResidencyEU,
-    India,
-    China,
-}
-
-public static class UrlStrategyExtension
-{
-    public static string ToLowerCaseString(this UrlStrategy strategy)
+    public enum UrlStrategy
     {
-        switch (strategy)
+        Default,
+        DataResidencyEU,
+        DataResidencyTK,
+        DataResidencyUS,
+        India,
+        China,
+    }
+
+    public static class UrlStrategyExtension
+    {
+        public static string ToLowerCaseString(this UrlStrategy strategy)
         {
-            case UrlStrategy.India: return "india";
-            case UrlStrategy.China: return "china";
-            case UrlStrategy.DataResidencyEU: return "data-residency-eu";
-            default: return string.Empty;
+            switch (strategy)
+            {
+                case UrlStrategy.India: return "india";
+                case UrlStrategy.China: return "china";
+                case UrlStrategy.DataResidencyEU: return "data-residency-eu";
+                case UrlStrategy.DataResidencyTK: return "data-residency-tr";
+                case UrlStrategy.DataResidencyUS: return "data-residency-us";
+                default: return string.Empty;
+            }
         }
     }
-} 
+}
 

@@ -33,7 +33,6 @@ namespace com.adjust.sdk
         public long info2 = 0;
         public long info3 = 0;
         public long info4 = 0;
-        [Space(20)]
 
         [Header("ANDROID SPECIFIC FEATURES:")]
         [Space(5)]
@@ -83,8 +82,10 @@ namespace com.adjust.sdk
                 adjustConfig.setAllowiAdInfoReading(this.allowAdInfoReading);
                 adjustConfig.setAllowAdServicesInfoReading(this.allowAdServicesInfoReading);
                 adjustConfig.setAllowIdfaReading(this.allowIDFAInfoReading);
-                if(!skAdNetworkHandling)
+                if (!skAdNetworkHandling)
+                {
                     adjustConfig.deactivateSKAdNetworkHandling();
+                }
                 Adjust.start(adjustConfig);
             }
         }
