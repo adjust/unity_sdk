@@ -121,10 +121,7 @@ public class AdjustSettings : ScriptableObject
         }
         set
         {
-            if (!Instance.userTrackingUsageDescription.Equals(value))
-            {
-                Instance.userTrackingUsageDescription = value;
-            }
+            Instance.userTrackingUsageDescription = value;
         }
     }
 }

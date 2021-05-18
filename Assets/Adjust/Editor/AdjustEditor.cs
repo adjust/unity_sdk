@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
+#endif
 
 public class AdjustEditor : AssetPostprocessor
 {
@@ -140,79 +142,7 @@ public class AdjustEditor : AssetPostprocessor
         else if (target == BuildTarget.iOS)
         {
 #if UNITY_IOS
-            const string CFBundleURLTypes = "CFBundleURLTypes";
-            const string CFBundleURLSchemes = "CFBundleURLSchemes";
-
-            PlistElementArray deferredDeeplinksArray = null;
-            PlistElementDict deferredDeeplinksItems = null;
-            PlistElementArray deferredDeeplinksSchemesArray = null;
-
-            var defferredLinks = new List<string>(AdjustSettings.UrlSchemes);
-            var plistPath = projectPath + "/Info.plist";
-            var plist = new PlistDocument();
-            plist.ReadFromFile(plistPath);
-            var plistRoot = plist.root;
-
-            plistRoot.SetString("NSUserTrackingUsageDescription", AdjustSettings.UserTrackingUsageDescription);
-
-            // Set Array for futher deeplink values.
-            if (!plistRoot.values.ContainsKey(CFBundleURLTypes))
-            {
-                deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
-            }
-            else
-            {
-                deferredDeeplinksArray = plistRoot.values[CFBundleURLTypes].AsArray();
-                if (deferredDeeplinksArray == null)
-                {
-                    deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
-                }
-            }
-
-            // Array will contains just one deeplink dictionary
-            if(deferredDeeplinksArray.values.Count == 0)
-            {
-                deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
-            }
-            else
-            {
-                deferredDeeplinksItems = deferredDeeplinksArray.values[0].AsDict();
-                if(deferredDeeplinksItems == null)
-                {
-                    deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
-                }
-            }
-
-            if (!deferredDeeplinksItems.values.ContainsKey(CFBundleURLSchemes))
-            {
-                deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
-            }
-            else
-            {
-                deferredDeeplinksSchemesArray = deferredDeeplinksItems.values[CFBundleURLSchemes].AsArray();
-
-                if (deferredDeeplinksSchemesArray == null)
-                {
-                    deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
-                }
-            }
-
-            // Delete old defferred deeplinks URIs
-            foreach (PlistElement element in deferredDeeplinksSchemesArray.values)
-            {
-                if (element.AsString() != null && defferredLinks.Contains(element.AsString()))
-                {
-                    deferredDeeplinksSchemesArray.values.Remove(element);
-                    break;
-                }
-            }
-
-            foreach (var link in defferredLinks)
-            {
-                deferredDeeplinksSchemesArray.AddString(link);
-            }
-
-            File.WriteAllText(plistPath, plist.WriteToString());
+            AddUrlSchemesIOS(projectPath);
 
             UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
             
@@ -292,6 +222,83 @@ public class AdjustEditor : AssetPostprocessor
 #endif
         }
     }
+
+    private static void AddUrlSchemesIOS(string projectPath) {
+        const string CFBundleURLTypes = "CFBundleURLTypes";
+        const string CFBundleURLSchemes = "CFBundleURLSchemes";
+
+        PlistElementArray deferredDeeplinksArray = null;
+        PlistElementDict deferredDeeplinksItems = null;
+        PlistElementArray deferredDeeplinksSchemesArray = null;
+
+        var defferredLinks = new List<string>(AdjustSettings.UrlSchemes);
+        var plistPath = projectPath + "/Info.plist";
+        var plist = new PlistDocument();
+        plist.ReadFromFile(plistPath);
+        var plistRoot = plist.root;
+
+        plistRoot.SetString("NSUserTrackingUsageDescription", AdjustSettings.UserTrackingUsageDescription);
+
+        // Set Array for futher deeplink values.
+        if (!plistRoot.values.ContainsKey(CFBundleURLTypes))
+        {
+            deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
+        }
+        else
+        {
+            deferredDeeplinksArray = plistRoot.values[CFBundleURLTypes].AsArray();
+            if (deferredDeeplinksArray == null)
+            {
+                deferredDeeplinksArray = plistRoot.CreateArray(CFBundleURLTypes);
+            }
+        }
+
+        // Array will contains just one deeplink dictionary
+        if (deferredDeeplinksArray.values.Count == 0)
+        {
+            deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
+        }
+        else
+        {
+            deferredDeeplinksItems = deferredDeeplinksArray.values[0].AsDict();
+            if (deferredDeeplinksItems == null)
+            {
+                deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
+            }
+        }
+
+        if (!deferredDeeplinksItems.values.ContainsKey(CFBundleURLSchemes))
+        {
+            deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
+        }
+        else
+        {
+            deferredDeeplinksSchemesArray = deferredDeeplinksItems.values[CFBundleURLSchemes].AsArray();
+
+            if (deferredDeeplinksSchemesArray == null)
+            {
+                deferredDeeplinksSchemesArray = deferredDeeplinksItems.CreateArray(CFBundleURLSchemes);
+            }
+        }
+
+        // Delete old defferred deeplinks URIs
+        foreach (PlistElement element in deferredDeeplinksSchemesArray.values)
+        {
+            if (element.AsString() != null && defferredLinks.Contains(element.AsString()))
+            {
+                deferredDeeplinksSchemesArray.values.Remove(element);
+                break;
+            }
+        }
+
+        foreach (var link in defferredLinks)
+        {
+            deferredDeeplinksSchemesArray.AddString(link);
+        }
+
+        File.WriteAllText(plistPath, plist.WriteToString());
+    }
+
 
     private static void RunPostProcessTasksiOS(string projectPath) {}
 

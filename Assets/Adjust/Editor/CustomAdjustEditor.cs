@@ -7,7 +7,7 @@ namespace com.adjust.sdk
     [CustomEditor(typeof(Adjust))]
     public class CustomAdjustEditor : Editor
     {
-        List<string> deeplinkingParameters;
+        private List<string> deeplinkingParameters;
         void OnEnable()
         {
             deeplinkingParameters = AdjustSettings.UrlSchemes;
