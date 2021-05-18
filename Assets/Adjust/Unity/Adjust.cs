@@ -35,13 +35,13 @@ namespace com.adjust.sdk
 
         [Header("ANDROID SPECIFIC FEATURES:")]
         [Space(5)]
-        public bool preinstallTrackingEnabled = false;
+        public bool preinstallTracking = false;
 
         [Header("iOS SPECIFIC FEATURES:")]
         [Space(5)]
-        public bool allowAdInfoReading = true;
-        public bool allowAdServicesInfoReading = true;
-        public bool allowIDFAInfoReading = true;
+        public bool iadInfoReading = true;
+        public bool adServicesInfoReading = true;
+        public bool IDFAInfoReading = true;
         public bool skAdNetworkHandling = true;
 
 #if UNITY_IOS
@@ -77,10 +77,10 @@ namespace com.adjust.sdk
                 adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
                 adjustConfig.setDelayStart(this.startDelay);
                 adjustConfig.setNeedsCost(this.needsCost);
-                adjustConfig.setPreinstallTrackingEnabled(this.preinstallTrackingEnabled);
-                adjustConfig.setAllowiAdInfoReading(this.allowAdInfoReading);
-                adjustConfig.setAllowAdServicesInfoReading(this.allowAdServicesInfoReading);
-                adjustConfig.setAllowIdfaReading(this.allowIDFAInfoReading);
+                adjustConfig.setPreinstallTrackingEnabled(this.preinstallTracking);
+                adjustConfig.setAllowiAdInfoReading(this.iadInfoReading);
+                adjustConfig.setAllowAdServicesInfoReading(this.adServicesInfoReading);
+                adjustConfig.setAllowIdfaReading(this.IDFAInfoReading);
                 if (!skAdNetworkHandling)
                 {
                     adjustConfig.deactivateSKAdNetworkHandling();
