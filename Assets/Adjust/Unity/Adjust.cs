@@ -21,7 +21,7 @@ namespace com.adjust.sdk
         
         public string defaultTracker = "";
 
-        public UrlStrategy URLStrategy = UrlStrategy.Default;
+        public AdjustUrlStrategy URLStrategy = AdjustUrlStrategy.Default;
 
         public double startDelay = 0;
 
