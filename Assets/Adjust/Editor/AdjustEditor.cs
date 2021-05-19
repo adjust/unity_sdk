@@ -301,7 +301,7 @@ public class AdjustEditor : AssetPostprocessor
 
     private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
     {
-        string entitlementsFileName = "entitlements_app.entitlements";
+        string entitlementsFileName = "Unity-iPhone.entitlements";
         string targetName = "Unity-iPhone";
 
         Debug.Log("[Adjust]: Adding associated domains to app_entitlements file.");
