@@ -249,22 +249,7 @@ public class AdjustEditor : AssetPostprocessor
         var deferredDeeplinksArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
 
         // Array will contains just one deeplink dictionary
-        PlistElementDict deferredDeeplinksItems = null;
-        if (deferredDeeplinksArray.values.Count == 0)
-        {
-            Debug.Log("[Adjust]: Deeplinks array doesn't contain deictionary for deeplinks. Creating a new one.");
-            deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
-        }
-        else
-        {
-            deferredDeeplinksItems = deferredDeeplinksArray.values[0].AsDict();
-            Debug.Log("Reading deeplinks array");
-            if (deferredDeeplinksItems == null)
-            {
-                Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
-                deferredDeeplinksItems = deferredDeeplinksArray.AddDict();
-            }
-        }
+        var deferredDeeplinksItems = CreatePlistElementDict(deferredDeeplinksArray);
 
         var deferredDeeplinksSchemesArray = CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
 
@@ -275,7 +260,6 @@ public class AdjustEditor : AssetPostprocessor
             if (element.AsString() != null && defferredLinks.Contains(element.AsString()))
             {
                 deferredDeeplinksSchemesArray.values.Remove(element);
-                break;
             }
         }
 
@@ -298,6 +282,28 @@ public class AdjustEditor : AssetPostprocessor
         var result = root.values[key].AsArray();
         return result != null ? result : root.CreateArray(key);
     }
+
+    private static PlistElementDict CreatePlistElementDict(PlistElementArray rootArray)
+    {
+        if (rootArray.values.Count == 0)
+        {
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain deictionary for deeplinks. Creating a new one.");
+            return rootArray.AddDict();
+        }
+        else
+        {
+            var deferredDeeplinksItems = rootArray.values[0].AsDict();
+            Debug.Log("Reading deeplinks array");
+            if (deferredDeeplinksItems == null)
+            {
+                Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
+                deferredDeeplinksItems = rootArray.AddDict();
+            }
+
+            return deferredDeeplinksItems;
+        }
+    }
+
 
     private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
     {
