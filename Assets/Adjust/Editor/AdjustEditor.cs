@@ -142,14 +142,27 @@ public class AdjustEditor : AssetPostprocessor
         else if (target == BuildTarget.iOS)
         {
 #if UNITY_IOS
-            AddUrlSchemesIOS(projectPath);
-
             UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
 
             string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
             PBXProject xcodeProject = new PBXProject();
             xcodeProject.ReadFromFile(xcodeProjectPath);
+
+#if UNITY_2019_3_OR_NEWER
+            string xcodeTarget = xcodeProject.GetUnityFrameworkTargetGuid();
+#else
+            string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
+#endif
+            if (AdjustSettings.UrlSchemesDeepLinksEnabled)
+            {
+                AddUrlSchemesIOS(projectPath);
+            }
+            if (AdjustSettings.UniversalLinksEnabled)
+            {
+                //Add Universal Links Domains
+                AddUniversalLinkDomains(xcodeProject, xcodeProjectPath, xcodeTarget);
+            }
 
             // The Adjust SDK will try to add following frameworks to your project:
             // - AdSupport.framework (needed for access to IDFA value)
@@ -160,12 +173,6 @@ public class AdjustEditor : AssetPostprocessor
             // - AppTrackingTransparency.framework (needed for information about user's consent to be tracked)
 
             // In case you don't need any of these, feel free to remove them from your app.
-
-#if UNITY_2019_3_OR_NEWER
-            string xcodeTarget = xcodeProject.GetUnityFrameworkTargetGuid();
-#else
-            string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
-#endif
 
             UnityEngine.Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
@@ -229,12 +236,8 @@ public class AdjustEditor : AssetPostprocessor
         const string CFBundleURLTypes = "CFBundleURLTypes";
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
-        PlistElementArray deferredDeeplinksArray = null;
-        PlistElementDict deferredDeeplinksItems = null;
-        PlistElementArray deferredDeeplinksSchemesArray = null;
-
         var defferredLinks = new List<string>(AdjustSettings.UrlSchemes);
-        var plistPath = projectPath + "/Info.plist";
+        var plistPath = Path.Combine(projectPath, "Info.plist");
         var plist = new PlistDocument();
         plist.ReadFromFile(plistPath);
         var plistRoot = plist.root;
@@ -243,9 +246,10 @@ public class AdjustEditor : AssetPostprocessor
         plistRoot.SetString("NSUserTrackingUsageDescription", AdjustSettings.UserTrackingUsageDescription);
 
         // Set Array for futher deeplink values.
-        deferredDeeplinksArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
+        var deferredDeeplinksArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
 
         // Array will contains just one deeplink dictionary
+        PlistElementDict deferredDeeplinksItems = null;
         if (deferredDeeplinksArray.values.Count == 0)
         {
             Debug.Log("[Adjust]: Deeplinks array doesn't contain deictionary for deeplinks. Creating a new one.");
@@ -262,7 +266,7 @@ public class AdjustEditor : AssetPostprocessor
             }
         }
 
-        deferredDeeplinksSchemesArray = CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
+        var deferredDeeplinksSchemesArray = CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
 
         // Delete old deferred deeplinks URIs
         Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
@@ -294,9 +298,21 @@ public class AdjustEditor : AssetPostprocessor
         var result = root.values[key].AsArray();
         return result != null ? result : root.CreateArray(key);
     }
-#endif
 
-    private static void RunPostProcessTasksiOS(string projectPath) { }
+    private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
+    {
+        string entitlementsFileName = "entitlements_app.entitlements";
+        string targetName = "Unity-iPhone";
+
+        Debug.Log("[Adjust]: Adding associated domains to app_entitlements file.");
+        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, targetName);
+        projectCapabilityManager.AddAssociatedDomains(AdjustSettings.Domains.ToArray());
+        projectCapabilityManager.WriteToFile();
+
+        Debug.Log("[Adjust]: Enabling Associated Domains capability with created app_entitlements file.");
+        project.AddCapability(xCodeTarget, PBXCapabilityType.AssociatedDomains, entitlementsFileName);
+    }
+#endif
 
     private static void RunPostProcessTasksAndroid()
     {

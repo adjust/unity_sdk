@@ -15,9 +15,15 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private bool isiOS14ProcessingEnabled = false;
     [SerializeField]
+    private bool urlSchemesDeepLinksEnabled = false;
+    [SerializeField]
     private List<string> urlSchemes = new List<string>();
     [SerializeField]
     private string userTrackingUsageDescription = "";
+    [SerializeField]
+    private bool universalLinksEnabled = false;
+    [SerializeField]
+    private List<string> domains = new List<string>();
 
     public static AdjustSettings Instance
     {
@@ -105,6 +111,18 @@ public class AdjustSettings : ScriptableObject
         }
     }
 
+    public static bool UrlSchemesDeepLinksEnabled
+    {
+        get
+        {
+            return Instance.urlSchemesDeepLinksEnabled;
+        }
+        set
+        {
+            Instance.urlSchemesDeepLinksEnabled = value;
+        }
+    }
+
     public static List<string> UrlSchemes
     {
         get
@@ -122,6 +140,30 @@ public class AdjustSettings : ScriptableObject
         set
         {
             Instance.userTrackingUsageDescription = value;
+        }
+    }
+
+    public static bool UniversalLinksEnabled
+    {
+        get
+        {
+            return Instance.universalLinksEnabled;
+        }
+        set
+        {
+            Instance.universalLinksEnabled = value;
+        }
+    }
+
+    public static List<string> Domains
+    {
+        get
+        {
+            return Instance.domains;
+        }
+        set
+        {
+            Instance.domains = value;
         }
     }
 }
