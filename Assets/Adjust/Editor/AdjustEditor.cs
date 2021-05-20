@@ -236,7 +236,7 @@ public class AdjustEditor : AssetPostprocessor
         const string CFBundleURLTypes = "CFBundleURLTypes";
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
-        var defferredLinks = new List<string>(AdjustSettings.UrlSchemes);
+        var deferredLinks = new List<string>(AdjustSettings.UrlSchemes);
         var plistPath = Path.Combine(projectPath, "Info.plist");
         var plist = new PlistDocument();
         plist.ReadFromFile(plistPath);
@@ -255,16 +255,13 @@ public class AdjustEditor : AssetPostprocessor
 
         // Delete old deferred deeplinks URIs
         Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
-        foreach (PlistElement element in deferredDeeplinksSchemesArray.values)
+        foreach (var link in deferredLinks)
         {
-            if (element.AsString() != null && defferredLinks.Contains(element.AsString()))
-            {
-                deferredDeeplinksSchemesArray.values.Remove(element);
-            }
+            deferredDeeplinksSchemesArray.values.RemoveAll(element => element != null && element.AsString().Equals(link));
         }
 
         Debug.Log("[Adjust]: Adding new deep links.");
-        foreach (var link in defferredLinks)
+        foreach (var link in deferredLinks)
         {
             deferredDeeplinksSchemesArray.AddString(link);
         }
