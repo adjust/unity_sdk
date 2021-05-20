@@ -427,44 +427,71 @@ public class AdjustEditor : AssetPostprocessor
 
     private static bool AddURLSchemes(XmlDocument manifest)
     {
-        bool hasAndroidScheme = false;
-
+        const string intentFilter = "intent-filter";
+        var androidUris = AdjustSettings.AndroidUriSchemes;
+        char[] separator = "://".ToCharArray();
         XmlElement manifestRoot = manifest.DocumentElement;
+        var intentFilters = manifestRoot.GetElementsByTagName(intentFilter);
+        bool manifestHasChanged = false;
+        XmlElement usedIntentFilters = manifest.CreateElement(intentFilter);
 
-        foreach (XmlNode node in manifestRoot.ChildNodes)
+        usedIntentFilters = CreateActionAndCategoryNodes(usedIntentFilters, manifest);
+
+        foreach (var uriScheme in androidUris)
         {
-            if (node.Name == "uses-permission")
-            {
-                foreach (XmlNode innerNode in node.ChildNodes)
-                {
-                    if (innerNode.Attributes != null && innerNode.Attributes["android:scheme"] != null)
-                    {
-                        hasAndroidScheme = true;
-                    }
+            //The first element is android:scheme and the second one is android:host
+            var attributeValues = uriScheme.Split(separator);
 
+            var schemeAlreadyExists = false;
+            //Check if uriScheme already exists
+            foreach (XmlNode filter in intentFilters)
+            {
+                foreach (XmlNode child in filter.ChildNodes)
+                {
+                    if (child.Attributes != null &&
+                        child.Attributes["android:scheme"].InnerText == attributeValues[0] &&
+                        child.Attributes["android:host"].InnerText == attributeValues[1])
+                    {
+                        schemeAlreadyExists = true;
+                    }
                 }
             }
-        }
 
-        bool manifestHasChanged = false;
-
-        if (!hasAndroidScheme)
-        {
-            XmlElement usesPermissionNode = manifest.CreateElement("uses-permission");
-            foreach (var scheme in AdjustSettings.AndroidUriSchemes)
+            if (!schemeAlreadyExists)
             {
                 XmlElement androidSchemeNode = manifest.CreateElement("data");
-                androidSchemeNode.SetAttribute("android:scheme", scheme);
-                usesPermissionNode.AppendChild(androidSchemeNode);
+                androidSchemeNode.SetAttribute("android:scheme", attributeValues[0]);
+                androidSchemeNode.SetAttribute("ändroid:host", attributeValues[1]);
+                usedIntentFilters.AppendChild(androidSchemeNode);
+
+                UnityEngine.Debug.Log("[Adjust]: Android deeplink URL scheme successfully added to your app's AndroidManifest.xml file.");
+
+                manifestHasChanged = true;
             }
-            manifestRoot.AppendChild(usesPermissionNode);
-            UnityEngine.Debug.Log("[Adjust]: Android deeplink URL scheme successfully added to your app's AndroidManifest.xml file.");
-
-            manifestHasChanged = true;
-
         }
 
+        manifestRoot.AppendChild(usedIntentFilters);
         return manifestHasChanged;
+    }
+
+    private static XmlElement CreateActionAndCategoryNodes(XmlElement intentFilter, XmlDocument manifest)
+    {
+        const string andoirdName = "android:name";
+        const string category = "category";
+
+        XmlElement actionElement = manifest.CreateElement("action");
+        actionElement.SetAttribute(andoirdName, "android.intent.action.VIEW");
+        intentFilter.AppendChild(actionElement);
+
+        XmlElement defaultCategory = manifest.CreateElement(category);
+        defaultCategory.SetAttribute(andoirdName, "android.intent.category.DEFAULT");
+        intentFilter.AppendChild(defaultCategory);
+
+        XmlElement browsableCategory = manifest.CreateElement(category);
+        browsableCategory.SetAttribute(andoirdName, "android.intent.category.BROWSABLE");
+        intentFilter.AppendChild(browsableCategory);
+
+        return intentFilter;
     }
 
     private static bool AddPermissions(XmlDocument manifest)

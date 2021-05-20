@@ -1,7 +1,5 @@
 // Inspired by: https://github.com/facebook/facebook-sdk-for-unity/blob/master/Facebook.Unity.Settings/FacebookSettings.cs
 
-using System;
-using System.IO;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
