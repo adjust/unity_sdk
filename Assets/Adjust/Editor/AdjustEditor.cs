@@ -435,13 +435,13 @@ public class AdjustEditor : AssetPostprocessor
         {
             if (node.Name == "uses-permission")
             {
-                foreach(XmlNode innerNode in node.ChildNodes)
+                foreach (XmlNode innerNode in node.ChildNodes)
                 {
                     if (innerNode.Attributes != null && innerNode.Attributes["android:scheme"] != null)
                     {
                         hasAndroidScheme = true;
                     }
-                    
+
                 }
             }
         }
@@ -451,11 +451,15 @@ public class AdjustEditor : AssetPostprocessor
         if (!hasAndroidScheme)
         {
             XmlElement usesPermissionNode = manifest.CreateElement("uses-permission");
-            XmlElement androidSchemeNode = manifest.CreateElement("data");
-            androidSchemeNode.SetAttribute("android:scheme", "Sample");
-            usesPermissionNode.AppendChild(androidSchemeNode);
+            foreach (var scheme in AdjustSettings.AndroidUriSchemes)
+            {
+                XmlElement androidSchemeNode = manifest.CreateElement("data");
+                androidSchemeNode.SetAttribute("android:scheme", scheme);
+                usesPermissionNode.AppendChild(androidSchemeNode);
+            }
             manifestRoot.AppendChild(usesPermissionNode);
             UnityEngine.Debug.Log("[Adjust]: Android deeplink URL scheme successfully added to your app's AndroidManifest.xml file.");
+
             manifestHasChanged = true;
 
         }

@@ -24,6 +24,10 @@ public class AdjustSettings : ScriptableObject
     private bool universalLinksEnabled = false;
     [SerializeField]
     private List<string> domains = new List<string>();
+    [SerializeField]
+    private bool androidUriSchemesEnabled = false;
+    [SerializeField]
+    private List<string> androidUriSchemes = new List<string>();
 
     public static AdjustSettings Instance
     {
@@ -164,6 +168,30 @@ public class AdjustSettings : ScriptableObject
         set
         {
             Instance.domains = value;
+        }
+    }
+
+    public static bool AdnroidUriSchemesEnabled
+    {
+        get
+        {
+            return Instance.androidUriSchemesEnabled;
+        }
+        set
+        {
+            Instance.androidUriSchemesEnabled = value;
+        }
+    }
+
+    public static List<string> AndroidUriSchemes
+    {
+        get
+        {
+            return Instance.androidUriSchemes;
+        }
+        set
+        {
+            Instance.androidUriSchemes = value;
         }
     }
 }

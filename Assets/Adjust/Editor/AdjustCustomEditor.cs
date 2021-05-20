@@ -9,16 +9,19 @@ namespace com.adjust.sdk
     {
         private List<string> deeplinkingParameters;
         private List<string> universalLinkDomains;
+        private List<string> androidURISchemes;
 
         void OnEnable()
         {
             deeplinkingParameters = AdjustSettings.UrlSchemes;
             universalLinkDomains = AdjustSettings.Domains;
+            androidURISchemes = AdjustSettings.AndroidUriSchemes;
         }
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
+#if UNITY_IOS
 
             AdjustSettings.UserTrackingUsageDescription = EditorGUILayout.TextField("User Tracking Usage Description", AdjustSettings.UserTrackingUsageDescription);
 
@@ -35,7 +38,15 @@ namespace com.adjust.sdk
             {
                 CreateListManipulationUI("Add domains for universal linking", "Domain ", universalLinkDomains);
             }
-
+#endif
+#if UNITY_ANDROID
+            GUILayout.Space(20f);
+            AdjustSettings.AdnroidUriSchemesEnabled = GUILayout.Toggle(AdjustSettings.AdnroidUriSchemesEnabled, "Adnroid URI schemes enabled");
+            if (AdjustSettings.AdnroidUriSchemesEnabled)
+            {
+                CreateListManipulationUI("Add URI schemes for Android", "URI scheme ", androidURISchemes);
+            }
+#endif
             serializedObject.ApplyModifiedProperties();
         }
 
