@@ -427,56 +427,81 @@ public class AdjustEditor : AssetPostprocessor
 
     private static bool AddURLSchemes(XmlDocument manifest)
     {
+        Debug.Log("[Adjust]: Start addition of URI schemes");
         const string intentFilter = "intent-filter";
-        var androidUris = AdjustSettings.AndroidUriSchemes;
         char[] separator = "://".ToCharArray();
         XmlElement manifestRoot = manifest.DocumentElement;
         var intentFilters = manifestRoot.GetElementsByTagName(intentFilter);
         bool manifestHasChanged = false;
+        bool usedIntentFiltersChanged = false;
         XmlElement usedIntentFilters = manifest.CreateElement(intentFilter);
 
         usedIntentFilters = CreateActionAndCategoryNodes(usedIntentFilters, manifest);
-
-        foreach (var uriScheme in androidUris)
+        Debug.Log(AdjustSettings.AndroidUriSchemes.Count);
+        foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
         {
             //The first element is android:scheme and the second one is android:host
-            var attributeValues = uriScheme.Split(separator);
+            Uri uri = new Uri(uriScheme);
 
             var schemeAlreadyExists = false;
+            var hostAlreadyExists = false;
             //Check if uriScheme already exists
             foreach (XmlNode filter in intentFilters)
             {
                 foreach (XmlNode child in filter.ChildNodes)
                 {
-                    if (child.Attributes != null &&
-                        child.Attributes["android:scheme"].InnerText == attributeValues[0] &&
-                        child.Attributes["android:host"].InnerText == attributeValues[1])
+                    foreach (XmlAttribute attribute in child.Attributes)
                     {
-                        schemeAlreadyExists = true;
+                        if (attribute.Value.Contains(uri.Scheme))
+                        {
+                            schemeAlreadyExists = true;
+                        }
+                        if (attribute.Value.Contains(uri.Host))
+                        {
+                            hostAlreadyExists = true;
+                        }
+                        if (hostAlreadyExists && schemeAlreadyExists) break;
                     }
+                    if(hostAlreadyExists && schemeAlreadyExists)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        hostAlreadyExists = false;
+                        schemeAlreadyExists = false;
+                    }
+                }
+                if(hostAlreadyExists && schemeAlreadyExists)
+                {
+                    break;
                 }
             }
 
-            if (!schemeAlreadyExists)
+            if (!schemeAlreadyExists && !hostAlreadyExists)
             {
+                Debug.Log("[Adjust]: Adding new URI " + uri.Scheme + " host: " + uri.Host);
                 XmlElement androidSchemeNode = manifest.CreateElement("data");
-                androidSchemeNode.SetAttribute("android:scheme", attributeValues[0]);
-                androidSchemeNode.SetAttribute("ändroid:host", attributeValues[1]);
+                androidSchemeNode.SetAttribute("android__scheme", uri.Scheme);
+                androidSchemeNode.SetAttribute("android__host", uri.Host);
                 usedIntentFilters.AppendChild(androidSchemeNode);
+                usedIntentFiltersChanged = true;
 
-                UnityEngine.Debug.Log("[Adjust]: Android deeplink URL scheme successfully added to your app's AndroidManifest.xml file.");
+                Debug.Log("[Adjust]: Android deeplink URL scheme successfully added to your app's AndroidManifest.xml file.");
 
                 manifestHasChanged = true;
             }
         }
-
-        manifestRoot.AppendChild(usedIntentFilters);
+        if (usedIntentFiltersChanged)
+        {
+            manifestRoot.AppendChild(usedIntentFilters);
+        }
         return manifestHasChanged;
     }
 
     private static XmlElement CreateActionAndCategoryNodes(XmlElement intentFilter, XmlDocument manifest)
     {
-        const string andoirdName = "android:name";
+        const string andoirdName = "android__name";
         const string category = "category";
 
         XmlElement actionElement = manifest.CreateElement("action");
@@ -490,6 +515,8 @@ public class AdjustEditor : AssetPostprocessor
         XmlElement browsableCategory = manifest.CreateElement(category);
         browsableCategory.SetAttribute(andoirdName, "android.intent.category.BROWSABLE");
         intentFilter.AppendChild(browsableCategory);
+
+        Debug.Log(intentFilter.ToString());
 
         return intentFilter;
     }
