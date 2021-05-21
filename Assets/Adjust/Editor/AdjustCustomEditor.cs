@@ -5,7 +5,7 @@ using UnityEditor;
 namespace com.adjust.sdk
 {
     [CustomEditor(typeof(Adjust))]
-    public class CustomAdjustEditor : Editor
+    public class AdjustCustomEditor : Editor
     {
         private List<string> deeplinkingParameters;
         private List<string> universalLinkDomains;
