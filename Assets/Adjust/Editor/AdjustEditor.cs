@@ -161,7 +161,6 @@ public class AdjustEditor : AssetPostprocessor
             }
             if (AdjustSettings.UniversalLinksEnabled)
             {
-                //Add Universal Links Domains
                 AddUniversalLinkDomains(xcodeProject, xcodeProjectPath, xcodeTarget);
             }
 
