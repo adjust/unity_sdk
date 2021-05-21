@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -261,7 +262,7 @@ public class AdjustEditor : AssetPostprocessor
         }
 
         Debug.Log("[Adjust]: Adding new deep links.");
-        foreach (var link in deferredLinks)
+        foreach (var link in deferredLinks.Distinct())
         {
             deferredDeeplinksSchemesArray.AddString(link);
         }
@@ -309,7 +310,17 @@ public class AdjustEditor : AssetPostprocessor
 
         Debug.Log("[Adjust]: Adding associated domains to app_entitlements file.");
         var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, targetName);
-        projectCapabilityManager.AddAssociatedDomains(AdjustSettings.Domains.ToArray());
+
+        var uniqueDomains = AdjustSettings.Domains.Distinct().ToArray();
+        const string applinksPrefix = "applinks:";
+        for(int i=0; i < uniqueDomains.Length; i++)
+        {
+            if (!uniqueDomains[i].Contains(applinksPrefix)) {
+                uniqueDomains[i] = applinksPrefix + uniqueDomains[i];
+            }
+        }
+
+        projectCapabilityManager.AddAssociatedDomains(uniqueDomains);
         projectCapabilityManager.WriteToFile();
 
         Debug.Log("[Adjust]: Enabling Associated Domains capability with created app_entitlements file.");
