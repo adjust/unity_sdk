@@ -312,9 +312,10 @@ public class AdjustEditor : AssetPostprocessor
 
         var uniqueDomains = AdjustSettings.Domains.Distinct().ToArray();
         const string applinksPrefix = "applinks:";
-        for(int i=0; i < uniqueDomains.Length; i++)
+        for (int i = 0; i < uniqueDomains.Length; i++)
         {
-            if (!uniqueDomains[i].Contains(applinksPrefix)) {
+            if (!uniqueDomains[i].Contains(applinksPrefix))
+            {
                 uniqueDomains[i] = applinksPrefix + uniqueDomains[i];
             }
         }
