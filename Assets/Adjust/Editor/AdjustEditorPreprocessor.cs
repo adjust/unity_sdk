@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 using UnityEditor;
 using System.Xml;
 using System;
@@ -21,6 +22,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             return 0;
         }
     }
+#if UNITY_2018_1_OR_NEWER
+    public void OnPreprocessBuild(BuildReport report)
+    {
+        OnPreprocessBuild(new BuildTarget(), string.Empty);
+    }
+#endif
 
     public void OnPreprocessBuild(BuildTarget target, string path)
     {
@@ -29,10 +36,10 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
     private static void RunPostProcessTasksAndroid()
     {
-        bool isAdjustManifestUsed = false;
-        string androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
-        string adjustManifestPath = Path.Combine(Application.dataPath, "Adjust/Android/AdjustAndroidManifest.xml");
-        string appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
+        var isAdjustManifestUsed = false;
+        var androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
+        var adjustManifestPath = Path.Combine(Application.dataPath, "Adjust/Android/AdjustAndroidManifest.xml");
+        var appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
 
         // Check if user has already created AndroidManifest.xml file in its location.
         // If not, use already predefined AdjustAndroidManifest.xml as default one.
@@ -46,12 +53,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             isAdjustManifestUsed = true;
             File.Copy(adjustManifestPath, appManifestPath);
 
-            UnityEngine.Debug.Log("[Adjust]: User defined AndroidManifest.xml file not found in Plugins/Android folder.");
-            UnityEngine.Debug.Log("[Adjust]: Creating default app's AndroidManifest.xml from AdjustAndroidManifest.xml file.");
+            Debug.Log("[Adjust]: User defined AndroidManifest.xml file not found in Plugins/Android folder.");
+            Debug.Log("[Adjust]: Creating default app's AndroidManifest.xml from AdjustAndroidManifest.xml file.");
         }
         else
         {
-            UnityEngine.Debug.Log("[Adjust]: User defined AndroidManifest.xml file located in Plugins/Android folder.");
+            Debug.Log("[Adjust]: User defined AndroidManifest.xml file located in Plugins/Android folder.");
         }
 
         // If Adjust manifest is used, we have already set up everything in it so that 
@@ -63,10 +70,10 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             // our native Android SDK needs so that it can run properly.
 
             // Let's open the app's AndroidManifest.xml file.
-            XmlDocument manifestFile = new XmlDocument();
+            var manifestFile = new XmlDocument();
             manifestFile.Load(appManifestPath);
 
-            bool manifestHasChanged = false;
+            var manifestHasChanged = false;
 
             // Add needed permissions if they are missing.
             manifestHasChanged |= AddPermissions(manifestFile);
@@ -85,23 +92,23 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
                 // Clean the manifest file.
                 CleanManifestFile(appManifestPath);
 
-                UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
-                UnityEngine.Debug.Log("[Adjust]: Please check if any error message was displayed during this process "
+                Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
+                Debug.Log("[Adjust]: Please check if any error message was displayed during this process "
                                       + "and make sure to fix all issues in order to properly use the Adjust SDK in your app.");
             }
             else
             {
-                UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check completed.");
-                UnityEngine.Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
+                Debug.Log("[Adjust]: App's AndroidManifest.xml file check completed.");
+                Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
             }
         }
         else
         {
             // Let's open the app's AndroidManifest.xml file.
-            XmlDocument manifestFile = new XmlDocument();
+            var manifestFile = new XmlDocument();
             manifestFile.Load(appManifestPath);
 
-            bool manifestHasChanged = false;
+            var manifestHasChanged = false;
 
             // Add intent filter to URL schemes for deeplinking
             manifestHasChanged |= AddURLSchemes(manifestFile);
@@ -114,14 +121,14 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
                 // Clean the manifest file.
                 CleanManifestFile(appManifestPath);
 
-                UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
-                UnityEngine.Debug.Log("[Adjust]: Please check if any error message was displayed during this process "
+                Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
+                Debug.Log("[Adjust]: Please check if any error message was displayed during this process "
                                       + "and make sure to fix all issues in order to properly use the Adjust SDK in your app.");
             }
             else
             {
-                UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check completed.");
-                UnityEngine.Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
+                Debug.Log("[Adjust]: App's AndroidManifest.xml file check completed.");
+                Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
             }
         }
     }
@@ -176,15 +183,15 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         const string andoirdName = "android__name";
         const string category = "category";
 
-        XmlElement actionElement = manifest.CreateElement("action");
+        var actionElement = manifest.CreateElement("action");
         actionElement.SetAttribute(andoirdName, "android.intent.action.VIEW");
         intentFilter.AppendChild(actionElement);
 
-        XmlElement defaultCategory = manifest.CreateElement(category);
+        var defaultCategory = manifest.CreateElement(category);
         defaultCategory.SetAttribute(andoirdName, "android.intent.category.DEFAULT");
         intentFilter.AppendChild(defaultCategory);
 
-        XmlElement browsableCategory = manifest.CreateElement(category);
+        var browsableCategory = manifest.CreateElement(category);
         browsableCategory.SetAttribute(andoirdName, "android.intent.category.BROWSABLE");
         intentFilter.AppendChild(browsableCategory);
 
@@ -201,14 +208,14 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
         // <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
 
-        UnityEngine.Debug.Log("[Adjust]: Checking if all permissions needed for the Adjust SDK are present in the app's AndroidManifest.xml file.");
+        Debug.Log("[Adjust]: Checking if all permissions needed for the Adjust SDK are present in the app's AndroidManifest.xml file.");
 
-        bool hasInternetPermission = false;
-        bool hasAccessWifiStatePermission = false;
-        bool hasAccessNetworkStatePermission = false;
-        bool hasInstallReferrerServicePermission = false;
+        var hasInternetPermission = false;
+        var hasAccessWifiStatePermission = false;
+        var hasAccessNetworkStatePermission = false;
+        var hasInstallReferrerServicePermission = false;
 
-        XmlElement manifestRoot = manifest.DocumentElement;
+        var manifestRoot = manifest.DocumentElement;
 
         // Check if permissions are already there.
         foreach (XmlNode node in manifestRoot.ChildNodes)
@@ -237,7 +244,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             }
         }
 
-        bool manifestHasChanged = false;
+         var manifestHasChanged = false;
 
         // If android.permission.INTERNET permission is missing, add it.
         if (!hasInternetPermission)
@@ -245,12 +252,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "android.permission.INTERNET");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: android.permission.INTERNET permission successfully added to your app's AndroidManifest.xml file.");
+            Debug.Log("[Adjust]: android.permission.INTERNET permission successfully added to your app's AndroidManifest.xml file.");
             manifestHasChanged = true;
         }
         else
         {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.INTERNET permission.");
+            Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.INTERNET permission.");
         }
 
         // If android.permission.ACCESS_WIFI_STATE permission is missing, add it.
@@ -259,12 +266,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "android.permission.ACCESS_WIFI_STATE");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: android.permission.ACCESS_WIFI_STATE permission successfully added to your app's AndroidManifest.xml file.");
+            Debug.Log("[Adjust]: android.permission.ACCESS_WIFI_STATE permission successfully added to your app's AndroidManifest.xml file.");
             manifestHasChanged = true;
         }
         else
         {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_WIFI_STATE permission.");
+            Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_WIFI_STATE permission.");
         }
 
         // If android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
@@ -273,12 +280,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "android.permission.ACCESS_NETWORK_STATE");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: android.permission.ACCESS_NETWORK_STATE permission successfully added to your app's AndroidManifest.xml file.");
+            Debug.Log("[Adjust]: android.permission.ACCESS_NETWORK_STATE permission successfully added to your app's AndroidManifest.xml file.");
             manifestHasChanged = true;
         }
         else
         {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_NETWORK_STATE permission.");
+            Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_NETWORK_STATE permission.");
         }
 
         // If com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
@@ -287,12 +294,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             XmlElement element = manifest.CreateElement("uses-permission");
             element.SetAttribute("android__name", "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
             manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission successfully added to your app's AndroidManifest.xml file.");
+            Debug.Log("[Adjust]: com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission successfully added to your app's AndroidManifest.xml file.");
             manifestHasChanged = true;
         }
         else
         {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission.");
+            Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission.");
         }
 
         return manifestHasChanged;
@@ -330,7 +337,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         //
         // </manifest>
 
-        UnityEngine.Debug.Log("[Adjust]: Checking if app's AndroidManifest.xml file contains receiver for INSTALL_REFERRER intent.");
+        Debug.Log("[Adjust]: Checking if app's AndroidManifest.xml file contains receiver for INSTALL_REFERRER intent.");
 
         XmlElement manifestRoot = manifest.DocumentElement;
         XmlNode applicationNode = null;
@@ -348,8 +355,8 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // If there's no applicatio node, something is really wrong with your AndroidManifest.xml.
         if (applicationNode == null)
         {
-            UnityEngine.Debug.LogError("[Adjust]: Your app's AndroidManifest.xml file does not contain \"<application>\" node.");
-            UnityEngine.Debug.LogError("[Adjust]: Unable to add the Adjust broadcast receiver to AndroidManifest.xml.");
+            Debug.LogError("[Adjust]: Your app's AndroidManifest.xml file does not contain \"<application>\" node.");
+            Debug.LogError("[Adjust]: Unable to add the Adjust broadcast receiver to AndroidManifest.xml.");
             return false;
         }
 
@@ -375,12 +382,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
             if (!foundAdjustBroadcastReceiver)
             {
-                UnityEngine.Debug.Log("[Adjust]: It seems like you are using your own broadcast receiver.");
-                UnityEngine.Debug.Log("[Adjust]: Please, add the calls to the Adjust broadcast receiver like described in here: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md");
+                Debug.Log("[Adjust]: It seems like you are using your own broadcast receiver.");
+                Debug.Log("[Adjust]: Please, add the calls to the Adjust broadcast receiver like described in here: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md");
             }
             else
             {
-                UnityEngine.Debug.Log("[Adjust]: It seems like you are already using Adjust broadcast receiver. Yay.");
+                Debug.Log("[Adjust]: It seems like you are already using Adjust broadcast receiver. Yay.");
             }
 
             return false;
@@ -401,7 +408,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             receiverElement.AppendChild(intentFilterElement);
             applicationNode.AppendChild(receiverElement);
 
-            UnityEngine.Debug.Log("[Adjust]: Adjust broadcast receiver successfully added to your app's AndroidManifest.xml file.");
+            Debug.Log("[Adjust]: Adjust broadcast receiver successfully added to your app's AndroidManifest.xml file.");
 
             return true;
         }
