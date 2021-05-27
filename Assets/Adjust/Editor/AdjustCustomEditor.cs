@@ -49,7 +49,10 @@ namespace com.adjust.sdk
             }
             if (GUILayout.Button("-"))
             {
-                manipulatedList.RemoveAt(manipulatedList.Count - 1);
+                if (manipulatedList.Count > 0)
+                {
+                    manipulatedList.RemoveAt(manipulatedList.Count - 1);
+                }
             }
             GUILayout.EndHorizontal();
 

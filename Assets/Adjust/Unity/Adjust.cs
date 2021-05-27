@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace com.adjust.sdk
 {
-    [ExecuteInEditMode]
     public class Adjust : MonoBehaviour
     {
         private const string errorMsgEditor = "[Adjust]: SDK can not be used in Editor.";
