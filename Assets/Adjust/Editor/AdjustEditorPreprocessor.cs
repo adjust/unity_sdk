@@ -8,6 +8,7 @@ using UnityEditor;
 using System.Xml;
 using System;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 #if UNITY_2018_1_OR_NEWER
 public class AdjustEditorPreprocessor : IPreprocessBuildWithReport
@@ -104,7 +105,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         }
         else
         {
-            // Let's open the app's AndroidManifest.xml file.
+            // Open copied AndroidManifest.xml file.
             var manifestFile = new XmlDocument();
             manifestFile.Load(appManifestPath);
 
@@ -137,7 +138,10 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     {
         Debug.Log("[Adjust]: Start addition of URI schemes");
         const string intentFilter = "intent-filter";
-        XmlNode intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity");
+
+        var namespaceManager = new XmlNamespaceManager(manifest.NameTable);
+        namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
+        XmlNode intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='com.unity3d.player.UnityPlayerActivity']", namespaceManager);
         bool manifestHasChanged = false;
         bool usedIntentFiltersChanged = false;
         XmlElement usedIntentFilters = manifest.CreateElement(intentFilter);
@@ -149,7 +153,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             //The first element is android:scheme and the second one is android:host
             Uri uri = new Uri(uriScheme);
 
-            if (!IntentFilterAlreadyExist(manifest, uri))
+            if (!IsIntentFilterAlreadyExist(manifest, uri))
             {
                 Debug.Log("[Adjust]: Adding new URI with scheme: " + uri.Scheme + ", and host: " + uri.Host);
                 XmlElement androidSchemeNode = manifest.CreateElement("data");
@@ -170,7 +174,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         return manifestHasChanged;
     }
 
-    private static bool IntentFilterAlreadyExist(XmlDocument manifest, Uri link)
+    private static bool IsIntentFilterAlreadyExist(XmlDocument manifest, Uri link)
     {
         var namespaceManager = new XmlNamespaceManager(manifest.NameTable);
         namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
@@ -180,22 +184,20 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
     private static XmlElement CreateActionAndCategoryNodes(XmlElement intentFilter, XmlDocument manifest)
     {
-        const string andoirdName = "android__name";
+        const string androidName = "android__name";
         const string category = "category";
 
         var actionElement = manifest.CreateElement("action");
-        actionElement.SetAttribute(andoirdName, "android.intent.action.VIEW");
+        actionElement.SetAttribute(androidName, "android.intent.action.VIEW");
         intentFilter.AppendChild(actionElement);
 
         var defaultCategory = manifest.CreateElement(category);
-        defaultCategory.SetAttribute(andoirdName, "android.intent.category.DEFAULT");
+        defaultCategory.SetAttribute(androidName, "android.intent.category.DEFAULT");
         intentFilter.AppendChild(defaultCategory);
 
         var browsableCategory = manifest.CreateElement(category);
-        browsableCategory.SetAttribute(andoirdName, "android.intent.category.BROWSABLE");
+        browsableCategory.SetAttribute(androidName, "android.intent.category.BROWSABLE");
         intentFilter.AppendChild(browsableCategory);
-
-        Debug.Log(intentFilter.ToString());
 
         return intentFilter;
     }
@@ -210,49 +212,18 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
         Debug.Log("[Adjust]: Checking if all permissions needed for the Adjust SDK are present in the app's AndroidManifest.xml file.");
 
-        var hasInternetPermission = false;
-        var hasAccessWifiStatePermission = false;
-        var hasAccessNetworkStatePermission = false;
-        var hasInstallReferrerServicePermission = false;
-
-        var manifestRoot = manifest.DocumentElement;
-
         // Check if permissions are already there.
-        foreach (XmlNode node in manifestRoot.ChildNodes)
-        {
-            if (node.Name == "uses-permission")
-            {
-                foreach (XmlAttribute attribute in node.Attributes)
-                {
-                    if (attribute.Value.Contains("android.permission.INTERNET"))
-                    {
-                        hasInternetPermission = true;
-                    }
-                    else if (attribute.Value.Contains("android.permission.ACCESS_WIFI_STATE"))
-                    {
-                        hasAccessWifiStatePermission = true;
-                    }
-                    else if (attribute.Value.Contains("android.permission.ACCESS_NETWORK_STATE"))
-                    {
-                        hasAccessNetworkStatePermission = true;
-                    }
-                    else if (attribute.Value.Contains("com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"))
-                    {
-                        hasInstallReferrerServicePermission = true;
-                    }
-                }
-            }
-        }
+        var hasInternetPermission = IsPermissionExists(manifest, "android.permission.INTERNET");
+        var hasAccessWifiStatePermission = IsPermissionExists(manifest, "android.permission.ACCESS_WIFI_STATE");
+        var hasAccessNetworkStatePermission = IsPermissionExists(manifest, "android.permission.ACCESS_NETWORK_STATE");
+        var hasInstallReferrerServicePermission = IsPermissionExists(manifest, "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
 
          var manifestHasChanged = false;
 
         // If android.permission.INTERNET permission is missing, add it.
         if (!hasInternetPermission)
         {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "android.permission.INTERNET");
-            manifestRoot.AppendChild(element);
-            Debug.Log("[Adjust]: android.permission.INTERNET permission successfully added to your app's AndroidManifest.xml file.");
+            AddPermission(manifest, "android.permission.INTERNET");
             manifestHasChanged = true;
         }
         else
@@ -263,10 +234,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // If android.permission.ACCESS_WIFI_STATE permission is missing, add it.
         if (!hasAccessWifiStatePermission)
         {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "android.permission.ACCESS_WIFI_STATE");
-            manifestRoot.AppendChild(element);
-            Debug.Log("[Adjust]: android.permission.ACCESS_WIFI_STATE permission successfully added to your app's AndroidManifest.xml file.");
+            AddPermission(manifest, "android.permission.ACCESS_WIFI_STATE");
             manifestHasChanged = true;
         }
         else
@@ -277,10 +245,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // If android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
         if (!hasAccessNetworkStatePermission)
         {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "android.permission.ACCESS_NETWORK_STATE");
-            manifestRoot.AppendChild(element);
-            Debug.Log("[Adjust]: android.permission.ACCESS_NETWORK_STATE permission successfully added to your app's AndroidManifest.xml file.");
+            AddPermission(manifest, "android.permission.ACCESS_NETWORK_STATE");
             manifestHasChanged = true;
         }
         else
@@ -291,10 +256,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // If com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
         if (!hasInstallReferrerServicePermission)
         {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
-            manifestRoot.AppendChild(element);
-            Debug.Log("[Adjust]: com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission successfully added to your app's AndroidManifest.xml file.");
+            AddPermission(manifest, "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
             manifestHasChanged = true;
         }
         else
@@ -303,6 +265,22 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         }
 
         return manifestHasChanged;
+    }
+
+    private static void AddPermission(XmlDocument manifest, string permissionValue)
+    {
+        XmlElement element = manifest.CreateElement("uses-permission");
+        element.SetAttribute("android__name", permissionValue);
+        manifest.DocumentElement.AppendChild(element);
+        Debug.Log(string.Format("[Adjust]: {0} permission successfully added to your app's AndroidManifest.xml file.", permissionValue));
+    }
+
+    private static bool IsPermissionExists(XmlDocument manifest, string permissionValue)
+    {
+        var namespaceManager = new XmlNamespaceManager(manifest.NameTable);
+        namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
+        var xpath = string.Format("/manifest/uses-permission[@android:name='{0}']", permissionValue);
+        return manifest.DocumentElement.SelectSingleNode(xpath, namespaceManager) != null;
     }
 
     private static bool AddBroadcastReceiver(XmlDocument manifest)
@@ -339,18 +317,9 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
         Debug.Log("[Adjust]: Checking if app's AndroidManifest.xml file contains receiver for INSTALL_REFERRER intent.");
 
-        XmlElement manifestRoot = manifest.DocumentElement;
-        XmlNode applicationNode = null;
-
-        // Let's find the application node.
-        foreach (XmlNode node in manifestRoot.ChildNodes)
-        {
-            if (node.Name == "application")
-            {
-                applicationNode = node;
-                break;
-            }
-        }
+        // Find the application node
+        var applicationNodeXpath = "/manifest/application";
+        XmlNode applicationNode = manifest.DocumentElement.SelectSingleNode(applicationNodeXpath);
 
         // If there's no applicatio node, something is really wrong with your AndroidManifest.xml.
         if (applicationNode == null)
@@ -365,7 +334,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // If that is already defined, don't force the Adjust broadcast receiver to the manifest file.
         // If not, add the Adjust broadcast receiver to the manifest file.
 
-        List<XmlNode> customBroadcastReceiversNodes = getCustomRecieverNodes(applicationNode);
+        List<XmlNode> customBroadcastReceiversNodes = GetCustomRecieverNodes(manifest, applicationNode);
         if (customBroadcastReceiversNodes.Count > 0)
         {
             bool foundAdjustBroadcastReceiver = false;
@@ -432,34 +401,11 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         manifestWriter.Close();
     }
 
-    private static List<XmlNode> getCustomRecieverNodes(XmlNode applicationNode)
+    private static List<XmlNode> GetCustomRecieverNodes(XmlDocument manifest, XmlNode applicationNode)
     {
-        List<XmlNode> nodes = new List<XmlNode>();
-        foreach (XmlNode node in applicationNode.ChildNodes)
-        {
-            if (node.Name == "receiver")
-            {
-                foreach (XmlNode subnode in node.ChildNodes)
-                {
-                    if (subnode.Name == "intent-filter")
-                    {
-                        foreach (XmlNode subsubnode in subnode.ChildNodes)
-                        {
-                            if (subsubnode.Name == "action")
-                            {
-                                foreach (XmlAttribute attribute in subsubnode.Attributes)
-                                {
-                                    if (attribute.Value.Contains("com.android.vending.INSTALL_REFERRER"))
-                                    {
-                                        nodes.Add(node);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return nodes;
+        var namespaceManager = new XmlNamespaceManager(manifest.NameTable);
+        namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
+        var xpath = "descendant::intent-filter/action[@android:name='com.android.vending.INSTALL_REFERRER']";
+        return new List<XmlNode>(applicationNode.SelectNodes(xpath, namespaceManager).OfType<XmlNode>());
     }
 }
