@@ -151,13 +151,13 @@ public class AdjustEditor : AssetPostprocessor
             xcodeProject.ReadFromFile(xcodeProjectPath);
 
 #if UNITY_2019_3_OR_NEWER
-            string xcodeTarget = xcodeProject.GetUnityFrameworkTargetGuid();
+            string xcodeTarget = xcodeProject.GetUnityMainTargetGuid();
 #else
             string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
 #endif
             if (AdjustSettings.UrlSchemesDeepLinksEnabled)
             {
-                AddUrlSchemesIOS(projectPath);
+                AddUrlSchemesIOS(projectPath, AdjustSettings.UrlSchemes, AdjustSettings.UserTrackingUsageDescription);
             }
             if (AdjustSettings.UniversalLinksEnabled)
             {
@@ -231,19 +231,21 @@ public class AdjustEditor : AssetPostprocessor
     }
 
 #if UNITY_IOS
-    private static void AddUrlSchemesIOS(string projectPath)
+    private static void AddUrlSchemesIOS(string projectPath, List<string> deferredLinks, string userTrackingUsageDescription)
     {
         const string CFBundleURLTypes = "CFBundleURLTypes";
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
-        var deferredLinks = new List<string>(AdjustSettings.UrlSchemes);
         var plistPath = Path.Combine(projectPath, "Info.plist");
         var plist = new PlistDocument();
         plist.ReadFromFile(plistPath);
         var plistRoot = plist.root;
 
         Debug.Log("[Adjust]: Creating NSUserTrackingUsageDescription element in Info.plist");
-        plistRoot.SetString("NSUserTrackingUsageDescription", AdjustSettings.UserTrackingUsageDescription);
+        if (userTrackingUsageDescription != null && userTrackingUsageDescription != "")
+        {
+            plistRoot.SetString("NSUserTrackingUsageDescription", userTrackingUsageDescription);
+        }
 
         // Set Array for futher deeplink values.
         var deferredDeeplinksArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
@@ -305,16 +307,19 @@ public class AdjustEditor : AssetPostprocessor
     private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
     {
         string entitlementsFileName = "Unity-iPhone.entitlements";
-        string targetName = "Unity-iPhone";
+        var projectPath = PBXProject.GetPBXProjectPath(xCodeProjectPath);
 
-        Debug.Log("[Adjust]: Adding associated domains to app_entitlements file.");
-        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, targetName);
-
+        Debug.Log("[Adjust]: Adding associated domains to entitlements file.");
+#if UNITY_2019_3_OR_NEWER
+        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, null,  project.GetUnityMainTargetGuid());
+#else
+        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, PBXProject.GetUnityTargetName());
+#endif
         var uniqueDomains = AdjustSettings.Domains.Distinct().ToArray();
         const string applinksPrefix = "applinks:";
         for (int i = 0; i < uniqueDomains.Length; i++)
         {
-            if (!uniqueDomains[i].Contains(applinksPrefix))
+            if (!uniqueDomains[i].StartsWith(applinksPrefix))
             {
                 uniqueDomains[i] = applinksPrefix + uniqueDomains[i];
             }
@@ -323,12 +328,12 @@ public class AdjustEditor : AssetPostprocessor
         projectCapabilityManager.AddAssociatedDomains(uniqueDomains);
         projectCapabilityManager.WriteToFile();
 
-        Debug.Log("[Adjust]: Enabling Associated Domains capability with created app_entitlements file.");
+        Debug.Log("[Adjust]: Enabling Associated Domains capability with created entitlements file.");
         project.AddCapability(xCodeTarget, PBXCapabilityType.AssociatedDomains, entitlementsFileName);
     }
 #endif
 
-    private static void RunPostProcessTasksAndroid()
+        private static void RunPostProcessTasksAndroid()
     {
         bool isAdjustManifestUsed = false;
         string androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");

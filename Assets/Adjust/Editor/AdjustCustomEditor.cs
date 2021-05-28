@@ -20,7 +20,10 @@ namespace com.adjust.sdk
         {
             base.OnInspectorGUI();
 
-            EditorGUILayout.TextField("User Tracking Usage Description", AdjustSettings.UserTrackingUsageDescription);
+            if (AdjustSettings.UniversalLinksEnabled || AdjustSettings.UrlSchemesDeepLinksEnabled)
+            {
+                AdjustSettings.UserTrackingUsageDescription = EditorGUILayout.TextField("User Tracking Usage Description", AdjustSettings.UserTrackingUsageDescription);
+            }
 
             GUILayout.Space(20f);
             AdjustSettings.UrlSchemesDeepLinksEnabled = GUILayout.Toggle(AdjustSettings.UrlSchemesDeepLinksEnabled, "URL schemes deep links enabled");
