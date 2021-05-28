@@ -10,18 +10,16 @@
 #import "ADJEvent.h"
 #import "ADJConfig.h"
 #import "AdjustUnity.h"
+#import "AdjustUnityAppDelegate.h"
 #import "AdjustUnityDelegate.h"
 
 @implementation AdjustUnity
 
 #pragma mark - Object lifecycle methods
 
-- (id)init {
-    self = [super init];
-    if (nil == self) {
-        return nil;
-    }
-    return self;
++ (void)load {
+    // Swizzle AppDelegate on the load because TODO TODO
+    [AdjustUnityAppDelegate swizzleAppDelegateCallbacks];
 }
 
 @end
