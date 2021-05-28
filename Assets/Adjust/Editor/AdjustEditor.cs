@@ -59,7 +59,7 @@ public class AdjustEditor : AssetPostprocessor
 
         assetsToExport.Add(assetsPath + "/Editor/AdjustEditor.cs");
         assetsToExport.Add(assetsPath + "/Editor/AdjustSettings.cs");
-        assetsToExport.Add(assetsPath + "/Editor/CustomAdjustEditor.cs");
+        assetsToExport.Add(assetsPath + "/Editor/AdjustCustomEditor.cs");
 
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.cs");
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.prefab");
