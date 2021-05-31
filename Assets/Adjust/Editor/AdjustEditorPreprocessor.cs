@@ -90,9 +90,6 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
                 // Save the changes.
                 manifestFile.Save(appManifestPath);
 
-                // Clean the manifest file.
-                CleanManifestFile(appManifestPath);
-
                 Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
                 Debug.Log("[Adjust]: Please check if any error message was displayed during this process "
                                       + "and make sure to fix all issues in order to properly use the Adjust SDK in your app.");
@@ -118,9 +115,6 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             {
                 // Save the changes.
                 manifestFile.Save(appManifestPath);
-
-                // Clean the manifest file.
-                CleanManifestFile(appManifestPath);
 
                 Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
                 Debug.Log("[Adjust]: Please check if any error message was displayed during this process "
@@ -157,8 +151,8 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             {
                 Debug.Log("[Adjust]: Adding new URI with scheme: " + uri.Scheme + ", and host: " + uri.Host);
                 XmlElement androidSchemeNode = manifest.CreateElement("data");
-                androidSchemeNode.SetAttribute("android__scheme", uri.Scheme);
-                androidSchemeNode.SetAttribute("android__host", uri.Host);
+                AddAndroidNamespaceAttribute(manifest, "scheme", uri.Scheme, androidSchemeNode);
+                AddAndroidNamespaceAttribute(manifest, "host", uri.Host, androidSchemeNode);
                 usedIntentFilters.AppendChild(androidSchemeNode);
                 usedIntentFiltersChanged = true;
 
@@ -184,19 +178,19 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
     private static XmlElement CreateActionAndCategoryNodes(XmlElement intentFilter, XmlDocument manifest)
     {
-        const string androidName = "android__name";
+        const string androidName = "name";
         const string category = "category";
 
         var actionElement = manifest.CreateElement("action");
-        actionElement.SetAttribute(androidName, "android.intent.action.VIEW");
+        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
         intentFilter.AppendChild(actionElement);
 
         var defaultCategory = manifest.CreateElement(category);
-        defaultCategory.SetAttribute(androidName, "android.intent.category.DEFAULT");
+        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
         intentFilter.AppendChild(defaultCategory);
 
         var browsableCategory = manifest.CreateElement(category);
-        browsableCategory.SetAttribute(androidName, "android.intent.category.BROWSABLE");
+        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
         intentFilter.AppendChild(browsableCategory);
 
         return intentFilter;
@@ -270,7 +264,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     private static void AddPermission(XmlDocument manifest, string permissionValue)
     {
         XmlElement element = manifest.CreateElement("uses-permission");
-        element.SetAttribute("android__name", permissionValue);
+        AddAndroidNamespaceAttribute(manifest, "name", permissionValue, element);
         manifest.DocumentElement.AppendChild(element);
         Debug.Log(string.Format("[Adjust]: {0} permission successfully added to your app's AndroidManifest.xml file.", permissionValue));
     }
@@ -365,13 +359,13 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         {
             // Generate Adjust broadcast receiver entry and add it to the application node.
             XmlElement receiverElement = manifest.CreateElement("receiver");
-            receiverElement.SetAttribute("android__name", "com.adjust.sdk.AdjustReferrerReceiver");
-            receiverElement.SetAttribute("android__permission", "android.permission.INSTALL_PACKAGES");
-            receiverElement.SetAttribute("android__exported", "true");
+            AddAndroidNamespaceAttribute(manifest, "name", "com.adjust.sdk.AdjustReferrerReceiver", receiverElement);
+            AddAndroidNamespaceAttribute(manifest, "permission", "android.permission.INSTALL_PACKAGES", receiverElement);
+            AddAndroidNamespaceAttribute(manifest, "exported", "true", receiverElement);
 
             XmlElement intentFilterElement = manifest.CreateElement("intent-filter");
             XmlElement actionElement = manifest.CreateElement("action");
-            actionElement.SetAttribute("android__name", "com.android.vending.INSTALL_REFERRER");
+            AddAndroidNamespaceAttribute(manifest, "name", "com.android.vending.INSTALL_REFERRER", actionElement);
 
             intentFilterElement.AppendChild(actionElement);
             receiverElement.AppendChild(intentFilterElement);
@@ -383,29 +377,18 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         }
     }
 
-    private static void CleanManifestFile(String manifestPath)
-    {
-        // Due to XML writing issue with XmlElement methods which are unable
-        // to write "android:[param]" string, we have wrote "android__[param]" string instead.
-        // Now make the replacement: "android:[param]" -> "android__[param]"
-
-        TextReader manifestReader = new StreamReader(manifestPath);
-        string manifestContent = manifestReader.ReadToEnd();
-        manifestReader.Close();
-
-        Regex regex = new Regex("android__");
-        manifestContent = regex.Replace(manifestContent, "android:");
-
-        TextWriter manifestWriter = new StreamWriter(manifestPath);
-        manifestWriter.Write(manifestContent);
-        manifestWriter.Close();
-    }
-
     private static List<XmlNode> GetCustomRecieverNodes(XmlDocument manifest, XmlNode applicationNode)
     {
         var namespaceManager = new XmlNamespaceManager(manifest.NameTable);
         namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
         var xpath = "descendant::intent-filter/action[@android:name='com.android.vending.INSTALL_REFERRER']";
         return new List<XmlNode>(applicationNode.SelectNodes(xpath, namespaceManager).OfType<XmlNode>());
+    }
+
+    private static void AddAndroidNamespaceAttribute(XmlDocument manifest, string key, string value, XmlElement node)
+    {
+        var androidSchemeAttribute = manifest.CreateAttribute("android", key, "http://schemas.android.com/apk/res/android");
+        androidSchemeAttribute.InnerText = value;
+        node.SetAttributeNode(androidSchemeAttribute);
     }
 }
