@@ -128,22 +128,22 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         Debug.Log("[Adjust]: Start addition of URI schemes");
         const string intentFilter = "intent-filter";
 
-        XmlNode intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='com.unity3d.player.UnityPlayerActivity']", GetNamespaceManager(manifest));
-        bool manifestHasChanged = false;
-        bool usedIntentFiltersChanged = false;
-        XmlElement usedIntentFilters = manifest.CreateElement(intentFilter);
+        var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='com.unity3d.player.UnityPlayerActivity']", GetNamespaceManager(manifest));
+        var manifestHasChanged = false;
+        var usedIntentFiltersChanged = false;
+        var usedIntentFilters = manifest.CreateElement(intentFilter);
 
         usedIntentFilters = CreateActionAndCategoryNodes(usedIntentFilters, manifest);
 
         foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
         {
             //The first element is android:scheme and the second one is android:host
-            Uri uri = new Uri(uriScheme);
+            var uri = new Uri(uriScheme);
 
             if (!IsIntentFilterAlreadyExist(manifest, uri))
             {
                 Debug.Log("[Adjust]: Adding new URI with scheme: " + uri.Scheme + ", and host: " + uri.Host);
-                XmlElement androidSchemeNode = manifest.CreateElement("data");
+                var androidSchemeNode = manifest.CreateElement("data");
                 AddAndroidNamespaceAttribute(manifest, "scheme", uri.Scheme, androidSchemeNode);
                 AddAndroidNamespaceAttribute(manifest, "host", uri.Host, androidSchemeNode);
                 usedIntentFilters.AppendChild(androidSchemeNode);
@@ -218,7 +218,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     {
         if (!IsPermissionExists(manifest, permissionValue))
         {
-            XmlElement element = manifest.CreateElement("uses-permission");
+            var element = manifest.CreateElement("uses-permission");
             AddAndroidNamespaceAttribute(manifest, "name", permissionValue, element);
             manifest.DocumentElement.AppendChild(element);
             Debug.Log(string.Format("[Adjust]: {0} permission successfully added to your app's AndroidManifest.xml file.", permissionValue));
@@ -273,7 +273,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
         // Find the application node
         var applicationNodeXpath = "/manifest/application";
-        XmlNode applicationNode = manifest.DocumentElement.SelectSingleNode(applicationNodeXpath);
+        var applicationNode = manifest.DocumentElement.SelectSingleNode(applicationNodeXpath);
 
         // If there's no applicatio node, something is really wrong with your AndroidManifest.xml.
         if (applicationNode == null)
@@ -288,7 +288,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // If that is already defined, don't force the Adjust broadcast receiver to the manifest file.
         // If not, add the Adjust broadcast receiver to the manifest file.
 
-        List<XmlNode> customBroadcastReceiversNodes = GetCustomRecieverNodes(manifest);
+        var customBroadcastReceiversNodes = GetCustomRecieverNodes(manifest);
         if (customBroadcastReceiversNodes.Count > 0)
         {
             if (IsAdjustBroadcastReceiverExists(manifest))
@@ -306,13 +306,13 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         else
         {
             // Generate Adjust broadcast receiver entry and add it to the application node.
-            XmlElement receiverElement = manifest.CreateElement("receiver");
+            var receiverElement = manifest.CreateElement("receiver");
             AddAndroidNamespaceAttribute(manifest, "name", "com.adjust.sdk.AdjustReferrerReceiver", receiverElement);
             AddAndroidNamespaceAttribute(manifest, "permission", "android.permission.INSTALL_PACKAGES", receiverElement);
             AddAndroidNamespaceAttribute(manifest, "exported", "true", receiverElement);
 
-            XmlElement intentFilterElement = manifest.CreateElement("intent-filter");
-            XmlElement actionElement = manifest.CreateElement("action");
+            var intentFilterElement = manifest.CreateElement("intent-filter");
+            var actionElement = manifest.CreateElement("action");
             AddAndroidNamespaceAttribute(manifest, "name", "com.android.vending.INSTALL_REFERRER", actionElement);
 
             intentFilterElement.AppendChild(actionElement);
