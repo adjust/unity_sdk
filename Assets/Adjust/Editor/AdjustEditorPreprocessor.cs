@@ -133,7 +133,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         var usedIntentFiltersChanged = false;
         var usedIntentFilters = manifest.CreateElement(intentFilter);
 
-        usedIntentFilters = CreateActionAndCategoryNodes(usedIntentFilters, manifest);
+        usedIntentFilters = CreateActionAndCategoryNodes(manifest, usedIntentFilters);
 
         foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
         {
@@ -167,7 +167,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
     }
 
-    private static XmlElement CreateActionAndCategoryNodes(XmlElement intentFilter, XmlDocument manifest)
+    private static XmlElement CreateActionAndCategoryNodes(XmlDocument manifest, XmlElement intentFilter)
     {
         const string androidName = "name";
         const string category = "category";
