@@ -328,7 +328,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         // If that is already defined, don't force the Adjust broadcast receiver to the manifest file.
         // If not, add the Adjust broadcast receiver to the manifest file.
 
-        List<XmlNode> customBroadcastReceiversNodes = GetCustomRecieverNodes(manifest, applicationNode);
+        List<XmlNode> customBroadcastReceiversNodes = GetCustomRecieverNodes(manifest);
         if (customBroadcastReceiversNodes.Count > 0)
         {
             bool foundAdjustBroadcastReceiver = false;
@@ -377,12 +377,12 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         }
     }
 
-    private static List<XmlNode> GetCustomRecieverNodes(XmlDocument manifest, XmlNode applicationNode)
+    private static List<XmlNode> GetCustomRecieverNodes(XmlDocument manifest)
     {
         var namespaceManager = new XmlNamespaceManager(manifest.NameTable);
         namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
-        var xpath = "descendant::intent-filter/action[@android:name='com.android.vending.INSTALL_REFERRER']";
-        return new List<XmlNode>(applicationNode.SelectNodes(xpath, namespaceManager).OfType<XmlNode>());
+        var xpath = "/manifest/application/receiver[intent-filter/action[@android:name='com.android.vending.INSTALL_REFERRER']]";
+        return new List<XmlNode>(manifest.DocumentElement.SelectNodes(xpath, namespaceManager).OfType<XmlNode>());
     }
 
     private static void AddAndroidNamespaceAttribute(XmlDocument manifest, string key, string value, XmlElement node)
