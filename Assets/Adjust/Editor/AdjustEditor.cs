@@ -155,10 +155,8 @@ public class AdjustEditor : AssetPostprocessor
 #else
             string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
 #endif
-            if (AdjustSettings.UrlSchemesDeepLinksEnabled)
-            {
-                AddUrlSchemesIOS(projectPath, AdjustSettings.UrlSchemes, AdjustSettings.UserTrackingUsageDescription);
-            }
+            HandlePlistIosChanges(projectPath);
+
             if (AdjustSettings.UniversalLinksEnabled)
             {
                 AddUniversalLinkDomains(xcodeProject, xcodeProjectPath, xcodeTarget);
@@ -231,21 +229,45 @@ public class AdjustEditor : AssetPostprocessor
     }
 
 #if UNITY_IOS
-    private static void AddUrlSchemesIOS(string projectPath, List<string> deferredLinks, string userTrackingUsageDescription)
-    {
-        const string CFBundleURLTypes = "CFBundleURLTypes";
-        const string CFBundleURLSchemes = "CFBundleURLSchemes";
+    private static void HandlePlistIosChanges(string projectPath) {
+        // check if needs to do any info plist change
+        bool hasUserTrackingDescription =
+            ! String.IsNullOrEmpty(AdjustSettings.UserTrackingUsageDescription);
+        bool hasUrlSchemesDeepLinksEnabled = AdjustSettings.UrlSchemesDeepLinksEnabled;
 
+        if (! hasUserTrackingDescription && ! hasUrlSchemesDeepLinksEnabled) {
+            return;
+        }
+
+        // get and read info plist
         var plistPath = Path.Combine(projectPath, "Info.plist");
         var plist = new PlistDocument();
         plist.ReadFromFile(plistPath);
         var plistRoot = plist.root;
 
-        Debug.Log("[Adjust]: Creating NSUserTrackingUsageDescription element in Info.plist");
-        if (userTrackingUsageDescription != null && userTrackingUsageDescription != "")
-        {
-            plistRoot.SetString("NSUserTrackingUsageDescription", userTrackingUsageDescription);
+        // do the info plist changes
+        if (hasUserTrackingDescription) {
+            if (plistRoot["NSUserTrackingUsageDescription"] != null) {
+                UnityEngine.Debug.Log("[Adjust]: Overwritting User Tracking Usage Description.");
+            }
+            plistRoot.SetString("NSUserTrackingUsageDescription",
+                AdjustSettings.UserTrackingUsageDescription);
         }
+
+        if (hasUrlSchemesDeepLinksEnabled) {
+            AddUrlSchemesIOS(projectPath, AdjustSettings.UrlSchemes, plistRoot);
+        }
+
+        // write any info plist change
+        File.WriteAllText(plistPath, plist.WriteToString());
+    }
+
+    private static void AddUrlSchemesIOS(string projectPath,
+        List<string> deferredLinks,
+        PlistElementDict plistRoot)
+    {
+        const string CFBundleURLTypes = "CFBundleURLTypes";
+        const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
         // Set Array for futher deeplink values.
         var deferredDeeplinksArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
@@ -253,13 +275,16 @@ public class AdjustEditor : AssetPostprocessor
         // Array will contains just one deeplink dictionary
         var deferredDeeplinksItems = CreatePlistElementDict(deferredDeeplinksArray);
 
-        var deferredDeeplinksSchemesArray = CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
+        var deferredDeeplinksSchemesArray =
+            CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
 
         // Delete old deferred deeplinks URIs
-        Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
+        Debug.Log("[Adjust]: Removing deeplinks that already exist in the array"
+            + " to avoid duplicates.");
         foreach (var link in deferredLinks)
         {
-            deferredDeeplinksSchemesArray.values.RemoveAll(element => element != null && element.AsString().Equals(link));
+            deferredDeeplinksSchemesArray.values.RemoveAll(
+                element => element != null && element.AsString().Equals(link));
         }
 
         Debug.Log("[Adjust]: Adding new deep links.");
@@ -267,14 +292,10 @@ public class AdjustEditor : AssetPostprocessor
         {
             deferredDeeplinksSchemesArray.AddString(link);
         }
-
-        File.WriteAllText(plistPath, plist.WriteToString());
     }
 
-    private static PlistElementArray CreatePlistElementArray(PlistElementDict root, string key)
-    {
-        if (!root.values.ContainsKey(key))
-        {
+    private static PlistElementArray CreatePlistElementArray(PlistElementDict root, string key) {
+        if (!root.values.ContainsKey(key)) {
             Debug.Log("[Adjust]: " + key + " not found in Info.plist. Creating a new one.");
             return root.CreateArray(key);
         }
@@ -282,27 +303,23 @@ public class AdjustEditor : AssetPostprocessor
         return result != null ? result : root.CreateArray(key);
     }
 
-    private static PlistElementDict CreatePlistElementDict(PlistElementArray rootArray)
-    {
-        if (rootArray.values.Count == 0)
-        {
-            Debug.Log("[Adjust]: Deeplinks array doesn't contain deictionary for deeplinks. Creating a new one.");
+    private static PlistElementDict CreatePlistElementDict(PlistElementArray rootArray) {
+        if (rootArray.values.Count == 0) {
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks."
+                + " Creating a new one.");
             return rootArray.AddDict();
         }
-        else
-        {
-            var deferredDeeplinksItems = rootArray.values[0].AsDict();
-            Debug.Log("Reading deeplinks array");
-            if (deferredDeeplinksItems == null)
-            {
-                Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
-                deferredDeeplinksItems = rootArray.AddDict();
-            }
 
-            return deferredDeeplinksItems;
+        var deferredDeeplinksItems = rootArray.values[0].AsDict();
+        Debug.Log("Reading deeplinks array");
+        if (deferredDeeplinksItems == null) {
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks."
+                + " Creating a new one.");
+            deferredDeeplinksItems = rootArray.AddDict();
         }
-    }
 
+        return deferredDeeplinksItems;
+    }
 
     private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
     {
@@ -332,7 +349,6 @@ public class AdjustEditor : AssetPostprocessor
         project.AddCapability(xCodeTarget, PBXCapabilityType.AssociatedDomains, entitlementsFileName);
     }
 #endif
-
         private static void RunPostProcessTasksAndroid()
     {
         bool isAdjustManifestUsed = false;
