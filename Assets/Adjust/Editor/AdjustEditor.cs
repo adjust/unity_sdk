@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -125,8 +125,8 @@ public class AdjustEditor : AssetPostprocessor
         // If user disabled it, oh well, we won't do a thing.
         if (!AdjustSettings.IsPostProcessingEnabled)
         {
-            UnityEngine.Debug.Log("[Adjust]: You have forbidden the Adjust SDK to perform post processing tasks.");
-            UnityEngine.Debug.Log("[Adjust]: Skipping post processing tasks.");
+            Debug.Log("[Adjust]: You have forbidden the Adjust SDK to perform post processing tasks.");
+            Debug.Log("[Adjust]: Skipping post processing tasks.");
             return;
         }
 
@@ -137,13 +137,13 @@ public class AdjustEditor : AssetPostprocessor
     {
         if (target == BuildTarget.Android)
         {
-            UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for Android platform.");
+            Debug.Log("[Adjust]: Starting to perform post build tasks for Android platform.");
             RunPostProcessTasksAndroid();
         }
         else if (target == BuildTarget.iOS)
         {
 #if UNITY_IOS
-            UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
+            Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
 
             string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
@@ -172,50 +172,50 @@ public class AdjustEditor : AssetPostprocessor
 
             // In case you don't need any of these, feel free to remove them from your app.
 
-            UnityEngine.Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
+            Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: AdSupport.framework added successfully.");
+            Debug.Log("[Adjust]: AdSupport.framework added successfully.");
 
-            UnityEngine.Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
+            Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: iAd.framework added successfully.");
+            Debug.Log("[Adjust]: iAd.framework added successfully.");
 
-            UnityEngine.Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
+            Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: AdServices.framework added successfully.");
+            Debug.Log("[Adjust]: AdServices.framework added successfully.");
 
-            UnityEngine.Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
+            Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
+            Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
 
             if (AdjustSettings.IsiOS14ProcessingEnabled)
             {
-                UnityEngine.Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
+                Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
 
-                UnityEngine.Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
+                Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
-                UnityEngine.Debug.Log("[Adjust]: StoreKit.framework added successfully.");
+                Debug.Log("[Adjust]: StoreKit.framework added successfully.");
 
-                UnityEngine.Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
+                Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
-                UnityEngine.Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+                Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
             }
 
             // The Adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
 
-            UnityEngine.Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
+            Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
             xcodeProject.AddBuildProperty(xcodeTarget, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
 
-            UnityEngine.Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
+            Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
 
             // The Adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
 
-            UnityEngine.Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
+            Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
             xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
 
-            UnityEngine.Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
+            Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
 
             if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/iOS/AdjustSigSdk.a"))
             {
@@ -229,42 +229,47 @@ public class AdjustEditor : AssetPostprocessor
     }
 
 #if UNITY_IOS
-    private static void HandlePlistIosChanges(string projectPath) {
-        // check if needs to do any info plist change
+    private static void HandlePlistIosChanges(string projectPath)
+    {
+        const string UserTrackingUsageDescriptionKey = "NSUserTrackingUsageDescription";
+
+        // Check if needs to do any info plist change.
         bool hasUserTrackingDescription =
-            ! String.IsNullOrEmpty(AdjustSettings.UserTrackingUsageDescription);
+            !string.IsNullOrEmpty(AdjustSettings.UserTrackingUsageDescription);
         bool hasUrlSchemesDeepLinksEnabled = AdjustSettings.UrlSchemesDeepLinksEnabled;
 
-        if (! hasUserTrackingDescription && ! hasUrlSchemesDeepLinksEnabled) {
+        if (!hasUserTrackingDescription && !hasUrlSchemesDeepLinksEnabled)
+        {
             return;
         }
 
-        // get and read info plist
+        // Get and read info plist.
         var plistPath = Path.Combine(projectPath, "Info.plist");
         var plist = new PlistDocument();
         plist.ReadFromFile(plistPath);
         var plistRoot = plist.root;
 
-        // do the info plist changes
-        if (hasUserTrackingDescription) {
-            if (plistRoot["NSUserTrackingUsageDescription"] != null) {
-                UnityEngine.Debug.Log("[Adjust]: Overwritting User Tracking Usage Description.");
+        // Do the info plist changes.
+        if (hasUserTrackingDescription)
+        {
+            if (plistRoot[UserTrackingUsageDescriptionKey] != null)
+            {
+                Debug.Log("[Adjust]: Overwritting User Tracking Usage Description.");
             }
-            plistRoot.SetString("NSUserTrackingUsageDescription",
+            plistRoot.SetString(UserTrackingUsageDescriptionKey,
                 AdjustSettings.UserTrackingUsageDescription);
         }
 
-        if (hasUrlSchemesDeepLinksEnabled) {
-            AddUrlSchemesIOS(projectPath, AdjustSettings.UrlSchemes, plistRoot);
+        if (hasUrlSchemesDeepLinksEnabled)
+        {
+            AddUrlSchemesIOS(AdjustSettings.UrlSchemes, plistRoot);
         }
 
-        // write any info plist change
+        // Write any info plist change.
         File.WriteAllText(plistPath, plist.WriteToString());
     }
 
-    private static void AddUrlSchemesIOS(string projectPath,
-        List<string> deferredLinks,
-        PlistElementDict plistRoot)
+    private static void AddUrlSchemesIOS(List<string> deferredLinks, PlistElementDict plistRoot)
     {
         const string CFBundleURLTypes = "CFBundleURLTypes";
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
@@ -279,8 +284,7 @@ public class AdjustEditor : AssetPostprocessor
             CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
 
         // Delete old deferred deeplinks URIs
-        Debug.Log("[Adjust]: Removing deeplinks that already exist in the array"
-            + " to avoid duplicates.");
+        Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
         foreach (var link in deferredLinks)
         {
             deferredDeeplinksSchemesArray.values.RemoveAll(
@@ -294,27 +298,30 @@ public class AdjustEditor : AssetPostprocessor
         }
     }
 
-    private static PlistElementArray CreatePlistElementArray(PlistElementDict root, string key) {
-        if (!root.values.ContainsKey(key)) {
-            Debug.Log("[Adjust]: " + key + " not found in Info.plist. Creating a new one.");
+    private static PlistElementArray CreatePlistElementArray(PlistElementDict root, string key)
+    {
+        if (!root.values.ContainsKey(key))
+        {
+            Debug.Log(string.Format("[Adjust]: {0} not found in Info.plist. Creating a new one.", key));
             return root.CreateArray(key);
         }
         var result = root.values[key].AsArray();
         return result != null ? result : root.CreateArray(key);
     }
 
-    private static PlistElementDict CreatePlistElementDict(PlistElementArray rootArray) {
-        if (rootArray.values.Count == 0) {
-            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks."
-                + " Creating a new one.");
+    private static PlistElementDict CreatePlistElementDict(PlistElementArray rootArray)
+    {
+        if (rootArray.values.Count == 0)
+        {
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
             return rootArray.AddDict();
         }
 
         var deferredDeeplinksItems = rootArray.values[0].AsDict();
         Debug.Log("Reading deeplinks array");
-        if (deferredDeeplinksItems == null) {
-            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks."
-                + " Creating a new one.");
+        if (deferredDeeplinksItems == null)
+        {
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
             deferredDeeplinksItems = rootArray.AddDict();
         }
 
@@ -328,7 +335,7 @@ public class AdjustEditor : AssetPostprocessor
 
         Debug.Log("[Adjust]: Adding associated domains to entitlements file.");
 #if UNITY_2019_3_OR_NEWER
-        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, null,  project.GetUnityMainTargetGuid());
+        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, null, project.GetUnityMainTargetGuid());
 #else
         var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, PBXProject.GetUnityTargetName());
 #endif
