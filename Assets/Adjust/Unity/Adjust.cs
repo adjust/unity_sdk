@@ -65,7 +65,7 @@ namespace com.adjust.sdk
 
             DontDestroyOnLoad(transform.gameObject);
 
-#if UNITY_ANDROID && UNITY_2019_1_OR_NEWER
+#if UNITY_ANDROID && UNITY_2019_2_OR_NEWER
             Application.deepLinkActivated += Adjust.appWillOpenUrl;
             if (!string.IsNullOrEmpty(Application.absoluteURL))
             {
