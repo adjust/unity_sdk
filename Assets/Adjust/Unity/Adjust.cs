@@ -65,6 +65,16 @@ namespace com.adjust.sdk
 
             DontDestroyOnLoad(transform.gameObject);
 
+#if UNITY_ANDROID && UNITY_2019_1_OR_NEWER
+            Application.deepLinkActivated += Adjust.appWillOpenUrl;
+            if (!string.IsNullOrEmpty(Application.absoluteURL))
+            {
+                // Cold start and Application.absoluteURL not null so process Deep Link.
+                Adjust.appWillOpenUrl(Application.absoluteURL);
+            }
+#endif
+
+
             if (!this.startManually)
             {
                 AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment, (this.logLevel == AdjustLogLevel.Suppress));
