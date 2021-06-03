@@ -6,10 +6,13 @@
 //
 
 /**
- * @brief TODO
+ * @brief The interface to Adjust App Delegate. Used to do callback methods swizzling for deep linking.
  */
 @interface AdjustUnityAppDelegate : NSObject
 
+/**
+ * @brief Swizzle AppDelegate deep linking callbacks.
+ */
 + (void)swizzleAppDelegateCallbacks;
 
 @end

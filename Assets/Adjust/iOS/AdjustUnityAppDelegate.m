@@ -64,7 +64,8 @@ static continueUserActivity_t original_continueUserActivity = NULL;
       continueUserActivity:(NSUserActivity *)userActivity
         restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler {
     if ([[userActivity activityType] isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-        [Adjust appWillOpenUrl:[userActivity webpageURL]];
+        NSURL *url = [userActivity webpageURL];
+        [Adjust appWillOpenUrl:url];
     }
     return original_continueUserActivity ? original_continueUserActivity(self, _cmd, application, userActivity, restorationHandler) : YES;
 }

@@ -18,7 +18,7 @@
 #pragma mark - Object lifecycle methods
 
 + (void)load {
-    // Swizzle AppDelegate on the load because TODO TODO
+    // Swizzle AppDelegate on the load. It should be done as early as possible.
     [AdjustUnityAppDelegate swizzleAppDelegateCallbacks];
 }
 
