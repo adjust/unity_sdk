@@ -41,8 +41,8 @@ namespace com.adjust.sdk
 #endif
 #if UNITY_ANDROID
             GUILayout.Space(20f);
-            AdjustSettings.AdnroidUriSchemesEnabled = GUILayout.Toggle(AdjustSettings.AdnroidUriSchemesEnabled, "Adnroid URI schemes enabled");
-            if (AdjustSettings.AdnroidUriSchemesEnabled)
+            AdjustSettings.AndroidUriSchemesEnabled = GUILayout.Toggle(AdjustSettings.AndroidUriSchemesEnabled, "Android URI schemes enabled");
+            if (AdjustSettings.AndroidUriSchemesEnabled)
             {
                 CreateListManipulationUI("Add URI schemes for Android", "URI scheme ", androidURISchemes);
             }

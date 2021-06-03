@@ -169,7 +169,7 @@ public class AdjustSettings : ScriptableObject
         }
     }
 
-    public static bool AdnroidUriSchemesEnabled
+    public static bool AndroidUriSchemesEnabled
     {
         get
         {
