@@ -275,10 +275,10 @@ public class AdjustEditor : AssetPostprocessor
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
         // Set Array for futher deeplink values.
-        var urlSchemesArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
+        var urlTypesArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
 
         // Array will contains just one deeplink dictionary
-        var urlSchemesItems = CreatePlistElementDict(urlSchemesArray);
+        var urlSchemesItems = CreatePlistElementDict(urlTypesArray);
 
         var urlSchemesArray =
             CreatePlistElementArray(urlSchemesItems, CFBundleURLSchemes);
