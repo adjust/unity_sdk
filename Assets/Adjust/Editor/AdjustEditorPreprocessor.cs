@@ -26,13 +26,19 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 #if UNITY_2018_1_OR_NEWER
     public void OnPreprocessBuild(BuildReport report)
     {
-        OnPreprocessBuild(new BuildTarget(), string.Empty);
+        if (report.summary.platform == BuildTarget.Android)
+        {
+            OnPreprocessBuild(BuildTarget.Android, string.Empty);
+        }
     }
 #endif
 
     public void OnPreprocessBuild(BuildTarget target, string path)
     {
-        RunPostProcessTasksAndroid();
+        if (target == BuildTarget.Android)
+        {
+            RunPostProcessTasksAndroid();
+        }
     }
 
     private static void RunPostProcessTasksAndroid()
