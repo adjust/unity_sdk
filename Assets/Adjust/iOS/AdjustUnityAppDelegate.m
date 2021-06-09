@@ -17,7 +17,7 @@ static continueUserActivity_t original_continueUserActivity = NULL;
 @implementation AdjustUnityAppDelegate
 
 + (void)swizzleAppDelegateCallbacks {
-    NSLog(@"[Adjsut] Swizzling AppDelegate callbacks...");
+    NSLog(@"[Adjust] Swizzling AppDelegate callbacks...");
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         original_openURL = (openURL_t)[self swizzleOriginalSelector:@selector(application:openURL:options:)
@@ -45,11 +45,11 @@ static continueUserActivity_t original_continueUserActivity = NULL;
         Method swizzledMethod = class_getInstanceMethod(swizzledClass, swizzledSelector);
         BOOL methodAdded = class_addMethod(originalClass, originalSelector, swizzledImp, method_getTypeEncoding(swizzledMethod));
         if (!methodAdded) {
-            NSLog(@"[Adjsut] Cannot swizzle selector '%@' of class '%@'.", NSStringFromSelector(originalSelector), originalClass);
+            NSLog(@"[Adjust] Cannot swizzle selector '%@' of class '%@'.", NSStringFromSelector(originalSelector), originalClass);
             return NULL;
         }
     }
-    NSLog(@"[Adjsut] Selector '%@' of class '%@' is swizzled.", NSStringFromSelector(originalSelector), originalClass);
+    NSLog(@"[Adjust] Selector '%@' of class '%@' is swizzled.", NSStringFromSelector(originalSelector), originalClass);
     return originalImp;
 }
 
