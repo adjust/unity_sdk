@@ -70,7 +70,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
         // If Adjust manifest is used, we have already set up everything in it so that 
         // our native Android SDK can be used properly.
-        if (! isAdjustManifestUsed)
+        if (!isAdjustManifestUsed)
         {
             // However, if you already had your own AndroidManifest.xml, we'll now run
             // some checks on it and tweak it a bit if needed to add some stuff which
@@ -84,7 +84,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         }
 
         // Add intent filter to URL schemes for deeplinking
-        manifestHasChanged |= AddURLSchemes(manifestFile);
+        manifestHasChanged |= AddURISchemes(manifestFile);
 
         if (manifestHasChanged)
         {
@@ -101,7 +101,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
         }
     }
-    private static bool AddURLSchemes(XmlDocument manifest)
+    private static bool AddURISchemes(XmlDocument manifest)
     {
         Debug.Log("[Adjust]: Start addition of URI schemes");
         const string intentFilter = "intent-filter";
@@ -126,7 +126,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
                 usedIntentFilters.AppendChild(androidSchemeNode);
                 usedIntentFiltersChanged = true;
 
-                Debug.Log("[Adjust]: Android deeplink URL scheme successfully added to your app's AndroidManifest.xml file.");
+                Debug.Log("[Adjust]: Android deeplink URI scheme successfully added to your app's AndroidManifest.xml file.");
             }
         }
 
@@ -193,7 +193,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
     private static bool AddPermission(XmlDocument manifest, string permissionValue)
     {
-        if (IsPermissionExists(manifest, permissionValue))
+        if (DoesPermissionExist(manifest, permissionValue))
         {
             Debug.Log(string.Format("[Adjust]: Your app's AndroidManifest.xml file already contains {0} permission.", permissionValue));
             return false;
@@ -207,7 +207,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         return true;
     }
 
-    private static bool IsPermissionExists(XmlDocument manifest, string permissionValue)
+    private static bool DoesPermissionExist(XmlDocument manifest, string permissionValue)
     {
         var xpath = string.Format("/manifest/uses-permission[@android:name='{0}']", permissionValue);
         return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
@@ -267,7 +267,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         var customBroadcastReceiversNodes = GetCustomRecieverNodes(manifest);
         if (customBroadcastReceiversNodes.Count > 0)
         {
-            if (IsAdjustBroadcastReceiverExists(manifest))
+            if (DoesAdjustBroadcastReceiverExist(manifest))
             {
                 Debug.Log("[Adjust]: It seems like you are already using Adjust broadcast receiver. Yay.");
             }
@@ -299,7 +299,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         return true;
     }
 
-    private static bool IsAdjustBroadcastReceiverExists(XmlDocument manifest)
+    private static bool DoesAdjustBroadcastReceiverExist(XmlDocument manifest)
     {
         var xpath = "/manifest/application/receiver[@android:name='com.adjust.sdk.AdjustReferrerReceiver']";
         return manifest.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
