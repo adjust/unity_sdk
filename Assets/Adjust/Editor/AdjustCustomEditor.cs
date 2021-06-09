@@ -33,7 +33,7 @@ namespace com.adjust.sdk
             AdjustSettings.UniversalLinksEnabled = GUILayout.Toggle(AdjustSettings.UniversalLinksEnabled, "Universal links enabled");
             if (AdjustSettings.UniversalLinksEnabled)
             {
-                CreateListManipulationUI("Add domains for Universal linking", "Domain ", universalLinkDomains);
+                CreateListManipulationUI("Add domains for universal linking", "Domain ", universalLinkDomains);
             }
 
             serializedObject.ApplyModifiedProperties();

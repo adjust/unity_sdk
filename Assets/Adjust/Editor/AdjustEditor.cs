@@ -269,32 +269,32 @@ public class AdjustEditor : AssetPostprocessor
         File.WriteAllText(plistPath, plist.WriteToString());
     }
 
-    private static void AddUrlSchemesIOS(List<string> deferredLinks, PlistElementDict plistRoot)
+    private static void AddUrlSchemesIOS(List<string> urlSchemes, PlistElementDict plistRoot)
     {
         const string CFBundleURLTypes = "CFBundleURLTypes";
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
 
         // Set Array for futher deeplink values.
-        var deferredDeeplinksArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
+        var urlSchemesArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
 
         // Array will contains just one deeplink dictionary
-        var deferredDeeplinksItems = CreatePlistElementDict(deferredDeeplinksArray);
+        var urlSchemesItems = CreatePlistElementDict(urlSchemesArray);
 
-        var deferredDeeplinksSchemesArray =
-            CreatePlistElementArray(deferredDeeplinksItems, CFBundleURLSchemes);
+        var urlSchemesArray =
+            CreatePlistElementArray(urlSchemesItems, CFBundleURLSchemes);
 
         // Delete old deferred deeplinks URIs
         Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
-        foreach (var link in deferredLinks)
+        foreach (var link in urlSchemes)
         {
-            deferredDeeplinksSchemesArray.values.RemoveAll(
+            urlSchemesArray.values.RemoveAll(
                 element => element != null && element.AsString().Equals(link));
         }
 
         Debug.Log("[Adjust]: Adding new deep links.");
-        foreach (var link in deferredLinks.Distinct())
+        foreach (var link in urlSchemes.Distinct())
         {
-            deferredDeeplinksSchemesArray.AddString(link);
+            urlSchemesArray.AddString(link);
         }
     }
 
@@ -317,21 +317,20 @@ public class AdjustEditor : AssetPostprocessor
             return rootArray.AddDict();
         }
 
-        var deferredDeeplinksItems = rootArray.values[0].AsDict();
+        var urlSchemesItems = rootArray.values[0].AsDict();
         Debug.Log("Reading deeplinks array");
-        if (deferredDeeplinksItems == null)
+        if (urlSchemesItems == null)
         {
             Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
-            deferredDeeplinksItems = rootArray.AddDict();
+            urlSchemesItems = rootArray.AddDict();
         }
 
-        return deferredDeeplinksItems;
+        return urlSchemesItems;
     }
 
     private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
     {
         string entitlementsFileName = "Unity-iPhone.entitlements";
-        var projectPath = PBXProject.GetPBXProjectPath(xCodeProjectPath);
 
         Debug.Log("[Adjust]: Adding associated domains to entitlements file.");
 #if UNITY_2019_3_OR_NEWER
@@ -356,7 +355,7 @@ public class AdjustEditor : AssetPostprocessor
         project.AddCapability(xCodeTarget, PBXCapabilityType.AssociatedDomains, entitlementsFileName);
     }
 #endif
-        private static void RunPostProcessTasksAndroid()
+    private static void RunPostProcessTasksAndroid()
     {
         bool isAdjustManifestUsed = false;
         string androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
