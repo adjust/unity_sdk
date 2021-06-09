@@ -13,19 +13,22 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private bool isiOS14ProcessingEnabled = false;
     [SerializeField]
+    private string userTrackingUsageDescription = "";
+
+    [Header("DEEP LINKING:")]
+    [Space(5)]
+    [SerializeField]
     private bool urlSchemesDeepLinksEnabled = false;
     [SerializeField]
-    private List<string> urlSchemes = new List<string>();
-    [SerializeField]
-    private string userTrackingUsageDescription = "";
+    private string[] urlSchemes = new string[0];
     [SerializeField]
     private bool universalLinksEnabled = false;
     [SerializeField]
-    private List<string> domains = new List<string>();
+    private string[] domains = new string[0];
     [SerializeField]
     private bool androidUriSchemesEnabled = false;
     [SerializeField]
-    private List<string> androidUriSchemes = new List<string>();
+    private string[] androidUriSchemes = new string[0];
 
     public static AdjustSettings Instance
     {
@@ -83,113 +86,54 @@ public class AdjustSettings : ScriptableObject
 
     public static bool IsPostProcessingEnabled
     {
-        get
-        {
-            return Instance.isPostProcessingEnabled;
-        }
-
-        set
-        {
-            if (Instance.isPostProcessingEnabled != value)
-            {
-                Instance.isPostProcessingEnabled = value;
-            }
-        }
+        get => Instance.isPostProcessingEnabled;
+        set => Instance.isPostProcessingEnabled = value;
     }
 
     public static bool IsiOS14ProcessingEnabled
     {
-        get
-        {
-            return Instance.isiOS14ProcessingEnabled;
-        }
-
-        set
-        {
-            if (Instance.isiOS14ProcessingEnabled != value)
-            {
-                Instance.isiOS14ProcessingEnabled = value;
-            }
-        }
+        get => Instance.isiOS14ProcessingEnabled;
+        set => Instance.isiOS14ProcessingEnabled = value;
     }
 
     public static bool UrlSchemesDeepLinksEnabled
     {
-        get
-        {
-            return Instance.urlSchemesDeepLinksEnabled;
-        }
-        set
-        {
-            Instance.urlSchemesDeepLinksEnabled = value;
-        }
+        get => Instance.urlSchemesDeepLinksEnabled;
+        set => Instance.urlSchemesDeepLinksEnabled = value;
     }
 
-    public static List<string> UrlSchemes
+    public static string[] UrlSchemes
     {
-        get
-        {
-            return Instance.urlSchemes;
-        }
+        get => Instance.urlSchemes;
     }
 
     public static string UserTrackingUsageDescription
     {
-        get
-        {
-            return Instance.userTrackingUsageDescription;
-        }
-        set
-        {
-            Instance.userTrackingUsageDescription = value;
-        }
+        get => Instance.userTrackingUsageDescription;
+        set => Instance.userTrackingUsageDescription = value;
     }
 
     public static bool UniversalLinksEnabled
     {
-        get
-        {
-            return Instance.universalLinksEnabled;
-        }
-        set
-        {
-            Instance.universalLinksEnabled = value;
-        }
+        get => Instance.universalLinksEnabled;
+        set => Instance.universalLinksEnabled = value;
     }
 
-    public static List<string> Domains
+    public static string[] Domains
     {
-        get
-        {
-            return Instance.domains;
-        }
-        set
-        {
-            Instance.domains = value;
-        }
+        get => Instance.domains;
+        set => Instance.domains = value;
     }
 
     public static bool AndroidUriSchemesEnabled
     {
-        get
-        {
-            return Instance.androidUriSchemesEnabled;
-        }
-        set
-        {
-            Instance.androidUriSchemesEnabled = value;
-        }
+        get => Instance.androidUriSchemesEnabled;
+        set => Instance.androidUriSchemesEnabled = value;
     }
 
-    public static List<string> AndroidUriSchemes
+    public static string[] AndroidUriSchemes
     {
-        get
-        {
-            return Instance.androidUriSchemes;
-        }
-        set
-        {
-            Instance.androidUriSchemes = value;
-        }
+        get => Instance.androidUriSchemes;
+        set => Instance.androidUriSchemes = value;
     }
 }

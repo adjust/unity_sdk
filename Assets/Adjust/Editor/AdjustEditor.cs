@@ -13,36 +13,6 @@ using UnityEditor.iOS.Xcode;
 
 public class AdjustEditor : AssetPostprocessor
 {
-    [MenuItem("Assets/Adjust/Check iOS 14 Support Status")]
-    public static void CheckIOS14SupportStatus()
-    {
-        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is " + (AdjustSettings.IsiOS14ProcessingEnabled ? "enabled." : "disabled."), "OK");
-    }
-
-    [MenuItem("Assets/Adjust/Toggle iOS 14 Support Status")]
-    public static void ToggleiOS14SupportStatus()
-    {
-        AdjustSettings.IsiOS14ProcessingEnabled = !AdjustSettings.IsiOS14ProcessingEnabled;
-        EditorUtility.SetDirty(AdjustSettings.Instance);
-        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is now " + (AdjustSettings.IsiOS14ProcessingEnabled ? "enabled." : "disabled.") +
-            "\nNote: Make sure to save your project files in order for this change to take effect.", "OK");
-    }
-
-    [MenuItem("Assets/Adjust/Check Post Processing Status")]
-    public static void CheckPostProcessingStatus()
-    {
-        EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is " + (AdjustSettings.IsPostProcessingEnabled ? "enabled." : "disabled."), "OK");
-    }
-
-    [MenuItem("Assets/Adjust/Toggle Post Processing Status")]
-    public static void TogglePostProcessingStatus()
-    {
-        AdjustSettings.IsPostProcessingEnabled = !AdjustSettings.IsPostProcessingEnabled;
-        EditorUtility.SetDirty(AdjustSettings.Instance);
-        EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is now " + (AdjustSettings.IsPostProcessingEnabled ? "enabled." : "disabled.") +
-            "\nNote: Make sure to save your project files in order for this change to take effect.", "OK");
-    }
-
     [MenuItem("Assets/Adjust/Export Unity Package")]
     public static void ExportAdjustUnityPackage()
     {
@@ -265,7 +235,7 @@ public class AdjustEditor : AssetPostprocessor
         File.WriteAllText(plistPath, plist.WriteToString());
     }
 
-    private static void AddUrlSchemesIOS(List<string> urlSchemes, PlistElementDict plistRoot)
+    private static void AddUrlSchemesIOS(string[] urlSchemes, PlistElementDict plistRoot)
     {
         const string CFBundleURLTypes = "CFBundleURLTypes";
         const string CFBundleURLSchemes = "CFBundleURLSchemes";
