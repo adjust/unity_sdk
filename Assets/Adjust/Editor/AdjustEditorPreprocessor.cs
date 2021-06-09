@@ -26,10 +26,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 #if UNITY_2018_1_OR_NEWER
     public void OnPreprocessBuild(BuildReport report)
     {
-        if (report.summary.platform == BuildTarget.Android)
-        {
-            OnPreprocessBuild(BuildTarget.Android, string.Empty);
-        }
+        OnPreprocessBuild(report.summary.platform, string.Empty);
     }
 #endif
 
