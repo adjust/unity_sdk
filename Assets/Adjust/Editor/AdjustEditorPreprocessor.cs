@@ -107,14 +107,10 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     private static bool AddURISchemes(XmlDocument manifest)
     {
         Debug.Log("[Adjust]: Start addition of URI schemes");
-        const string intentFilter = "intent-filter";
 
         var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='com.unity3d.player.UnityPlayerActivity']", GetNamespaceManager(manifest));
         var usedIntentFiltersChanged = false;
-        var usedIntentFilters = manifest.CreateElement(intentFilter);
-
-        usedIntentFilters = CreateActionAndCategoryNodes(manifest, usedIntentFilters);
-
+        var usedIntentFilters = GetIntentFilter(manifest);
         foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
         {
             Uri uri;
@@ -148,7 +144,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             }
         }
 
-        if (usedIntentFiltersChanged)
+        if (usedIntentFiltersChanged && usedIntentFilters.ParentNode == null)
         {
             intentRoot.AppendChild(usedIntentFilters);
         }
@@ -156,30 +152,36 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         return usedIntentFiltersChanged;
     }
 
+    private static XmlElement GetIntentFilter(XmlDocument manifest)
+    {
+        var xpath = "/manifest/application/activity/intent-filter[data/@android:scheme and data/@android:host]";
+        var intentFilter = manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) as XmlElement;
+        if (intentFilter == null)
+        {
+            const string androidName = "name";
+            const string category = "category";
+
+            intentFilter = manifest.CreateElement("intent-filter");
+
+            var actionElement = manifest.CreateElement("action");
+            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
+            intentFilter.AppendChild(actionElement);
+
+            var defaultCategory = manifest.CreateElement(category);
+            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
+            intentFilter.AppendChild(defaultCategory);
+
+            var browsableCategory = manifest.CreateElement(category);
+            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
+            intentFilter.AppendChild(browsableCategory);
+        }
+        return intentFilter;
+    }
+
     private static bool IsIntentFilterAlreadyExist(XmlDocument manifest, Uri link)
     {
         var xpath = string.Format("/manifest/application/activity/intent-filter/data[@android:scheme='{0}' and @android:host='{1}']", link.Scheme, link.Host);
         return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
-    }
-
-    private static XmlElement CreateActionAndCategoryNodes(XmlDocument manifest, XmlElement intentFilter)
-    {
-        const string androidName = "name";
-        const string category = "category";
-
-        var actionElement = manifest.CreateElement("action");
-        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
-        intentFilter.AppendChild(actionElement);
-
-        var defaultCategory = manifest.CreateElement(category);
-        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
-        intentFilter.AppendChild(defaultCategory);
-
-        var browsableCategory = manifest.CreateElement(category);
-        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
-        intentFilter.AppendChild(browsableCategory);
-
-        return intentFilter;
     }
 
     private static bool AddPermissions(XmlDocument manifest)
