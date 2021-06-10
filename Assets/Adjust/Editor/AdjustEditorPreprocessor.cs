@@ -117,8 +117,23 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
         foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
         {
-            //The first element is android:scheme and the second one is android:host
-            var uri = new Uri(uriScheme);
+            Uri uri;
+            try
+            {
+                // The first element is android:scheme and the second one is android:host.
+                uri = new Uri(uriScheme);
+
+                // Uri class converts implicit file paths to explicit file paths with the file:// scheme.
+                if (!uriScheme.StartsWith(uri.Scheme))
+                {
+                    throw new UriFormatException();
+                }
+            }
+            catch(UriFormatException)
+            {
+                Debug.LogError(string.Format("[Adjust]: Android deeplink URI scheme \"{0}\" is invalid and will be ignored.", uriScheme));
+                continue;
+            }
 
             if (!IsIntentFilterAlreadyExist(manifest, uri))
             {
@@ -129,7 +144,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
                 usedIntentFilters.AppendChild(androidSchemeNode);
                 usedIntentFiltersChanged = true;
 
-                Debug.Log("[Adjust]: Android deeplink URI scheme successfully added to your app's AndroidManifest.xml file.");
+                Debug.Log(string.Format("[Adjust]: Android deeplink URI scheme \"{0}\" successfully added to your app's AndroidManifest.xml file.", uriScheme));
             }
         }
 
