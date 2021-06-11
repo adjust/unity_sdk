@@ -13,20 +13,11 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private bool isiOS14ProcessingEnabled = false;
     [SerializeField]
-    private string userTrackingUsageDescription = "";
-
-    [Header("DEEP LINKING:")]
-    [Space(5)]
+    private string _iOSUserTrackingUsageDescription = "";
     [SerializeField]
-    private bool urlSchemesDeepLinksEnabled = false;
+    private string[] _iOSUrlSchemes = new string[0];
     [SerializeField]
-    private string[] urlSchemes = new string[0];
-    [SerializeField]
-    private bool universalLinksEnabled = false;
-    [SerializeField]
-    private string[] domains = new string[0];
-    [SerializeField]
-    private bool androidUriSchemesEnabled = false;
+    private string[] _iOSUniversalLinksDomains = new string[0];
     [SerializeField]
     private string[] androidUriSchemes = new string[0];
 
@@ -53,11 +44,11 @@ public class AdjustSettings : ScriptableObject
                 // If yes, migrate the value to AdjustSettings.asset and remove the key from EditorPrefs.
                 if (EditorPrefs.HasKey("adjustiOS14Support"))
                 {
-                    UnityEngine.Debug.Log("[Adjust]: Found 'adjustiOS14Support' key in EditorPrefs.");
-                    UnityEngine.Debug.Log("[Adjust]: Migrating that value to AdjustSettings.asset.");
+                    Debug.Log("[Adjust]: Found 'adjustiOS14Support' key in EditorPrefs.");
+                    Debug.Log("[Adjust]: Migrating that value to AdjustSettings.asset.");
                     IsiOS14ProcessingEnabled = EditorPrefs.GetBool("adjustiOS14Support", false);
                     EditorPrefs.DeleteKey("adjustiOS14Support");
-                    UnityEngine.Debug.Log("[Adjust]: Key 'adjustiOS14Support' removed from EditorPrefs.");
+                    Debug.Log("[Adjust]: Key 'adjustiOS14Support' removed from EditorPrefs.");
                 }
             }
 
@@ -96,39 +87,22 @@ public class AdjustSettings : ScriptableObject
         set => Instance.isiOS14ProcessingEnabled = value;
     }
 
-    public static bool UrlSchemesDeepLinksEnabled
+    public static string iOSUserTrackingUsageDescription
     {
-        get => Instance.urlSchemesDeepLinksEnabled;
-        set => Instance.urlSchemesDeepLinksEnabled = value;
+        get => Instance._iOSUserTrackingUsageDescription;
+        set => Instance._iOSUserTrackingUsageDescription = value;
     }
 
-    public static string[] UrlSchemes
+    public static string[] iOSUrlSchemes
     {
-        get => Instance.urlSchemes;
+        get => Instance._iOSUrlSchemes;
+        set => Instance._iOSUrlSchemes = value;
     }
 
-    public static string UserTrackingUsageDescription
+    public static string[] iOSUniversalLinksDomains
     {
-        get => Instance.userTrackingUsageDescription;
-        set => Instance.userTrackingUsageDescription = value;
-    }
-
-    public static bool UniversalLinksEnabled
-    {
-        get => Instance.universalLinksEnabled;
-        set => Instance.universalLinksEnabled = value;
-    }
-
-    public static string[] Domains
-    {
-        get => Instance.domains;
-        set => Instance.domains = value;
-    }
-
-    public static bool AndroidUriSchemesEnabled
-    {
-        get => Instance.androidUriSchemesEnabled;
-        set => Instance.androidUriSchemesEnabled = value;
+        get => Instance._iOSUniversalLinksDomains;
+        set => Instance._iOSUniversalLinksDomains = value;
     }
 
     public static string[] AndroidUriSchemes

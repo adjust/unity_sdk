@@ -29,6 +29,7 @@ public class AdjustEditor : AssetPostprocessor
 
         assetsToExport.Add(assetsPath + "/Editor/AdjustEditor.cs");
         assetsToExport.Add(assetsPath + "/Editor/AdjustSettings.cs");
+        assetsToExport.Add(assetsPath + "/Editor/AdjustSettingsEditor.cs");
         assetsToExport.Add(assetsPath + "/Editor/AdjustCustomEditor.cs");
         assetsToExport.Add(assetsPath + "/Editor/AdjustEditorPreprocessor.cs");
 
@@ -123,7 +124,7 @@ public class AdjustEditor : AssetPostprocessor
 #endif
             HandlePlistIosChanges(projectPath);
 
-            if (AdjustSettings.UniversalLinksEnabled)
+            if (AdjustSettings.iOSUniversalLinksDomains.Length > 0)
             {
                 AddUniversalLinkDomains(xcodeProject, xcodeProjectPath, xcodeTarget);
             }
@@ -201,8 +202,8 @@ public class AdjustEditor : AssetPostprocessor
 
         // Check if needs to do any info plist change.
         bool hasUserTrackingDescription =
-            !string.IsNullOrEmpty(AdjustSettings.UserTrackingUsageDescription);
-        bool hasUrlSchemesDeepLinksEnabled = AdjustSettings.UrlSchemesDeepLinksEnabled;
+            !string.IsNullOrEmpty(AdjustSettings.iOSUserTrackingUsageDescription);
+        bool hasUrlSchemesDeepLinksEnabled = AdjustSettings.iOSUrlSchemes.Length > 0;
 
         if (!hasUserTrackingDescription && !hasUrlSchemesDeepLinksEnabled)
         {
@@ -223,12 +224,12 @@ public class AdjustEditor : AssetPostprocessor
                 Debug.Log("[Adjust]: Overwritting User Tracking Usage Description.");
             }
             plistRoot.SetString(UserTrackingUsageDescriptionKey,
-                AdjustSettings.UserTrackingUsageDescription);
+                AdjustSettings.iOSUserTrackingUsageDescription);
         }
 
         if (hasUrlSchemesDeepLinksEnabled)
         {
-            AddUrlSchemesIOS(AdjustSettings.UrlSchemes, plistRoot);
+            AddUrlSchemesIOS(AdjustSettings.iOSUrlSchemes, plistRoot);
         }
 
         // Write any info plist change.
@@ -304,7 +305,7 @@ public class AdjustEditor : AssetPostprocessor
 #else
         var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, PBXProject.GetUnityTargetName());
 #endif
-        var uniqueDomains = AdjustSettings.Domains.Distinct().ToArray();
+        var uniqueDomains = AdjustSettings.iOSUniversalLinksDomains.Distinct().ToArray();
         const string applinksPrefix = "applinks:";
         for (int i = 0; i < uniqueDomains.Length; i++)
         {

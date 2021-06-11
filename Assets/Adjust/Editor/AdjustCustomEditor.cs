@@ -12,6 +12,9 @@ namespace com.adjust.sdk
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
+            
+            EditorGUILayout.Space(16);
+            EditorGUILayout.LabelField("POST PROCESSING SETTINGS:", EditorStyles.boldLabel);
 
             if (settingsEditor == null)
             {

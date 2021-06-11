@@ -34,10 +34,13 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     {
         if (target == BuildTarget.Android)
         {
+#if UNITY_ANDROID
             RunPostProcessTasksAndroid();
+#endif
         }
     }
 
+#if UNITY_ANDROID
     private static void RunPostProcessTasksAndroid()
     {
         var isAdjustManifestUsed = false;
@@ -104,8 +107,13 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
             Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
         }
     }
+
     private static bool AddURISchemes(XmlDocument manifest)
     {
+        if (AdjustSettings.AndroidUriSchemes.Length == 0)
+        {
+            return false;
+        }
         Debug.Log("[Adjust]: Start addition of URI schemes");
 
         var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='com.unity3d.player.UnityPlayerActivity']", GetNamespaceManager(manifest));
@@ -344,4 +352,5 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
         return namespaceManager;
     }
+#endif
 }
