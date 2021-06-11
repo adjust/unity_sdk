@@ -40,6 +40,10 @@ namespace com.adjust.sdk
                 EditorGUILayout.PropertyField(iOSUniversalLinksDomains, new GUIContent("Universal Links Domains"));
 #elif UNITY_ANDROID
                 EditorGUILayout.PropertyField(androidUriSchemes, new GUIContent("URI Schemes"));
+                EditorGUILayout.HelpBox(
+                    "Please note that Adjust SDK doesn't remove existing URI Schemes, " +
+                    "so if you need to clean previously added entries, " +
+                    "you need to do it manually from \"Assets/Plugins/Android/AndroidManifest.xml\"", MessageType.Info, true);
 #endif
             }
 
