@@ -42,10 +42,10 @@ namespace com.adjust.sdk
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("DEEP LINKING:", EditorStyles.boldLabel);
 #if UNITY_IOS
-                EditorGUILayout.PropertyField(iOSUrlSchemes, new GUIContent("URL Schemes"));
-                EditorGUILayout.PropertyField(iOSUniversalLinksDomains, new GUIContent("Universal Links Domains"));
+                EditorGUILayout.PropertyField(iOSUrlSchemes, new GUIContent("URL Schemes"), true);
+                EditorGUILayout.PropertyField(iOSUniversalLinksDomains, new GUIContent("Universal Links Domains"), true);
 #elif UNITY_ANDROID
-                EditorGUILayout.PropertyField(androidUriSchemes, new GUIContent("URI Schemes"));
+                EditorGUILayout.PropertyField(androidUriSchemes, new GUIContent("URI Schemes"), true);
                 EditorGUILayout.HelpBox(
                     "Please note that Adjust SDK doesn't remove existing URI Schemes, " +
                     "so if you need to clean previously added entries, " +
