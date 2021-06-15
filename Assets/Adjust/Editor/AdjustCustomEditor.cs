@@ -13,7 +13,7 @@ namespace com.adjust.sdk
         {
             base.OnInspectorGUI();
             
-            EditorGUILayout.Space(16);
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("POST PROCESSING SETTINGS:", EditorStyles.boldLabel);
 
             if (settingsEditor == null)

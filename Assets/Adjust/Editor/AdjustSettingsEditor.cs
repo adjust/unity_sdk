@@ -8,21 +8,27 @@ namespace com.adjust.sdk
     public class AdjustSettingsEditor : Editor
     {
         SerializedProperty isPostProcessingEnabled;
+#if UNITY_IOS
         SerializedProperty isiOS14ProcessingEnabled;
         SerializedProperty iOSUserTrackingUsageDescription;
         SerializedProperty iOSUrlSchemes;
         SerializedProperty iOSUniversalLinksDomains;
+#elif UNITY_ANDROID
         SerializedProperty androidUriSchemes;
+#endif
 
 
         void OnEnable()
         {
             isPostProcessingEnabled = serializedObject.FindProperty("isPostProcessingEnabled");
+#if UNITY_IOS
             isiOS14ProcessingEnabled = serializedObject.FindProperty("isiOS14ProcessingEnabled");
             iOSUserTrackingUsageDescription = serializedObject.FindProperty("_iOSUserTrackingUsageDescription");
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
+#elif UNITY_ANDROID
             androidUriSchemes = serializedObject.FindProperty("androidUriSchemes");
+#endif
         }
         public override void OnInspectorGUI()
         {
@@ -33,7 +39,7 @@ namespace com.adjust.sdk
                 EditorGUILayout.PropertyField(isiOS14ProcessingEnabled, new GUIContent("Is iOS 14 Processing Enabled"));
                 EditorGUILayout.PropertyField(iOSUserTrackingUsageDescription, new GUIContent("User Tracking Usage Description"));
 #endif
-                EditorGUILayout.Space(16);
+                EditorGUILayout.Space();
                 EditorGUILayout.LabelField("DEEP LINKING:", EditorStyles.boldLabel);
 #if UNITY_IOS
                 EditorGUILayout.PropertyField(iOSUrlSchemes, new GUIContent("URL Schemes"));

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
 using UnityEditor;
 using System.Xml;
 using System;
@@ -24,7 +23,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         }
     }
 #if UNITY_2018_1_OR_NEWER
-    public void OnPreprocessBuild(BuildReport report)
+    public void OnPreprocessBuild(Reporting.BuildReport report)
     {
         OnPreprocessBuild(report.summary.platform, string.Empty);
     }
