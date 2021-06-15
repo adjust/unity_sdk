@@ -77,37 +77,37 @@ public class AdjustSettings : ScriptableObject
 
     public static bool IsPostProcessingEnabled
     {
-        get => Instance.isPostProcessingEnabled;
-        set => Instance.isPostProcessingEnabled = value;
+        get { return Instance.isPostProcessingEnabled; }
+        set { Instance.isPostProcessingEnabled = value; }
     }
 
     public static bool IsiOS14ProcessingEnabled
     {
-        get => Instance.isiOS14ProcessingEnabled;
-        set => Instance.isiOS14ProcessingEnabled = value;
+        get { return Instance.isiOS14ProcessingEnabled; }
+        set { Instance.isiOS14ProcessingEnabled = value; }
     }
 
     public static string iOSUserTrackingUsageDescription
     {
-        get => Instance._iOSUserTrackingUsageDescription;
-        set => Instance._iOSUserTrackingUsageDescription = value;
+        get { return Instance._iOSUserTrackingUsageDescription; }
+        set { Instance._iOSUserTrackingUsageDescription = value; }
     }
 
     public static string[] iOSUrlSchemes
     {
-        get => Instance._iOSUrlSchemes;
-        set => Instance._iOSUrlSchemes = value;
+        get { return Instance._iOSUrlSchemes; }
+        set { Instance._iOSUrlSchemes = value; }
     }
 
     public static string[] iOSUniversalLinksDomains
     {
-        get => Instance._iOSUniversalLinksDomains;
-        set => Instance._iOSUniversalLinksDomains = value;
+        get { return Instance._iOSUniversalLinksDomains; }
+        set { Instance._iOSUniversalLinksDomains = value; }
     }
 
     public static string[] AndroidUriSchemes
     {
-        get => Instance.androidUriSchemes;
-        set => Instance.androidUriSchemes = value;
+        get { return Instance.androidUriSchemes; }
+        set { Instance.androidUriSchemes = value; }
     }
 }
