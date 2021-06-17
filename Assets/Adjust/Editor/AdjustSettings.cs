@@ -15,6 +15,8 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private string _iOSUserTrackingUsageDescription = "";
     [SerializeField]
+    private string _iOSUrlName = "";
+    [SerializeField]
     private string[] _iOSUrlSchemes = new string[0];
     [SerializeField]
     private string[] _iOSUniversalLinksDomains = new string[0];
@@ -91,6 +93,12 @@ public class AdjustSettings : ScriptableObject
     {
         get { return Instance._iOSUserTrackingUsageDescription; }
         set { Instance._iOSUserTrackingUsageDescription = value; }
+    }
+
+    public static string iOSUrlName
+    {
+        get { return Instance._iOSUrlName; }
+        set { Instance._iOSUrlName = value; }
     }
 
     public static string[] iOSUrlSchemes

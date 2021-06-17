@@ -229,26 +229,22 @@ public class AdjustEditor : AssetPostprocessor
 
         if (hasUrlSchemesDeepLinksEnabled)
         {
-            AddUrlSchemesIOS(AdjustSettings.iOSUrlSchemes, plistRoot);
+            AddUrlSchemesIOS(plistRoot, AdjustSettings.iOSUrlName, AdjustSettings.iOSUrlSchemes);
         }
 
         // Write any info plist change.
         File.WriteAllText(plistPath, plist.WriteToString());
     }
 
-    private static void AddUrlSchemesIOS(string[] urlSchemes, PlistElementDict plistRoot)
+    private static void AddUrlSchemesIOS(PlistElementDict plistRoot, string urlName, string[] urlSchemes)
     {
-        const string CFBundleURLTypes = "CFBundleURLTypes";
-        const string CFBundleURLSchemes = "CFBundleURLSchemes";
-
         // Set Array for futher deeplink values.
-        var urlTypesArray = CreatePlistElementArray(plistRoot, CFBundleURLTypes);
+        var urlTypesArray = CreatePlistElementArray(plistRoot, "CFBundleURLTypes");
 
-        // Array will contains just one deeplink dictionary
+        // Array will contain just one deeplink dictionary
         var urlSchemesItems = CreatePlistElementDict(urlTypesArray);
-
-        var urlSchemesArray =
-            CreatePlistElementArray(urlSchemesItems, CFBundleURLSchemes);
+        urlSchemesItems.SetString("CFBundleURLName", urlName);
+        var urlSchemesArray = CreatePlistElementArray(urlSchemesItems, "CFBundleURLSchemes");
 
         // Delete old deferred deeplinks URIs
         Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
