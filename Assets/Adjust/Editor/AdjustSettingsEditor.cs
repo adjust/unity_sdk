@@ -10,6 +10,7 @@ namespace com.adjust.sdk
         SerializedProperty isPostProcessingEnabled;
         SerializedProperty isiOS14ProcessingEnabled;
         SerializedProperty iOSUserTrackingUsageDescription;
+        SerializedProperty iOSUrlName;
         SerializedProperty iOSUrlSchemes;
         SerializedProperty iOSUniversalLinksDomains;
         SerializedProperty androidUriSchemes;
@@ -20,6 +21,7 @@ namespace com.adjust.sdk
             isPostProcessingEnabled = serializedObject.FindProperty("isPostProcessingEnabled");
             isiOS14ProcessingEnabled = serializedObject.FindProperty("isiOS14ProcessingEnabled");
             iOSUserTrackingUsageDescription = serializedObject.FindProperty("_iOSUserTrackingUsageDescription");
+            iOSUrlName = serializedObject.FindProperty("_iOSUrlName");
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
             androidUriSchemes = serializedObject.FindProperty("androidUriSchemes");
@@ -33,6 +35,7 @@ namespace com.adjust.sdk
                 EditorGUILayout.PropertyField(iOSUserTrackingUsageDescription, new GUIContent("iOS User Tracking Usage Description"));
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("DEEP LINKING:", EditorStyles.boldLabel);
+                EditorGUILayout.PropertyField(iOSUrlName, new GUIContent("iOS URL Name"), true);
                 EditorGUILayout.PropertyField(iOSUrlSchemes, new GUIContent("iOS URL Schemes"), true);
                 EditorGUILayout.PropertyField(iOSUniversalLinksDomains, new GUIContent("iOS Universal Links Domains"), true);
                 EditorGUILayout.PropertyField(androidUriSchemes, new GUIContent("Android URI Schemes"), true);
