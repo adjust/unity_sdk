@@ -23,7 +23,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
         }
     }
 #if UNITY_2018_1_OR_NEWER
-    public void OnPreprocessBuild(Reporting.BuildReport report)
+    public void OnPreprocessBuild(UnityEditor.Build.Reporting.BuildReport report)
     {
         OnPreprocessBuild(report.summary.platform, string.Empty);
     }
