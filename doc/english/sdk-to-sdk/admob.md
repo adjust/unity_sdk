@@ -1,6 +1,6 @@
 # Track AdMob ad revenue with Adjust SDK
 
-[Adjust Android SDK README][unity-readme]
+[Adjust Unity SDK README][unity-readme]
 
 Minimum SDK version required for this feature:
 
