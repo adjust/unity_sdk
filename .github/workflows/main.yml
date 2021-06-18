@@ -22,8 +22,10 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform }}
-          restore-keys: Library-
+          key: Library-${{ matrix.unityVersion }}-${{ matrix.targetPlatform }}
+          restore-keys: |
+            Library-${{ matrix.unityVersion }}-
+            Library-
       - name: Build project
         uses: game-ci/unity-builder@v2
         env:
