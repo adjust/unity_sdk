@@ -2,7 +2,7 @@ name: Build Adjust Unity SDK
 on: [push, pull_request]
 jobs:
   build:
-    name: Build for ${{ matrix.targetPlatform }}
+    name: Build on Unity ${{ matrix.unityVersion }} for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,6 +19,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          lfs: true
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
       - name: Build project
         uses: game-ci/unity-builder@v2
         env:
@@ -30,5 +36,5 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
       - uses: actions/upload-artifact@v2
         with:
-          name: Build
-          path: build
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
