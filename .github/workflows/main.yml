@@ -5,10 +5,9 @@ jobs:
     name: Build on Unity ${{ matrix.unityVersion }} for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       fail-fast: false
       matrix:
-        projectPath:
-          - test-project
         unityVersion:
           - 2018.4.9f1
           - 2020.3.9f1
