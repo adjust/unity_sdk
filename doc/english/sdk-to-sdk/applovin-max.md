@@ -13,20 +13,18 @@ If you want to track your ad revenue with the AppLovin MAX SDK, you can use our 
 ### Example
 
 ```cs
-// initialise with AppLovin MAX source
-AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAppLovinMAX);
+public static void OnInterstitialAdRevenuePaidEvent(string adUnitId)
+{
+    var info = MaxSdk.GetAdInfo(adUnitId);
 
-// set revenue and currency
-adjustAdRevenue.setRevenue(6.66, "USD");
+    var adRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAppLovinMAX);
+    adRevenue.setRevenue(info.Revenue, "USD");
+    adRevenue.setAdRevenueNetwork(info.NetworkName);
+    adRevenue.setAdRevenueUnit(info.AdUnitIdentifier);
+    adRevenue.setAdRevenuePlacement(info.Placement);
 
-// optional parameters
-adjustAdRevenue.setAdRevenueNetwork("network");
-adjustAdRevenue.setAdRevenueUnit("unit");
-adjustAdRevenue.setAdRevenuePlacement("placement");
-
-// track ad revenue
-Adjust.trackAdRevenue(adjustAdRevenue);
-
+    Adjust.trackAdRevenue(adRevenue);
+}
 ```
 
 [unity-readme]:    ../../../README.md
