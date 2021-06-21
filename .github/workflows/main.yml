@@ -56,9 +56,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: Build-${{ matrix.unityVersion }}-iOS
-          path: build/iOS
       - name: Build
-        working-directory: build/iOS
+        working-directory: iOS
         run: |
           xcodebuild build -project "Unity-iPhone.xcodeproj" -scheme "Unity-iPhone" -configuration "Release"
       - name: Cleanup generated Xcode project to avoid storage limit
