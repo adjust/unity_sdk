@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         unityVersion:
-          - 2018.4.36f1
+          #- 2018.4.36f1
           - 2020.3.12f1
         targetPlatform:
           - iOS
@@ -39,7 +39,7 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
       - uses: actions/upload-artifact@v2
         with:
-          name: Build-${{ matrix.targetPlatform }}
+          name: Build-${{ matrix.unityVersion }}-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
 
   buildXcode:
@@ -49,19 +49,20 @@ jobs:
     strategy:
       matrix:
         unityVersion:
-          - 2018.4.36f1
+          #- 2018.4.36f1
           - 2020.3.12f1
     steps:
       - name: Download iOS Artifact
         uses: actions/download-artifact@v2
         with:
-          name: build-iOS
+          name: Build-${{ matrix.unityVersion }}-iOS
           path: build/iOS
       - name: Build
+        working-directory: build/iOS
         run: |
           xcodebuild build -project "Unity-iPhone.xcodeproj" -scheme "Unity-iPhone" -configuration "Release"
       - name: Cleanup generated Xcode project to avoid storage limit
         if: always()
         uses: geekyeggo/delete-artifact@v1
         with:
-          name: build-iOS
+          name: Build-${{ matrix.unityVersion }}-iOS
