@@ -59,6 +59,7 @@ jobs:
       - name: Build
         working-directory: iOS
         run: |
+          chmod +x MapFileParser.sh # Fix for issue 1071993
           xcodebuild build -project "Unity-iPhone.xcodeproj" -scheme "Unity-iPhone" -configuration "Release"
       - name: Cleanup generated Xcode project to avoid storage limit
         if: always()
