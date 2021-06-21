@@ -7,12 +7,12 @@ jobs:
     name: Build on Unity ${{ matrix.unityVersion }} for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       fail-fast: false
       matrix:
         unityVersion:
           #- 2018.4.36f1
-          - 2020.3.12f1
+          - 2020.3.9f1
         targetPlatform:
           - iOS
           - Android
@@ -50,7 +50,7 @@ jobs:
       matrix:
         unityVersion:
           #- 2018.4.36f1
-          - 2020.3.12f1
+          - 2020.3.9f1
     steps:
       - name: Download iOS Artifact
         uses: actions/download-artifact@v2
