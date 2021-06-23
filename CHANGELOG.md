@@ -1,3 +1,14 @@
+### Version 4.29.2 (23rd June 2021)
+#### Changed
+- Added deep link URL decoding before parsing its parameters for Android platform.
+
+#### Native SDKs
+- [iOS@v4.29.3][ios_sdk_v4.29.3]
+- [Android@v4.28.2][android_sdk_v4.28.2]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.29.1 (13th May 2021)
 #### Added
 - [beta] Added data residency support for US region. You can choose this setting by calling `setUrlStrategy` method of `AdjustConfig` instance with `AdjustConfig.AdjustDataResidencyUS` parameter.
@@ -913,6 +924,7 @@
 [ios_sdk_v4.28.0]: https://github.com/adjust/ios_sdk/tree/v4.28.0
 [ios_sdk_v4.29.0]: https://github.com/adjust/ios_sdk/tree/v4.29.0
 [ios_sdk_v4.29.2]: https://github.com/adjust/ios_sdk/tree/v4.29.2
+[ios_sdk_v4.29.3]: https://github.com/adjust/ios_sdk/tree/v4.29.3
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -947,6 +959,7 @@
 [android_sdk_v4.27.0]: https://github.com/adjust/android_sdk/tree/v4.27.0
 [android_sdk_v4.28.0]: https://github.com/adjust/android_sdk/tree/v4.28.0
 [android_sdk_v4.28.1]: https://github.com/adjust/android_sdk/tree/v4.28.1
+[android_sdk_v4.28.2]: https://github.com/adjust/android_sdk/tree/v4.28.2
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
