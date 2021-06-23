@@ -193,7 +193,6 @@ AndroidManifest.xml*
 MetroTestCertificate.pfx*
 src/
 src.meta
-ProjectSettings/
 Scripts/Unity4Assets
 
 # ======================= #
