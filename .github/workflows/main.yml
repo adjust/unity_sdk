@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         unityVersion:
-          #- 2018.4.36f1
+          - 2018.4.36f1
           - 2020.3.9f1
         targetPlatform:
           - iOS
@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         unityVersion:
-          #- 2018.4.36f1
+          - 2018.4.36f1
           - 2020.3.9f1
     steps:
       - name: Download iOS Artifact
