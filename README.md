@@ -74,6 +74,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Google Play Services advertising identifier](#ad-gps-adid)
       * [Amazon advertising identifier](#ad-amazon-adid)
       * [Adjust device identifier](#ad-adid)
+   * [Set external device ID](#set-external-device-id)
    * [Preinstalled apps](#ad-preinstalled-apps)
    * [Offline mode](#ad-offline-mode)
    * [Disable tracking](#ad-disable-tracking)
@@ -988,6 +989,28 @@ String adid = Adjust.getAdid();
 ```
 
 Information about the adid is only available after our backend tracks the app install. It is not possible to access the adid value before the SDK has been initialized and the installation of your app has been successfully tracked.
+  
+### <a id="set-external-device-id"></a>Set external device ID
+
+> **Note** If you want to use external device IDs, please contact your Adjust representative. They will talk you through the best approach for your use case.
+
+An external device identifier is a custom value that you can assign to a device or user. They can help you to recognize users across sessions and platforms. They can also help you to deduplicate installs by user so that a user isn't counted as multiple new installs.
+
+You can also use an external device ID as a custom identifier for a device. This can be useful if you use these identifiers elsewhere and want to keep continuity.
+
+Check out our [external device identifiers article](https://help.adjust.com/en/article/external-device-identifiers) for more information.
+
+> **Note** This setting requires Adjust SDK v4.20.0 or later.
+
+To set an external device ID, assign the identifier to the `externalDeviceId` property of your config instance. Do this before you initialize the Adjust SDK.
+
+```csharp
+AdjustConfig.setExternalDeviceId("{Your-External-Device-Id}")
+```
+
+If you want to use the external device ID in your business analytics, you can pass it as a session callback parameter. See the section on [session callback parameters](#cp-session-parameters) for more information.
+
+You can import existing external device IDs into Adjust. This ensures that the backend matches future data to your existing device records. If you want to do this, please contact your Adjust representative.  
 
 ### <a id="ad-preinstalled-apps"></a>Preinstalled apps
 
@@ -1059,7 +1082,7 @@ Depending upon your implmentation method, you may need to make a change to your 
   ```
   Default tracker: 'abc123'
   ```
-
+  
 ### <a id="ad-offline-mode"></a>Offline mode
 
 Offline mode suspends transmission to our servers while retaining tracked data to be sent at a later point. While the Adjust SDK is in offline mode, all information is saved in a file. Please be careful not to trigger too many events in offline mode.
