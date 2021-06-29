@@ -52,6 +52,10 @@ jobs:
           - 2018.4.36f1
           - 2020.3.9f1
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
       - name: Download iOS Artifact
         uses: actions/download-artifact@v2
         with:
@@ -88,7 +92,12 @@ jobs:
         working-directory: iOS
         run: |
           chmod +x MapFileParser.sh # Fix for issue 1071993
-          xcodebuild build -project "Unity-iPhone.xcodeproj" -scheme "Unity-iPhone" -configuration "Release"
+          xcodebuild archive -project "Unity-iPhone.xcodeproj" -scheme "Unity-iPhone" -configuration "Release" -archivePath "Unity-iPhone.xcarchive" -destination 'generic/platform=iOS' ENABLE_BITCODE=NO
+          xcodebuild -exportArchive -archivePath "Unity-iPhone.xcarchive" -exportOptionsPlist "$GITHUB_WORKSPACE/Assets/Adjust/Test/ExportOptions.plist" -exportPath Export
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Export-${{ matrix.unityVersion }}-iOS
+          path: iOS/Export/*.ipa
       - name: Cleanup generated Xcode project to avoid storage limit
         if: always()
         uses: geekyeggo/delete-artifact@v1
