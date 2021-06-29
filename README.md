@@ -1008,6 +1008,8 @@ To set an external device ID, assign the identifier to the `externalDeviceId` pr
 AdjustConfig.setExternalDeviceId("{Your-External-Device-Id}")
 ```
 
+> **Important** You need to make sure this ID is **unique to the user or device** depending on your use-case. Using the same ID across different users or devices could lead to duplicated data. Talk to your Adjust representative for more information.
+
 If you want to use the external device ID in your business analytics, you can pass it as a session callback parameter. See the section on [session callback parameters](#cp-session-parameters) for more information.
 
 You can import existing external device IDs into Adjust. This ensures that the backend matches future data to your existing device records. If you want to do this, please contact your Adjust representative.  
