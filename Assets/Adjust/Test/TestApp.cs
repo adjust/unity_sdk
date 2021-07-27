@@ -12,11 +12,19 @@ namespace com.adjust.sdk.test
 #if UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
+<<<<<<< HEAD
         private const string IP = "192.168.86.80";
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string IP = "192.168.86.80";
+=======
+        private const string IP = "192.168.86.32";
+#elif UNITY_IOS
+        private const string PORT = ":8080";
+        private const string PROTOCOL = "http://";
+        private const string IP = "192.168.86.32";
+>>>>>>> test runs
         private TestLibraryiOS _testLibraryiOS;
 #else
         private const string PORT = ":8080";
