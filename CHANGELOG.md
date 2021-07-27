@@ -1,3 +1,13 @@
+### Version 4.29.3 (27th July 2021)
+#### Fixed
+- Fixed missing authorization header in retry requests on Android.
+
+#### Native SDKs
+- [iOS@v4.29.3][ios_sdk_v4.29.3]
+- [Android@v4.28.3][android_sdk_v4.28.3]
+
+---
+
 ### Version 4.29.2 (23rd June 2021)
 #### Changed
 - Added deep link URL decoding before parsing its parameters for Android platform.
@@ -960,6 +970,7 @@
 [android_sdk_v4.28.0]: https://github.com/adjust/android_sdk/tree/v4.28.0
 [android_sdk_v4.28.1]: https://github.com/adjust/android_sdk/tree/v4.28.1
 [android_sdk_v4.28.2]: https://github.com/adjust/android_sdk/tree/v4.28.2
+[android_sdk_v4.28.3]: https://github.com/adjust/android_sdk/tree/v4.28.3
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
