@@ -84,7 +84,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Disable third-party sharing](#ad-disable-third-party-sharing)
       * [Enable third-party sharing](#ad-enable-third-party-sharing)
    * [Measurement consent](#ad-measurement-consent)
-   * [[beta] Data residency](#ad-data-residency)
+   * [Data residency](#ad-data-residency)
 
 ### Testing and troubleshooting
    * [Debug information in iOS](#tt-debug-ios)
@@ -1169,7 +1169,7 @@ Adjust.trackMeasurementConsent(true);
 
 Upon receiving this information, Adjust changes sharing the specific user's data to partners. The Adjust SDK will continue to work as expected.
 
-### <a id="ad-data-residency"></a>[beta] Data residency
+### <a id="ad-data-residency"></a>Data residency
 
 In order to enable data residency feature, make sure to make a call to `setUrlStrategy` method of the `AdjustConfig` instance with one of the following constants:
 
@@ -1178,8 +1178,6 @@ adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyEU); // for EU data 
 adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyTR); // for Turkey data residency region
 adjustConfig.setUrlStrategy(AdjustConfig.AdjustDataResidencyUS); // for US data residency region
 ```
-
-**Note:** This feature is currently in beta testing phase. If you are interested in getting access to it, please contact your dedicated account manager or write an email to support@adjust.com. Please, do not turn this setting on before making sure with the support team that this feature is enabled for your app because otherwise SDK traffic will get dropped.
 
 ## Testing and troubleshooting
 
