@@ -15,16 +15,6 @@ If you want to track your ad revenue with the Admob SDK, you can use our SDK-to-
 ### Example
 
 ```cs
-private void RequestRewardedAd()
-{
-    // create a rewarded ad
-    this.rewardedAd = new RewardedAd(<your-ad-unit-id>);
-    // register for ad paid events
-    this.rewardedAd.OnPaidEvent += this.HandleAdPaidEvent;
-    // load a rewarded ad
-    this.rewardedAd.LoadAd(new AdRequest.Builder().Build());
-}
-// register for ad paid events
 this.rewardedAd.OnPaidEvent += this.HandleAdPaidEvent;
 public void HandleAdPaidEvent(object sender, AdValueEventArgs args)
 {
@@ -32,9 +22,11 @@ public void HandleAdPaidEvent(object sender, AdValueEventArgs args)
     AdValue adValue = args.AdValue;
     // send ad revenue info to Adjust
     AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAdMob);
-    adRevenue.setRevenue(adValue.Value / 1000000, adValue.CurrencyCode);
+    adRevenue.setRevenue(adValue.Value / 1000000f, adValue.CurrencyCode);
     Adjust.trackAdRevenue(adRevenue);
 }
 ```
+
+For more information on how to properly integrate and set up AdMob SDK, please check out the [official documentation](https://developers.google.com/admob/unity/paid-events).
 
 [unity-readme]:    ../../../README.md
