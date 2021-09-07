@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.29.3";
+        private const string sdkPrefix = "unity4.29.4";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
