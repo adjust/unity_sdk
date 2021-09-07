@@ -17,7 +17,7 @@ namespace com.adjust.sdk
 {
     public class AdjustWindows
     {
-        private const string sdkPrefix = "unity4.29.3";
+        private const string sdkPrefix = "unity4.29.4";
         private static bool appLaunched = false;
 
         public static void Start(AdjustConfig adjustConfig)
