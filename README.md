@@ -179,7 +179,7 @@ Adjust.start(adjustConfig);
 
 Since August 1st 2014, apps in the Google Play Store must use the [Google Advertising ID][google_ad_id] to uniquely identify devices. To allow the Adjust SDK to use the Google Advertising ID, integrate [Google Play Services][google_play_services]. To do this, copy the `google-play-services_lib` folder (part of the Android SDK) into the `Assets/Plugins/Android` folder of your Unity project.
 
-There are two main ways to download the Android SDK. Any tool using the `Android SDK Manager` will offer a quick link to downlaod and install the Android SDK tools. Once installed, you can find the libraries in the `SDK_FOLDER/extras/google/google_play_services/libproject/` folder.
+There are two main ways to download the Android SDK. Any tool using the `Android SDK Manager` will offer a quick link to download and install the Android SDK tools. Once installed, you can find the libraries in the `SDK_FOLDER/extras/google/google_play_services/libproject/` folder.
 
 ![][android_sdk_location]
 
@@ -193,8 +193,18 @@ You can now add only the part of the Google Play Services library that the Adjus
 
 With Google Play Services library 15.0.0, Google has moved the classes needed to get the Google advertising ID into a  `play-services-ads-identifier` package. Add this package to your app if you are using library version 15.0.0 or later. When you’re finished, please test to make sure the Adjust SDK correctly obtains the Google advertising ID; we have noticed some inconsistencies, depending upon which Unity integrated development environment (IDE) version you use. 
 
-#### Testing for the Google advertising ID
+#### <a id="gps-adid-permission"></a>Add permission to gather Google advertising ID
+  
+If you are targeting Android 12 and above (API level 31), you need to add the `com.google.android.gms.AD_ID` permission to read the device's advertising ID. This is not done automatically during the [post-build process](#qs-post-build-android). Add the following line to your `AndroidManifest.xml` to enable the permission.
 
+```xml
+<uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+```
+
+For more information, see [Google's `AdvertisingIdClient.Info` documentation](https://developers.google.com/android/reference/com/google/android/gms/ads/identifier/AdvertisingIdClient.Info#public-string-getid).
+
+#### Testing for the Google advertising ID
+  
 To check whether the Adjust SDK is receiving the Google advertising ID, start your app by configuring the SDK to run in `sandbox` mode and set the log level to `verbose`. After that, track a session or an event in the app and check the list of parameters recorded in the verbose logs. If you see the `gps_adid` parameter, our SDK has successfully read the Google advertising ID.
 
 If you encounter any issues getting the Google advertising ID, please open an issue in our Github repository or contact support@adjust.com.
@@ -961,6 +971,10 @@ string idfa = Adjust.getIdfa();
 ```
 
 ### <a id="ad-gps-adid"></a>Google Play Services advertising identifier
+  
+The Google Play Services Advertising Identifier (Google advertising ID) is a unique identifier for a device. Users can opt out of sharing their Google advertising ID by toggling the "Opt out of Ads Personalization" setting on their device. When a user has enabled this setting, the Adjust SDK returns a string of zeros when trying to read the Google advertising ID.
+  
+> **Important**: If you are targeting Android 12 and above (API level 31), you need to add the [`com.google.android.gms.AD_ID` permission](#gps-adid-permission) to your app. If you do not add this permission, you will not be able to read the Google advertising ID even if the user has not opted out of sharing their ID.
 
 The Google advertising ID can only be read in a background thread. If you call the method `getGoogleAdId` of the `Adjust` instance with an `Action<string>` delegate, it will work in any situation:
 
