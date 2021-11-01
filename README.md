@@ -259,7 +259,7 @@ To execute the iOS post-build process properly, use Unity 5 or later and have `i
 - Adds the other linker flag `-ObjC` (needed to recognize Adjust Objective-C categories during build time)
 - Enables `Objective-C exceptions`
 
-In case you enable iOS 14 support (`Assets/Adjust/Toggle iOS 14 Support`), iOS post-build process will add two additional frameworks to your Xcode project:
+In case you enable iOS 14+ support (`Assets/Adjust/Toggle iOS 14 Support`), iOS post-build process will add two additional frameworks to your Xcode project:
 
 - Adds the `AppTrackingTransparency.framework` (needed to ask for user's consent to be tracked and obtain status of that consent)
 - Adds the `StoreKit.framework` (needed for communication with SKAdNetwork framework)
@@ -615,7 +615,7 @@ To get the current app tracking authorization status you can call `getAppTrackin
 
 **Note**: This feature exists only in iOS platform.
 
-If you have implemented the Adjust iOS SDK v4.23.0 or above and your app is running on iOS 14, the communication with SKAdNetwork will be set on by default, although you can choose to turn it off. When set on, Adjust automatically registers for SKAdNetwork attribution when the SDK is initialized. If events are set up in the Adjust dashboard to receive conversion values, the Adjust backend sends the conversion value data to the SDK. The SDK then sets the conversion value. After Adjust receives the SKAdNetwork callback data, it is then displayed in the dashboard.
+If you have implemented the Adjust iOS SDK v4.23.0 or above and your app is running on iOS 14 and above, the communication with SKAdNetwork will be set on by default, although you can choose to turn it off. When set on, Adjust automatically registers for SKAdNetwork attribution when the SDK is initialized. If events are set up in the Adjust dashboard to receive conversion values, the Adjust backend sends the conversion value data to the SDK. The SDK then sets the conversion value. After Adjust receives the SKAdNetwork callback data, it is then displayed in the dashboard.
 
 In case you don't want the Adjust SDK to automatically communicate with SKAdNetwork, you can disable that by calling the following method on configuration object:
 
