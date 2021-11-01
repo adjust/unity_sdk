@@ -74,6 +74,7 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
       * [Google Play Services advertising identifier](#ad-gps-adid)
       * [Amazon advertising identifier](#ad-amazon-adid)
       * [Adjust device identifier](#ad-adid)
+   * [Set external device ID](#set-external-device-id)
    * [Preinstalled apps](#ad-preinstalled-apps)
    * [Offline mode](#ad-offline-mode)
    * [Disable tracking](#ad-disable-tracking)
@@ -178,7 +179,7 @@ Adjust.start(adjustConfig);
 
 Since August 1st 2014, apps in the Google Play Store must use the [Google Advertising ID][google_ad_id] to uniquely identify devices. To allow the Adjust SDK to use the Google Advertising ID, integrate [Google Play Services][google_play_services]. To do this, copy the `google-play-services_lib` folder (part of the Android SDK) into the `Assets/Plugins/Android` folder of your Unity project.
 
-There are two main ways to download the Android SDK. Any tool using the `Android SDK Manager` will offer a quick link to downlaod and install the Android SDK tools. Once installed, you can find the libraries in the `SDK_FOLDER/extras/google/google_play_services/libproject/` folder.
+There are two main ways to download the Android SDK. Any tool using the `Android SDK Manager` will offer a quick link to download and install the Android SDK tools. Once installed, you can find the libraries in the `SDK_FOLDER/extras/google/google_play_services/libproject/` folder.
 
 ![][android_sdk_location]
 
@@ -192,8 +193,18 @@ You can now add only the part of the Google Play Services library that the Adjus
 
 With Google Play Services library 15.0.0, Google has moved the classes needed to get the Google advertising ID into a  `play-services-ads-identifier` package. Add this package to your app if you are using library version 15.0.0 or later. When you’re finished, please test to make sure the Adjust SDK correctly obtains the Google advertising ID; we have noticed some inconsistencies, depending upon which Unity integrated development environment (IDE) version you use. 
 
-#### Testing for the Google advertising ID
+#### <a id="gps-adid-permission"></a>Add permission to gather Google advertising ID
+  
+If you are targeting Android 12 and above (API level 31), you need to add the `com.google.android.gms.AD_ID` permission to read the device's advertising ID. This is not done automatically during the [post-build process](#qs-post-build-android). Add the following line to your `AndroidManifest.xml` to enable the permission.
 
+```xml
+<uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+```
+
+For more information, see [Google's `AdvertisingIdClient.Info` documentation](https://developers.google.com/android/reference/com/google/android/gms/ads/identifier/AdvertisingIdClient.Info#public-string-getid).
+
+#### Testing for the Google advertising ID
+  
 To check whether the Adjust SDK is receiving the Google advertising ID, start your app by configuring the SDK to run in `sandbox` mode and set the log level to `verbose`. After that, track a session or an event in the app and check the list of parameters recorded in the verbose logs. If you see the `gps_adid` parameter, our SDK has successfully read the Google advertising ID.
 
 If you encounter any issues getting the Google advertising ID, please open an issue in our Github repository or contact support@adjust.com.
@@ -248,7 +259,7 @@ To execute the iOS post-build process properly, use Unity 5 or later and have `i
 - Adds the other linker flag `-ObjC` (needed to recognize Adjust Objective-C categories during build time)
 - Enables `Objective-C exceptions`
 
-In case you enable iOS 14 support (`Assets/Adjust/Toggle iOS 14 Support`), iOS post-build process will add two additional frameworks to your Xcode project:
+In case you enable iOS 14+ support (`Assets/Adjust/Toggle iOS 14 Support`), iOS post-build process will add two additional frameworks to your Xcode project:
 
 - Adds the `AppTrackingTransparency.framework` (needed to ask for user's consent to be tracked and obtain status of that consent)
 - Adds the `StoreKit.framework` (needed for communication with SKAdNetwork framework)
@@ -604,7 +615,7 @@ To get the current app tracking authorization status you can call `getAppTrackin
 
 **Note**: This feature exists only in iOS platform.
 
-If you have implemented the Adjust iOS SDK v4.23.0 or above and your app is running on iOS 14, the communication with SKAdNetwork will be set on by default, although you can choose to turn it off. When set on, Adjust automatically registers for SKAdNetwork attribution when the SDK is initialized. If events are set up in the Adjust dashboard to receive conversion values, the Adjust backend sends the conversion value data to the SDK. The SDK then sets the conversion value. After Adjust receives the SKAdNetwork callback data, it is then displayed in the dashboard.
+If you have implemented the Adjust iOS SDK v4.23.0 or above and your app is running on iOS 14 and above, the communication with SKAdNetwork will be set on by default, although you can choose to turn it off. When set on, Adjust automatically registers for SKAdNetwork attribution when the SDK is initialized. If events are set up in the Adjust dashboard to receive conversion values, the Adjust backend sends the conversion value data to the SDK. The SDK then sets the conversion value. After Adjust receives the SKAdNetwork callback data, it is then displayed in the dashboard.
 
 In case you don't want the Adjust SDK to automatically communicate with SKAdNetwork, you can disable that by calling the following method on configuration object:
 
@@ -960,6 +971,10 @@ string idfa = Adjust.getIdfa();
 ```
 
 ### <a id="ad-gps-adid"></a>Google Play Services advertising identifier
+  
+The Google Play Services Advertising Identifier (Google advertising ID) is a unique identifier for a device. Users can opt out of sharing their Google advertising ID by toggling the "Opt out of Ads Personalization" setting on their device. When a user has enabled this setting, the Adjust SDK returns a string of zeros when trying to read the Google advertising ID.
+  
+> **Important**: If you are targeting Android 12 and above (API level 31), you need to add the [`com.google.android.gms.AD_ID` permission](#gps-adid-permission) to your app. If you do not add this permission, you will not be able to read the Google advertising ID even if the user has not opted out of sharing their ID.
 
 The Google advertising ID can only be read in a background thread. If you call the method `getGoogleAdId` of the `Adjust` instance with an `Action<string>` delegate, it will work in any situation:
 
@@ -988,6 +1003,30 @@ String adid = Adjust.getAdid();
 ```
 
 Information about the adid is only available after our backend tracks the app install. It is not possible to access the adid value before the SDK has been initialized and the installation of your app has been successfully tracked.
+  
+### <a id="set-external-device-id"></a>Set external device ID
+
+> **Note** If you want to use external device IDs, please contact your Adjust representative. They will talk you through the best approach for your use case.
+
+An external device identifier is a custom value that you can assign to a device or user. They can help you to recognize users across sessions and platforms. They can also help you to deduplicate installs by user so that a user isn't counted as multiple new installs.
+
+You can also use an external device ID as a custom identifier for a device. This can be useful if you use these identifiers elsewhere and want to keep continuity.
+
+Check out our [external device identifiers article](https://help.adjust.com/en/article/external-device-identifiers) for more information.
+
+> **Note** This setting requires Adjust SDK v4.20.0 or later.
+
+To set an external device ID, assign the identifier to the `externalDeviceId` property of your config instance. Do this before you initialize the Adjust SDK.
+
+```csharp
+AdjustConfig.setExternalDeviceId("{Your-External-Device-Id}")
+```
+
+> **Important** You need to make sure this ID is **unique to the user or device** depending on your use-case. Using the same ID across different users or devices could lead to duplicated data. Talk to your Adjust representative for more information.
+
+If you want to use the external device ID in your business analytics, you can pass it as a session callback parameter. See the section on [session callback parameters](#cp-session-parameters) for more information.
+
+You can import existing external device IDs into Adjust. This ensures that the backend matches future data to your existing device records. If you want to do this, please contact your Adjust representative.  
 
 ### <a id="ad-preinstalled-apps"></a>Preinstalled apps
 
@@ -1059,7 +1098,7 @@ Depending upon your implmentation method, you may need to make a change to your 
   ```
   Default tracker: 'abc123'
   ```
-
+  
 ### <a id="ad-offline-mode"></a>Offline mode
 
 Offline mode suspends transmission to our servers while retaining tracked data to be sent at a later point. While the Adjust SDK is in offline mode, all information is saved in a file. Please be careful not to trigger too many events in offline mode.
