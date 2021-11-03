@@ -41,7 +41,6 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
    * [Track event](#et-tracking)
    * [Track revenue](#et-revenue)
    * [Deduplicate revenue](#et-revenue-deduplication)
-   * [Verify in-app purchase](#et-purchase-verification)
 
 ### Custom parameters
 
@@ -402,10 +401,6 @@ adjustEvent.setTransactionId("transactionId");
 
 Adjust.trackEvent(adjustEvent);
 ```
-
-### <a id="et-purchase-verification"></a>In-app purchase verification
-
-Verify in-app purchases using [Adjust's Purchase Verification][unity-purchase-sdk], a server-side receipt verification tool.  
 
 ## Custom parameters
 
