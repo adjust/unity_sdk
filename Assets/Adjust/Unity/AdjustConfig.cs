@@ -15,6 +15,7 @@ namespace com.adjust.sdk
         public const string AdjustAdRevenueSourceMopub = "mopub";
         public const string AdjustAdRevenueSourceAdMob = "admob_sdk";
         public const string AdjustAdRevenueSourceIronSource = "ironsource_sdk";
+        public const string AdjustAdRevenueSourceAdmost = "admost_sdk";
 
         internal string appToken;
         internal string sceneName;

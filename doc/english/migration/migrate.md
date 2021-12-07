@@ -1,4 +1,4 @@
-## Migrate your Adjust SDK for Unity3d to 4.29.4 from 3.4.4
+## Migrate your Adjust SDK for Unity3d to 4.29.5 from 3.4.4
 
 ### Migration procedure
 

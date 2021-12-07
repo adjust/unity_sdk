@@ -1,3 +1,13 @@
+### Version 4.29.5 (7th December 2021)
+#### Added
+- Added support for Admost ad revenue tracking.
+
+#### Native SDKs
+- [iOS@v4.29.6][ios_sdk_v4.29.6]
+- [Android@v4.28.8][android_sdk_v4.28.8]
+
+---
+
 ### Version 4.29.4 (7th September 2021)
 #### Added
 - Added support to OAID plugin for MSA SDK v1.0.26.
@@ -947,6 +957,7 @@
 [ios_sdk_v4.29.2]: https://github.com/adjust/ios_sdk/tree/v4.29.2
 [ios_sdk_v4.29.3]: https://github.com/adjust/ios_sdk/tree/v4.29.3
 [ios_sdk_v4.29.5]: https://github.com/adjust/ios_sdk/tree/v4.29.5
+[ios_sdk_v4.29.6]: https://github.com/adjust/ios_sdk/tree/v4.29.6
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -984,6 +995,7 @@
 [android_sdk_v4.28.2]: https://github.com/adjust/android_sdk/tree/v4.28.2
 [android_sdk_v4.28.3]: https://github.com/adjust/android_sdk/tree/v4.28.3
 [android_sdk_v4.28.4]: https://github.com/adjust/android_sdk/tree/v4.28.4
+[android_sdk_v4.28.8]: https://github.com/adjust/android_sdk/tree/v4.28.8
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
