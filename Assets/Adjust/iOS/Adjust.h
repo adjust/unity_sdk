@@ -52,7 +52,10 @@ extern NSString * __nonnull const ADJAdRevenueSourceAdMost;
 <<<<<<< HEAD
 extern NSString * __nonnull const ADJAdRevenueSourceUnity;
 extern NSString * __nonnull const ADJAdRevenueSourceHeliumChartboost;
+<<<<<<< HEAD
 extern NSString * __nonnull const ADJAdRevenueSourcePublisher;
+=======
+>>>>>>> update native binaries
 =======
 >>>>>>> update native binaries
 
