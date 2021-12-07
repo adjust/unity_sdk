@@ -346,6 +346,16 @@ namespace com.adjust.sdk.test
                 adjustConfig.allowIdfaReading = allowIdfaReading;
             }
 
+            if (_command.ContainsParameter("allowSkAdNetworkHandling"))
+            {
+                var allowSkAdNetworkHandlingS = _command.GetFirstParameterValue("allowSkAdNetworkHandling");
+                var allowSkAdNetworkHandling = allowSkAdNetworkHandlingS.ToLower() == "true";
+                if (allowSkAdNetworkHandling == false)
+                {
+                    adjustConfig.deactivateSKAdNetworkHandling();
+                }
+            }
+
             if (_command.ContainsParameter("userAgent"))
             {
                 var userAgent = _command.GetFirstParameterValue("userAgent");
