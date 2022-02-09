@@ -1,6 +1,18 @@
+### Version 4.29.6 (9th February 2022)
+#### Added
+- Added support for `Unity` ad revenue tracking.
+- Added support for `Helium Chartboost` ad revenue tracking.
+- Added support for `MSA SDK v1.1.0` to OAID plugin.
+
+#### Native SDKs
+- [iOS@v4.29.7][ios_sdk_v4.29.7]
+- [Android@v4.29.1][android_sdk_v4.29.1]
+
+---
+
 ### Version 4.29.5 (7th December 2021)
 #### Added
-- Added support for Admost ad revenue tracking.
+- Added support for `Admost` ad revenue tracking.
 
 #### Native SDKs
 - [iOS@v4.29.6][ios_sdk_v4.29.6]
@@ -10,7 +22,7 @@
 
 ### Version 4.29.4 (7th September 2021)
 #### Added
-- Added support to OAID plugin for MSA SDK v1.0.26.
+- Added support for `MSA SDK v1.0.26` to OAID plugin.
 - Added sending of information when was the call to `registerAppForAdNetworkAttribution` method made in iOS.
 
 #### Native SDKs
@@ -958,6 +970,7 @@
 [ios_sdk_v4.29.3]: https://github.com/adjust/ios_sdk/tree/v4.29.3
 [ios_sdk_v4.29.5]: https://github.com/adjust/ios_sdk/tree/v4.29.5
 [ios_sdk_v4.29.6]: https://github.com/adjust/ios_sdk/tree/v4.29.6
+[ios_sdk_v4.29.7]: https://github.com/adjust/ios_sdk/tree/v4.29.7
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -996,6 +1009,7 @@
 [android_sdk_v4.28.3]: https://github.com/adjust/android_sdk/tree/v4.28.3
 [android_sdk_v4.28.4]: https://github.com/adjust/android_sdk/tree/v4.28.4
 [android_sdk_v4.28.8]: https://github.com/adjust/android_sdk/tree/v4.28.8
+[android_sdk_v4.29.1]: https://github.com/adjust/android_sdk/tree/v4.29.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
