@@ -105,9 +105,41 @@ namespace com.adjust.sdk
             {
                 return null;
             }
+            // list of callback / partner parameters must contain even number of elements
+            if (list.Count % 2 != 0)
+            {
+                return null;
+            }
+
+            // do the list preprocessing to remove all null values from it
+            List<String> processedList = new List<String>();
+            for (int i = 0; i < list.Count; i += 1)
+            {
+                // if null value is at odd index, delete the right neighbour
+                // if null value is at even index, delete the left neighbour
+                if (list[i] == null)
+                {
+                    if (i % 2 == 0)
+                    {
+                        // if key is null, ignore entire key-value pair
+                        i += 2;
+                        continue;
+                    }
+                    else
+                    {
+                        // if value is null, remove added key from prvious iteration
+                        processedList.RemoveAt(i - 1);
+                        continue;
+                    }
+                }
+                else
+                {
+                    processedList.Add(list[i]);
+                }
+            }
 
             var jsonArray = new JSONArray();
-            foreach (var listItem in list)
+            foreach (var listItem in processedList)
             {
                 jsonArray.Add(new JSONData(listItem));
             }
