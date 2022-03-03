@@ -111,8 +111,8 @@ namespace com.adjust.sdk
                 return null;
             }
 
-            // do the list preprocessing to remove all null values from it
-            List<String> processedList = new List<String>();
+            // get list of indexes of elements which should be removed from original list
+            List<int> toBeRemoved = new List<int>();
             for (int i = 0; i < list.Count; i += 1)
             {
                 // if null value is at odd index, delete the right neighbour
@@ -121,23 +121,33 @@ namespace com.adjust.sdk
                 {
                     if (i % 2 == 0)
                     {
-                        // if key is null, ignore entire key-value pair
+                        // if key is null, remove current key and value after it
+                        toBeRemoved.Add(i);
+                        toBeRemoved.Add(i + 1);
                         i += 2;
                         continue;
                     }
                     else
                     {
-                        // if value is null, remove added key from prvious iteration
-                        processedList.RemoveAt(i - 1);
-                        continue;
+                        // if value is null, remove current value and key in front of it
+                        toBeRemoved.Add(i);
+                        toBeRemoved.Add(i - 1);
                     }
-                }
-                else
-                {
-                    processedList.Add(list[i]);
                 }
             }
 
+            // remove all elements from indexes marked for deletion
+            List<String> processedList = new List<String>();
+            for (int i = 0; i < list.Count; i += 1)
+            {
+                if (toBeRemoved.Contains(i))
+                {
+                    continue;
+                }
+                processedList.Add(list[i]);
+            }
+
+            // create JSON array
             var jsonArray = new JSONArray();
             foreach (var listItem in processedList)
             {
