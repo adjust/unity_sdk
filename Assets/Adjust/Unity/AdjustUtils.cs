@@ -105,9 +105,30 @@ namespace com.adjust.sdk
             {
                 return null;
             }
+            // list of callback / partner parameters must contain even number of elements
+            if (list.Count % 2 != 0)
+            {
+                return null;
+            }
 
+            List<String> processedList = new List<String>();
+            for (int i = 0; i < list.Count; i += 2)
+            {
+                String key = list[i];
+                String value = list[i + 1];
+
+                if (key == null || value == null)
+                {
+                    continue;
+                }
+
+                processedList.Add(key);
+                processedList.Add(value);
+            }
+
+            // create JSON array
             var jsonArray = new JSONArray();
-            foreach (var listItem in list)
+            foreach (var listItem in processedList)
             {
                 jsonArray.Add(new JSONData(listItem));
             }

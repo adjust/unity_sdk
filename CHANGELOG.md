@@ -1,3 +1,14 @@
+### Version 4.29.7 (4th March 2022)
+#### Fixed
+- Fixed crash occurrences in scenarios where one was passing `null` as value of either key or value of callback or partner parameter on iOS platform.
+- Fixed crash occurrences in scenarios where one was passing `null` as value of any of the parameters of the granular third party sharing options on iOS platform.
+
+#### Native SDKs
+- [iOS@v4.29.7][ios_sdk_v4.29.7]
+- [Android@v4.29.1][android_sdk_v4.29.1]
+
+---
+
 ### Version 4.29.6 (9th February 2022)
 #### Added
 - Added support for `Unity` ad revenue tracking.
