@@ -1,4 +1,4 @@
-### Version 4.29.7 (3rd March 2022)
+### Version 4.29.7 (4th March 2022)
 #### Fixed
 - Fixed crash occurrences in scenarios where one was passing `null` as value of either key or value of callback or partner parameter on iOS platform.
 - Fixed crash occurrences in scenarios where one was passing `null` as value of any of the parameters of the granular third party sharing options on iOS platform.
