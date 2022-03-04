@@ -117,7 +117,8 @@ namespace com.adjust.sdk
                 String key = list[i];
                 String value = list[i + 1];
 
-                if (key == null || value == null) {
+                if (key == null || value == null)
+                {
                     continue;
                 }
 
