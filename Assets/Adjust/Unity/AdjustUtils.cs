@@ -111,40 +111,18 @@ namespace com.adjust.sdk
                 return null;
             }
 
-            // get list of indexes of elements which should be removed from original list
-            List<int> toBeRemoved = new List<int>();
-            for (int i = 0; i < list.Count; i += 1)
-            {
-                // if null value is at odd index, delete the right neighbour
-                // if null value is at even index, delete the left neighbour
-                if (list[i] == null)
-                {
-                    if (i % 2 == 0)
-                    {
-                        // if key is null, remove current key and value after it
-                        toBeRemoved.Add(i);
-                        toBeRemoved.Add(i + 1);
-                        i += 2;
-                        continue;
-                    }
-                    else
-                    {
-                        // if value is null, remove current value and key in front of it
-                        toBeRemoved.Add(i);
-                        toBeRemoved.Add(i - 1);
-                    }
-                }
-            }
-
-            // remove all elements from indexes marked for deletion
             List<String> processedList = new List<String>();
-            for (int i = 0; i < list.Count; i += 1)
+            for (int i = 0; i < list.Count; i += 2)
             {
-                if (toBeRemoved.Contains(i))
-                {
+                String key = list[i];
+                String value = list[i + 1];
+
+                if (key == null || value == null) {
                     continue;
                 }
-                processedList.Add(list[i]);
+
+                processedList.Add(key);
+                processedList.Add(value);
             }
 
             // create JSON array
