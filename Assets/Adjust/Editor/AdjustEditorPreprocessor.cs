@@ -132,9 +132,10 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
                     throw new UriFormatException();
                 }
             }
-            catch(UriFormatException)
+            catch (UriFormatException)
             {
                 Debug.LogError(string.Format("[Adjust]: Android deeplink URI scheme \"{0}\" is invalid and will be ignored.", uriScheme));
+                Debug.LogWarning(string.Format("[Adjust]: Make sure that your URI scheme entry ends with ://"));
                 continue;
             }
 
