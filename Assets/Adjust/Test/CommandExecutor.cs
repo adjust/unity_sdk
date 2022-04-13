@@ -318,6 +318,20 @@ namespace com.adjust.sdk.test
                 adjustConfig.setEventBufferingEnabled(eventBufferingEnabled);
             }
 
+            if (_command.ContainsParameter("coppaCompliant"))
+            {
+                var coppaCompliantS = _command.GetFirstParameterValue("coppaCompliant");
+                var coppaCompliant = coppaCompliantS.ToLower() == "true";
+                adjustConfig.setCoppaCompliantEnabled(coppaCompliant);
+            }
+
+            if (_command.ContainsParameter("playStoreKids"))
+            {
+                var playStoreKidsS = _command.GetFirstParameterValue("playStoreKids");
+                var playStoreKids = playStoreKidsS.ToLower() == "true";
+                adjustConfig.setPlayStoreKidsAppEnabled(playStoreKids);
+            }
+
             if (_command.ContainsParameter("sendInBackground"))
             {
                 var sendInBackgroundS = _command.GetFirstParameterValue("sendInBackground");
