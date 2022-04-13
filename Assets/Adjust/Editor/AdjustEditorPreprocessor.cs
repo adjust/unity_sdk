@@ -195,7 +195,6 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     {
         // The Adjust SDK needs two permissions to be added to you app's manifest file:
         // <uses-permission android:name="android.permission.INTERNET" />
-        // <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
         // <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
         // <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
 
@@ -205,9 +204,6 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
         // If android.permission.INTERNET permission is missing, add it.
         manifestHasChanged |= AddPermission(manifest, "android.permission.INTERNET");
-
-        // If android.permission.ACCESS_WIFI_STATE permission is missing, add it.
-        manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_WIFI_STATE");
 
         // If android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
         manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_NETWORK_STATE");
