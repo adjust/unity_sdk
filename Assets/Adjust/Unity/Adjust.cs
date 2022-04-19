@@ -18,7 +18,7 @@ namespace com.adjust.sdk
         [HideInInspector]
         public bool startManually = true;
         [HideInInspector]
-        public string appToken = "{Your App Token}";
+        public string appToken = "";
         [HideInInspector]
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
         [HideInInspector]
@@ -31,6 +31,8 @@ namespace com.adjust.sdk
         public bool launchDeferredDeeplink = true;
         [HideInInspector]
         public bool needsCost = false;
+        [HideInInspector]
+        public bool coppaCompliant = false;
         [HideInInspector]
         public string defaultTracker = "";
         [HideInInspector]
@@ -55,6 +57,8 @@ namespace com.adjust.sdk
         // [Space(5)]
         [HideInInspector]
         public bool preinstallTracking = false;
+        [HideInInspector]
+        public bool playStoreKidsApp = false;
 
         // [Header("iOS SPECIFIC FEATURES:")]
         // [Space(5)]
@@ -113,6 +117,8 @@ namespace com.adjust.sdk
                 adjustConfig.setAllowiAdInfoReading(this.iadInfoReading);
                 adjustConfig.setAllowAdServicesInfoReading(this.adServicesInfoReading);
                 adjustConfig.setAllowIdfaReading(this.idfaInfoReading);
+                adjustConfig.setCoppaCompliantEnabled(this.coppaCompliant);
+                adjustConfig.setPlayStoreKidsAppEnabled(this.playStoreKidsApp);
                 if (!skAdNetworkHandling)
                 {
                     adjustConfig.deactivateSKAdNetworkHandling();

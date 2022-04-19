@@ -33,12 +33,13 @@ namespace com.adjust.sdk
                 adjust.appToken = EditorGUILayout.TextField("App Token", adjust.appToken);
                 adjust.environment = (AdjustEnvironment)EditorGUILayout.EnumPopup("Environment", adjust.environment);
                 adjust.logLevel = (AdjustLogLevel)EditorGUILayout.EnumPopup("Log Level", adjust.logLevel);
+                adjust.urlStrategy = (AdjustUrlStrategy)EditorGUILayout.EnumPopup("URL Strategy", adjust.urlStrategy);
                 adjust.eventBuffering = EditorGUILayout.Toggle("Event Buffering", adjust.eventBuffering);
                 adjust.sendInBackground = EditorGUILayout.Toggle("Send In Background", adjust.sendInBackground);
                 adjust.launchDeferredDeeplink = EditorGUILayout.Toggle("Launch Deferred Deep Link", adjust.launchDeferredDeeplink);
                 adjust.needsCost = EditorGUILayout.Toggle("Cost Data In Attribution Callback", adjust.needsCost);
+                adjust.coppaCompliant = EditorGUILayout.Toggle("COPPA Compliant", adjust.coppaCompliant);
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
-                adjust.urlStrategy = (AdjustUrlStrategy)EditorGUILayout.EnumPopup("URL Strategy", adjust.urlStrategy);
                 adjust.startDelay = EditorGUILayout.DoubleField("Start Delay", adjust.startDelay);
                 EditorGUILayout.LabelField("App Secret:", EditorStyles.label);
                 EditorGUI.indentLevel += 1;
@@ -52,6 +53,7 @@ namespace com.adjust.sdk
                 EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
                 adjust.preinstallTracking = EditorGUILayout.Toggle("Preinstall Tracking", adjust.preinstallTracking);
+                adjust.playStoreKidsApp = EditorGUILayout.Toggle("Play Store Kids App", adjust.playStoreKidsApp);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
