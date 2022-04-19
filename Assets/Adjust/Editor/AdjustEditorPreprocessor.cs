@@ -196,21 +196,34 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     {
         // The Adjust SDK needs two permissions to be added to you app's manifest file:
         // <uses-permission android:name="android.permission.INTERNET" />
-        // <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
         // <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+        // <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+        // <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
         Debug.Log("[Adjust]: Checking if all permissions needed for the Adjust SDK are present in the app's AndroidManifest.xml file.");
 
         var manifestHasChanged = false;
 
-        // If android.permission.INTERNET permission is missing, add it.
-        manifestHasChanged |= AddPermission(manifest, "android.permission.INTERNET");
-
-        // If android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
-        manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_NETWORK_STATE");
-
-        // If com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
-        manifestHasChanged |= AddPermission(manifest, "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
+        // If enabled by the user && android.permission.INTERNET permission is missing, add it.
+        if (AdjustSettings.androidPermissionInternet == true)
+        {
+            manifestHasChanged |= AddPermission(manifest, "android.permission.INTERNET");
+        }
+        // If enabled by the user && com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
+        if (AdjustSettings.androidPermissionInstallReferrerService == true)
+        {
+            manifestHasChanged |= AddPermission(manifest, "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
+        }
+        // If enabled by the user && com.google.android.gms.permission.AD_ID permission is missing, add it.
+        if (AdjustSettings.androidPermissionAdId == true)
+        {
+            manifestHasChanged |= AddPermission(manifest, "com.google.android.gms.permission.AD_ID");
+        }
+        // If enabled by the user && android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
+        if (AdjustSettings.androidPermissionAccessNetworkState == true)
+        {
+            manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_NETWORK_STATE");
+        }
 
         return manifestHasChanged;
     }

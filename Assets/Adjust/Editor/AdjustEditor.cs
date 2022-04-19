@@ -93,19 +93,10 @@ public class AdjustEditor : AssetPostprocessor
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string projectPath)
     {
-        // Check what is user setting about allowing Adjust SDK to perform post build tasks.
-        // If user disabled it, oh well, we won't do a thing.
-        if (!AdjustSettings.IsPostProcessingEnabled)
-        {
-            Debug.Log("[Adjust]: You have forbidden the Adjust SDK to perform post processing tasks.");
-            Debug.Log("[Adjust]: Skipping post processing tasks.");
-            return;
-        }
-
-        RunPostBuildScript(target: target, preBuild: false, projectPath: projectPath);
+        RunPostBuildScript(target: target, projectPath: projectPath);
     }
 
-    private static void RunPostBuildScript(BuildTarget target, bool preBuild, string projectPath = "")
+    private static void RunPostBuildScript(BuildTarget target, string projectPath = "")
     {
         if (target == BuildTarget.iOS)
         {
@@ -155,33 +146,24 @@ public class AdjustEditor : AssetPostprocessor
             xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
             Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
 
-            if (AdjustSettings.IsiOS14ProcessingEnabled)
-            {
-                Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
+            Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
+            xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
+            Debug.Log("[Adjust]: StoreKit.framework added successfully.");
 
-                Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
-                xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
-                Debug.Log("[Adjust]: StoreKit.framework added successfully.");
-
-                Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
-                xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
-                Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
-            }
+            Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
+            xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
+            Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
 
             // The Adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
-
             Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
             xcodeProject.AddBuildProperty(xcodeTarget, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
-
             Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
 
             // The Adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
-
             Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
             xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
-
             Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
 
             if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/iOS/AdjustSigSdk.a"))
@@ -229,21 +211,21 @@ public class AdjustEditor : AssetPostprocessor
 
         if (hasUrlSchemesDeepLinksEnabled)
         {
-            AddUrlSchemesIOS(plistRoot, AdjustSettings.iOSUrlName, AdjustSettings.iOSUrlSchemes);
+            AddUrlSchemesIOS(plistRoot, AdjustSettings.iOSUrlIdentifier, AdjustSettings.iOSUrlSchemes);
         }
 
         // Write any info plist change.
         File.WriteAllText(plistPath, plist.WriteToString());
     }
 
-    private static void AddUrlSchemesIOS(PlistElementDict plistRoot, string urlName, string[] urlSchemes)
+    private static void AddUrlSchemesIOS(PlistElementDict plistRoot, string urlIdentifier, string[] urlSchemes)
     {
         // Set Array for futher deeplink values.
         var urlTypesArray = CreatePlistElementArray(plistRoot, "CFBundleURLTypes");
 
         // Array will contain just one deeplink dictionary
         var urlSchemesItems = CreatePlistElementDict(urlTypesArray);
-        urlSchemesItems.SetString("CFBundleURLName", urlName);
+        urlSchemesItems.SetString("CFBundleURLName", urlIdentifier);
         var urlSchemesArray = CreatePlistElementArray(urlSchemesItems, "CFBundleURLSchemes");
 
         // Delete old deferred deeplinks URIs
@@ -281,7 +263,7 @@ public class AdjustEditor : AssetPostprocessor
         }
 
         var urlSchemesItems = rootArray.values[0].AsDict();
-        Debug.Log("Reading deeplinks array");
+        Debug.Log("[Adjust]: Reading deeplinks array");
         if (urlSchemesItems == null)
         {
             Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");

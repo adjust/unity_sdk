@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 namespace com.adjust.sdk
 {
@@ -10,38 +11,60 @@ namespace com.adjust.sdk
         private const string errorMsgStart = "[Adjust]: SDK not started. Start it manually using the 'start' method.";
         private const string errorMsgPlatform = "[Adjust]: SDK can only be used in Android, iOS, Windows Phone 8.1, Windows Store or Universal Windows apps.";
 
+        // [Header("SDK SETTINGS:")]
+        // [Space(5)]
+        // [Tooltip("If selected, it is expected from you to initialize Adjust SDK from your app code. " +
+        //     "Any SDK configuration settings from prefab will be ignored in that case.")]
+        [HideInInspector]
         public bool startManually = true;
+        [HideInInspector]
         public string appToken = "{Your App Token}";
+        [HideInInspector]
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
+        [HideInInspector]
         public AdjustLogLevel logLevel = AdjustLogLevel.Info;
+        [HideInInspector]
         public bool eventBuffering = false;
+        [HideInInspector]
         public bool sendInBackground = false;
+        [HideInInspector]
         public bool launchDeferredDeeplink = true;
+        [HideInInspector]
         public bool needsCost = false;
-        
+        [HideInInspector]
         public string defaultTracker = "";
-
-        public AdjustUrlStrategy URLStrategy = AdjustUrlStrategy.Default;
-
+        [HideInInspector]
+        public AdjustUrlStrategy urlStrategy = AdjustUrlStrategy.Default;
+        [HideInInspector]
         public double startDelay = 0;
 
-        [Header("APP SECRET:")]
-        [Space(5)]
+        // [Header("APP SECRET:")]
+        // [Space(5)]
+        [HideInInspector]
         public long secretId = 0;
+        [HideInInspector]
         public long info1 = 0;
+        [HideInInspector]
         public long info2 = 0;
+        [HideInInspector]
         public long info3 = 0;
+        [HideInInspector]
         public long info4 = 0;
 
-        [Header("ANDROID SPECIFIC FEATURES:")]
-        [Space(5)]
+        // [Header("ANDROID SPECIFIC FEATURES:")]
+        // [Space(5)]
+        [HideInInspector]
         public bool preinstallTracking = false;
 
-        [Header("iOS SPECIFIC FEATURES:")]
-        [Space(5)]
+        // [Header("iOS SPECIFIC FEATURES:")]
+        // [Space(5)]
+        [HideInInspector]
         public bool iadInfoReading = true;
+        [HideInInspector]
         public bool adServicesInfoReading = true;
-        public bool IDFAInfoReading = true;
+        [HideInInspector]
+        public bool idfaInfoReading = true;
+        [HideInInspector]
         public bool skAdNetworkHandling = true;
 
 #if UNITY_IOS
@@ -74,7 +97,6 @@ namespace com.adjust.sdk
             }
 #endif
 
-
             if (!this.startManually)
             {
                 AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment, (this.logLevel == AdjustLogLevel.Suppress));
@@ -83,14 +105,14 @@ namespace com.adjust.sdk
                 adjustConfig.setEventBufferingEnabled(this.eventBuffering);
                 adjustConfig.setLaunchDeferredDeeplink(this.launchDeferredDeeplink);
                 adjustConfig.setDefaultTracker(this.defaultTracker);
-                adjustConfig.setUrlStrategy(this.URLStrategy.ToLowerCaseString());
+                adjustConfig.setUrlStrategy(this.urlStrategy.ToLowerCaseString());
                 adjustConfig.setAppSecret(this.secretId, this.info1, this.info2, this.info3, this.info4);
                 adjustConfig.setDelayStart(this.startDelay);
                 adjustConfig.setNeedsCost(this.needsCost);
                 adjustConfig.setPreinstallTrackingEnabled(this.preinstallTracking);
                 adjustConfig.setAllowiAdInfoReading(this.iadInfoReading);
                 adjustConfig.setAllowAdServicesInfoReading(this.adServicesInfoReading);
-                adjustConfig.setAllowIdfaReading(this.IDFAInfoReading);
+                adjustConfig.setAllowIdfaReading(this.idfaInfoReading);
                 if (!skAdNetworkHandling)
                 {
                     adjustConfig.deactivateSKAdNetworkHandling();
@@ -145,20 +167,20 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-                Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
-                Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
-                Adjust.sessionSuccessDelegate = adjustConfig.getSessionSuccessDelegate();
-                Adjust.sessionFailureDelegate = adjustConfig.getSessionFailureDelegate();
-                Adjust.deferredDeeplinkDelegate = adjustConfig.getDeferredDeeplinkDelegate();
-                Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate();
-                Adjust.conversionValueUpdatedDelegate = adjustConfig.getConversionValueUpdatedDelegate();
-                AdjustiOS.Start(adjustConfig);
+            Adjust.eventSuccessDelegate = adjustConfig.getEventSuccessDelegate();
+            Adjust.eventFailureDelegate = adjustConfig.getEventFailureDelegate();
+            Adjust.sessionSuccessDelegate = adjustConfig.getSessionSuccessDelegate();
+            Adjust.sessionFailureDelegate = adjustConfig.getSessionFailureDelegate();
+            Adjust.deferredDeeplinkDelegate = adjustConfig.getDeferredDeeplinkDelegate();
+            Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate();
+            Adjust.conversionValueUpdatedDelegate = adjustConfig.getConversionValueUpdatedDelegate();
+            AdjustiOS.Start(adjustConfig);
 #elif UNITY_ANDROID
-                AdjustAndroid.Start(adjustConfig);
+            AdjustAndroid.Start(adjustConfig);
 #elif (UNITY_WSA || UNITY_WP8)
-                AdjustWindows.Start(adjustConfig);
+            AdjustWindows.Start(adjustConfig);
 #else
-                Debug.Log(errorMsgPlatform);
+            Debug.Log(errorMsgPlatform);
 #endif
         }
 
