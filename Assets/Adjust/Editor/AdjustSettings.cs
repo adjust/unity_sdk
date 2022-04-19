@@ -13,9 +13,11 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private bool _iOSFrameworkiAd = false;
     [SerializeField]
+    private bool _iOSFrameworkAdServices = false;
+    [SerializeField]
     private bool _iOSFrameworkAppTrackingTransparency = false;
     [SerializeField]
-    private bool _iOSFrameworkAdServices = false;
+    private bool _iOSFrameworkStoreKit = false;
     [SerializeField]
     private bool _androidPermissionInternet = true;
     [SerializeField]
@@ -89,16 +91,22 @@ public class AdjustSettings : ScriptableObject
         set { Instance._iOSFrameworkiAd = value; }
     }
 
+    public static bool iOSFrameworkAdServices
+    {
+        get { return Instance._iOSFrameworkAdServices; }
+        set { Instance._iOSFrameworkAdServices = value; }
+    }
+
     public static bool iOSFrameworkAppTrackingTransparency
     {
         get { return Instance._iOSFrameworkAppTrackingTransparency; }
         set { Instance._iOSFrameworkAppTrackingTransparency = value; }
     }
 
-    public static bool iOSFrameworkAdServices
+    public static bool iOSFrameworkStoreKit
     {
-        get { return Instance._iOSFrameworkAdServices; }
-        set { Instance._iOSFrameworkAdServices = value; }
+        get { return Instance._iOSFrameworkStoreKit; }
+        set { Instance._iOSFrameworkStoreKit = value; }
     }
 
     public static bool androidPermissionInternet

@@ -9,8 +9,9 @@ namespace com.adjust.sdk
     {
         SerializedProperty iOSFrameworkAdSupport;
         SerializedProperty iOSFrameworkiAd;
-        SerializedProperty iOSFrameworkAppTrackingTransparency;
         SerializedProperty iOSFrameworkAdServices;
+        SerializedProperty iOSFrameworkAppTrackingTransparency;
+        SerializedProperty iOSFrameworkStoreKit;
         SerializedProperty androidPermissionInternet;
         SerializedProperty androidPermissionInstallReferrerService;
         SerializedProperty androidPermissionAdId;
@@ -25,8 +26,9 @@ namespace com.adjust.sdk
         {
             iOSFrameworkAdSupport = serializedObject.FindProperty("_iOSFrameworkAdSupport");
             iOSFrameworkiAd = serializedObject.FindProperty("_iOSFrameworkiAd");
-            iOSFrameworkAppTrackingTransparency = serializedObject.FindProperty("_iOSFrameworkAppTrackingTransparency");
             iOSFrameworkAdServices = serializedObject.FindProperty("_iOSFrameworkAdServices");
+            iOSFrameworkAppTrackingTransparency = serializedObject.FindProperty("_iOSFrameworkAppTrackingTransparency");
+            iOSFrameworkStoreKit = serializedObject.FindProperty("_iOSFrameworkStoreKit");
             androidPermissionInternet = serializedObject.FindProperty("_androidPermissionInternet");
             androidPermissionInstallReferrerService = serializedObject.FindProperty("_androidPermissionInstallReferrerService");
             androidPermissionAdId = serializedObject.FindProperty("_androidPermissionAdId");
@@ -53,13 +55,17 @@ namespace com.adjust.sdk
                 new GUIContent("iAd.framework",
                     "iOS framework needed to support iAd based Apple Search Ads attribution"),
                 true);
+            EditorGUILayout.PropertyField(iOSFrameworkAdServices,
+                new GUIContent("AdServices.framework",
+                    "iOS framework needed to support AdServices based Apple Search Ads attribution"),
+                true);
             EditorGUILayout.PropertyField(iOSFrameworkAppTrackingTransparency,
                 new GUIContent("AppTrackingTransparency.framework",
                     "iOS framework needed to display tracking consent dialog"),
                 true);
-            EditorGUILayout.PropertyField(iOSFrameworkAdServices,
-                new GUIContent("AdServices.framework",
-                    "iOS framework needed to support AdServices based Apple Search Ads attribution"),
+            EditorGUILayout.PropertyField(iOSFrameworkStoreKit,
+                new GUIContent("StoreKit.framework",
+                    "iOS framework needed to use SKAdNetwork capabilities"),
                 true);
             EditorGUI.indentLevel -= 1;
             EditorGUILayout.Space();

@@ -120,39 +120,44 @@ public class AdjustEditor : AssetPostprocessor
                 AddUniversalLinkDomains(xcodeProject, xcodeProjectPath, xcodeTarget);
             }
 
-            // The Adjust SDK will try to add following frameworks to your project:
+            // If enabled by the user, Adjust SDK will try to add following frameworks to your project:
             // - AdSupport.framework (needed for access to IDFA value)
             // - iAd.framework (needed in case you are running ASA campaigns)
             // - AdServices.framework (needed in case you are running ASA campaigns)
-            // - CoreTelephony.framework (needed to get information about network type user is connected to)
             // - StoreKit.framework (needed for communication with SKAdNetwork framework)
             // - AppTrackingTransparency.framework (needed for information about user's consent to be tracked)
-
             // In case you don't need any of these, feel free to remove them from your app.
 
-            Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
-            Debug.Log("[Adjust]: AdSupport.framework added successfully.");
-
-            Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
-            Debug.Log("[Adjust]: iAd.framework added successfully.");
-
-            Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
-            Debug.Log("[Adjust]: AdServices.framework added successfully.");
-
-            Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
-            Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
-
-            Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
-            Debug.Log("[Adjust]: StoreKit.framework added successfully.");
-
-            Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
-            Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+            if (AdjustSettings.iOSFrameworkAdSupport)
+            {
+                Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
+                Debug.Log("[Adjust]: AdSupport.framework added successfully.");
+            }
+            if (AdjustSettings.iOSFrameworkiAd)
+            {
+                Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
+                Debug.Log("[Adjust]: iAd.framework added successfully.");
+            }
+            if (AdjustSettings.iOSFrameworkAdServices)
+            {
+                Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
+                Debug.Log("[Adjust]: AdServices.framework added successfully.");
+            }
+            if (AdjustSettings.iOSFrameworkStoreKit)
+            {
+                Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
+                Debug.Log("[Adjust]: StoreKit.framework added successfully.");
+            }
+            if (AdjustSettings.iOSFrameworkAppTrackingTransparency)
+            {
+                Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
+                Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+            }
 
             // The Adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
