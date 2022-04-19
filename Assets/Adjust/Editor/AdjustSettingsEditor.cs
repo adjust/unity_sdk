@@ -85,7 +85,8 @@ namespace com.adjust.sdk
                 true);
             EditorGUILayout.PropertyField(androidPermissionAccessNetworkState,
                 new GUIContent("android.permission.ACCESS_NETWORK_STATE",
-                    "Android permission needed to determine type of network device is connected to"), true);
+                    "Android permission needed to determine type of network device is connected to"),
+                true);
             EditorGUI.indentLevel -= 1;
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("DEEP LINKING:", darkerCyanTextFieldStyles);
@@ -93,20 +94,25 @@ namespace com.adjust.sdk
             EditorGUILayout.PropertyField(iOSUrlIdentifier,
                 new GUIContent("iOS URL Identifier",
                     "Value of CFBundleURLName property of the root CFBundleURLTypes element. " +
-                    "If not needed otherwise, value should be your bundle ID."), true);
+                    "If not needed otherwise, value should be your bundle ID."),
+                true);
             EditorGUILayout.PropertyField(iOSUrlSchemes,
                 new GUIContent("iOS URL Schemes",
-                    "URL schemes handled by your app. State just the scheme name without :// part at the end."), true);
+                    "URL schemes handled by your app. State just the scheme name without :// part at the end."),
+                true);
             EditorGUILayout.PropertyField(iOSUniversalLinksDomains,
                 new GUIContent("iOS Universal Links Domains",
-                    "Associated domains handled by your app. State just the domain part without applinks: part in front."), true);
+                    "Associated domains handled by your app. State just the domain part without applinks: part in front."),
+                true);
             EditorGUILayout.PropertyField(androidUriSchemes,
                 new GUIContent("Android URI Schemes",
                     "URI schemes handled by your app."), true);
             EditorGUILayout.HelpBox(
                 "Please note that Adjust SDK doesn't remove existing URI Schemes, " +
                 "so if you need to clean previously added entries, " +
-                "you need to do it manually from \"Assets/Plugins/Android/AndroidManifest.xml\"", MessageType.Info, true);
+                "you need to do it manually from \"Assets/Plugins/Android/AndroidManifest.xml\"",
+                MessageType.Info,
+                true);
             EditorGUI.indentLevel -= 1;
             serializedObject.ApplyModifiedProperties();
         }
