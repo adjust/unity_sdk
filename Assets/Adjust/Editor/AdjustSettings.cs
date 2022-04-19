@@ -9,7 +9,7 @@ public class AdjustSettings : ScriptableObject
     private static AdjustSettings instance;
 
     [SerializeField]
-    private bool _iOSFrameworkAdSupport = false;
+    private bool _iOSFrameworkAdSupport = true;
     [SerializeField]
     private bool _iOSFrameworkiAd = false;
     [SerializeField]
