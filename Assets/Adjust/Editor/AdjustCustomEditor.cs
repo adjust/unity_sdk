@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 using UnityEditor;
 
 namespace com.adjust.sdk
@@ -71,6 +72,12 @@ namespace com.adjust.sdk
             }
 
             settingsEditor.OnInspectorGUI();
+
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(adjust);
+                EditorSceneManager.MarkSceneDirty(adjust.gameObject.scene);
+            }
         }
     }
 }
