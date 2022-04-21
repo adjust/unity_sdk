@@ -98,7 +98,8 @@ namespace com.adjust.sdk
                 true);
             EditorGUILayout.PropertyField(iOSUrlSchemes,
                 new GUIContent("iOS URL Schemes",
-                    "URL schemes handled by your app. State just the scheme name without :// part at the end."),
+                    "URL schemes handled by your app. " +
+                    "Make sure to enter just the scheme name without :// part at the end."),
                 true);
             EditorGUILayout.PropertyField(iOSUniversalLinksDomains,
                 new GUIContent("iOS Universal Links Domains",
@@ -106,7 +107,9 @@ namespace com.adjust.sdk
                 true);
             EditorGUILayout.PropertyField(androidUriSchemes,
                 new GUIContent("Android URI Schemes",
-                    "URI schemes handled by your app."), true);
+                    "URI schemes handled by your app. " +
+                    "Make sure to enter just the scheme name with :// part at the end."),
+                true);
             EditorGUILayout.HelpBox(
                 "Please note that Adjust SDK doesn't remove existing URI Schemes, " +
                 "so if you need to clean previously added entries, " +
