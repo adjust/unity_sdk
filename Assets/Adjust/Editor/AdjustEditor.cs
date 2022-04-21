@@ -134,11 +134,19 @@ public class AdjustEditor : AssetPostprocessor
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
                 Debug.Log("[Adjust]: AdSupport.framework added successfully.");
             }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping AdSupport.framework linking.");
+            }
             if (AdjustSettings.iOSFrameworkiAd)
             {
                 Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
                 Debug.Log("[Adjust]: iAd.framework added successfully.");
+            }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping iAd.framework linking.");
             }
             if (AdjustSettings.iOSFrameworkAdServices)
             {
@@ -146,17 +154,29 @@ public class AdjustEditor : AssetPostprocessor
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
                 Debug.Log("[Adjust]: AdServices.framework added successfully.");
             }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping AdServices.framework linking.");
+            }
             if (AdjustSettings.iOSFrameworkStoreKit)
             {
                 Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
                 Debug.Log("[Adjust]: StoreKit.framework added successfully.");
             }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping StoreKit.framework linking.");
+            }
             if (AdjustSettings.iOSFrameworkAppTrackingTransparency)
             {
                 Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
                 Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+            }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping AppTrackingTransparency.framework linking.");
             }
 
             // The Adjust SDK needs to have Obj-C exceptions enabled.
@@ -167,9 +187,22 @@ public class AdjustEditor : AssetPostprocessor
 
             // The Adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
-            Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
+            //
+            // Seems that in newer Unity IDE versions adding -ObjC flag to Unity-iPhone target doesn't do the trick.
+            // Adding -ObjC to UnityFramework target however does make things work nicely again.
+            // This happens because Unity is linking SDK's static library into UnityFramework target.
+            // Check for presence of UnityFramework target and if there, include -ObjC flag inside of it.
+
+            Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS) of Unity-iPhone target.");
             xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
             Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
+            string xcodeTargetUnityFramework = xcodeProject.TargetGuidByName("UnityFramework");
+            if (!string.IsNullOrEmpty(xcodeTargetUnityFramework))
+            {
+                Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS) of UnityFramework target.");
+                xcodeProject.AddBuildProperty(xcodeTargetUnityFramework, "OTHER_LDFLAGS", "-ObjC");
+                Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
+            }
 
             if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/iOS/AdjustSigSdk.a"))
             {
