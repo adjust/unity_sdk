@@ -41,12 +41,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startManually: 1
+  appToken: 
+  environment: 0
+  logLevel: 3
   eventBuffering: 0
   sendInBackground: 0
   launchDeferredDeeplink: 1
-  appToken: '{Your App Token}'
-  logLevel: 3
-  environment: 0
+  needsCost: 0
+  coppaCompliant: 0
+  defaultTracker: 
+  urlStrategy: 0
+  startDelay: 0
+  secretId: 0
+  info1: 0
+  info2: 0
+  info3: 0
+  info4: 0
+  preinstallTracking: 0
+  playStoreKidsApp: 0
+  iadInfoReading: 1
+  adServicesInfoReading: 1
+  idfaInfoReading: 1
+  skAdNetworkHandling: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
