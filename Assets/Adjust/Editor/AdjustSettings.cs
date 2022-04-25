@@ -27,9 +27,9 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private bool _androidPermissionAccessNetworkState = false;
     [SerializeField]
-    private string _iOSUserTrackingUsageDescription = "";
+    private string _iOSUserTrackingUsageDescription;
     [SerializeField]
-    private string _iOSUrlIdentifier = "";
+    private string _iOSUrlIdentifier;
     [SerializeField]
     private string[] _iOSUrlSchemes = new string[0];
     [SerializeField]

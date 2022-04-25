@@ -17,7 +17,7 @@ namespace com.adjust.sdk
         [HideInInspector]
         public bool startManually = true;
         [HideInInspector]
-        public string appToken = "";
+        public string appToken;
         [HideInInspector]
         public AdjustEnvironment environment = AdjustEnvironment.Sandbox;
         [HideInInspector]
@@ -33,7 +33,7 @@ namespace com.adjust.sdk
         [HideInInspector]
         public bool coppaCompliant = false;
         [HideInInspector]
-        public string defaultTracker = "";
+        public string defaultTracker;
         [HideInInspector]
         public AdjustUrlStrategy urlStrategy = AdjustUrlStrategy.Default;
         [HideInInspector]
