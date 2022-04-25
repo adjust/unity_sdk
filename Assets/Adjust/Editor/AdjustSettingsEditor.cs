@@ -89,6 +89,15 @@ namespace com.adjust.sdk
                 true);
             EditorGUI.indentLevel -= 1;
             EditorGUILayout.Space();
+            EditorGUILayout.LabelField("IOS PRIVACY:", darkerCyanTextFieldStyles);
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(iOSUserTrackingUsageDescription,
+                new GUIContent("User Tracking Description",
+                    "String you would like to display to your users describing the reason " +
+                    "behind asking for tracking permission."),
+                true);
+            EditorGUI.indentLevel -= 1;
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("DEEP LINKING:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(iOSUrlIdentifier,
