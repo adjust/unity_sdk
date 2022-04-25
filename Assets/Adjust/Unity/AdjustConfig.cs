@@ -50,9 +50,10 @@ namespace com.adjust.sdk
         internal Action<int> conversionValueUpdatedDelegate;
 
         // Android specific members
+        internal string processName;
         internal bool? readImei;
         internal bool? preinstallTrackingEnabled;
-        internal string processName;
+        internal string preinstallFilePath;
         // iOS specific members
         internal bool? allowiAdInfoReading;
         internal bool? allowAdServicesInfoReading;
@@ -265,6 +266,11 @@ namespace com.adjust.sdk
         public void setPreinstallTrackingEnabled(bool preinstallTrackingEnabled)
         {
             this.preinstallTrackingEnabled = preinstallTrackingEnabled;
+        }
+
+        public void setPreinstallFilePath(string preinstallFilePath)
+        {
+            this.preinstallFilePath = preinstallFilePath;
         }
 
         // Windows specific methods.

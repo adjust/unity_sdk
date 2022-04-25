@@ -54,6 +54,7 @@ namespace com.adjust.sdk
                 EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
                 adjust.preinstallTracking = EditorGUILayout.Toggle("Preinstall Tracking", adjust.preinstallTracking);
+                adjust.preinstallFilePath = EditorGUILayout.TextField("Preinstall File Path", adjust.preinstallFilePath);
                 adjust.playStoreKidsApp = EditorGUILayout.Toggle("Play Store Kids App", adjust.playStoreKidsApp);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();

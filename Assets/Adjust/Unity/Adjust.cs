@@ -57,6 +57,8 @@ namespace com.adjust.sdk
         [HideInInspector]
         public bool preinstallTracking = false;
         [HideInInspector]
+        public string preinstallFilePath;
+        [HideInInspector]
         public bool playStoreKidsApp = false;
 
         // [Header("iOS SPECIFIC FEATURES:")]
@@ -113,6 +115,7 @@ namespace com.adjust.sdk
                 adjustConfig.setDelayStart(this.startDelay);
                 adjustConfig.setNeedsCost(this.needsCost);
                 adjustConfig.setPreinstallTrackingEnabled(this.preinstallTracking);
+                adjustConfig.setPreinstallFilePath(this.preinstallFilePath);
                 adjustConfig.setAllowiAdInfoReading(this.iadInfoReading);
                 adjustConfig.setAllowAdServicesInfoReading(this.adServicesInfoReading);
                 adjustConfig.setAllowIdfaReading(this.idfaInfoReading);

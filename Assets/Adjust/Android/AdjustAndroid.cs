@@ -110,6 +110,12 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setPreinstallTrackingEnabled", adjustConfig.preinstallTrackingEnabled.Value);
             }
 
+            // Check if user has set custom preinstall file path.
+            if (adjustConfig.preinstallFilePath != null)
+            {
+                ajoAdjustConfig.Call("setPreinstallFilePath", adjustConfig.preinstallFilePath);
+            }
+
             // Check if user has set user agent value.
             if (adjustConfig.userAgent != null)
             {
