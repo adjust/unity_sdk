@@ -30,6 +30,7 @@ namespace com.adjust.sdk
             int allowIdfaReading,
             int deactivateSkAdNetworkHandling,
             int needsCost,
+            int coppaCompliant,
             long secretId,
             long info1,
             long info2,
@@ -203,6 +204,7 @@ namespace com.adjust.sdk
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
             int deactivateSkAdNetworkHandling = AdjustUtils.ConvertBool(adjustConfig.skAdNetworkHandling);
             int needsCost = AdjustUtils.ConvertBool(adjustConfig.needsCost);
+            int coppaCompliant = AdjustUtils.ConvertBool(adjustConfig.coppaCompliantEnabled);
             int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
             int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventSuccessDelegate() != null);
             int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventFailureDelegate() != null);
@@ -230,6 +232,7 @@ namespace com.adjust.sdk
                 allowIdfaReading,
                 deactivateSkAdNetworkHandling,
                 needsCost,
+                coppaCompliant,
                 secretId,
                 info1,
                 info2,

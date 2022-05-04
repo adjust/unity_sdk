@@ -100,6 +100,7 @@ extern "C"
                           int allowIdfaReading,
                           int deactivateSkAdNetworkHandling,
                           int needsCost,
+                          int coppaCompliant,
                           int64_t secretId,
                           int64_t info1,
                           int64_t info2,
@@ -205,6 +206,11 @@ extern "C"
         // Cost data in attribution callback.
         if (needsCost != -1) {
             [adjustConfig setNeedsCost:(BOOL)needsCost];
+        }
+
+        // COPPA compliance.
+        if (coppaCompliant != -1) {
+            [adjustConfig setCoppaCompliantEnabled:(BOOL)coppaCompliant];
         }
 
         // User agent.
