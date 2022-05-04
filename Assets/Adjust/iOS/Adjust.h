@@ -49,15 +49,9 @@ extern NSString * __nonnull const ADJAdRevenueSourceMopub;
 extern NSString * __nonnull const ADJAdRevenueSourceAdMob;
 extern NSString * __nonnull const ADJAdRevenueSourceIronSource;
 extern NSString * __nonnull const ADJAdRevenueSourceAdMost;
-<<<<<<< HEAD
 extern NSString * __nonnull const ADJAdRevenueSourceUnity;
 extern NSString * __nonnull const ADJAdRevenueSourceHeliumChartboost;
-<<<<<<< HEAD
 extern NSString * __nonnull const ADJAdRevenueSourcePublisher;
-=======
->>>>>>> update native binaries
-=======
->>>>>>> update native binaries
 
 /**
  * Constants for country app's URL strategies.
