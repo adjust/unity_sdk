@@ -284,7 +284,7 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("delayStart"))
             {
                 var delayStartStr = _command.GetFirstParameterValue("delayStart");
-                var delayStart = double.Parse(delayStartStr);
+                var delayStart = double.Parse(delayStartStr, System.Globalization.CultureInfo.InvariantCulture);
                 adjustConfig.setDelayStart(delayStart);
             }
 
@@ -527,7 +527,7 @@ namespace com.adjust.sdk.test
             {
                 var revenueParams = _command.Parameters["revenue"];
                 var currency = revenueParams[0];
-                var revenue = double.Parse(revenueParams[1]);
+                var revenue = double.Parse(revenueParams[1], System.Globalization.CultureInfo.InvariantCulture);
                 adjustEvent.setRevenue(revenue, currency);
             }
 
@@ -881,7 +881,7 @@ namespace com.adjust.sdk.test
             {
                 var revenueParams = _command.Parameters["revenue"];
                 var currency = revenueParams[0];
-                var revenue = double.Parse(revenueParams[1]);
+                var revenue = double.Parse(revenueParams[1], System.Globalization.CultureInfo.InvariantCulture);
                 adRevenue.setRevenue(revenue, currency);
             }
 
