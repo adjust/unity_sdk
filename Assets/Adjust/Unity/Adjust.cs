@@ -617,6 +617,24 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static void checkForNewAttStatus()
+        {
+            if (IsEditor()) 
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.CheckForNewAttStatus();
+#elif UNITY_ANDROID
+            Debug.Log("[Adjust]: Checking for new ATT status is only supported for iOS platform.");
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Checking for new ATT status is only supported for iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static int getAppTrackingAuthorizationStatus()
         {
             if (IsEditor())

@@ -707,6 +707,10 @@ extern "C"
         [Adjust updateConversionValue:conversionValue];
     }
 
+    void _AdjustCheckForNewAttStatus() {
+        [Adjust checkForNewAttStatus];
+    }
+
     int _AdjustGetAppTrackingAuthorizationStatus() {
         return [Adjust appTrackingAuthorizationStatus];
     }

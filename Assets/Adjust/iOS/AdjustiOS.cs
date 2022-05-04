@@ -168,6 +168,9 @@ namespace com.adjust.sdk
         private static extern void _AdjustUpdateConversionValue(int conversionValue);
 
         [DllImport("__Internal")]
+        private static extern void _AdjustCheckForNewAttStatus();
+
+        [DllImport("__Internal")]
         private static extern int _AdjustGetAppTrackingAuthorizationStatus();
 
         [DllImport("__Internal")]
@@ -400,6 +403,11 @@ namespace com.adjust.sdk
         public static void UpdateConversionValue(int conversionValue)
         {
             _AdjustUpdateConversionValue(conversionValue);
+        }
+
+        public static void CheckForNewAttStatus()
+        {
+            _AdjustCheckForNewAttStatus();
         }
 
         public static int GetAppTrackingAuthorizationStatus()
