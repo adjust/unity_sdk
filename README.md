@@ -282,15 +282,21 @@ If you are using Adjust tracker URLs with deeplinking enabled, it is possible to
 
 Standard deeplinking is scenario in which click on a specific link opens your app which is already installed on user's device.
 
+As of Adjust SDK v4.30.0, [limited support](#why-limited-support) for deeplinking setup is bundled into iOS and Android post-build processes so that you don't need to jump to native Xcode and Android Studio projects and add that support manually.
 
-As of Adjust SDK v4.30.0, [limited support](#why-limited-support) for deeplinking setup is bundled into iOS and Android post-build processes so that you don't need to jump to native Xcode and Android Studio projects and add that support manually. For more information, here’s how to enable deeplinking for [iOS](#dl-app-ios) and [Android](#dl-app-android) apps.
+**Important:** In case you already had deeplinking set up in your app to support Adjust reattribution via deeplinks, you don't necessarily need to perform steps described in implementation chapters below for iOS and Android platforms. In case you had deeplinking support added to your apps and would like to switch to more convenient approach which Adjust SDK v4.30.0 (or later version) is offering, then please make sure to:
+
+- **For iOS platform:** Remove calls to `[Adjust appWillOpenUrl:url];` method inside of your app's `AppDelegate` callbacks methods. This part will be automatically done if enabled in inspector menu of Adjust SDK v4.30.0 or later.
+- **For Android platform:** Remove calls to `Adjust.appWillOpenUrl(url);` method inside of your app's default `Activity` class methods only if you are using `UNITY_2019_2_OR_NEWER` version. This part will be automatically done if enabled in inspector menu of Adjust SDK v4.30.0 or later. If you are using lower Unity version, then make sure to leave native deeplinking support in your Android app project.
+
+For more information, check how to enable deeplinking for [iOS](#dl-app-ios) and [Android](#dl-app-android) apps.
 
 ### <a id="dl-app-ios"></a>Deeplink handling in iOS apps
 
 In order to set up deeplinking support for iOS platform, make sure to perform the following steps:
 
-- For scheme based links: In the inspector, fill in `iOS URL Identifier` text field (this should usually be your iOS bundle ID) and inside of the `iOS URL Schemes` section, add all the schemes which you want your iOS app to handle. **Note:** Pay attention to tooltip which says that when you are entering schemes in the list, you should write them without `://` part at the end.
-- For universal links: In the inspector, make sure to add each associated domain which your app handles into the `iOS Universal Links Domains` list. **Note:** Pay attention to tooltip which says that when you are entering universal links associated domains, you should write them without `applinks:` part in front of the domain (also without `https://`).
+- **For scheme based links:** In the inspector, fill in `iOS URL Identifier` text field (this should usually be your iOS bundle ID) and inside of the `iOS URL Schemes` section, add all the schemes which you want your iOS app to handle. **Note:** Pay attention to tooltip which says that when you are entering schemes in the list, you should write them without `://` part at the end.
+- **For universal links:** In the inspector, make sure to add each associated domain which your app handles into the `iOS Universal Links Domains` list. **Note:** Pay attention to tooltip which says that when you are entering universal links associated domains, you should write them without `applinks:` part in front of the domain (also without `https://`).
 
 What iOS post-build process will perform under the hood will be swizzling of some of your app's default `AppDelegate` methods in order to intercept the link which has opened the app and then forward the call further up the hierarchy to your app's default `AppDelegate` callback method implementation. This implementation intercepts the links only to let Adjust SDK know about them and SDK will perform everything which is needed to potentially reattribute your users via deeplinking. SDK does not offer any way of forwarding of deeplinks into Unity layer to be picked up in some custom callback method. If you would like to see information about deeplink captured inside of the Unity layer in your app, make sure to check [Application.deepLinkActivated](https://docs.unity3d.com/ScriptReference/Application-deepLinkActivated.html) method offered by Unity. Be aware that this method is available only as of `UNITY_2019_2_OR_NEWER`. If you would want to obtain information about iOS deeplink in earlier versions of Unity, you would need to implement this mechanism on your own.
 
