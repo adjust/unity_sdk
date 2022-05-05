@@ -1,7 +1,6 @@
 // Inspired by: https://github.com/facebook/facebook-sdk-for-unity/blob/master/Facebook.Unity.Settings/FacebookSettings.cs
 
-using System;
-using System.IO;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,9 +9,33 @@ public class AdjustSettings : ScriptableObject
     private static AdjustSettings instance;
 
     [SerializeField]
-    private bool isPostProcessingEnabled = true;
+    private bool _iOSFrameworkAdSupport = true;
     [SerializeField]
-    private bool isiOS14ProcessingEnabled = false;
+    private bool _iOSFrameworkiAd = false;
+    [SerializeField]
+    private bool _iOSFrameworkAdServices = false;
+    [SerializeField]
+    private bool _iOSFrameworkAppTrackingTransparency = false;
+    [SerializeField]
+    private bool _iOSFrameworkStoreKit = false;
+    [SerializeField]
+    private bool _androidPermissionInternet = true;
+    [SerializeField]
+    private bool _androidPermissionInstallReferrerService = true;
+    [SerializeField]
+    private bool _androidPermissionAdId = false;
+    [SerializeField]
+    private bool _androidPermissionAccessNetworkState = false;
+    [SerializeField]
+    private string _iOSUserTrackingUsageDescription;
+    [SerializeField]
+    private string _iOSUrlIdentifier;
+    [SerializeField]
+    private string[] _iOSUrlSchemes = new string[0];
+    [SerializeField]
+    private string[] _iOSUniversalLinksDomains = new string[0];
+    [SerializeField]
+    private string[] androidUriSchemes = new string[0];
 
     public static AdjustSettings Instance
     {
@@ -31,18 +54,6 @@ public class AdjustSettings : ScriptableObject
                 }
                 var assetPath = AssetDatabase.GUIDToAssetPath(guids[0]).Replace("AdjustSettings.cs", "AdjustSettings.asset");
                 AssetDatabase.CreateAsset(instance, assetPath);
-
-                // Before switching to AssetsDatabase, EditorPrefs were used to write 'adjustiOS14Support' key.
-                // Check if this key still exists in EditorPrefs.
-                // If yes, migrate the value to AdjustSettings.asset and remove the key from EditorPrefs.
-                if (EditorPrefs.HasKey("adjustiOS14Support"))
-                {
-                    UnityEngine.Debug.Log("[Adjust]: Found 'adjustiOS14Support' key in EditorPrefs.");
-                    UnityEngine.Debug.Log("[Adjust]: Migrating that value to AdjustSettings.asset.");
-                    IsiOS14ProcessingEnabled = EditorPrefs.GetBool("adjustiOS14Support", false);
-                    EditorPrefs.DeleteKey("adjustiOS14Support");
-                    UnityEngine.Debug.Log("[Adjust]: Key 'adjustiOS14Support' removed from EditorPrefs.");
-                }
             }
 
             return instance;
@@ -68,35 +79,87 @@ public class AdjustSettings : ScriptableObject
         }
     }
 
-    public static bool IsPostProcessingEnabled
+    public static bool iOSFrameworkAdSupport
     {
-        get
-        {
-            return Instance.isPostProcessingEnabled;
-        }
-
-        set
-        {
-            if (Instance.isPostProcessingEnabled != value)
-            {
-                Instance.isPostProcessingEnabled = value;
-            }
-        }
+        get { return Instance._iOSFrameworkAdSupport; }
+        set { Instance._iOSFrameworkAdSupport = value; }
     }
 
-    public static bool IsiOS14ProcessingEnabled
+    public static bool iOSFrameworkiAd
     {
-        get
-        {
-            return Instance.isiOS14ProcessingEnabled;
-        }
+        get { return Instance._iOSFrameworkiAd; }
+        set { Instance._iOSFrameworkiAd = value; }
+    }
 
-        set
-        {
-            if (Instance.isiOS14ProcessingEnabled != value)
-            {
-                Instance.isiOS14ProcessingEnabled = value;
-            }
-        }
+    public static bool iOSFrameworkAdServices
+    {
+        get { return Instance._iOSFrameworkAdServices; }
+        set { Instance._iOSFrameworkAdServices = value; }
+    }
+
+    public static bool iOSFrameworkAppTrackingTransparency
+    {
+        get { return Instance._iOSFrameworkAppTrackingTransparency; }
+        set { Instance._iOSFrameworkAppTrackingTransparency = value; }
+    }
+
+    public static bool iOSFrameworkStoreKit
+    {
+        get { return Instance._iOSFrameworkStoreKit; }
+        set { Instance._iOSFrameworkStoreKit = value; }
+    }
+
+    public static bool androidPermissionInternet
+    {
+        get { return Instance._androidPermissionInternet; }
+        set { Instance._androidPermissionInternet = value; }
+    }
+
+    public static bool androidPermissionInstallReferrerService
+    {
+        get { return Instance._androidPermissionInstallReferrerService; }
+        set { Instance._androidPermissionInstallReferrerService = value; }
+    }
+
+    public static bool androidPermissionAdId
+    {
+        get { return Instance._androidPermissionAdId; }
+        set { Instance._androidPermissionAdId = value; }
+    }
+
+    public static bool androidPermissionAccessNetworkState
+    {
+        get { return Instance._androidPermissionAccessNetworkState; }
+        set { Instance._androidPermissionAccessNetworkState = value; }
+    }
+
+    public static string iOSUserTrackingUsageDescription
+    {
+        get { return Instance._iOSUserTrackingUsageDescription; }
+        set { Instance._iOSUserTrackingUsageDescription = value; }
+    }
+
+    public static string iOSUrlIdentifier
+    {
+        get { return Instance._iOSUrlIdentifier; }
+        set { Instance._iOSUrlIdentifier = value; }
+    }
+
+    public static string[] iOSUrlSchemes
+    {
+        get { return Instance._iOSUrlSchemes; }
+        set { Instance._iOSUrlSchemes = value; }
+    }
+
+    public static string[] iOSUniversalLinksDomains
+    {
+        get { return Instance._iOSUniversalLinksDomains; }
+        set { Instance._iOSUniversalLinksDomains = value; }
+    }
+
+    public static string[] AndroidUriSchemes
+    {
+        get { return Instance.androidUriSchemes; }
+        set { Instance.androidUriSchemes = value; }
     }
 }

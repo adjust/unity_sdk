@@ -392,7 +392,7 @@ Adjust.trackEvent(adjustEvent);
 
 ### <a id="cp"></a>맞춤 파라미터 개요
 
-Adjust SDK가 기본적으로 수집하는 데이터 포인트 외에도 Adjust SDK를 사용하여 이벤트나 세션에 필요한 만큼의 맞춤 값을 추적하고 추가할 수 있습니다(사용자 ID, 제품 ID 등). 맞춤 파라미터는 원시 데이터로만 제공되며 Adjust 대시보드에 표시되지 **않습니다**.
+Adjust SDK가 기본적으로 수집하는 데이터 포인트 외에도 Adjust SDK를 사용하여 이벤트나 세션에 필요한 만큼의 맞춤 값을 추적하고 추가할 수 있습니다(사용자 ID, 제품 ID 등). 맞춤 파라미터는 로데이터로만 제공되며 Adjust 대시보드에 표시되지 **않습니다**.
 
 내부용으로 수집하는 값의 경우 [콜백 파라미터](https://help.adjust.com/en/manage-data/export-raw-data/callbacks/best-practices-callbacks)를 사용하고, 외부 파트너와 공유하는 값의 경우 파트너 파라미터를 사용하세요. 내/외부 공용으로 추적하는 값(예: 제품 ID)의 경우 콜백 파라미터와 파트너 파라미터를 모두 사용하도록 권장합니다.
 

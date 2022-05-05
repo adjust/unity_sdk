@@ -1,5 +1,6 @@
 ﻿namespace com.adjust.sdk
 {
+    [System.Serializable]
     public enum AdjustEnvironment
     {
         Sandbox,

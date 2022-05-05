@@ -284,7 +284,7 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("delayStart"))
             {
                 var delayStartStr = _command.GetFirstParameterValue("delayStart");
-                var delayStart = double.Parse(delayStartStr);
+                var delayStart = double.Parse(delayStartStr, System.Globalization.CultureInfo.InvariantCulture);
                 adjustConfig.setDelayStart(delayStart);
             }
 
@@ -316,6 +316,20 @@ namespace com.adjust.sdk.test
                 var eventBufferingEnabledS = _command.GetFirstParameterValue("eventBufferingEnabled");
                 var eventBufferingEnabled = eventBufferingEnabledS.ToLower() == "true";
                 adjustConfig.setEventBufferingEnabled(eventBufferingEnabled);
+            }
+
+            if (_command.ContainsParameter("coppaCompliant"))
+            {
+                var coppaCompliantS = _command.GetFirstParameterValue("coppaCompliant");
+                var coppaCompliant = coppaCompliantS.ToLower() == "true";
+                adjustConfig.setCoppaCompliantEnabled(coppaCompliant);
+            }
+
+            if (_command.ContainsParameter("playStoreKids"))
+            {
+                var playStoreKidsS = _command.GetFirstParameterValue("playStoreKids");
+                var playStoreKids = playStoreKidsS.ToLower() == "true";
+                adjustConfig.setPlayStoreKidsAppEnabled(playStoreKids);
             }
 
             if (_command.ContainsParameter("sendInBackground"))
@@ -513,7 +527,7 @@ namespace com.adjust.sdk.test
             {
                 var revenueParams = _command.Parameters["revenue"];
                 var currency = revenueParams[0];
-                var revenue = double.Parse(revenueParams[1]);
+                var revenue = double.Parse(revenueParams[1], System.Globalization.CultureInfo.InvariantCulture);
                 adjustEvent.setRevenue(revenue, currency);
             }
 
@@ -867,7 +881,7 @@ namespace com.adjust.sdk.test
             {
                 var revenueParams = _command.Parameters["revenue"];
                 var currency = revenueParams[0];
-                var revenue = double.Parse(revenueParams[1]);
+                var revenue = double.Parse(revenueParams[1], System.Globalization.CultureInfo.InvariantCulture);
                 adRevenue.setRevenue(revenue, currency);
             }
 

@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.29.7";
+        private const string sdkPrefix = "unity4.30.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -30,6 +30,7 @@ namespace com.adjust.sdk
             int allowIdfaReading,
             int deactivateSkAdNetworkHandling,
             int needsCost,
+            int coppaCompliant,
             long secretId,
             long info1,
             long info2,
@@ -167,6 +168,9 @@ namespace com.adjust.sdk
         private static extern void _AdjustUpdateConversionValue(int conversionValue);
 
         [DllImport("__Internal")]
+        private static extern void _AdjustCheckForNewAttStatus();
+
+        [DllImport("__Internal")]
         private static extern int _AdjustGetAppTrackingAuthorizationStatus();
 
         [DllImport("__Internal")]
@@ -203,6 +207,7 @@ namespace com.adjust.sdk
             int launchDeferredDeeplink = AdjustUtils.ConvertBool(adjustConfig.launchDeferredDeeplink);
             int deactivateSkAdNetworkHandling = AdjustUtils.ConvertBool(adjustConfig.skAdNetworkHandling);
             int needsCost = AdjustUtils.ConvertBool(adjustConfig.needsCost);
+            int coppaCompliant = AdjustUtils.ConvertBool(adjustConfig.coppaCompliantEnabled);
             int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
             int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventSuccessDelegate() != null);
             int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventFailureDelegate() != null);
@@ -230,6 +235,7 @@ namespace com.adjust.sdk
                 allowIdfaReading,
                 deactivateSkAdNetworkHandling,
                 needsCost,
+                coppaCompliant,
                 secretId,
                 info1,
                 info2,
@@ -397,6 +403,11 @@ namespace com.adjust.sdk
         public static void UpdateConversionValue(int conversionValue)
         {
             _AdjustUpdateConversionValue(conversionValue);
+        }
+
+        public static void CheckForNewAttStatus()
+        {
+            _AdjustCheckForNewAttStatus();
         }
 
         public static int GetAppTrackingAuthorizationStatus()

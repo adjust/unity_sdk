@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
@@ -14,36 +13,6 @@ using UnityEditor.iOS.Xcode;
 
 public class AdjustEditor : AssetPostprocessor
 {
-    [MenuItem("Assets/Adjust/Check iOS 14 Support Status")]
-    public static void CheckIOS14SupportStatus()
-    {
-        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is " + (AdjustSettings.IsiOS14ProcessingEnabled ? "enabled." : "disabled."), "OK");
-    }
-
-    [MenuItem("Assets/Adjust/Toggle iOS 14 Support Status")]
-    public static void ToggleiOS14SupportStatus()
-    {
-        AdjustSettings.IsiOS14ProcessingEnabled = !AdjustSettings.IsiOS14ProcessingEnabled;
-        EditorUtility.SetDirty(AdjustSettings.Instance);
-        EditorUtility.DisplayDialog("Adjust SDK", "iOS 14 support is now " + (AdjustSettings.IsiOS14ProcessingEnabled ? "enabled." : "disabled.") +
-            "\nNote: Make sure to save your project files in order for this change to take effect.", "OK");
-    }
-
-    [MenuItem("Assets/Adjust/Check Post Processing Status")]
-    public static void CheckPostProcessingStatus()
-    {
-        EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is " + (AdjustSettings.IsPostProcessingEnabled ? "enabled." : "disabled."), "OK");
-    }
-
-    [MenuItem("Assets/Adjust/Toggle Post Processing Status")]
-    public static void TogglePostProcessingStatus()
-    {
-        AdjustSettings.IsPostProcessingEnabled = !AdjustSettings.IsPostProcessingEnabled;
-        EditorUtility.SetDirty(AdjustSettings.Instance);
-        EditorUtility.DisplayDialog("Adjust SDK", "The post processing for Adjust SDK is now " + (AdjustSettings.IsPostProcessingEnabled ? "enabled." : "disabled.") +
-            "\nNote: Make sure to save your project files in order for this change to take effect.", "OK");
-    }
-
     [MenuItem("Assets/Adjust/Export Unity Package")]
     public static void ExportAdjustUnityPackage()
     {
@@ -60,6 +29,9 @@ public class AdjustEditor : AssetPostprocessor
 
         assetsToExport.Add(assetsPath + "/Editor/AdjustEditor.cs");
         assetsToExport.Add(assetsPath + "/Editor/AdjustSettings.cs");
+        assetsToExport.Add(assetsPath + "/Editor/AdjustSettingsEditor.cs");
+        assetsToExport.Add(assetsPath + "/Editor/AdjustCustomEditor.cs");
+        assetsToExport.Add(assetsPath + "/Editor/AdjustEditorPreprocessor.cs");
 
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.cs");
         assetsToExport.Add(assetsPath + "/ExampleGUI/ExampleGUI.prefab");
@@ -117,99 +89,120 @@ public class AdjustEditor : AssetPostprocessor
             exportedFileName,
             ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
     }
-
+    
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string projectPath)
     {
-        // Check what is user setting about allowing Adjust SDK to perform post build tasks.
-        // If user disabled it, oh well, we won't do a thing.
-        if (!AdjustSettings.IsPostProcessingEnabled)
-        {
-            UnityEngine.Debug.Log("[Adjust]: You have forbidden the Adjust SDK to perform post processing tasks.");
-            UnityEngine.Debug.Log("[Adjust]: Skipping post processing tasks.");
-            return;
-        }
-
-        RunPostBuildScript(target:target, preBuild:false, projectPath:projectPath);
+        RunPostBuildScript(target: target, projectPath: projectPath);
     }
 
-    private static void RunPostBuildScript(BuildTarget target, bool preBuild, string projectPath = "")
+    private static void RunPostBuildScript(BuildTarget target, string projectPath = "")
     {
-        if (target == BuildTarget.Android)
-        {
-            UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for Android platform.");
-            RunPostProcessTasksAndroid();
-        }
-        else if (target == BuildTarget.iOS)
+        if (target == BuildTarget.iOS)
         {
 #if UNITY_IOS
-            UnityEngine.Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
-            
+            Debug.Log("[Adjust]: Starting to perform post build tasks for iOS platform.");
+
             string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
             PBXProject xcodeProject = new PBXProject();
             xcodeProject.ReadFromFile(xcodeProjectPath);
 
-            // The Adjust SDK will try to add following frameworks to your project:
-            // - AdSupport.framework (needed for access to IDFA value)
-            // - iAd.framework (needed in case you are running ASA campaigns)
-            // - AdServices.framework (needed in case you are running ASA campaigns)
-            // - CoreTelephony.framework (needed to get information about network type user is connected to)
-            // - StoreKit.framework (needed for communication with SKAdNetwork framework)
-            // - AppTrackingTransparency.framework (needed for information about user's consent to be tracked)
-
-            // In case you don't need any of these, feel free to remove them from your app.
-
 #if UNITY_2019_3_OR_NEWER
-            string xcodeTarget = xcodeProject.GetUnityFrameworkTargetGuid();
+            string xcodeTarget = xcodeProject.GetUnityMainTargetGuid();
 #else
             string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
 #endif
-            
-            UnityEngine.Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: AdSupport.framework added successfully.");
+            HandlePlistIosChanges(projectPath);
 
-            UnityEngine.Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: iAd.framework added successfully.");
-
-            UnityEngine.Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: AdServices.framework added successfully.");
-
-            UnityEngine.Debug.Log("[Adjust]: Adding CoreTelephony.framework to Xcode project.");
-            xcodeProject.AddFrameworkToProject(xcodeTarget, "CoreTelephony.framework", true);
-            UnityEngine.Debug.Log("[Adjust]: CoreTelephony.framework added successfully.");
-
-            if (AdjustSettings.IsiOS14ProcessingEnabled)
+            if (AdjustSettings.iOSUniversalLinksDomains.Length > 0)
             {
-                UnityEngine.Debug.Log("[Adjust]: Xcode project being built with iOS 14 support.");
+                AddUniversalLinkDomains(xcodeProject, xcodeProjectPath, xcodeTarget);
+            }
 
-                UnityEngine.Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
+            // If enabled by the user, Adjust SDK will try to add following frameworks to your project:
+            // - AdSupport.framework (needed for access to IDFA value)
+            // - iAd.framework (needed in case you are running ASA campaigns)
+            // - AdServices.framework (needed in case you are running ASA campaigns)
+            // - StoreKit.framework (needed for communication with SKAdNetwork framework)
+            // - AppTrackingTransparency.framework (needed for information about user's consent to be tracked)
+            // In case you don't need any of these, feel free to remove them from your app.
+
+            if (AdjustSettings.iOSFrameworkAdSupport)
+            {
+                Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
+                Debug.Log("[Adjust]: AdSupport.framework added successfully.");
+            }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping AdSupport.framework linking.");
+            }
+            if (AdjustSettings.iOSFrameworkiAd)
+            {
+                Debug.Log("[Adjust]: Adding iAd.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "iAd.framework", true);
+                Debug.Log("[Adjust]: iAd.framework added successfully.");
+            }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping iAd.framework linking.");
+            }
+            if (AdjustSettings.iOSFrameworkAdServices)
+            {
+                Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
+                xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
+                Debug.Log("[Adjust]: AdServices.framework added successfully.");
+            }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping AdServices.framework linking.");
+            }
+            if (AdjustSettings.iOSFrameworkStoreKit)
+            {
+                Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
-                UnityEngine.Debug.Log("[Adjust]: StoreKit.framework added successfully.");
-
-                UnityEngine.Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
+                Debug.Log("[Adjust]: StoreKit.framework added successfully.");
+            }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping StoreKit.framework linking.");
+            }
+            if (AdjustSettings.iOSFrameworkAppTrackingTransparency)
+            {
+                Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
                 xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
-                UnityEngine.Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+                Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
+            }
+            else
+            {
+                Debug.Log("[Adjust]: Skipping AppTrackingTransparency.framework linking.");
             }
 
             // The Adjust SDK needs to have Obj-C exceptions enabled.
             // GCC_ENABLE_OBJC_EXCEPTIONS=YES
-
-            UnityEngine.Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
+            Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
             xcodeProject.AddBuildProperty(xcodeTarget, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
-
-            UnityEngine.Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
+            Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
 
             // The Adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
-            
-            UnityEngine.Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS).");
-            xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
+            //
+            // Seems that in newer Unity IDE versions adding -ObjC flag to Unity-iPhone target doesn't do the trick.
+            // Adding -ObjC to UnityFramework target however does make things work nicely again.
+            // This happens because Unity is linking SDK's static library into UnityFramework target.
+            // Check for presence of UnityFramework target and if there, include -ObjC flag inside of it.
 
-            UnityEngine.Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
+            Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS) of Unity-iPhone target.");
+            xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
+            Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
+            string xcodeTargetUnityFramework = xcodeProject.TargetGuidByName("UnityFramework");
+            if (!string.IsNullOrEmpty(xcodeTargetUnityFramework))
+            {
+                Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS) of UnityFramework target.");
+                xcodeProject.AddBuildProperty(xcodeTargetUnityFramework, "OTHER_LDFLAGS", "-ObjC");
+                Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
+            }
 
             if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/iOS/AdjustSigSdk.a"))
             {
@@ -222,335 +215,127 @@ public class AdjustEditor : AssetPostprocessor
         }
     }
 
-    private static void RunPostProcessTasksiOS(string projectPath) {}
-
-    private static void RunPostProcessTasksAndroid()
+#if UNITY_IOS
+    private static void HandlePlistIosChanges(string projectPath)
     {
-        bool isAdjustManifestUsed = false;
-        string androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
-        string adjustManifestPath = Path.Combine(Application.dataPath, "Adjust/Android/AdjustAndroidManifest.xml");
-        string appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
+        const string UserTrackingUsageDescriptionKey = "NSUserTrackingUsageDescription";
 
-        // Check if user has already created AndroidManifest.xml file in its location.
-        // If not, use already predefined AdjustAndroidManifest.xml as default one.
-        if (!File.Exists(appManifestPath))
+        // Check if needs to do any info plist change.
+        bool hasUserTrackingDescription =
+            !string.IsNullOrEmpty(AdjustSettings.iOSUserTrackingUsageDescription);
+        bool hasUrlSchemesDeepLinksEnabled = AdjustSettings.iOSUrlSchemes.Length > 0;
+
+        if (!hasUserTrackingDescription && !hasUrlSchemesDeepLinksEnabled)
         {
-            if (!Directory.Exists(androidPluginsPath))
-            {
-                Directory.CreateDirectory(androidPluginsPath);
-            }
-
-            isAdjustManifestUsed = true;
-            File.Copy(adjustManifestPath, appManifestPath);
-
-            UnityEngine.Debug.Log("[Adjust]: User defined AndroidManifest.xml file not found in Plugins/Android folder.");
-            UnityEngine.Debug.Log("[Adjust]: Creating default app's AndroidManifest.xml from AdjustAndroidManifest.xml file.");
-        }
-        else
-        {
-            UnityEngine.Debug.Log("[Adjust]: User defined AndroidManifest.xml file located in Plugins/Android folder.");
+            return;
         }
 
-        // If Adjust manifest is used, we have already set up everything in it so that 
-        // our native Android SDK can be used properly.
-        if (!isAdjustManifestUsed)
+        // Get and read info plist.
+        var plistPath = Path.Combine(projectPath, "Info.plist");
+        var plist = new PlistDocument();
+        plist.ReadFromFile(plistPath);
+        var plistRoot = plist.root;
+
+        // Do the info plist changes.
+        if (hasUserTrackingDescription)
         {
-            // However, if you already had your own AndroidManifest.xml, we'll now run
-            // some checks on it and tweak it a bit if needed to add some stuff which
-            // our native Android SDK needs so that it can run properly.
-
-            // Let's open the app's AndroidManifest.xml file.
-            XmlDocument manifestFile = new XmlDocument();
-            manifestFile.Load(appManifestPath);
-            
-            bool manifestHasChanged = false;
-            
-            // Add needed permissions if they are missing.
-            manifestHasChanged |= AddPermissions(manifestFile);
-
-            // Add intent filter to main activity if it is missing.
-            manifestHasChanged |= AddBroadcastReceiver(manifestFile);
-
-            if (manifestHasChanged)
+            if (plistRoot[UserTrackingUsageDescriptionKey] != null)
             {
-                // Save the changes.
-                manifestFile.Save(appManifestPath);
-
-                // Clean the manifest file.
-                CleanManifestFile(appManifestPath);
-
-                UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check and potential modification completed.");
-                UnityEngine.Debug.Log("[Adjust]: Please check if any error message was displayed during this process " 
-                                      + "and make sure to fix all issues in order to properly use the Adjust SDK in your app.");                
+                Debug.Log("[Adjust]: Overwritting User Tracking Usage Description.");
             }
-            else
-            {
-                UnityEngine.Debug.Log("[Adjust]: App's AndroidManifest.xml file check completed.");
-                UnityEngine.Debug.Log("[Adjust]: No modifications performed due to app's AndroidManifest.xml file compatibility.");
-            }
+            plistRoot.SetString(UserTrackingUsageDescriptionKey,
+                AdjustSettings.iOSUserTrackingUsageDescription);
+        }
+
+        if (hasUrlSchemesDeepLinksEnabled)
+        {
+            AddUrlSchemesIOS(plistRoot, AdjustSettings.iOSUrlIdentifier, AdjustSettings.iOSUrlSchemes);
+        }
+
+        // Write any info plist change.
+        File.WriteAllText(plistPath, plist.WriteToString());
+    }
+
+    private static void AddUrlSchemesIOS(PlistElementDict plistRoot, string urlIdentifier, string[] urlSchemes)
+    {
+        // Set Array for futher deeplink values.
+        var urlTypesArray = CreatePlistElementArray(plistRoot, "CFBundleURLTypes");
+
+        // Array will contain just one deeplink dictionary
+        var urlSchemesItems = CreatePlistElementDict(urlTypesArray);
+        urlSchemesItems.SetString("CFBundleURLName", urlIdentifier);
+        var urlSchemesArray = CreatePlistElementArray(urlSchemesItems, "CFBundleURLSchemes");
+
+        // Delete old deferred deeplinks URIs
+        Debug.Log("[Adjust]: Removing deeplinks that already exist in the array to avoid duplicates.");
+        foreach (var link in urlSchemes)
+        {
+            urlSchemesArray.values.RemoveAll(
+                element => element != null && element.AsString().Equals(link));
+        }
+
+        Debug.Log("[Adjust]: Adding new deep links.");
+        foreach (var link in urlSchemes.Distinct())
+        {
+            urlSchemesArray.AddString(link);
         }
     }
 
-    private static bool AddPermissions(XmlDocument manifest)
+    private static PlistElementArray CreatePlistElementArray(PlistElementDict root, string key)
     {
-        // The Adjust SDK needs two permissions to be added to you app's manifest file:
-        // <uses-permission android:name="android.permission.INTERNET" />
-        // <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-        // <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-        // <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
-
-        UnityEngine.Debug.Log("[Adjust]: Checking if all permissions needed for the Adjust SDK are present in the app's AndroidManifest.xml file.");
-
-        bool hasInternetPermission = false;
-        bool hasAccessWifiStatePermission = false;
-        bool hasAccessNetworkStatePermission = false;
-        bool hasInstallReferrerServicePermission = false;
-
-        XmlElement manifestRoot = manifest.DocumentElement;
-
-        // Check if permissions are already there.
-        foreach (XmlNode node in manifestRoot.ChildNodes)
+        if (!root.values.ContainsKey(key))
         {
-            if (node.Name == "uses-permission")
-            {
-                foreach (XmlAttribute attribute in node.Attributes)
-                {
-                    if (attribute.Value.Contains("android.permission.INTERNET"))
-                    {
-                        hasInternetPermission = true;
-                    }
-                    else if (attribute.Value.Contains("android.permission.ACCESS_WIFI_STATE"))
-                    {
-                        hasAccessWifiStatePermission = true;
-                    }
-                    else if (attribute.Value.Contains("android.permission.ACCESS_NETWORK_STATE"))
-                    {
-                        hasAccessNetworkStatePermission = true;
-                    }
-                    else if (attribute.Value.Contains("com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"))
-                    {
-                        hasInstallReferrerServicePermission = true;
-                    }
-                }
-            }
+            Debug.Log(string.Format("[Adjust]: {0} not found in Info.plist. Creating a new one.", key));
+            return root.CreateArray(key);
         }
-
-        bool manifestHasChanged = false;
-
-        // If android.permission.INTERNET permission is missing, add it.
-        if (!hasInternetPermission)
-        {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "android.permission.INTERNET");
-            manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: android.permission.INTERNET permission successfully added to your app's AndroidManifest.xml file.");
-            manifestHasChanged = true;
-        }
-        else
-        {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.INTERNET permission.");
-        }
-
-        // If android.permission.ACCESS_WIFI_STATE permission is missing, add it.
-        if (!hasAccessWifiStatePermission)
-        {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "android.permission.ACCESS_WIFI_STATE");
-            manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: android.permission.ACCESS_WIFI_STATE permission successfully added to your app's AndroidManifest.xml file.");
-            manifestHasChanged = true;
-        }
-        else
-        {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_WIFI_STATE permission.");
-        }
-
-        // If android.permission.ACCESS_NETWORK_STATE permission is missing, add it.
-        if (!hasAccessNetworkStatePermission)
-        {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "android.permission.ACCESS_NETWORK_STATE");
-            manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: android.permission.ACCESS_NETWORK_STATE permission successfully added to your app's AndroidManifest.xml file.");
-            manifestHasChanged = true;
-        }
-        else
-        {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains android.permission.ACCESS_NETWORK_STATE permission.");
-        }
-
-        // If com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
-        if (!hasInstallReferrerServicePermission)
-        {
-            XmlElement element = manifest.CreateElement("uses-permission");
-            element.SetAttribute("android__name", "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE");
-            manifestRoot.AppendChild(element);
-            UnityEngine.Debug.Log("[Adjust]: com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission successfully added to your app's AndroidManifest.xml file.");
-            manifestHasChanged = true;
-        }
-        else
-        {
-            UnityEngine.Debug.Log("[Adjust]: Your app's AndroidManifest.xml file already contains com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission.");
-        }
-
-        return manifestHasChanged;
+        var result = root.values[key].AsArray();
+        return result != null ? result : root.CreateArray(key);
     }
 
-    private static bool AddBroadcastReceiver(XmlDocument manifest)
+    private static PlistElementDict CreatePlistElementDict(PlistElementArray rootArray)
     {
-        // We're looking for existance of broadcast receiver in the AndroidManifest.xml
-        // Check out the example below how that usually looks like:
-
-        // <manifest
-        //     <!-- ... -->>
-        // 
-        //     <supports-screens
-        //         <!-- ... -->/>
-        // 
-        //     <application
-        //         <!-- ... -->>
-        //         <receiver
-        //             android:name="com.adjust.sdk.AdjustReferrerReceiver"
-        //             android:permission="android.permission.INSTALL_PACKAGES"
-        //             android:exported="true" >
-        //             
-        //             <intent-filter>
-        //                 <action android:name="com.android.vending.INSTALL_REFERRER" />
-        //             </intent-filter>
-        //         </receiver>
-        //         
-        //         <activity android:name="com.unity3d.player.UnityPlayerActivity"
-        //             <!-- ... -->
-        //         </activity>
-        //     </application>
-        // 
-        //     <!-- ... -->>
-        //
-        // </manifest>
-
-        UnityEngine.Debug.Log("[Adjust]: Checking if app's AndroidManifest.xml file contains receiver for INSTALL_REFERRER intent.");
-
-        XmlElement manifestRoot = manifest.DocumentElement;
-        XmlNode applicationNode = null;
-
-        // Let's find the application node.
-        foreach(XmlNode node in manifestRoot.ChildNodes)
+        if (rootArray.values.Count == 0)
         {
-            if (node.Name == "application")
-            {
-                applicationNode = node;
-                break;
-            }
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
+            return rootArray.AddDict();
         }
 
-        // If there's no applicatio node, something is really wrong with your AndroidManifest.xml.
-        if (applicationNode == null)
+        var urlSchemesItems = rootArray.values[0].AsDict();
+        Debug.Log("[Adjust]: Reading deeplinks array");
+        if (urlSchemesItems == null)
         {
-            UnityEngine.Debug.LogError("[Adjust]: Your app's AndroidManifest.xml file does not contain \"<application>\" node.");
-            UnityEngine.Debug.LogError("[Adjust]: Unable to add the Adjust broadcast receiver to AndroidManifest.xml.");
-            return false;
+            Debug.Log("[Adjust]: Deeplinks array doesn't contain dictionary for deeplinks. Creating a new one.");
+            urlSchemesItems = rootArray.AddDict();
         }
 
-        // Okay, there's an application node in the AndroidManifest.xml file.
-        // Let's now check if user has already defined a receiver which is listening to INSTALL_REFERRER intent.
-        // If that is already defined, don't force the Adjust broadcast receiver to the manifest file.
-        // If not, add the Adjust broadcast receiver to the manifest file.
-
-        List<XmlNode> customBroadcastReceiversNodes = getCustomRecieverNodes(applicationNode);
-        if (customBroadcastReceiversNodes.Count > 0)
-        {
-            bool foundAdjustBroadcastReceiver = false;
-            for (int i = 0; i < customBroadcastReceiversNodes.Count; i += 1)
-            {
-                foreach (XmlAttribute attribute in customBroadcastReceiversNodes[i].Attributes)
-                {
-                    if (attribute.Value.Contains("com.adjust.sdk.AdjustReferrerReceiver"))
-                    {
-                        foundAdjustBroadcastReceiver = true;
-                    }
-                }
-            }
-
-            if (!foundAdjustBroadcastReceiver)
-            {
-                UnityEngine.Debug.Log("[Adjust]: It seems like you are using your own broadcast receiver.");
-                UnityEngine.Debug.Log("[Adjust]: Please, add the calls to the Adjust broadcast receiver like described in here: https://github.com/adjust/android_sdk/blob/master/doc/english/referrer.md");
-            }
-            else
-            {
-                UnityEngine.Debug.Log("[Adjust]: It seems like you are already using Adjust broadcast receiver. Yay.");
-            }
-
-            return false;
-        }
-        else
-        {
-            // Generate Adjust broadcast receiver entry and add it to the application node.
-            XmlElement receiverElement = manifest.CreateElement("receiver");
-            receiverElement.SetAttribute("android__name", "com.adjust.sdk.AdjustReferrerReceiver");
-            receiverElement.SetAttribute("android__permission", "android.permission.INSTALL_PACKAGES");
-            receiverElement.SetAttribute("android__exported", "true");
-
-            XmlElement intentFilterElement = manifest.CreateElement("intent-filter");
-            XmlElement actionElement = manifest.CreateElement("action");
-            actionElement.SetAttribute("android__name", "com.android.vending.INSTALL_REFERRER");
-
-            intentFilterElement.AppendChild(actionElement);
-            receiverElement.AppendChild(intentFilterElement);
-            applicationNode.AppendChild(receiverElement);
-
-            UnityEngine.Debug.Log("[Adjust]: Adjust broadcast receiver successfully added to your app's AndroidManifest.xml file.");
-
-            return true;
-        }
+        return urlSchemesItems;
     }
 
-    private static void CleanManifestFile(String manifestPath)
+    private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
     {
-        // Due to XML writing issue with XmlElement methods which are unable
-        // to write "android:[param]" string, we have wrote "android__[param]" string instead.
-        // Now make the replacement: "android:[param]" -> "android__[param]"
+        string entitlementsFileName = "Unity-iPhone.entitlements";
 
-        TextReader manifestReader = new StreamReader(manifestPath);
-        string manifestContent = manifestReader.ReadToEnd();
-        manifestReader.Close();
-
-        Regex regex = new Regex("android__");
-        manifestContent = regex.Replace(manifestContent, "android:");
-
-        TextWriter manifestWriter = new StreamWriter(manifestPath);
-        manifestWriter.Write(manifestContent);
-        manifestWriter.Close();
-    }
-
-    private static List<XmlNode> getCustomRecieverNodes(XmlNode applicationNode)
-    {
-        List<XmlNode> nodes = new List<XmlNode>();
-        foreach (XmlNode node in applicationNode.ChildNodes)
+        Debug.Log("[Adjust]: Adding associated domains to entitlements file.");
+#if UNITY_2019_3_OR_NEWER
+        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, null, project.GetUnityMainTargetGuid());
+#else
+        var projectCapabilityManager = new ProjectCapabilityManager(xCodeProjectPath, entitlementsFileName, PBXProject.GetUnityTargetName());
+#endif
+        var uniqueDomains = AdjustSettings.iOSUniversalLinksDomains.Distinct().ToArray();
+        const string applinksPrefix = "applinks:";
+        for (int i = 0; i < uniqueDomains.Length; i++)
         {
-            if (node.Name == "receiver")
+            if (!uniqueDomains[i].StartsWith(applinksPrefix))
             {
-                foreach (XmlNode subnode in node.ChildNodes)
-                {
-                    if (subnode.Name == "intent-filter")
-                    {
-                        foreach (XmlNode subsubnode in subnode.ChildNodes)
-                        {
-                            if (subsubnode.Name == "action")
-                            {
-                                foreach (XmlAttribute attribute in subsubnode.Attributes)
-                                {
-                                    if (attribute.Value.Contains("com.android.vending.INSTALL_REFERRER"))
-                                    {
-                                        nodes.Add(node);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                uniqueDomains[i] = applinksPrefix + uniqueDomains[i];
             }
         }
-        return nodes;
+
+        projectCapabilityManager.AddAssociatedDomains(uniqueDomains);
+        projectCapabilityManager.WriteToFile();
+
+        Debug.Log("[Adjust]: Enabling Associated Domains capability with created entitlements file.");
+        project.AddCapability(xCodeTarget, PBXCapabilityType.AssociatedDomains, entitlementsFileName);
     }
+#endif
 }

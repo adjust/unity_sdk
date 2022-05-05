@@ -34,6 +34,8 @@ namespace com.adjust.sdk
         internal bool? isDeviceKnown;
         internal bool? sendInBackground;
         internal bool? eventBufferingEnabled;
+        internal bool? coppaCompliantEnabled;
+        internal bool? playStoreKidsAppEnabled;
         internal bool? allowSuppressLogLevel;
         internal bool? needsCost;
         internal bool launchDeferredDeeplink;
@@ -48,9 +50,10 @@ namespace com.adjust.sdk
         internal Action<int> conversionValueUpdatedDelegate;
 
         // Android specific members
+        internal string processName;
         internal bool? readImei;
         internal bool? preinstallTrackingEnabled;
-        internal string processName;
+        internal string preinstallFilePath;
         // iOS specific members
         internal bool? allowiAdInfoReading;
         internal bool? allowAdServicesInfoReading;
@@ -104,6 +107,16 @@ namespace com.adjust.sdk
         public void setEventBufferingEnabled(bool eventBufferingEnabled)
         {
             this.eventBufferingEnabled = eventBufferingEnabled;
+        }
+
+        public void setCoppaCompliantEnabled(bool coppaCompliantEnabled)
+        {
+            this.coppaCompliantEnabled = coppaCompliantEnabled;
+        }
+
+        public void setPlayStoreKidsAppEnabled(bool playStoreKidsAppEnabled)
+        {
+            this.playStoreKidsAppEnabled = playStoreKidsAppEnabled;
         }
 
         public void setNeedsCost(bool needsCost)
@@ -253,6 +266,11 @@ namespace com.adjust.sdk
         public void setPreinstallTrackingEnabled(bool preinstallTrackingEnabled)
         {
             this.preinstallTrackingEnabled = preinstallTrackingEnabled;
+        }
+
+        public void setPreinstallFilePath(string preinstallFilePath)
+        {
+            this.preinstallFilePath = preinstallFilePath;
         }
 
         // Windows specific methods.

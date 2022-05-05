@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.29.7";
+        private const string sdkPrefix = "unity4.30.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -80,6 +80,18 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setEventBufferingEnabled", ajoIsEnabled);
             }
 
+            // Check COPPA setting.
+            if (adjustConfig.coppaCompliantEnabled != null)
+            {
+                ajoAdjustConfig.Call("setCoppaCompliantEnabled", adjustConfig.coppaCompliantEnabled.Value);
+            }
+
+            // Check Play Store Kids Apps setting.
+            if (adjustConfig.playStoreKidsAppEnabled != null)
+            {
+                ajoAdjustConfig.Call("setPlayStoreKidsAppEnabled", adjustConfig.playStoreKidsAppEnabled.Value);
+            }
+
             // Check if user enabled tracking in the background.
             if (adjustConfig.sendInBackground != null)
             {
@@ -96,6 +108,12 @@ namespace com.adjust.sdk
             if (adjustConfig.preinstallTrackingEnabled != null)
             {
                 ajoAdjustConfig.Call("setPreinstallTrackingEnabled", adjustConfig.preinstallTrackingEnabled.Value);
+            }
+
+            // Check if user has set custom preinstall file path.
+            if (adjustConfig.preinstallFilePath != null)
+            {
+                ajoAdjustConfig.Call("setPreinstallFilePath", adjustConfig.preinstallFilePath);
             }
 
             // Check if user has set user agent value.

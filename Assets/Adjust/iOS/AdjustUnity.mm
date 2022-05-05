@@ -10,18 +10,16 @@
 #import "ADJEvent.h"
 #import "ADJConfig.h"
 #import "AdjustUnity.h"
+#import "AdjustUnityAppDelegate.h"
 #import "AdjustUnityDelegate.h"
 
 @implementation AdjustUnity
 
 #pragma mark - Object lifecycle methods
 
-- (id)init {
-    self = [super init];
-    if (nil == self) {
-        return nil;
-    }
-    return self;
++ (void)load {
+    // Swizzle AppDelegate on the load. It should be done as early as possible.
+    [AdjustUnityAppDelegate swizzleAppDelegateCallbacks];
 }
 
 @end
@@ -102,6 +100,7 @@ extern "C"
                           int allowIdfaReading,
                           int deactivateSkAdNetworkHandling,
                           int needsCost,
+                          int coppaCompliant,
                           int64_t secretId,
                           int64_t info1,
                           int64_t info2,
@@ -207,6 +206,11 @@ extern "C"
         // Cost data in attribution callback.
         if (needsCost != -1) {
             [adjustConfig setNeedsCost:(BOOL)needsCost];
+        }
+
+        // COPPA compliance.
+        if (coppaCompliant != -1) {
+            [adjustConfig setCoppaCompliantEnabled:(BOOL)coppaCompliant];
         }
 
         // User agent.
@@ -701,6 +705,10 @@ extern "C"
 
     void _AdjustUpdateConversionValue(int conversionValue) {
         [Adjust updateConversionValue:conversionValue];
+    }
+
+    void _AdjustCheckForNewAttStatus() {
+        [Adjust checkForNewAttStatus];
     }
 
     int _AdjustGetAppTrackingAuthorizationStatus() {
