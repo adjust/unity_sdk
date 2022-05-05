@@ -116,7 +116,7 @@ Add the prefab from `Assets/Adjust/Adjust.prefab` to the first scene.
 
 You can edit the Adjust script parameters in the prefab `Inspector menu` to set up varios options.
 
-![][prefab-sdk-settings]
+<img src="https://raw.github.com/adjust/sdks/master/Resources/unity/prefab-sdk-settings.png" width="500" height="700" />
 
 **Note:** You can chose to initialize Adjust SDK in two different ways:
 
