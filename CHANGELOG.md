@@ -16,6 +16,10 @@
 - [Android@v4.30.0][android_sdk_v4.30.0]
 - [Windows@v4.17.0][windows_sdk_v4.17.0]
 
+#### Kudos
+
+Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/evgenyKozlovAkvelon) for all the contributions to this release.
+
 ---
 
 ### Version 4.29.7 (4th March 2022)
