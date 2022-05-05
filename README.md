@@ -717,7 +717,6 @@ Currently we support the below `source` parameter values:
 - `AdjustConfig.AdjustAdRevenueSourceIronSource` - representing IronSource platform.
 - `AdjustConfig.AdjustAdRevenueSourceUnity` - representing Unity platform.
 - `AdjustConfig.AdjustAdRevenueSourceHeliumChartboost` - representing Helium Chartboost platform.
-- `AdjustConfig.AdjustAdRevenueSourcePublisher` - representing Generic platform.
 
 **Note**: Additional documentation which explains detailed integration with every of the supported sources will be provided outside of this README. Also, in order to use this feature, additional setup is needed for your app in Adjust dashboard, so make sure to get in touch with our support team to make sure that everything is set up correctly before you start to use this feature.
 
