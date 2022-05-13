@@ -12,8 +12,11 @@ If you want to track your ad revenue with the ironSource SDK, you can use our SD
 
 ### Example
 
+> Note: As of ironSource SDK 7.1.14.1, make sure to subscribe to `onImpressionDataReadyEvent` instead of `onImpressionSuccessEvent`.
+
 ```cs
-private void ImpressionSuccessEvent(IronSourceImpressionData impressionData)
+IronSourceEvents.onImpressionDataReadyEvent += ImpressionDataReadyEvent;
+private void ImpressionDataReadyEvent(IronSourceImpressionData impressionData)
 {
     AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceIronSource);
     adjustAdRevenue.setRevenue(impressionData.revenue, "USD");
