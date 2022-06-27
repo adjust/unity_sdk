@@ -258,17 +258,9 @@ One thing which is automatically being done as part of Android post-build proces
 
 ### <a id="qs-sdk-signature"></a>SDK signature
 
-An account manager can activate the Adjust SDK signature for you. Contact Adjust support at support@adjust.com if you want to use this feature.
+When you set up the SDK Signature, each SDK communication package is "signed". This lets Adjust’s servers easily detect and reject any install activity that is not legitimate. 
 
-If the SDK signature is enabled on your account and you have access to App Secrets in your dashboard, add all secret parameters (`secretId`, `info1`, `info2`, `info3`, `info4`) to the `setAppSecret` method of `AdjustConfig` instance:
-
-```cs
-AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", AdjustEnvironment.Sandbox);
-adjustConfig.setAppSecret(secretId, info1, info2, info3, info4);
-Adjust.start(adjustConfig);
-```
-
-The SDK signature is now integrated in your app. 
+There are just a few steps involved in setting up the SDK Signature. Please contact your Technical Account Manager or support@adjust.com to get started.
 
 ## Deeplinking
 
