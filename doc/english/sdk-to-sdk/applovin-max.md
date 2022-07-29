@@ -12,7 +12,17 @@ If you want to track your ad revenue with the AppLovin MAX SDK, you can use our 
 
 ### Example
 
+> Note: In order to successfully use SDK to SDK ad revenue tracking with MAX SDK, please make sure that your `AdjustConfig` instance you use for Adjust SDk initialization is configured so that [background tracking](../../../README.md#ad-background-tracking) is enabled.
+
 ```cs
+// Adjust SDK initialization
+AdjustConfig adjustConfig = new AdjustConfig("{YourAppToken}", AdjustEnvironment.Sandbox);
+adjustConfig.setSendInBackground(true);
+Adjust.start(adjustConfig);
+
+// ...
+
+// pass MAX SDK ad revenue data to Adjust SDK
 public static void OnInterstitialAdRevenuePaidEvent(string adUnitId)
 {
     var info = MaxSdk.GetAdInfo(adUnitId);
