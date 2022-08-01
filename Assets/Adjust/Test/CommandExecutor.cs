@@ -411,6 +411,7 @@ namespace com.adjust.sdk.test
                     _testLibrary.AddInfoToSend("costType", attribution.costType);
                     _testLibrary.AddInfoToSend("costAmount", attribution.costAmount.ToString());
                     _testLibrary.AddInfoToSend("costCurrency", attribution.costCurrency);
+                    _testLibrary.AddInfoToSend("fbInstallReferrer", attribution.fbInstallReferrer);
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
