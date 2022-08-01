@@ -371,6 +371,8 @@ namespace com.adjust.sdk
                 }
                 adjustAttribution.costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
                     null : ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
+                adjustAttribution.fbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
                 return adjustAttribution;
             }
             catch (Exception) {}
@@ -677,6 +679,8 @@ namespace com.adjust.sdk
                 }
                 adjustAttribution.costCurrency = attribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
                     null : attribution.Get<string>(AdjustUtils.KeyCostCurrency);
+                adjustAttribution.fbInstallReferrer = attribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
+                    null : attribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
                 callback(adjustAttribution);
             }
         }
