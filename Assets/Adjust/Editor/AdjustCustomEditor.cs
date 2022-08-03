@@ -40,6 +40,7 @@ namespace com.adjust.sdk
                 adjust.launchDeferredDeeplink = EditorGUILayout.Toggle("Launch Deferred Deep Link", adjust.launchDeferredDeeplink);
                 adjust.needsCost = EditorGUILayout.Toggle("Cost Data In Attribution Callback", adjust.needsCost);
                 adjust.coppaCompliant = EditorGUILayout.Toggle("COPPA Compliant", adjust.coppaCompliant);
+                adjust.linkMe = EditorGUILayout.Toggle("LinkMe", adjust.linkMe);
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
                 adjust.startDelay = EditorGUILayout.DoubleField("Start Delay", adjust.startDelay);
                 EditorGUILayout.LabelField("App Secret:", EditorStyles.label);
