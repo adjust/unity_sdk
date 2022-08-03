@@ -173,6 +173,14 @@ Adjust.start(adjustConfig);
 
 Since August 1st 2014, apps in the Google Play Store must use the [Google Advertising ID](https://developer.android.com/google/play-services/id.html) to uniquely identify devices. To allow the Adjust SDK to use the Google Advertising ID, make sure to add latest version of [`play-services-ads-identifier`](https://mvnrepository.com/artifact/com.google.android.gms/play-services-ads-identifier?repo=google) AAR into the `Assets/Plugins/Android` folder of your Unity project.
 
+If you are using `Google External Dependency Manager` plugin, you can also add this dependecy by stating it inside of your `Dependencies.xml` file:
+
+```xml
+<androidPackages>
+    <androidPackage spec="com.google.android.gms:play-services-ads-identifier:18.0.1" />
+</androidPackages>
+```
+
 #### Testing for the Google advertising ID
   
 To check whether the Adjust SDK is receiving the Google advertising ID, start your app by configuring the SDK to run in `sandbox` mode and set the log level to `verbose`. After that, track a session or an event in the app and check the list of parameters recorded in the verbose logs. If you see the `gps_adid` parameter, our SDK has successfully read the Google advertising ID.
@@ -207,6 +215,14 @@ Google introduced the Google Play Referrer API in order to provide a more reliab
 The Adjust post-build process makes sure that SDK will be able to capture the Google Play Store intent; you need take a few additional steps to add support for the new Google Play Referrer API.
 
 To add support for the Google Play Referrer API, download the latest [install referrer library](https://mvnrepository.com/artifact/com.android.installreferrer/installreferrer) AAR from Maven repository and place it into your `Plugins/Android` folder.
+
+If you are using `Google External Dependency Manager` plugin, you can also add this dependecy by stating it inside of your `Dependencies.xml` file:
+
+```xml
+<androidPackages>
+    <androidPackage spec="com.android.installreferrer:installreferrer:2.2" />
+</androidPackages>
+```
 
 #### <a id="qs-huawei-referrer-api"></a>Huawei Referrer API
 
