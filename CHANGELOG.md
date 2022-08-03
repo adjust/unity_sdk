@@ -1,7 +1,8 @@
-### Version 4.31.0 (xx August 2022)
+### Version 4.31.0 (3rd August 2022)
 #### Added
 - Added support for `LinkMe` feature.
 - Added support to get Facebook install referrer information in attribution callback.
+- Added README instructions about how to add Android dependencies via `Google External Dependency Manager` (https://github.com/adjust/unity_sdk/issues/229).
 
 #### Native SDKs
 - [iOS@v4.31.0][ios_sdk_v4.31.0]
