@@ -1,3 +1,16 @@
+### Version 4.31.0 (3rd August 2022)
+#### Added
+- Added support for `LinkMe` feature.
+- Added support to get Facebook install referrer information in attribution callback.
+- Added README instructions about how to add Android dependencies via `Google External Dependency Manager` (https://github.com/adjust/unity_sdk/issues/229).
+
+#### Native SDKs
+- [iOS@v4.31.0][ios_sdk_v4.31.0]
+- [Android@v4.31.0][android_sdk_v4.31.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.30.0 (5th May 2022)
 #### Added
 - Added all the missing SDK configuration settings into the Adjust prefab.
@@ -1012,6 +1025,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.29.6]: https://github.com/adjust/ios_sdk/tree/v4.29.6
 [ios_sdk_v4.29.7]: https://github.com/adjust/ios_sdk/tree/v4.29.7
 [ios_sdk_v4.30.0]: https://github.com/adjust/ios_sdk/tree/v4.30.0
+[ios_sdk_v4.31.0]: https://github.com/adjust/ios_sdk/tree/v4.31.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1052,6 +1066,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.28.8]: https://github.com/adjust/android_sdk/tree/v4.28.8
 [android_sdk_v4.29.1]: https://github.com/adjust/android_sdk/tree/v4.29.1
 [android_sdk_v4.30.0]: https://github.com/adjust/android_sdk/tree/v4.30.0
+[android_sdk_v4.31.0]: https://github.com/adjust/android_sdk/tree/v4.31.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

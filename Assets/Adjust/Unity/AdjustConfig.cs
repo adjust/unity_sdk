@@ -59,6 +59,7 @@ namespace com.adjust.sdk
         internal bool? allowAdServicesInfoReading;
         internal bool? allowIdfaReading;
         internal bool? skAdNetworkHandling;
+        internal bool? linkMeEnabled;
         // Windows specific members
         internal Action<String> logDelegate;
 
@@ -147,6 +148,11 @@ namespace com.adjust.sdk
         public void deactivateSKAdNetworkHandling()
         {
             this.skAdNetworkHandling = true;
+        }
+
+        public void setLinkMeEnabled(bool linkMeEnabled)
+        {
+            this.linkMeEnabled = linkMeEnabled;
         }
 
         public void setDeferredDeeplinkDelegate(Action<string> deferredDeeplinkDelegate, string sceneName = "Adjust")
