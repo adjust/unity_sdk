@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 415478}
-  - component: {fileID: 11482148}
+  - component: {fileID: 114179903453641630}
   m_Layer: 0
   m_Name: Adjust
   m_TagString: Untagged
@@ -29,7 +29,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &11482148
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 115478}
+  m_IsPrefabParent: 1
+--- !u!114 &114179903453641630
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -49,6 +60,7 @@ MonoBehaviour:
   launchDeferredDeeplink: 1
   needsCost: 0
   coppaCompliant: 0
+  linkMe: 0
   defaultTracker: 
   urlStrategy: 0
   startDelay: 0
@@ -64,14 +76,3 @@ MonoBehaviour:
   adServicesInfoReading: 1
   idfaInfoReading: 1
   skAdNetworkHandling: 1
---- !u!1001 &100100000
-Prefab:
-  m_ObjectHideFlags: 1
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications: []
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 115478}
-  m_IsPrefabParent: 1
