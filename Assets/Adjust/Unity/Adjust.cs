@@ -33,6 +33,8 @@ namespace com.adjust.sdk
         [HideInInspector]
         public bool coppaCompliant = false;
         [HideInInspector]
+        public bool linkMe = false;
+        [HideInInspector]
         public string defaultTracker;
         [HideInInspector]
         public AdjustUrlStrategy urlStrategy = AdjustUrlStrategy.Default;
@@ -121,6 +123,7 @@ namespace com.adjust.sdk
                 adjustConfig.setAllowIdfaReading(this.idfaInfoReading);
                 adjustConfig.setCoppaCompliantEnabled(this.coppaCompliant);
                 adjustConfig.setPlayStoreKidsAppEnabled(this.playStoreKidsApp);
+                adjustConfig.setLinkMeEnabled(this.linkMe);
                 if (!skAdNetworkHandling)
                 {
                     adjustConfig.deactivateSKAdNetworkHandling();
