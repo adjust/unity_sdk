@@ -14,7 +14,7 @@ if __name__ != "__main__":
 
 # ------------------------------------------------------------------
 # get arguments
-usage_message = 'Usage: python build_sdk.py [ios | android | windows] [otpional, to build test library too: --with-testlib | -tl]\n';
+usage_message = 'Usage: python build_sdk.py [ios | android | windows] [optional, to build test library too: --with-testlib | -tl]\n';
 if len(sys.argv) < 2:
     error('Error. Platform not provided.')
     debug(usage_message)
