@@ -94,7 +94,7 @@
 
 ### <a id="qs-get-sdk"></a>获取 SDK
 
-从版本 `4.19.2` 开始，您就可以将 Adjust SDK 从 [Unity Asset Store (Unity 资源商店)](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890) 添加至自己的应用了。您也可以从我们的 [releases page][releases] 下载最新版本。
+您可以在我们的 [发布页面][releases] 下载最新版本。
 
 ### <a id="qs-add-sdk"></a>添加 SDK 至您的项目
 
