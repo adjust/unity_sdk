@@ -818,6 +818,27 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static string getLastDeeplink()
+        {
+            if (IsEditor())
+            {
+                return string.Empty;
+            }
+
+#if UNITY_IOS
+            return AdjustiOS.GetLastDeeplink();
+#elif UNITY_ANDROID
+            Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Android platform.");
+            return string.Empty;
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Windows platform.");
+            return string.Empty;
+#else
+            Debug.Log(errorMsgPlatform);
+            return string.Empty;
+#endif
+        }
+
 #if UNITY_IOS
         public void GetNativeAttribution(string attributionData)
         {

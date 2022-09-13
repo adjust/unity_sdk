@@ -73,6 +73,7 @@ namespace com.adjust.sdk.test
                     case "thirdPartySharing": ThirdPartySharing(); break;
                     case "measurementConsent": MeasurementConsent(); break;
                     case "trackAdRevenueV2": TrackAdRevenueV2(); break;
+                    case "getLastDeeplink": GetLastDeeplink(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -945,6 +946,16 @@ namespace com.adjust.sdk.test
             }
 
             Adjust.trackAdRevenue(adRevenue);
+        }
+
+        private void GetLastDeeplink()
+        {
+#if UNITY_IOS
+            string localExtraPath = ExtraPath;
+            string lastDeeplink = Adjust.getLastDeeplink();
+            _testLibrary.AddInfoToSend("last_deeplink", lastDeeplink);
+            _testLibrary.SendInfoToServer(localExtraPath);            
+#endif
         }
 
         private void CommandNotFound(string className, string methodName)

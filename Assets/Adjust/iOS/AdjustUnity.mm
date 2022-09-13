@@ -742,6 +742,24 @@ extern "C"
         return [Adjust appTrackingAuthorizationStatus];
     }
 
+    char* _AdjustGetLastDeeplink() {
+        NSURL *lastDeeplink = [Adjust lastDeeplink];
+        if (nil == lastDeeplink) {
+            return NULL;
+        }
+        NSString *lastDeeplinkString = [lastDeeplink absoluteString];
+        if (nil == lastDeeplinkString) {
+            return NULL;
+        }
+        const char* lastDeeplinkCString = [lastDeeplinkString UTF8String];
+        if (NULL == lastDeeplinkCString) {
+            return NULL;
+        }
+
+        char* lastDeeplinkCStringCopy = strdup(lastDeeplinkCString);
+        return lastDeeplinkCStringCopy;
+    }
+
     void _AdjustSetTestOptions(const char* baseUrl,
                                const char* gdprUrl,
                                const char* subscriptionUrl,
