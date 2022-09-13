@@ -141,7 +141,7 @@ namespace com.adjust.sdk
             string jsonPartnerParameters);
 
         [DllImport("__Internal")]
-        private static extern void _AdjustTrackThirdPartySharing(int enabled, string jsonGranularOptions);
+        private static extern void _AdjustTrackThirdPartySharing(int enabled, string jsonGranularOptions, string jsonPartnerSharingSettings);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackMeasurementConsent(int enabled);
@@ -388,8 +388,14 @@ namespace com.adjust.sdk
                 jsonGranularOptions.Add(entry.Key);
                 jsonGranularOptions.Add(AdjustUtils.ConvertListToJson(entry.Value));
             }
+            List<string> jsonPartnerSharingSettings = new List<string>();
+            foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.partnerSharingSettings)
+            {
+                jsonPartnerSharingSettings.Add(entry.Key);
+                jsonPartnerSharingSettings.Add(AdjustUtils.ConvertListToJson(entry.Value));
+            }
 
-            _AdjustTrackThirdPartySharing(enabled, AdjustUtils.ConvertListToJson(jsonGranularOptions));
+            _AdjustTrackThirdPartySharing(enabled, AdjustUtils.ConvertListToJson(jsonGranularOptions), AdjustUtils.ConvertListToJson(jsonPartnerSharingSettings));
         }
 
         public static void TrackMeasurementConsent(bool enabled)

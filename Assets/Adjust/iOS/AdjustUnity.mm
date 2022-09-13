@@ -662,7 +662,7 @@ extern "C"
         [Adjust trackSubscription:subscription];
     }
 
-    void _AdjustTrackThirdPartySharing(int enabled, const char* jsonGranularOptions) {
+    void _AdjustTrackThirdPartySharing(int enabled, const char* jsonGranularOptions, const char* jsonPartnerSharingSettings) {
         NSNumber *nEnabled = enabled >= 0 ? [NSNumber numberWithInt:enabled] : nil;
         ADJThirdPartySharing *adjustThirdPartySharing = [[ADJThirdPartySharing alloc] initWithIsEnabledNumberBool:nEnabled];
 
@@ -680,8 +680,29 @@ extern "C"
                         // in here we have partner and key-value pair for it
                         for (int j = 0; j < [partnerGranularOptions count];) {
                             [adjustThirdPartySharing addGranularOption:partnerName
-                                                     key:partnerGranularOptions[j++]
-                                                     value:partnerGranularOptions[j++]];
+                                                                   key:partnerGranularOptions[j++]
+                                                                 value:partnerGranularOptions[j++]];
+                        }
+                    }
+                }
+            }
+        }
+        NSArray *arrayPartnerSharingSettings = convertArrayParameters(jsonPartnerSharingSettings);
+        if (arrayPartnerSharingSettings != nil) {
+            NSUInteger count = [arrayPartnerSharingSettings count];
+            for (int i = 0; i < count;) {
+                NSString *partnerName = arrayPartnerSharingSettings[i++];
+                NSString *sharingSettings = arrayPartnerSharingSettings[i++];
+                // sharingSettings is now NSString which pretty much contains array of partner key-value pairs
+                if (sharingSettings != nil) {
+                    NSData *dataJson = [sharingSettings dataUsingEncoding:NSUTF8StringEncoding];
+                    NSArray *partnerSharingSettings = [NSJSONSerialization JSONObjectWithData:dataJson options:0 error:nil];
+                    if (partnerSharingSettings != nil) {
+                        // in here we have partner and key-value pair for it
+                        for (int j = 0; j < [partnerSharingSettings count];) {
+                            [adjustThirdPartySharing addPartnerSharingSetting:partnerName
+                                                                          key:partnerSharingSettings[j++]
+                                                                        value:[partnerSharingSettings[j++] boolValue]];
                         }
                     }
                 }

@@ -864,6 +864,18 @@ namespace com.adjust.sdk.test
                 }
             }
 
+            if (_command.ContainsParameter("partnerSharingSettings"))
+            {
+                var partnerSharingSettings = _command.Parameters["partnerSharingSettings"];
+                for (var i = 0; i < partnerSharingSettings.Count; i += 3)
+                {
+                    var partnerName = partnerSharingSettings[i];
+                    var key = partnerSharingSettings[i+1];
+                    var value = partnerSharingSettings[i+2];
+                    adjustThirdPartySharing.addPartnerSharingSetting(partnerName, key, bool.Parse(value));
+                }
+            }
+
             Adjust.trackThirdPartySharing(adjustThirdPartySharing);
         }
 
