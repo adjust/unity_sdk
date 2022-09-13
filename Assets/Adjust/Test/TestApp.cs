@@ -46,7 +46,7 @@ namespace com.adjust.sdk.test
             // testLibrary.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
             // testLibrary.AddTest("Test_AdRevenue_ad_revenue_v2");
             // testLibrary.AddTest("Test_AdRevenue_ad_revenue_v2_invalid");
-            testLibrary.AddTestDirectory ("third-party-sharing");
+            // testLibrary.AddTestDirectory ("third-party-sharing");
 
             Log("Starting test session.");
             testLibrary.StartTestSession();

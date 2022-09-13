@@ -180,6 +180,9 @@ namespace com.adjust.sdk
         [DllImport("__Internal")]
         private static extern void _AdjustTrackSubsessionEnd();
 
+        [DllImport("__Internal")]
+        private static extern string _AdjustGetLastDeeplink();
+
         public AdjustiOS() {}
 
         public static void Start(AdjustConfig adjustConfig)
@@ -464,6 +467,11 @@ namespace com.adjust.sdk
 
             var attribution = new AdjustAttribution(attributionString);
             return attribution;
+        }
+
+        public static string GetLastDeeplink()
+        {
+            return _AdjustGetLastDeeplink();
         }
 
         // Used for testing only.
