@@ -94,7 +94,7 @@ Unity 프로젝트에 Adjust SDK를 연동하려면 다음과 같이 실행하�
 
 ### <a id="qs-get-sdk"></a>SDK 설치
 
-`4.19.2` 버전부터는 [Unity 에셋 스토어](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890)에서 Adjust SDK를 앱에 추가할 수 있습니다. Adjust [릴리스 페이지][릴리스]에서 최신 버전을 다운로드할 수도 있습니다.
+최신 버전은 [Adjust releases 페이지](https://github.com/adjust/unity_sdk/releases)에서 다운로드하실 수 있습니다.
 
 ### <a id="qs-add-sdk"></a>프로젝트에 SDK 추가
 
