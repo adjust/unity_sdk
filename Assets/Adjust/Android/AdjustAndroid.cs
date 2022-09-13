@@ -581,6 +581,17 @@ namespace com.adjust.sdk
                 }
             }
 
+            if (thirdPartySharing.partnerSharingSettings != null)
+            {
+                foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.partnerSharingSettings)
+                {
+                    for (int i = 0; i < entry.Value.Count;)
+                    {
+                        ajoAdjustThirdPartySharing.Call("addPartnerSharingSetting", entry.Key, entry.Value[i++], bool.Parse(entry.Value[i++]));
+                    }
+                }
+            }
+
             ajcAdjust.CallStatic("trackThirdPartySharing", ajoAdjustThirdPartySharing);
         }
 
