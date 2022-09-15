@@ -1,4 +1,4 @@
-### Version 4.32.0 (14th September 2022)
+### Version 4.32.0 (16th September 2022)
 #### Added
 - Added partner sharing settings to the third party sharing feature.
 - Added `getLastDeeplink` getter to `Adjust` API to be able to get last tracked deep link by the SDK for iOS platform.
