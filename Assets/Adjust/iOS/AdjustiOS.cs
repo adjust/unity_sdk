@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.31.0";
+        private const string sdkPrefix = "unity4.32.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -141,7 +141,7 @@ namespace com.adjust.sdk
             string jsonPartnerParameters);
 
         [DllImport("__Internal")]
-        private static extern void _AdjustTrackThirdPartySharing(int enabled, string jsonGranularOptions);
+        private static extern void _AdjustTrackThirdPartySharing(int enabled, string jsonGranularOptions, string jsonPartnerSharingSettings);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackMeasurementConsent(int enabled);
@@ -179,6 +179,9 @@ namespace com.adjust.sdk
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackSubsessionEnd();
+
+        [DllImport("__Internal")]
+        private static extern string _AdjustGetLastDeeplink();
 
         public AdjustiOS() {}
 
@@ -388,8 +391,14 @@ namespace com.adjust.sdk
                 jsonGranularOptions.Add(entry.Key);
                 jsonGranularOptions.Add(AdjustUtils.ConvertListToJson(entry.Value));
             }
+            List<string> jsonPartnerSharingSettings = new List<string>();
+            foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.partnerSharingSettings)
+            {
+                jsonPartnerSharingSettings.Add(entry.Key);
+                jsonPartnerSharingSettings.Add(AdjustUtils.ConvertListToJson(entry.Value));
+            }
 
-            _AdjustTrackThirdPartySharing(enabled, AdjustUtils.ConvertListToJson(jsonGranularOptions));
+            _AdjustTrackThirdPartySharing(enabled, AdjustUtils.ConvertListToJson(jsonGranularOptions), AdjustUtils.ConvertListToJson(jsonPartnerSharingSettings));
         }
 
         public static void TrackMeasurementConsent(bool enabled)
@@ -458,6 +467,11 @@ namespace com.adjust.sdk
 
             var attribution = new AdjustAttribution(attributionString);
             return attribution;
+        }
+
+        public static string GetLastDeeplink()
+        {
+            return _AdjustGetLastDeeplink();
         }
 
         // Used for testing only.

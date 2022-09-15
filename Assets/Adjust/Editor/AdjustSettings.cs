@@ -23,7 +23,7 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private bool _androidPermissionInstallReferrerService = true;
     [SerializeField]
-    private bool _androidPermissionAdId = false;
+    private bool _androidPermissionAdId = true;
     [SerializeField]
     private bool _androidPermissionAccessNetworkState = false;
     [SerializeField]
