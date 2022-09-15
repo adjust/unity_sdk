@@ -94,7 +94,7 @@ Adjust SDKをUnityプロジェクトに連携させるステップをご説明�
 
 ### <a id="qs-get-sdk"></a> SDKダウンロード
 
-バージョン`4.19.2` 以降より、[Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/adjust-sdk-160890)からAdjust SDKをアプリに追加できます。または、[リリースページ][リリース]から最新バージョンをダウンロードすることもできます。
+[リリースページ](https://github.com/adjust/unity_sdk/releases)より最新バージョンをダウンロードしてください。
 
 ### <a id="qs-add-sdk"></a> プロジェクトにSDKを追加
 

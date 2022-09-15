@@ -12,11 +12,11 @@ namespace com.adjust.sdk.test
 #if UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
-        private const string IP = "192.168.86.43";
+        private const string IP = "192.168.86.44";
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string IP = "192.168.86.43";
+        private const string IP = "192.168.86.44";
         private TestLibraryiOS _testLibraryiOS;
 #else
         private const string PORT = ":8080";
@@ -46,7 +46,7 @@ namespace com.adjust.sdk.test
             // testLibrary.AddTest("current/eventBuffering/Test_EventBuffering_sensitive_packets");
             // testLibrary.AddTest("Test_AdRevenue_ad_revenue_v2");
             // testLibrary.AddTest("Test_AdRevenue_ad_revenue_v2_invalid");
-            // testLibrary.AddTestDirectory ("current/deeplink-deferred");
+            // testLibrary.AddTestDirectory ("third-party-sharing");
 
             Log("Starting test session.");
             testLibrary.StartTestSession();

@@ -73,6 +73,7 @@ namespace com.adjust.sdk.test
                     case "thirdPartySharing": ThirdPartySharing(); break;
                     case "measurementConsent": MeasurementConsent(); break;
                     case "trackAdRevenueV2": TrackAdRevenueV2(); break;
+                    case "getLastDeeplink": GetLastDeeplink(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -864,6 +865,18 @@ namespace com.adjust.sdk.test
                 }
             }
 
+            if (_command.ContainsParameter("partnerSharingSettings"))
+            {
+                var partnerSharingSettings = _command.Parameters["partnerSharingSettings"];
+                for (var i = 0; i < partnerSharingSettings.Count; i += 3)
+                {
+                    var partnerName = partnerSharingSettings[i];
+                    var key = partnerSharingSettings[i+1];
+                    var value = partnerSharingSettings[i+2];
+                    adjustThirdPartySharing.addPartnerSharingSetting(partnerName, key, bool.Parse(value));
+                }
+            }
+
             Adjust.trackThirdPartySharing(adjustThirdPartySharing);
         }
 
@@ -933,6 +946,16 @@ namespace com.adjust.sdk.test
             }
 
             Adjust.trackAdRevenue(adRevenue);
+        }
+
+        private void GetLastDeeplink()
+        {
+#if UNITY_IOS
+            string localExtraPath = ExtraPath;
+            string lastDeeplink = Adjust.getLastDeeplink();
+            _testLibrary.AddInfoToSend("last_deeplink", lastDeeplink);
+            _testLibrary.SendInfoToServer(localExtraPath);            
+#endif
         }
 
         private void CommandNotFound(string className, string methodName)
