@@ -206,7 +206,14 @@ public class AdjustEditor : AssetPostprocessor
 
             if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/iOS/AdjustSigSdk.a"))
             {
-                xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-force_load $(PROJECT_DIR)/Libraries/Adjust/iOS/AdjustSigSdk.a");
+                if (!string.IsNullOrEmpty(xcodeTargetUnityFramework))
+                {
+                    xcodeProject.AddBuildProperty(xcodeTargetUnityFramework, "OTHER_LDFLAGS", "-force_load $(PROJECT_DIR)/Libraries/Adjust/iOS/AdjustSigSdk.a");
+                }
+                else
+                {
+                    xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-force_load $(PROJECT_DIR)/Libraries/Adjust/iOS/AdjustSigSdk.a");
+                }
             }
 
             // Save the changes to Xcode project file.
