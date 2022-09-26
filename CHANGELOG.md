@@ -1,4 +1,4 @@
-### Version 4.32.1 (21st September 2022)
+### Version 4.32.1 (26th September 2022)
 #### Fixed
 - Fixed issue where signature was not being loaded for Unity IDE versions which are using `UnityFramework` Xcode target.
 
