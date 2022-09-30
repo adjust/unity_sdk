@@ -148,7 +148,7 @@ namespace com.adjust.sdk
 
         public void deactivateSKAdNetworkHandling()
         {
-            this.skAdNetworkHandling = true;
+            this.skAdNetworkHandling = false;
         }
 
         public void setLinkMeEnabled(bool linkMeEnabled)
