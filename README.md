@@ -1,4 +1,4 @@
-Note: This is Monumental's fork of https://github.com/adjust/unity_sdk. At the time of its creation the SDK's support for installation via Unity Package Manager was experimentally and only partially complete.
+Note: This is Monumental's fork of https://github.com/adjust/unity_sdk. At the time of its creation the SDK's support for installation via Unity Package Manager was experimental and only partially complete. This repo's purpose is to maintain an up to date copy that supports UPM, to be used in Mythgard and other Monumental games.
 
 Monumental Changes:
 - Merge asmdef branch into main
