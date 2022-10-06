@@ -2,6 +2,7 @@ Note: This is Monumental's fork of https://github.com/adjust/unity_sdk. At the t
 
 Monumental Changes:
 - Merge asmdef branch into main
+- Deletion of two Json.net DLLs included in the repo that conflict with standalone copies, if your project does not have a standalone copy of that package it should be added to your project via UPM: com.unity.nuget.newtonsoft-json
 
 ## Summary
 
