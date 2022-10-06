@@ -7,11 +7,11 @@ This is Monumental's fork of https://github.com/adjust/unity_sdk. At the time of
 - Deletion of two Json.net DLLs included in the repo that conflict with standalone copies, if your project does not have a standalone copy of that package it should be added to your project via UPM: com.unity.nuget.newtonsoft-json
 - Modified AdjustSettings.cs to genreate the AdjustSettings.asset scriptable object at /Assets/Editor/Adjust/ rather than within the package where it is immutable
 
-To add this to you project:
-Go to Package Manager, press the + button in the top left, then click "Add package from Git URL"
-Use this URL for main SDK: https://github.com/uerceg/unity_sdk.git?path=Assets/Adjust
-Use this URL for IMEI plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustImei (optional, not tested)
-Use this URL for OAID plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustOaid (optional, not tested)
+**To add this to you project:**
+- Go to Package Manager, press the + button in the top left, then click "Add package from Git URL":
+- Use this URL for main SDK: https://github.com/uerceg/unity_sdk.git?path=Assets/Adjust
+- Use this URL for IMEI plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustImei (optional, not tested)
+- Use this URL for OAID plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustOaid (optional, not tested)
 
 Original Adjust README begins here:
 
