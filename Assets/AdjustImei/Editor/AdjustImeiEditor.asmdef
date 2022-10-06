@@ -1,0 +1,8 @@
+{
+    "name": "AdjustImeiEditor",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

@@ -1,0 +1,10 @@
+{
+    "name": "AdjustEditor",
+    "references": [
+        "Adjust"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

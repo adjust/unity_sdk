@@ -1,0 +1,8 @@
+{
+    "name": "AdjustOaidEditor",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

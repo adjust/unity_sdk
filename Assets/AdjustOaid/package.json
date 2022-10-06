@@ -1,0 +1,20 @@
+{
+    "name": "com.adjust.sdk.oaid",
+    "version": "4.31.0",
+    "displayName": "AdjustOaid",
+    "description": "Adjust OAID Unity SDK plugin.",
+    "unity": "2019.4",
+    "unityRelease": "18f1",
+    "dependencies": {
+
+    },
+    "keywords": [
+        "Adjust",
+        "AdjustOaid"
+    ],
+    "author": {
+        "name": "Adjust",
+        "email": "sdk@adjust.com",
+        "url": "https://github.com/adjust/unity_sdk/"
+    }
+}
