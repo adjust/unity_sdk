@@ -1,5 +1,6 @@
 // Inspired by: https://github.com/facebook/facebook-sdk-for-unity/blob/master/Facebook.Unity.Settings/FacebookSettings.cs
 
+using System.IO;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -45,7 +46,13 @@ public class AdjustSettings : ScriptableObject
 
             if (instance == null)
             {
-                instance = ScriptableObject.CreateInstance<AdjustSettings>();
+                string directoryPath = new FileInfo(AssetPath).Directory.FullName;
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+                
+                instance = CreateInstance<AdjustSettings>();
                 AssetDatabase.CreateAsset(instance, AssetPath);
             }
 
