@@ -34,7 +34,6 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
 ### Quick start
 
    * [Getting started](#qs-getting-started)
-      * [Get the SDK](#qs-get-sdk)
       * [Add the SDK to your project](#qs-add-sdk)
       * [Integrate the SDK into your app](#qs-integrate-sdk)
       * [Adjust logging](#qs-adjust-logging)
@@ -121,13 +120,9 @@ Read this in other languages: [English][en-readme], [中文][zh-readme], [日本
 
 To integrate the Adjust SDK into your Unity project, follow these steps.
 
-### <a id="qs-get-sdk"></a>Get the SDK
-
-You can download the latest version from our [releases page][releases].
-
 ### <a id="qs-add-sdk"></a>Add the SDK to your project
 
-Open your project in the Unity Editor, go to `Assets → Import Package → Custom Package` and select the downloaded Unity package file.
+Monumental change: See the Monumental Note above to learn how to add this to your project via UPM.
 
 ### <a id="qs-integrate-sdk"></a>Integrate the SDK into your app
 
