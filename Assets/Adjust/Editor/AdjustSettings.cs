@@ -35,7 +35,7 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private string[] androidUriSchemes = new string[0];
 
-    private const string assetPath = "/Assets/Editor/Adjust/AdjustSettings.asset";
+    private const string AssetPath = "Assets/Editor/Adjust/AdjustSettings.asset";
 
     public static AdjustSettings Instance
     {
@@ -46,7 +46,7 @@ public class AdjustSettings : ScriptableObject
             if (instance == null)
             {
                 instance = ScriptableObject.CreateInstance<AdjustSettings>();
-                AssetDatabase.CreateAsset(instance, assetPath);
+                AssetDatabase.CreateAsset(instance, AssetPath);
             }
 
             return instance;
@@ -59,7 +59,7 @@ public class AdjustSettings : ScriptableObject
         {
             if (instance == null)
             {
-                instance = (AdjustSettings)AssetDatabase.LoadAssetAtPath(assetPath, typeof(AdjustSettings));
+                instance = (AdjustSettings)AssetDatabase.LoadAssetAtPath(AssetPath, typeof(AdjustSettings));
             }
 
             return instance;
