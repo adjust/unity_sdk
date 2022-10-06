@@ -1,3 +1,8 @@
+Note: This is Monumental's fork of https://github.com/adjust/unity_sdk. At the time of its creation the SDK's support for installation via Unity Package Manager was experimentally and only partially complete.
+
+Monumental Changes:
+- Merge asmdef branch into main
+
 ## Summary
 
 This is the Unity SDK of Adjust™. It supports iOS, Android, Windows Store 8.1 and Windows 10 targets. You can read more about Adjust™ at [adjust.com]. 
