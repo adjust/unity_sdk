@@ -8,7 +8,7 @@ This is Monumental's fork of https://github.com/adjust/unity_sdk. At the time of
 - Modified AdjustSettings.cs to genreate the AdjustSettings.asset scriptable object at /Assets/Editor/Adjust/ rather than within the package where it is immutable
 
 To add this to you project:
-1. Go to Package Manager -> + -> Add package from Git URL
+Go to Package Manager, press the + button in the top left, then click "Add package from Git URL"
 Use this URL for main SDK: https://github.com/uerceg/unity_sdk.git?path=Assets/Adjust
 Use this URL for IMEI plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustImei (optional, not tested)
 Use this URL for OAID plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustOaid (optional, not tested)
