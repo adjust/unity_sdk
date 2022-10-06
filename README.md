@@ -2,7 +2,7 @@
 
 This is Monumental's fork of https://github.com/adjust/unity_sdk. At the time of its creation the SDK's support for installation via Unity Package Manager was experimental and only partially complete. This repo's purpose is to maintain an up to date copy that supports UPM, to be used in Mythgard and other Monumental games.
 
-Monumental Changes:
+**Monumental Changes:**
 - Merge asmdef branch into main
 - Deletion of two Json.net DLLs included in the repo that conflict with standalone copies, if your project does not have a standalone copy of that package it should be added to your project via UPM: com.unity.nuget.newtonsoft-json
 - Modified AdjustSettings.cs to genreate the AdjustSettings.asset scriptable object at /Assets/Editor/Adjust/ rather than within the package where it is immutable
