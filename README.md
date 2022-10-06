@@ -11,9 +11,9 @@ This is Monumental's fork of https://github.com/adjust/unity_sdk. At the time of
 **To add this to your project:**
 
 Go to Package Manager, press the + button in the top left, then click "Add package from Git URL":
-- Use this URL for main SDK: https://github.com/uerceg/unity_sdk.git?path=Assets/Adjust
-- Use this URL for IMEI plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustImei (optional, not tested)
-- Use this URL for OAID plugin: https://github.com/uerceg/unity_sdk.git?path=Assets/AdjustOaid (optional, not tested)
+- Use this URL for main SDK: https://github.com/monumentalco/adjust-upm.git?path=Assets/Adjust
+- Use this URL for IMEI plugin: https://github.com/monumentalco/adjust-upm.git?path=Assets/AdjustImei (optional, not tested)
+- Use this URL for OAID plugin: https://github.com/monumentalco/adjust-upm.git?path=Assets/AdjustOaid (optional, not tested)
 
 Original Adjust README begins here:
 
