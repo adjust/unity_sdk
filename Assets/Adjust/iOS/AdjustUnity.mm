@@ -240,6 +240,8 @@ extern "C"
                 [adjustConfig setUrlStrategy:ADJUrlStrategyChina];
             } else if ([stringUrlStrategy isEqualToString:@"india"]) {
                 [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
+            } else if ([stringUrlStrategy isEqualToString:@"cn"]) {
+                [adjustConfig setUrlStrategy:ADJUrlStrategyCn];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
                 [adjustConfig setUrlStrategy:ADJDataResidencyEU];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-tr"]) {
