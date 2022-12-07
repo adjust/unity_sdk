@@ -1,3 +1,12 @@
+### Version 4.33.0 (xxth December 2022)
+#### Added
+- Added support for SKAD 4.0.
+- Added support for Samsung install referrer.
+- Added support to OAID plugin for MSA SDK v2.0.0.
+- Added support for setting a new China URL Strategy. You can choose this setting by calling `setUrlStrategy` method of `AdjustConfig` instance with `AdjustConfig.AdjustUrlStrategyCn` parameter.
+
+---
+
 ### Version 4.32.2 (14th November 2022)
 #### Fixed
 - Fixed conversion bug which caused `transaction_date` parameter of iOS subscription tracking to be wrongly formatted.
