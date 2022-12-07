@@ -27,7 +27,7 @@ namespace com.adjust.sdk
         public static string KeyFbInstallReferrer = "fbInstallReferrer";
         public static string KeySkadConversionValue = "fineValue";
         public static string KeySkadCoarseValue = "coarseValue";
-        public static string KeySkadLockedWindow = "lockedWindow";
+        public static string KeySkadLockWindow = "lockWindow";
 
         // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
@@ -291,15 +291,15 @@ namespace com.adjust.sdk
             return coarseValue;
         }
 
-        public static bool GetSkad4LockedWindow(string conversionValueUpdate)
+        public static bool GetSkad4LockWindow(string conversionValueUpdate)
         {
             var jsonNode = JSON.Parse(conversionValueUpdate);
             if (jsonNode == null) 
             {
                 return false;
             }
-            bool lockedWindow = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadLockedWindow));
-            return lockedWindow;
+            bool lockWindow = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadLockWindow));
+            return lockWindow;
         }
 
 #if UNITY_ANDROID

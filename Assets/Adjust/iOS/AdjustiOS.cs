@@ -170,6 +170,12 @@ namespace com.adjust.sdk
         private static extern void _AdjustUpdateConversionValue(int conversionValue);
 
         [DllImport("__Internal")]
+        private static extern void _AdjustUpdateConversionValueWithCallback(int conversionValue, string sceneName);
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustUpdateConversionValueWithCallbackSkad4(int conversionValue, string coarseValue, int lockedWindow, string sceneName);
+
+        [DllImport("__Internal")]
         private static extern void _AdjustCheckForNewAttStatus();
 
         [DllImport("__Internal")]
@@ -418,6 +424,18 @@ namespace com.adjust.sdk
         public static void UpdateConversionValue(int conversionValue)
         {
             _AdjustUpdateConversionValue(conversionValue);
+        }
+
+        public static void UpdateConversionValue(int conversionValue, string sceneName)
+        {
+            string cSceneName = sceneName != null ? sceneName : "ADJ_INVALID";
+            _AdjustUpdateConversionValueWithCallback(conversionValue, cSceneName);
+        }
+
+        public static void UpdateConversionValue(int conversionValue, string coarseValue, bool lockedWindow, string sceneName)
+        {
+            string cSceneName = sceneName != null ? sceneName : "ADJ_INVALID";
+            _AdjustUpdateConversionValueWithCallbackSkad4(conversionValue, coarseValue, AdjustUtils.ConvertBool(lockedWindow), cSceneName);
         }
 
         public static void CheckForNewAttStatus()

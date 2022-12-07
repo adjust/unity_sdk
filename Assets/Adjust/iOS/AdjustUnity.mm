@@ -739,6 +739,37 @@ extern "C"
         [Adjust updateConversionValue:conversionValue];
     }
 
+    void _AdjustUpdateConversionValueWithCallback(int conversionValue, const char* sceneName) {
+        [Adjust updatePostbackConversionValue:conversionValue completionHandler:^(NSError * _Nullable error) {
+            NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+            if (stringSceneName == nil) {
+                return;
+            }
+            NSString *errorString = [error description];
+            const char* errorChar = [errorString UTF8String];
+            UnitySendMessage([stringSceneName UTF8String], "GetNativeSkadCompletionDelegate", errorChar);
+        }];
+    }
+
+    void _AdjustUpdateConversionValueWithCallbackSkad4(int conversionValue, const char* coarseValue, int lockWindow, const char* sceneName) {
+        if (coarseValue != NULL) {
+            NSString *stringCoarseValue = [NSString stringWithUTF8String:coarseValue];
+            BOOL bLockWindow = (BOOL)lockWindow;
+            [Adjust updatePostbackConversionValue:conversionValue
+                                      coarseValue:stringCoarseValue
+                                       lockWindow:bLockWindow
+                                completionHandler:^(NSError * _Nullable error) {
+                NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+                if (stringSceneName == nil) {
+                    return;
+                }
+                NSString *errorString = [error description];
+                const char* errorChar = [errorString UTF8String];
+                UnitySendMessage([stringSceneName UTF8String], "GetNativeSkad4CompletionDelegate", errorChar);
+            }];
+        }
+    }
+
     void _AdjustCheckForNewAttStatus() {
         [Adjust checkForNewAttStatus];
     }
