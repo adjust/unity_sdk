@@ -45,7 +45,8 @@ namespace com.adjust.sdk
             int isSessionSuccessCallbackImplemented,
             int isSessionFailureCallbackImplemented,
             int isDeferredDeeplinkCallbackImplemented,
-            int isConversionValueUpdatedCallbackImplemented);
+            int isConversionValueUpdatedCallbackImplemented,
+            int isSkad4ConversionValueUpdatedCallbackImplemented);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackEvent(
@@ -220,6 +221,7 @@ namespace com.adjust.sdk
             int isSessionFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getSessionFailureDelegate() != null);
             int isDeferredDeeplinkCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getDeferredDeeplinkDelegate() != null);
             int isConversionValueUpdatedCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getConversionValueUpdatedDelegate() != null);
+            int isSkad4ConversionValueUpdatedCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getSkad4ConversionValueUpdatedDelegate() != null);
 
             _AdjustLaunchApp(
                 appToken,
@@ -255,7 +257,8 @@ namespace com.adjust.sdk
                 isSessionSuccessCallbackImplemented,
                 isSessionFailureCallbackImplemented,
                 isDeferredDeeplinkCallbackImplemented,
-                isConversionValueUpdatedCallbackImplemented);
+                isConversionValueUpdatedCallbackImplemented,
+                isSkad4ConversionValueUpdatedCallbackImplemented);
         }
 
         public static void TrackEvent(AdjustEvent adjustEvent)

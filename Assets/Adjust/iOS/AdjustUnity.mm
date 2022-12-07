@@ -115,7 +115,8 @@ extern "C"
                           int isSessionSuccessCallbackImplemented,
                           int isSessionFailureCallbackImplemented,
                           int isDeferredDeeplinkCallbackImplemented,
-                          int isConversionValueUpdatedCallbackImplemented) {
+                          int isConversionValueUpdatedCallbackImplemented,
+                          int isSkad4ConversionValueUpdatedCallbackImplemented) {
         NSString *stringAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *stringEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
         NSString *stringSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
@@ -146,7 +147,8 @@ extern "C"
             || isSessionSuccessCallbackImplemented
             || isSessionFailureCallbackImplemented
             || isDeferredDeeplinkCallbackImplemented
-            || isConversionValueUpdatedCallbackImplemented) {
+            || isConversionValueUpdatedCallbackImplemented
+            || isSkad4ConversionValueUpdatedCallbackImplemented) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
                                                             eventSuccessCallback:isEventSuccessCallbackImplemented
@@ -155,6 +157,7 @@ extern "C"
                                                           sessionFailureCallback:isSessionFailureCallbackImplemented
                                                         deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
                                                   conversionValueUpdatedCallback:isConversionValueUpdatedCallbackImplemented
+                                             skad4ConversionValueUpdatedCallback:isSkad4ConversionValueUpdatedCallbackImplemented
                                                     shouldLaunchDeferredDeeplink:launchDeferredDeeplink
                                                         withAdjustUnitySceneName:stringSceneName]];
         }

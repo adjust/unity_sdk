@@ -50,6 +50,7 @@ namespace com.adjust.sdk
         internal Action<AdjustSessionFailure> sessionFailureDelegate;
         internal Action<AdjustAttribution> attributionChangedDelegate;
         internal Action<int> conversionValueUpdatedDelegate;
+        internal Action<int, string, bool> skad4ConversionValueUpdatedDelegate;
 
         // Android specific members
         internal string processName;
@@ -229,9 +230,20 @@ namespace com.adjust.sdk
             this.sceneName = sceneName;
         }
 
+        public void setSkad4ConversionValueUpdatedDelegate(Action<int, string, bool> skad4ConversionValueUpdatedDelegate, string sceneName = "Adjust")
+        {
+            this.skad4ConversionValueUpdatedDelegate = skad4ConversionValueUpdatedDelegate;
+            this.sceneName = sceneName;
+        }
+
         public Action<int> getConversionValueUpdatedDelegate()
         {
             return this.conversionValueUpdatedDelegate;
+        }
+
+        public Action<int, string, bool> getSkad4ConversionValueUpdatedDelegate()
+        {
+            return this.skad4ConversionValueUpdatedDelegate;
         }
 
         public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)
