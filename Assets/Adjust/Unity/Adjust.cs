@@ -84,6 +84,7 @@ namespace com.adjust.sdk
         private static Action<AdjustSessionFailure> sessionFailureDelegate = null;
         private static Action<AdjustAttribution> attributionChangedDelegate = null;
         private static Action<int> conversionValueUpdatedDelegate = null;
+        private static Action<int, string, bool> skad4ConversionValueUpdatedDelegate = null;
 #endif
 
         void Awake()
@@ -185,6 +186,7 @@ namespace com.adjust.sdk
             Adjust.deferredDeeplinkDelegate = adjustConfig.getDeferredDeeplinkDelegate();
             Adjust.attributionChangedDelegate = adjustConfig.getAttributionChangedDelegate();
             Adjust.conversionValueUpdatedDelegate = adjustConfig.getConversionValueUpdatedDelegate();
+            Adjust.skad4ConversionValueUpdatedDelegate = adjustConfig.getSkad4ConversionValueUpdatedDelegate();
             AdjustiOS.Start(adjustConfig);
 #elif UNITY_ANDROID
             AdjustAndroid.Start(adjustConfig);
@@ -962,6 +964,26 @@ namespace com.adjust.sdk
                     Adjust.conversionValueUpdatedDelegate(cv);
                 }
             }
+        }
+
+        public void GetNativeSkad4ConversionValueUpdated(string conversionValueUpdate)
+        {
+            if (IsEditor()) 
+            {
+                return;
+            }
+
+            if (Adjust.skad4ConversionValueUpdatedDelegate == null)
+            {
+                Debug.Log("[Adjust]: SKAD4 Conversion value updated delegate was not set.");
+                return;
+            }
+
+            int conversionValue = AdjustUtils.GetSkad4ConversionValue(conversionValueUpdate);
+            string coarseValue = AdjustUtils.GetSkad4CoarseValue(conversionValueUpdate);
+            bool lockedWindow = AdjustUtils.GetSkad4LockedWindow(conversionValueUpdate);
+
+            Adjust.skad4ConversionValueUpdatedDelegate(conversionValue, coarseValue, lockedWindow);
         }
 
         public void GetAuthorizationStatus(string authorizationStatus)

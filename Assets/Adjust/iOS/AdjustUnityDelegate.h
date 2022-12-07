@@ -26,15 +26,16 @@
 /**
  * @brief Get instance of the AdjustUnityDelegate with properly swizzled callback methods.
  *
- * @param swizzleAttributionCallback            Indicator whether attribution callback should be swizzled or not.
- * @param swizzleEventSuccessCallback           Indicator whether event success callback should be swizzled or not.
- * @param swizzleEventFailureCallback           Indicator whether event failure callback should be swizzled or not.
- * @param swizzleSessionSuccessCallback         Indicator whether session success callback should be swizzled or not.
- * @param swizzleSessionFailureCallback         Indicator whether session failure callback should be swizzled or not.
- * @param swizzleDeferredDeeplinkCallback       Indicator whether deferred deep link callback should be swizzled or not.
- * @param swizzleConversionValueUpdatedCallback Indicator whether deferred deep link callback should be swizzled or not.
- * @param shouldLaunchDeferredDeeplink          Indicator whether SDK should launch deferred deep link by default or not.
- * @param adjustUnitySceneName                  Name of the Unity scene that loads Adjust SDK.
+ * @param swizzleAttributionCallback                  Indicator whether attribution callback should be swizzled or not.
+ * @param swizzleEventSuccessCallback                 Indicator whether event success callback should be swizzled or not.
+ * @param swizzleEventFailureCallback                 Indicator whether event failure callback should be swizzled or not.
+ * @param swizzleSessionSuccessCallback               Indicator whether session success callback should be swizzled or not.
+ * @param swizzleSessionFailureCallback               Indicator whether session failure callback should be swizzled or not.
+ * @param swizzleDeferredDeeplinkCallback             Indicator whether deferred deep link callback should be swizzled or not.
+ * @param swizzleConversionValueUpdatedCallback       Indicator whether SKAD conversion value update callback should be swizzled or not.
+ * @param swizzleSkad4ConversionValueUpdatedCallback  Indicator whether SKAD4 conversion value update callback should be swizzled or not.
+ * @param shouldLaunchDeferredDeeplink                Indicator whether SDK should launch deferred deep link by default or not.
+ * @param adjustUnitySceneName                        Name of the Unity scene that loads Adjust SDK.
  *
  * @return AdjustUnityDelegate object instance with properly swizzled callback methods.
  */
@@ -45,6 +46,7 @@
                            sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
                          deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
                    conversionValueUpdatedCallback:(BOOL)swizzleConversionValueUpdatedCallback
+              skad4ConversionValueUpdatedCallback:(BOOL)swizzleSkad4ConversionValueUpdatedCallback
                      shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
                          withAdjustUnitySceneName:(NSString *)adjustUnitySceneName;
 

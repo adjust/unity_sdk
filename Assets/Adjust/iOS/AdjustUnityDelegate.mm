@@ -33,8 +33,9 @@ static AdjustUnityDelegate *defaultInstance = nil;
                            sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
                          deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
                    conversionValueUpdatedCallback:(BOOL)swizzleConversionValueUpdatedCallback
+              skad4ConversionValueUpdatedCallback:(BOOL)swizzleSkad4ConversionValueUpdatedCallback
                      shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
-                         withAdjustUnitySceneName:(NSString *)adjustUnitySceneName; {
+                         withAdjustUnitySceneName:(NSString *)adjustUnitySceneName {
     dispatch_once(&onceToken, ^{
         defaultInstance = [[AdjustUnityDelegate alloc] init];
 
@@ -66,6 +67,10 @@ static AdjustUnityDelegate *defaultInstance = nil;
         if (swizzleConversionValueUpdatedCallback) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustConversionValueUpdated:)
                                         withSelector:@selector(adjustConversionValueUpdatedWannabe:)];
+        }
+        if (swizzleSkad4ConversionValueUpdatedCallback) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustConversionValueUpdated:coarseValue:lockWindow:)
+                                        withSelector:@selector(adjustConversionValueUpdatedWannabe:coarseValue:lockWindow:)];
         }
 
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
@@ -209,6 +214,21 @@ static AdjustUnityDelegate *defaultInstance = nil;
     NSString *stringConversionValue = [conversionValue stringValue];
     const char* charConversionValue = [stringConversionValue UTF8String];
     UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeConversionValueUpdated", charConversionValue);
+}
+
+- (void)adjustConversionValueUpdatedWannabe:(nullable NSNumber *)fineValue
+                                coarseValue:(nullable NSString *)coarseValue
+                                 lockWindow:(nullable NSNumber *)lockWindow {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [self addValueOrEmpty:fineValue forKey:@"fineValue" toDictionary:dictionary];
+    [self addValueOrEmpty:coarseValue forKey:@"coarseValue" toDictionary:dictionary];
+    [self addValueOrEmpty:lockWindow forKey:@"lockWindow" toDictionary:dictionary];
+    NSData *dataConversionValueUpdate = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+    NSString *stringConversionValueUpdate = [[NSString alloc] initWithBytes:[dataConversionValueUpdate bytes]
+                                                                     length:[dataConversionValueUpdate length]
+                                                                   encoding:NSUTF8StringEncoding];
+    const char* charConversionValueUpdate = [stringConversionValueUpdate UTF8String];
+    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeSkad4ConversionValueUpdated", charConversionValueUpdate);
 }
 
 - (void)swizzleOriginalSelector:(SEL)originalSelector
