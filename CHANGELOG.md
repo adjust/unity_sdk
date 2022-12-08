@@ -5,6 +5,9 @@
 - Added support to OAID plugin for MSA SDK v2.0.0.
 - Added support for setting a new China URL Strategy. You can choose this setting by calling `setUrlStrategy` method of `AdjustConfig` instance with `AdjustConfig.AdjustUrlStrategyCn` parameter.
 
+#### Fixed
+- Added addition of `GCC_ENABLE_OBJC_EXCEPTIONS` to `UnityFramework` target (if present) from `AdjustEditor`.
+
 #### Native SDKs
 - [iOS@v4.33.2][ios_sdk_v4.33.2]
 - [Android@v4.33.2][android_sdk_v4.32.2]
