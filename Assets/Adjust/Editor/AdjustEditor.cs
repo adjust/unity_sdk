@@ -179,12 +179,6 @@ public class AdjustEditor : AssetPostprocessor
                 Debug.Log("[Adjust]: Skipping AppTrackingTransparency.framework linking.");
             }
 
-            // The Adjust SDK needs to have Obj-C exceptions enabled.
-            // GCC_ENABLE_OBJC_EXCEPTIONS=YES
-            Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
-            xcodeProject.AddBuildProperty(xcodeTarget, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
-            Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
-
             // The Adjust SDK needs to have -ObjC flag set in other linker flags section because of it's categories.
             // OTHER_LDFLAGS -ObjC
             //
@@ -192,7 +186,6 @@ public class AdjustEditor : AssetPostprocessor
             // Adding -ObjC to UnityFramework target however does make things work nicely again.
             // This happens because Unity is linking SDK's static library into UnityFramework target.
             // Check for presence of UnityFramework target and if there, include -ObjC flag inside of it.
-
             Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS) of Unity-iPhone target.");
             xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-ObjC");
             Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
@@ -202,6 +195,18 @@ public class AdjustEditor : AssetPostprocessor
                 Debug.Log("[Adjust]: Adding -ObjC flag to other linker flags (OTHER_LDFLAGS) of UnityFramework target.");
                 xcodeProject.AddBuildProperty(xcodeTargetUnityFramework, "OTHER_LDFLAGS", "-ObjC");
                 Debug.Log("[Adjust]: -ObjC successfully added to other linker flags.");
+            }
+
+            // The Adjust SDK needs to have Obj-C exceptions enabled.
+            // GCC_ENABLE_OBJC_EXCEPTIONS=YES
+            Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
+            xcodeProject.AddBuildProperty(xcodeTarget, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
+            Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
+            if (!string.IsNullOrEmpty(xcodeTargetUnityFramework))
+            {
+                Debug.Log("[Adjust]: Enabling Obj-C exceptions by setting GCC_ENABLE_OBJC_EXCEPTIONS value to YES.");
+                xcodeProject.AddBuildProperty(xcodeTargetUnityFramework, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
+                Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
             }
 
             if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/iOS/AdjustSigSdk.a"))

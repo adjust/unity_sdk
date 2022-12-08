@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.32.2";
+        private const string sdkPrefix = "unity4.33.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -152,6 +152,11 @@ namespace com.adjust.sdk
                 {
                     AndroidJavaObject ajoUrlStrategyIndia = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("URL_STRATEGY_INDIA");
                     ajoAdjustConfig.Call("setUrlStrategy", ajoUrlStrategyIndia);
+                }
+                else if (adjustConfig.urlStrategy == AdjustConfig.AdjustUrlStrategyCn)
+                {
+                    AndroidJavaObject ajoUrlStrategyCn = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("URL_STRATEGY_CN");
+                    ajoAdjustConfig.Call("setUrlStrategy", ajoUrlStrategyCn);
                 }
                 else if (adjustConfig.urlStrategy == AdjustConfig.AdjustDataResidencyEU)
                 {

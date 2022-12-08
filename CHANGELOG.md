@@ -1,3 +1,20 @@
+### Version 4.33.0 (8th December 2022)
+#### Added
+- Added support for SKAD 4.0.
+- Added support for Samsung install referrer.
+- Added support to OAID plugin for MSA SDK v2.0.0.
+- Added support for setting a new China URL Strategy. You can choose this setting by calling `setUrlStrategy` method of `AdjustConfig` instance with `AdjustConfig.AdjustUrlStrategyCn` parameter.
+
+#### Fixed
+- Added addition of `GCC_ENABLE_OBJC_EXCEPTIONS` to `UnityFramework` target (if present) from `AdjustEditor`.
+
+#### Native SDKs
+- [iOS@v4.33.2][ios_sdk_v4.33.2]
+- [Android@v4.33.2][android_sdk_v4.32.2]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.32.2 (14th November 2022)
 #### Fixed
 - Fixed conversion bug which caused `transaction_date` parameter of iOS subscription tracking to be wrongly formatted.
@@ -1064,6 +1081,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.30.0]: https://github.com/adjust/ios_sdk/tree/v4.30.0
 [ios_sdk_v4.31.0]: https://github.com/adjust/ios_sdk/tree/v4.31.0
 [ios_sdk_v4.32.0]: https://github.com/adjust/ios_sdk/tree/v4.32.0
+[ios_sdk_v4.33.2]: https://github.com/adjust/ios_sdk/tree/v4.33.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1106,6 +1124,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.30.0]: https://github.com/adjust/android_sdk/tree/v4.30.0
 [android_sdk_v4.31.0]: https://github.com/adjust/android_sdk/tree/v4.31.0
 [android_sdk_v4.32.0]: https://github.com/adjust/android_sdk/tree/v4.32.0
+[android_sdk_v4.33.2]: https://github.com/adjust/android_sdk/tree/v4.33.2
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

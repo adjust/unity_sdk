@@ -25,6 +25,9 @@ namespace com.adjust.sdk
         public static string KeyCostAmount = "costAmount";
         public static string KeyCostCurrency = "costCurrency";
         public static string KeyFbInstallReferrer = "fbInstallReferrer";
+        public static string KeySkadConversionValue = "fineValue";
+        public static string KeySkadCoarseValue = "coarseValue";
+        public static string KeySkadLockWindow = "lockWindow";
 
         // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
@@ -255,6 +258,48 @@ namespace com.adjust.sdk
                 return value;
             }
             return null;
+        }
+
+        public static int GetSkad4ConversionValue(string conversionValueUpdate)
+        {
+            var jsonNode = JSON.Parse(conversionValueUpdate);
+            if (jsonNode == null) 
+            {
+                return -1;
+            }
+
+            string strConversionValue = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadConversionValue);
+            int conversionValue = 0;
+            if (Int32.TryParse(strConversionValue, out conversionValue))
+            {
+                return conversionValue;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public static string GetSkad4CoarseValue(string conversionValueUpdate)
+        {
+            var jsonNode = JSON.Parse(conversionValueUpdate);
+            if (jsonNode == null) 
+            {
+                return null;
+            }
+            string coarseValue = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadCoarseValue);
+            return coarseValue;
+        }
+
+        public static bool GetSkad4LockWindow(string conversionValueUpdate)
+        {
+            var jsonNode = JSON.Parse(conversionValueUpdate);
+            if (jsonNode == null) 
+            {
+                return false;
+            }
+            bool lockWindow = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadLockWindow));
+            return lockWindow;
         }
 
 #if UNITY_ANDROID
