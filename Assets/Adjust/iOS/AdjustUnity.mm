@@ -115,7 +115,8 @@ extern "C"
                           int isSessionSuccessCallbackImplemented,
                           int isSessionFailureCallbackImplemented,
                           int isDeferredDeeplinkCallbackImplemented,
-                          int isConversionValueUpdatedCallbackImplemented) {
+                          int isConversionValueUpdatedCallbackImplemented,
+                          int isSkad4ConversionValueUpdatedCallbackImplemented) {
         NSString *stringAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *stringEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
         NSString *stringSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
@@ -146,7 +147,8 @@ extern "C"
             || isSessionSuccessCallbackImplemented
             || isSessionFailureCallbackImplemented
             || isDeferredDeeplinkCallbackImplemented
-            || isConversionValueUpdatedCallbackImplemented) {
+            || isConversionValueUpdatedCallbackImplemented
+            || isSkad4ConversionValueUpdatedCallbackImplemented) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
                                                             eventSuccessCallback:isEventSuccessCallbackImplemented
@@ -155,6 +157,7 @@ extern "C"
                                                           sessionFailureCallback:isSessionFailureCallbackImplemented
                                                         deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
                                                   conversionValueUpdatedCallback:isConversionValueUpdatedCallbackImplemented
+                                             skad4ConversionValueUpdatedCallback:isSkad4ConversionValueUpdatedCallbackImplemented
                                                     shouldLaunchDeferredDeeplink:launchDeferredDeeplink
                                                         withAdjustUnitySceneName:stringSceneName]];
         }
@@ -240,6 +243,8 @@ extern "C"
                 [adjustConfig setUrlStrategy:ADJUrlStrategyChina];
             } else if ([stringUrlStrategy isEqualToString:@"india"]) {
                 [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
+            } else if ([stringUrlStrategy isEqualToString:@"cn"]) {
+                [adjustConfig setUrlStrategy:ADJUrlStrategyCn];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
                 [adjustConfig setUrlStrategy:ADJDataResidencyEU];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-tr"]) {
@@ -732,6 +737,37 @@ extern "C"
 
     void _AdjustUpdateConversionValue(int conversionValue) {
         [Adjust updateConversionValue:conversionValue];
+    }
+
+    void _AdjustUpdateConversionValueWithCallback(int conversionValue, const char* sceneName) {
+        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+        [Adjust updatePostbackConversionValue:conversionValue completionHandler:^(NSError * _Nullable error) {
+            if (stringSceneName == nil) {
+                return;
+            }
+            NSString *errorString = [error description];
+            const char* errorChar = [errorString UTF8String];
+            UnitySendMessage([stringSceneName UTF8String], "GetNativeSkadCompletionDelegate", errorChar);
+        }];
+    }
+
+    void _AdjustUpdateConversionValueWithCallbackSkad4(int conversionValue, const char* coarseValue, int lockWindow, const char* sceneName) {
+        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+        if (coarseValue != NULL) {
+            NSString *stringCoarseValue = [NSString stringWithUTF8String:coarseValue];
+            BOOL bLockWindow = (BOOL)lockWindow;
+            [Adjust updatePostbackConversionValue:conversionValue
+                                      coarseValue:stringCoarseValue
+                                       lockWindow:bLockWindow
+                                completionHandler:^(NSError * _Nullable error) {
+                if (stringSceneName == nil) {
+                    return;
+                }
+                NSString *errorString = [error description];
+                const char* errorChar = [errorString UTF8String];
+                UnitySendMessage([stringSceneName UTF8String], "GetNativeSkad4CompletionDelegate", errorChar);
+            }];
+        }
     }
 
     void _AdjustCheckForNewAttStatus() {
