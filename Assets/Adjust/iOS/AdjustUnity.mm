@@ -740,8 +740,8 @@ extern "C"
     }
 
     void _AdjustUpdateConversionValueWithCallback(int conversionValue, const char* sceneName) {
+        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
         [Adjust updatePostbackConversionValue:conversionValue completionHandler:^(NSError * _Nullable error) {
-            NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
             if (stringSceneName == nil) {
                 return;
             }
@@ -752,6 +752,7 @@ extern "C"
     }
 
     void _AdjustUpdateConversionValueWithCallbackSkad4(int conversionValue, const char* coarseValue, int lockWindow, const char* sceneName) {
+        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
         if (coarseValue != NULL) {
             NSString *stringCoarseValue = [NSString stringWithUTF8String:coarseValue];
             BOOL bLockWindow = (BOOL)lockWindow;
@@ -759,7 +760,6 @@ extern "C"
                                       coarseValue:stringCoarseValue
                                        lockWindow:bLockWindow
                                 completionHandler:^(NSError * _Nullable error) {
-                NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
                 if (stringSceneName == nil) {
                     return;
                 }
