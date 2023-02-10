@@ -117,7 +117,6 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
         var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='com.unity3d.player.UnityPlayerActivity']", GetNamespaceManager(manifest));
         var usedIntentFiltersChanged = false;
-        var usedIntentFilters = GetIntentFilter(manifest);
         foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
         {
             Uri uri;
@@ -141,6 +140,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
             if (!IsIntentFilterAlreadyExist(manifest, uri))
             {
+                var usedIntentFilters = GetIntentFilter(manifest);
                 Debug.Log("[Adjust]: Adding new URI with scheme: " + uri.Scheme + ", and host: " + uri.Host);
                 var androidSchemeNode = manifest.CreateElement("data");
                 AddAndroidNamespaceAttribute(manifest, "scheme", uri.Scheme, androidSchemeNode);
@@ -148,13 +148,10 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
                 usedIntentFilters.AppendChild(androidSchemeNode);
                 usedIntentFiltersChanged = true;
 
+                intentRoot.AppendChild(usedIntentFilters);
+
                 Debug.Log(string.Format("[Adjust]: Android deeplink URI scheme \"{0}\" successfully added to your app's AndroidManifest.xml file.", uriScheme));
             }
-        }
-
-        if (usedIntentFiltersChanged && usedIntentFilters.ParentNode == null)
-        {
-            intentRoot.AppendChild(usedIntentFilters);
         }
 
         return usedIntentFiltersChanged;
@@ -162,27 +159,22 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
 
     private static XmlElement GetIntentFilter(XmlDocument manifest)
     {
-        var xpath = "/manifest/application/activity/intent-filter[data/@android:scheme and data/@android:host]";
-        var intentFilter = manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) as XmlElement;
-        if (intentFilter == null)
-        {
-            const string androidName = "name";
-            const string category = "category";
+        const string androidName = "name";
+        const string category = "category";
 
-            intentFilter = manifest.CreateElement("intent-filter");
+        var intentFilter = manifest.CreateElement("intent-filter");
 
-            var actionElement = manifest.CreateElement("action");
-            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
-            intentFilter.AppendChild(actionElement);
+        var actionElement = manifest.CreateElement("action");
+        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
+        intentFilter.AppendChild(actionElement);
 
-            var defaultCategory = manifest.CreateElement(category);
-            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
-            intentFilter.AppendChild(defaultCategory);
+        var defaultCategory = manifest.CreateElement(category);
+        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
+        intentFilter.AppendChild(defaultCategory);
 
-            var browsableCategory = manifest.CreateElement(category);
-            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
-            intentFilter.AppendChild(browsableCategory);
-        }
+        var browsableCategory = manifest.CreateElement(category);
+        AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
+        intentFilter.AppendChild(browsableCategory);
         return intentFilter;
     }
 

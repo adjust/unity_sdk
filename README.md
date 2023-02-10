@@ -310,7 +310,7 @@ What iOS post-build process will perform under the hood will be swizzling of som
 
 ### <a id="dl-app-android"></a>Deeplink handling in Android apps
 
-In order to set up deeplinking support for Android platform, make sure to add all the schemes you would like your app to handle into the `Android URI Schemes` list. **Note:** Pay attention to tooltip which says that when you are entering URI schemes in the list, you should write them with `://` part at the end.
+In order to set up deeplinking support for Android platform, make sure to add all the schemes you would like your app to handle into the `Android URI Schemes` list. **Note:** Pay attention to tooltip which says that when you are entering URI schemes in the list, you should write them with `://` part at the end(append it with a host name is OK either, e.g. my_app://host).
 
 Unlike iOS counter part, Android post-build process will not perform any injection of custom Unity `Activity` class in order to intercept deeplinks which have opened your Android app. Instead, Adjust SDK internally relies on above mentioned [Application.deepLinkActivated](https://docs.unity3d.com/ScriptReference/Application-deepLinkActivated.html) method to get information about deeplink directly from Unity API. SDK will automatically perform everything which is needed to potentially reattribute your users via deeplinking. And, like already mentioned above - feel free to implement this same method in order to obtain deeplink which has opened your Android app.
 
