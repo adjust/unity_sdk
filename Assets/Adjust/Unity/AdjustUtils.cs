@@ -44,7 +44,6 @@ namespace com.adjust.sdk
         public static string KeyTestOptionsSubsessionIntervalInMilliseconds = "subsessionIntervalInMilliseconds";
         public static string KeyTestOptionsTeardown = "teardown";
         public static string KeyTestOptionsNoBackoffWait = "noBackoffWait";
-        public static string KeyTestOptionsiAdFrameworkEnabled = "iAdFrameworkEnabled";
         public static string KeyTestOptionsAdServicesFrameworkEnabled = "adServicesFrameworkEnabled";
 
         public static int ConvertLogLevel(AdjustLogLevel? logLevel)

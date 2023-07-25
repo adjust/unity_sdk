@@ -95,7 +95,6 @@ extern "C"
                           int isDeviceKnown,
                           int eventBuffering,
                           int sendInBackground,
-                          int allowiAdInfoReading,
                           int allowAdServicesInfoReading,
                           int allowIdfaReading,
                           int deactivateSkAdNetworkHandling,
@@ -175,11 +174,6 @@ extern "C"
         // Send in background.
         if (sendInBackground != -1) {
             [adjustConfig setSendInBackground:(BOOL)sendInBackground];
-        }
-
-        // Allow iAd info reading.
-        if (allowiAdInfoReading != -1) {
-            [adjustConfig setAllowiAdInfoReading:(BOOL)allowiAdInfoReading];
         }
 
         // Allow AdServices info reading.
@@ -807,7 +801,6 @@ extern "C"
                                int teardown,
                                int deleteState,
                                int noBackoffWait,
-                               int iAdFrameworkEnabled,
                                int adServicesFrameworkEnabled) {
         AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
 
@@ -845,9 +838,6 @@ extern "C"
         }
         if (noBackoffWait != -1) {
             [testOptions setNoBackoffWait:(BOOL)noBackoffWait];
-        }
-        if (iAdFrameworkEnabled != -1) {
-            [testOptions setIAdFrameworkEnabled:(BOOL)iAdFrameworkEnabled];
         }
         if (adServicesFrameworkEnabled != -1) {
             [testOptions setAdServicesFrameworkEnabled:(BOOL)adServicesFrameworkEnabled];
