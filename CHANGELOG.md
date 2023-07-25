@@ -1,3 +1,14 @@
+### Version 4.33.2 (25th July 2023)
+#### Fixed
+- Fixed iOS compile time errors caused by hanging references to removed `iAd.framework` handling logic (https://github.com/adjust/unity_sdk/issues/271).
+
+#### Native SDKs
+- [iOS@v4.33.6][ios_sdk_v4.33.6]
+- [Android@v4.33.5][android_sdk_v4.33.5]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.33.1 (7th July 2023)
 #### Added
 - Added ability to read App Set ID on Android platform in case you opt in by adding the `com.google.android.gms:play-services-appset` dependency to your Android app.
