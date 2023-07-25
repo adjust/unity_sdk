@@ -58,7 +58,6 @@ namespace com.adjust.sdk
         internal bool? preinstallTrackingEnabled;
         internal string preinstallFilePath;
         // iOS specific members
-        internal bool? allowiAdInfoReading;
         internal bool? allowAdServicesInfoReading;
         internal bool? allowIdfaReading;
         internal bool? skAdNetworkHandling;
@@ -256,9 +255,9 @@ namespace com.adjust.sdk
         }
 
         // iOS specific methods.
+        [Obsolete("This is an obsolete method. Apple Search Ads attribution with usage of iAd.framework has been sunset by Apple as of February 7th 2023.")]
         public void setAllowiAdInfoReading(bool allowiAdInfoReading)
         {
-            this.allowiAdInfoReading = allowiAdInfoReading;
         }
 
         public void setAllowAdServicesInfoReading(bool allowAdServicesInfoReading)

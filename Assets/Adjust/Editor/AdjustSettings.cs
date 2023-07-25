@@ -11,8 +11,6 @@ public class AdjustSettings : ScriptableObject
     [SerializeField]
     private bool _iOSFrameworkAdSupport = true;
     [SerializeField]
-    private bool _iOSFrameworkiAd = false;
-    [SerializeField]
     private bool _iOSFrameworkAdServices = false;
     [SerializeField]
     private bool _iOSFrameworkAppTrackingTransparency = false;
@@ -83,12 +81,6 @@ public class AdjustSettings : ScriptableObject
     {
         get { return Instance._iOSFrameworkAdSupport; }
         set { Instance._iOSFrameworkAdSupport = value; }
-    }
-
-    public static bool iOSFrameworkiAd
-    {
-        get { return Instance._iOSFrameworkiAd; }
-        set { Instance._iOSFrameworkiAd = value; }
     }
 
     public static bool iOSFrameworkAdServices

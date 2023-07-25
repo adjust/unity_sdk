@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.33.1";
+        private const string sdkPrefix = "unity4.33.2";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -25,7 +25,6 @@ namespace com.adjust.sdk
             int isDeviceKnown,
             int eventBuffering,
             int sendInBackground,
-            int allowiAdInfoReading,
             int allowAdServicesInfoReading,
             int allowIdfaReading,
             int deactivateSkAdNetworkHandling,
@@ -160,7 +159,6 @@ namespace com.adjust.sdk
             int teardown,
             int deleteState,
             int noBackoffWait,
-            int iAdFrameworkEnabled,
             int adServicesFrameworkEnabled);
 
         [DllImport("__Internal")]
@@ -211,7 +209,6 @@ namespace com.adjust.sdk
             int isDeviceKnown = AdjustUtils.ConvertBool(adjustConfig.isDeviceKnown);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
             int eventBufferingEnabled = AdjustUtils.ConvertBool(adjustConfig.eventBufferingEnabled);
-            int allowiAdInfoReading = AdjustUtils.ConvertBool(adjustConfig.allowiAdInfoReading);
             int allowAdServicesInfoReading = AdjustUtils.ConvertBool(adjustConfig.allowAdServicesInfoReading);
             int allowIdfaReading = AdjustUtils.ConvertBool(adjustConfig.allowIdfaReading);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
@@ -243,7 +240,6 @@ namespace com.adjust.sdk
                 isDeviceKnown,
                 eventBufferingEnabled,
                 sendInBackground,
-                allowiAdInfoReading,
                 allowAdServicesInfoReading,
                 allowIdfaReading,
                 deactivateSkAdNetworkHandling,
@@ -509,7 +505,6 @@ namespace com.adjust.sdk
             bool teardown = false;
             bool deleteState = false;
             bool noBackoffWait = false;
-            bool iAdFrameworkEnabled = false;
             bool adServicesFrameworkEnabled = false;
 
             if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsTimerIntervalInMilliseconds)) 
@@ -540,10 +535,6 @@ namespace com.adjust.sdk
             {
                 noBackoffWait = testOptions[AdjustUtils.KeyTestOptionsNoBackoffWait].ToLower() == "true";
             }
-            if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsiAdFrameworkEnabled))
-            {
-                iAdFrameworkEnabled = testOptions[AdjustUtils.KeyTestOptionsiAdFrameworkEnabled].ToLower() == "true";
-            }
             if (testOptions.ContainsKey(AdjustUtils.KeyTestOptionsAdServicesFrameworkEnabled))
             {
                 adServicesFrameworkEnabled = testOptions[AdjustUtils.KeyTestOptionsAdServicesFrameworkEnabled].ToLower() == "true";
@@ -561,7 +552,6 @@ namespace com.adjust.sdk
                 AdjustUtils.ConvertBool(teardown),
                 AdjustUtils.ConvertBool(deleteState),
                 AdjustUtils.ConvertBool(noBackoffWait),
-                AdjustUtils.ConvertBool(iAdFrameworkEnabled),
                 AdjustUtils.ConvertBool(adServicesFrameworkEnabled));
         }
 
