@@ -61,7 +61,6 @@ namespace com.adjust.sdk
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
-                adjust.iadInfoReading = EditorGUILayout.Toggle("iAd Info Reading", adjust.iadInfoReading);
                 adjust.adServicesInfoReading = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServicesInfoReading);
                 adjust.idfaInfoReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaInfoReading);
                 adjust.skAdNetworkHandling = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skAdNetworkHandling);
