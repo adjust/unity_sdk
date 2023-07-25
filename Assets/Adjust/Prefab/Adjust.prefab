@@ -72,7 +72,6 @@ MonoBehaviour:
   preinstallTracking: 0
   preinstallFilePath: 
   playStoreKidsApp: 0
-  iadInfoReading: 1
   adServicesInfoReading: 1
   idfaInfoReading: 1
   skAdNetworkHandling: 1
