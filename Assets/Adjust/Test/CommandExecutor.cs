@@ -115,12 +115,6 @@ namespace com.adjust.sdk.test
             {
                 testOptions[AdjustUtils.KeyTestOptionsNoBackoffWait] = _command.GetFirstParameterValue("noBackoffWait");
             }
-            // iAd.framework will not be used in test app by default
-            testOptions [AdjustUtils.KeyTestOptionsiAdFrameworkEnabled] = "false";
-            if (_command.ContainsParameter("iAdFrameworkEnabled"))
-            {
-                testOptions[AdjustUtils.KeyTestOptionsiAdFrameworkEnabled] = _command.GetFirstParameterValue("iAdFrameworkEnabled");
-            }
             // AdServices.framework will not be used in test app by default
             testOptions [AdjustUtils.KeyTestOptionsAdServicesFrameworkEnabled] = "false";
             if (_command.ContainsParameter("adServicesFrameworkEnabled"))
@@ -338,13 +332,6 @@ namespace com.adjust.sdk.test
                 var sendInBackgroundS = _command.GetFirstParameterValue("sendInBackground");
                 var sendInBackground = sendInBackgroundS.ToLower() == "true";
                 adjustConfig.sendInBackground = sendInBackground;
-            }
-
-            if (_command.ContainsParameter("allowiAdInfoReading"))
-            {
-                var allowiAdInfoReadingS = _command.GetFirstParameterValue("allowiAdInfoReading");
-                var allowiAdInfoReading = allowiAdInfoReadingS.ToLower() == "true";
-                adjustConfig.allowiAdInfoReading = allowiAdInfoReading;
             }
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))

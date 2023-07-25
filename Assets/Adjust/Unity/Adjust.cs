@@ -66,8 +66,6 @@ namespace com.adjust.sdk
         // [Header("iOS SPECIFIC FEATURES:")]
         // [Space(5)]
         [HideInInspector]
-        public bool iadInfoReading = true;
-        [HideInInspector]
         public bool adServicesInfoReading = true;
         [HideInInspector]
         public bool idfaInfoReading = true;
@@ -121,7 +119,6 @@ namespace com.adjust.sdk
                 adjustConfig.setNeedsCost(this.needsCost);
                 adjustConfig.setPreinstallTrackingEnabled(this.preinstallTracking);
                 adjustConfig.setPreinstallFilePath(this.preinstallFilePath);
-                adjustConfig.setAllowiAdInfoReading(this.iadInfoReading);
                 adjustConfig.setAllowAdServicesInfoReading(this.adServicesInfoReading);
                 adjustConfig.setAllowIdfaReading(this.idfaInfoReading);
                 adjustConfig.setCoppaCompliantEnabled(this.coppaCompliant);
