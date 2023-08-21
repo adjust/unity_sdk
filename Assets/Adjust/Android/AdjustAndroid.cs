@@ -18,6 +18,7 @@ namespace com.adjust.sdk
         private static EventTrackingSucceededListener onEventTrackingSucceededListener;
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
+        private static VerificationInfoListener onVerificationInfoListener;
 
         public static void Start(AdjustConfig adjustConfig)
         {
@@ -638,6 +639,16 @@ namespace com.adjust.sdk
             return sdkPrefix + "@" + nativeSdkVersion;
         }
 
+        public static void VerifyPlayStorePurchase(AdjustPlayStorePurchase purchase, Action<AdjustPurchaseVerificationInfo> verificationInfoCallback)
+        {
+            AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPurchase",
+                purchase.productId,
+                purchase.purchaseToken);
+            onVerificationInfoListener = new VerificationInfoListener(verificationInfoCallback);
+
+            ajcAdjust.CallStatic("verifyPurchase", ajoPurchase, onVerificationInfoListener);
+        }
+
         // Used for testing only.
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
@@ -949,6 +960,32 @@ namespace com.adjust.sdk
                 }
 
                 this.onGoogleAdIdRead(ajoAdId.Call<string>("toString"));
+            }
+        }
+
+        private class VerificationInfoListener : AndroidJavaProxy
+        {
+            private Action<AdjustPurchaseVerificationInfo> callback;
+
+            public VerificationInfoListener(Action<AdjustPurchaseVerificationInfo> pCallback) : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onVerificationFinished(AndroidJavaObject verificationInfo)
+            {
+                AdjustPurchaseVerificationInfo purchaseVerificationInfo = new AdjustPurchaseVerificationInfo();
+                // verification status
+                purchaseVerificationInfo.verificationStatus = verificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus);
+                // status code
+                purchaseVerificationInfo.code = verificationInfo.Get<int>(AdjustUtils.KeyCode);
+                // message
+                purchaseVerificationInfo.message = verificationInfo.Get<string>(AdjustUtils.KeyMessage);
+
+                if (callback != null)
+                {
+                    callback(purchaseVerificationInfo);
+                }
             }
         }
 

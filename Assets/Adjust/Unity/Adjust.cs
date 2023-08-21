@@ -895,7 +895,7 @@ namespace com.adjust.sdk
                 purchase.productId == null ||
                 purchase.receipt == null)
             {
-                Debug.Log("Adjust: Invalid App Store purchase parameters.");
+                Debug.Log("[Adjust]: Invalid App Store purchase parameters.");
                 return;
             }
 
@@ -905,6 +905,34 @@ namespace com.adjust.sdk
             Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void verifyPlayStorePurchase(
+            AdjustPlayStorePurchase purchase,
+            Action<AdjustPurchaseVerificationInfo> verificationInfoDelegate)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
+#elif UNITY_ANDROID
+            if (purchase == null ||
+                purchase.productId == null ||
+                purchase.purchaseToken == null)
+            {
+                Debug.Log("[Adjust]: Invalid Play Store purchase parameters.");
+                return;
+            }
+
+            AdjustAndroid.VerifyPlayStorePurchase(purchase, verificationInfoDelegate);
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
