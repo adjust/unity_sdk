@@ -37,6 +37,7 @@ namespace com.adjust.sdk
             long info3,
             long info4,
             double delayStart,
+            int attConsentWaitingInterval,
             int launchDeferredDeeplink,
             int isAttributionCallbackImplemented, 
             int isEventSuccessCallbackImplemented,
@@ -214,6 +215,7 @@ namespace com.adjust.sdk
             long info4 = AdjustUtils.ConvertLong(adjustConfig.info4);
             long secretId = AdjustUtils.ConvertLong(adjustConfig.secretId);
             double delayStart = AdjustUtils.ConvertDouble(adjustConfig.delayStart);
+            int attConsentWaitingInterval = AdjustUtils.ConvertInt(adjustConfig.attConsentWaitingInterval);
             int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.logLevel);
             int isDeviceKnown = AdjustUtils.ConvertBool(adjustConfig.isDeviceKnown);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
@@ -261,6 +263,7 @@ namespace com.adjust.sdk
                 info3,
                 info4,
                 delayStart,
+                attConsentWaitingInterval,
                 launchDeferredDeeplink,
                 isAttributionCallbackImplemented,
                 isEventSuccessCallbackImplemented,
