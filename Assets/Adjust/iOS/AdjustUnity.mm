@@ -790,6 +790,61 @@ extern "C"
         return lastDeeplinkCStringCopy;
     }
 
+    void _AdjustVerifyAppStorePurchase(const char* transactionId,
+                                       const char* productId,
+                                       const char* receipt,
+                                       const char* sceneName) {
+        // Mandatory fields.
+        NSString *strTransactionId;
+        NSString *strProductId;
+        NSData *dataReceipt;
+        NSString *strSceneName;
+
+        // Transaction ID.
+        if (transactionId != NULL) {
+            strTransactionId = [NSString stringWithUTF8String:transactionId];
+        }
+
+        // Product ID.
+        if (productId != NULL) {
+            strProductId = [NSString stringWithUTF8String:productId];
+        }
+
+        // Receipt.
+        if (receipt != NULL) {
+            dataReceipt = [[NSString stringWithUTF8String:receipt] dataUsingEncoding:NSUTF8StringEncoding];
+        }
+
+        // Scene name.
+        strSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+
+        // Verify the purchase.
+        ADJPurchase *purchase = [[ADJPurchase alloc] initWithTransactionId:strTransactionId
+                                                                 productId:strProductId
+                                                                andReceipt:dataReceipt];
+        [Adjust verifyPurchase:purchase
+             completionHandler:^(ADJPurchaseVerificationResult * _Nonnull verificationResult) {
+                if (strSceneName == nil) {
+                    return;
+                }
+                if (verificationResult == nil) {
+                    return;
+                }
+                
+                NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+                addValueOrEmpty(dictionary, @"verificationStatus", verificationResult.verificationStatus);
+                addValueOrEmpty(dictionary, @"code", [NSString stringWithFormat:@"%d", verificationResult.code]);
+                addValueOrEmpty(dictionary, @"message", verificationResult.message);
+
+                NSData *dataVerificationInfo = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+                NSString *strVerificationInfo = [[NSString alloc] initWithBytes:[dataVerificationInfo bytes]
+                                                                         length:[dataVerificationInfo length]
+                                                                       encoding:NSUTF8StringEncoding];
+                const char* verificationInfoCString = [strVerificationInfo UTF8String];
+                UnitySendMessage([strSceneName UTF8String], "GetNativeVerificationInfo", verificationInfoCString);
+        }];
+    }
+
     void _AdjustSetTestOptions(const char* baseUrl,
                                const char* gdprUrl,
                                const char* subscriptionUrl,

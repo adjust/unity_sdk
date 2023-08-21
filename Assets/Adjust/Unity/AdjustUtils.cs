@@ -28,6 +28,8 @@ namespace com.adjust.sdk
         public static string KeySkadConversionValue = "fineValue";
         public static string KeySkadCoarseValue = "coarseValue";
         public static string KeySkadLockWindow = "lockWindow";
+        public static string KeyCode = "code";
+        public static string KeyVerificationStatus = "verificationStatus";
 
         // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
