@@ -107,6 +107,7 @@ extern "C"
                           int64_t info3,
                           int64_t info4,
                           double delayStart,
+                          int attConsentWaitingInterval,
                           int launchDeferredDeeplink,
                           int isAttributionCallbackImplemented,
                           int isEventSuccessCallbackImplemented,
@@ -206,6 +207,11 @@ extern "C"
             [adjustConfig setDelayStart:delayStart];
         }
 
+        // ATT dialog delay.
+        if (attConsentWaitingInterval != -1) {
+            [adjustConfig setAttConsentWaitingInterval:attConsentWaitingInterval];
+        }
+
         // Cost data in attribution callback.
         if (needsCost != -1) {
             [adjustConfig setNeedsCost:(BOOL)needsCost];
@@ -262,6 +268,7 @@ extern "C"
                            double revenue,
                            const char* currency,
                            const char* receipt,
+                           const char* productId,
                            const char* transactionId,
                            const char* callbackId,
                            int isReceiptSet,
@@ -303,6 +310,18 @@ extern "C"
             [event setTransactionId:stringTransactionId];
         }
 
+        // Product ID.
+        if (productId != NULL) {
+            NSString *stringProductId = [NSString stringWithUTF8String:productId];
+            [event setProductId:stringProductId];
+        }
+
+        // Receipt.
+        if (receipt != NULL) {
+            NSString *stringReceipt = [NSString stringWithUTF8String:receipt];
+            [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+
         // Callback ID.
         if (callbackId != NULL) {
             NSString *stringCallbackId = [NSString stringWithUTF8String:callbackId];
@@ -310,19 +329,19 @@ extern "C"
         }
 
         // Receipt (legacy).
-        if ([[NSNumber numberWithInt:isReceiptSet] boolValue]) {
-            NSString *stringReceipt = nil;
-            NSString *stringTransactionId = nil;
+        // if ([[NSNumber numberWithInt:isReceiptSet] boolValue]) {
+        //     NSString *stringReceipt = nil;
+        //     NSString *stringTransactionId = nil;
 
-            if (receipt != NULL) {
-                stringReceipt = [NSString stringWithUTF8String:receipt];
-            }
-            if (transactionId != NULL) {
-                stringTransactionId = [NSString stringWithUTF8String:transactionId];
-            }
+        //     if (receipt != NULL) {
+        //         stringReceipt = [NSString stringWithUTF8String:receipt];
+        //     }
+        //     if (transactionId != NULL) {
+        //         stringTransactionId = [NSString stringWithUTF8String:transactionId];
+        //     }
 
-            [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding] transactionId:stringTransactionId];
-        }
+        //     [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding] transactionId:stringTransactionId];
+        // }
 
         // Track event.
         [Adjust trackEvent:event];
@@ -790,9 +809,65 @@ extern "C"
         return lastDeeplinkCStringCopy;
     }
 
+    void _AdjustVerifyAppStorePurchase(const char* transactionId,
+                                       const char* productId,
+                                       const char* receipt,
+                                       const char* sceneName) {
+        // Mandatory fields.
+        NSString *strTransactionId;
+        NSString *strProductId;
+        NSData *dataReceipt;
+        NSString *strSceneName;
+
+        // Transaction ID.
+        if (transactionId != NULL) {
+            strTransactionId = [NSString stringWithUTF8String:transactionId];
+        }
+
+        // Product ID.
+        if (productId != NULL) {
+            strProductId = [NSString stringWithUTF8String:productId];
+        }
+
+        // Receipt.
+        if (receipt != NULL) {
+            dataReceipt = [[NSString stringWithUTF8String:receipt] dataUsingEncoding:NSUTF8StringEncoding];
+        }
+
+        // Scene name.
+        strSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+
+        // Verify the purchase.
+        ADJPurchase *purchase = [[ADJPurchase alloc] initWithTransactionId:strTransactionId
+                                                                 productId:strProductId
+                                                                andReceipt:dataReceipt];
+        [Adjust verifyPurchase:purchase
+             completionHandler:^(ADJPurchaseVerificationResult * _Nonnull verificationResult) {
+                if (strSceneName == nil) {
+                    return;
+                }
+                if (verificationResult == nil) {
+                    return;
+                }
+                
+                NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+                addValueOrEmpty(dictionary, @"verificationStatus", verificationResult.verificationStatus);
+                addValueOrEmpty(dictionary, @"code", [NSString stringWithFormat:@"%d", verificationResult.code]);
+                addValueOrEmpty(dictionary, @"message", verificationResult.message);
+
+                NSData *dataVerificationInfo = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+                NSString *strVerificationInfo = [[NSString alloc] initWithBytes:[dataVerificationInfo bytes]
+                                                                         length:[dataVerificationInfo length]
+                                                                       encoding:NSUTF8StringEncoding];
+                const char* verificationInfoCString = [strVerificationInfo UTF8String];
+                UnitySendMessage([strSceneName UTF8String], "GetNativeVerificationInfo", verificationInfoCString);
+        }];
+    }
+
     void _AdjustSetTestOptions(const char* baseUrl,
                                const char* gdprUrl,
                                const char* subscriptionUrl,
+                               const char* purchaseVerificationUrl,
                                const char* extraPath,
                                long timerIntervalInMilliseconds,
                                long timerStartInMilliseconds,
@@ -817,6 +892,11 @@ extern "C"
         NSString *stringSubscriptionUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:subscriptionUrl] : nil;
         if (stringSubscriptionUrl != nil) {
             [testOptions setSubscriptionUrl:stringSubscriptionUrl];
+        }
+
+        NSString *stringPurchaseVerificationUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:purchaseVerificationUrl] : nil;
+        if (stringPurchaseVerificationUrl != nil) {
+            [testOptions setPurchaseVerificationUrl:stringPurchaseVerificationUrl];
         }
 
         NSString *stringExtraPath = isStringValid(extraPath) == true ? [NSString stringWithUTF8String:extraPath] : nil;

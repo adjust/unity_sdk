@@ -62,6 +62,7 @@ namespace com.adjust.sdk
         internal bool? allowIdfaReading;
         internal bool? skAdNetworkHandling;
         internal bool? linkMeEnabled;
+        internal int? attConsentWaitingInterval;
         // Windows specific members
         internal Action<String> logDelegate;
 
@@ -117,11 +118,6 @@ namespace com.adjust.sdk
             this.coppaCompliantEnabled = coppaCompliantEnabled;
         }
 
-        public void setPlayStoreKidsAppEnabled(bool playStoreKidsAppEnabled)
-        {
-            this.playStoreKidsAppEnabled = playStoreKidsAppEnabled;
-        }
-
         public void setNeedsCost(bool needsCost)
         {
             this.needsCost = needsCost;
@@ -147,14 +143,13 @@ namespace com.adjust.sdk
             this.urlStrategy = urlStrategy;
         }
 
-        public void deactivateSKAdNetworkHandling()
+        public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)
         {
-            this.skAdNetworkHandling = true;
-        }
-
-        public void setLinkMeEnabled(bool linkMeEnabled)
-        {
-            this.linkMeEnabled = linkMeEnabled;
+            this.secretId = secretId;
+            this.info1 = info1;
+            this.info2 = info2;
+            this.info3 = info3;
+            this.info4 = info4;
         }
 
         public void setDeferredDeeplinkDelegate(Action<string> deferredDeeplinkDelegate, string sceneName = "Adjust")
@@ -223,37 +218,6 @@ namespace com.adjust.sdk
             return this.sessionFailureDelegate;
         }
 
-        public void setConversionValueUpdatedDelegate(Action<int> conversionValueUpdatedDelegate, string sceneName = "Adjust")
-        {
-            this.conversionValueUpdatedDelegate = conversionValueUpdatedDelegate;
-            this.sceneName = sceneName;
-        }
-
-        public void setSkad4ConversionValueUpdatedDelegate(Action<int, string, bool> skad4ConversionValueUpdatedDelegate, string sceneName = "Adjust")
-        {
-            this.skad4ConversionValueUpdatedDelegate = skad4ConversionValueUpdatedDelegate;
-            this.sceneName = sceneName;
-        }
-
-        public Action<int> getConversionValueUpdatedDelegate()
-        {
-            return this.conversionValueUpdatedDelegate;
-        }
-
-        public Action<int, string, bool> getSkad4ConversionValueUpdatedDelegate()
-        {
-            return this.skad4ConversionValueUpdatedDelegate;
-        }
-
-        public void setAppSecret(long secretId, long info1, long info2, long info3, long info4)
-        {
-            this.secretId = secretId;
-            this.info1 = info1;
-            this.info2 = info2;
-            this.info3 = info3;
-            this.info4 = info4;
-        }
-
         // iOS specific methods.
         [Obsolete("This is an obsolete method. Apple Search Ads attribution with usage of iAd.framework has been sunset by Apple as of February 7th 2023.")]
         public void setAllowiAdInfoReading(bool allowiAdInfoReading)
@@ -268,6 +232,43 @@ namespace com.adjust.sdk
         public void setAllowIdfaReading(bool allowIdfaReading)
         {
             this.allowIdfaReading = allowIdfaReading;
+        }
+
+        public void deactivateSKAdNetworkHandling()
+        {
+            this.skAdNetworkHandling = true;
+        }
+
+        public void setLinkMeEnabled(bool linkMeEnabled)
+        {
+            this.linkMeEnabled = linkMeEnabled;
+        }
+
+        public void setConversionValueUpdatedDelegate(Action<int> conversionValueUpdatedDelegate, string sceneName = "Adjust")
+        {
+            this.conversionValueUpdatedDelegate = conversionValueUpdatedDelegate;
+            this.sceneName = sceneName;
+        }
+
+        public Action<int> getConversionValueUpdatedDelegate()
+        {
+            return this.conversionValueUpdatedDelegate;
+        }
+
+        public void setSkad4ConversionValueUpdatedDelegate(Action<int, string, bool> skad4ConversionValueUpdatedDelegate, string sceneName = "Adjust")
+        {
+            this.skad4ConversionValueUpdatedDelegate = skad4ConversionValueUpdatedDelegate;
+            this.sceneName = sceneName;
+        }
+
+        public Action<int, string, bool> getSkad4ConversionValueUpdatedDelegate()
+        {
+            return this.skad4ConversionValueUpdatedDelegate;
+        }
+
+        public void setAttConsentWaitingInterval(int numberOfSeconds)
+        {
+            this.attConsentWaitingInterval = numberOfSeconds;
         }
 
         // Android specific methods.
@@ -290,6 +291,11 @@ namespace com.adjust.sdk
         public void setPreinstallFilePath(string preinstallFilePath)
         {
             this.preinstallFilePath = preinstallFilePath;
+        }
+
+        public void setPlayStoreKidsAppEnabled(bool playStoreKidsAppEnabled)
+        {
+            this.playStoreKidsAppEnabled = playStoreKidsAppEnabled;
         }
 
         // Windows specific methods.

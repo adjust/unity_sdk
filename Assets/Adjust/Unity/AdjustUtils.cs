@@ -28,11 +28,14 @@ namespace com.adjust.sdk
         public static string KeySkadConversionValue = "fineValue";
         public static string KeySkadCoarseValue = "coarseValue";
         public static string KeySkadLockWindow = "lockWindow";
+        public static string KeyCode = "code";
+        public static string KeyVerificationStatus = "verificationStatus";
 
         // For testing purposes.
         public static string KeyTestOptionsBaseUrl = "baseUrl";
         public static string KeyTestOptionsGdprUrl = "gdprUrl";
         public static string KeyTestOptionsSubscriptionUrl = "subscriptionUrl";
+        public static string KeyTestOptionsPurchaseVerificationUrl = "purchaseVerificationUrl";
         public static string KeyTestOptionsExtraPath = "extraPath";
         public static string KeyTestOptionsBasePath = "basePath";
         public static string KeyTestOptionsGdprPath = "gdprPath";
@@ -308,12 +311,14 @@ namespace com.adjust.sdk
             ajoTestOptions.Set<String>("baseUrl", testOptionsMap[KeyTestOptionsBaseUrl]);
             ajoTestOptions.Set<String>("gdprUrl", testOptionsMap[KeyTestOptionsGdprUrl]);
             ajoTestOptions.Set<String>("subscriptionUrl", testOptionsMap[KeyTestOptionsSubscriptionUrl]);
+            ajoTestOptions.Set<String>("purchaseVerificationUrl", testOptionsMap[KeyTestOptionsPurchaseVerificationUrl]);
 
             if (testOptionsMap.ContainsKey(KeyTestOptionsExtraPath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsExtraPath]))
             {
                 ajoTestOptions.Set<String>("basePath", testOptionsMap[KeyTestOptionsExtraPath]);
                 ajoTestOptions.Set<String>("gdprPath", testOptionsMap[KeyTestOptionsExtraPath]);
                 ajoTestOptions.Set<String>("subscriptionPath", testOptionsMap[KeyTestOptionsExtraPath]);
+                ajoTestOptions.Set<String>("purchaseVerificationPath", testOptionsMap[KeyTestOptionsExtraPath]);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsDeleteState) && ajoCurrentActivity != null)
             {
