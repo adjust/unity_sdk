@@ -1,3 +1,15 @@
+### Version 4.34.0 (21st August 2023)
+#### Added
+- Added ability to delay SDK start on iOS platform in order to wait for an answer to the ATT dialog. You can set the number of seconds to wait (capped internally to 120) by calling the `setAttConsentWaitingInterval` method of the `AdjustConfig` instance.
+- Added support for purchase verification. In case you are using this feature, you can now use it by calling `verifyAppStorePurchase` (for iOS) and `verifyPlayStorePurchase` (for Android) methods of the `Adjust` instance.
+
+#### Native SDKs
+- [iOS@v4.34.1][ios_sdk_v4.34.1]
+- [Android@v4.34.0][android_sdk_v4.34.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.33.2 (25th July 2023)
 #### Fixed
 - Fixed iOS compile time errors caused by hanging references to removed `iAd.framework` handling logic (https://github.com/adjust/unity_sdk/issues/271).
@@ -1105,6 +1117,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.32.0]: https://github.com/adjust/ios_sdk/tree/v4.32.0
 [ios_sdk_v4.33.2]: https://github.com/adjust/ios_sdk/tree/v4.33.2
 [ios_sdk_v4.33.4]: https://github.com/adjust/ios_sdk/tree/v4.33.4
+[ios_sdk_v4.34.1]: https://github.com/adjust/ios_sdk/tree/v4.34.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1149,6 +1162,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.32.0]: https://github.com/adjust/android_sdk/tree/v4.32.0
 [android_sdk_v4.33.2]: https://github.com/adjust/android_sdk/tree/v4.33.2
 [android_sdk_v4.33.5]: https://github.com/adjust/android_sdk/tree/v4.33.5
+[android_sdk_v4.34.0]: https://github.com/adjust/android_sdk/tree/v4.34.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

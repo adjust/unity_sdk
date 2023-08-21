@@ -17,7 +17,7 @@ namespace com.adjust.sdk
         public double? costAmount { get; set; }
         public string costCurrency { get; set; }
         // Android only
-        public string fbInstallReferrer {get; set;}
+        public string fbInstallReferrer { get; set; }
 
         public AdjustAttribution() {}
 

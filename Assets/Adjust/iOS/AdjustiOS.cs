@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.33.2";
+        private const string sdkPrefix = "unity4.34.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -37,6 +37,7 @@ namespace com.adjust.sdk
             long info3,
             long info4,
             double delayStart,
+            int attConsentWaitingInterval,
             int launchDeferredDeeplink,
             int isAttributionCallbackImplemented, 
             int isEventSuccessCallbackImplemented,
@@ -53,6 +54,7 @@ namespace com.adjust.sdk
             double revenue,
             string currency,
             string receipt,
+            string productId,
             string transactionId,
             string callbackId,
             int isReceiptSet,
@@ -151,6 +153,7 @@ namespace com.adjust.sdk
             string baseUrl,
             string gdprUrl,
             string subscriptionUrl,
+            string purchaseVerificationUrl,
             string extraPath,
             long timerIntervalInMilliseconds,
             long timerStartInMilliseconds,
@@ -188,6 +191,13 @@ namespace com.adjust.sdk
         [DllImport("__Internal")]
         private static extern string _AdjustGetLastDeeplink();
 
+        [DllImport("__Internal")]
+        private static extern void _AdjustVerifyAppStorePurchase(
+            string transactionId,
+            string productId,
+            string receipt,
+            string sceneName);
+
         public AdjustiOS() {}
 
         public static void Start(AdjustConfig adjustConfig)
@@ -205,6 +215,7 @@ namespace com.adjust.sdk
             long info4 = AdjustUtils.ConvertLong(adjustConfig.info4);
             long secretId = AdjustUtils.ConvertLong(adjustConfig.secretId);
             double delayStart = AdjustUtils.ConvertDouble(adjustConfig.delayStart);
+            int attConsentWaitingInterval = AdjustUtils.ConvertInt(adjustConfig.attConsentWaitingInterval);
             int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.logLevel);
             int isDeviceKnown = AdjustUtils.ConvertBool(adjustConfig.isDeviceKnown);
             int sendInBackground = AdjustUtils.ConvertBool(adjustConfig.sendInBackground);
@@ -252,6 +263,7 @@ namespace com.adjust.sdk
                 info3,
                 info4,
                 delayStart,
+                attConsentWaitingInterval,
                 launchDeferredDeeplink,
                 isAttributionCallbackImplemented,
                 isEventSuccessCallbackImplemented,
@@ -270,12 +282,13 @@ namespace com.adjust.sdk
             string eventToken = adjustEvent.eventToken;
             string currency = adjustEvent.currency;
             string receipt = adjustEvent.receipt;
+            string productId = adjustEvent.productId;
             string transactionId = adjustEvent.transactionId;
             string callbackId = adjustEvent.callbackId;
             string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
 
-            _AdjustTrackEvent(eventToken, revenue, currency, receipt, transactionId, callbackId, isReceiptSet, stringJsonCallbackParameters, stringJsonPartnerParameters);
+            _AdjustTrackEvent(eventToken, revenue, currency, receipt, productId, transactionId, callbackId, isReceiptSet, stringJsonCallbackParameters, stringJsonPartnerParameters);
         }        
 
         public static void SetEnabled(bool enabled)
@@ -491,12 +504,27 @@ namespace com.adjust.sdk
             return _AdjustGetLastDeeplink();
         }
 
+        public static void VerifyAppStorePurchase(AdjustAppStorePurchase purchase, string sceneName)
+        {
+            string transactionId = purchase.transactionId;
+            string productId = purchase.productId;
+            string receipt = purchase.receipt;
+            string cSceneName = sceneName != null ? sceneName : "ADJ_INVALID";
+            
+            _AdjustVerifyAppStorePurchase(
+                transactionId,
+                productId,
+                receipt,
+                cSceneName);
+        }
+
         // Used for testing only.
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
             string baseUrl = testOptions[AdjustUtils.KeyTestOptionsBaseUrl];
             string gdprUrl = testOptions[AdjustUtils.KeyTestOptionsGdprUrl];
             string subscriptionUrl = testOptions[AdjustUtils.KeyTestOptionsSubscriptionUrl];
+            string purchaseVerificationUrl = testOptions[AdjustUtils.KeyTestOptionsPurchaseVerificationUrl];
             string extraPath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsExtraPath) ? testOptions[AdjustUtils.KeyTestOptionsExtraPath] : null;
             long timerIntervalMilis = -1;
             long timerStartMilis = -1;
@@ -544,6 +572,7 @@ namespace com.adjust.sdk
                 baseUrl,
                 gdprUrl,
                 subscriptionUrl,
+                purchaseVerificationUrl,
                 extraPath,
                 timerIntervalMilis,
                 timerStartMilis,

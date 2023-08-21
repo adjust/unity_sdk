@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.33.2";
+        private const string sdkPrefix = "unity4.34.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -18,6 +18,7 @@ namespace com.adjust.sdk
         private static EventTrackingSucceededListener onEventTrackingSucceededListener;
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
+        private static VerificationInfoListener onVerificationInfoListener;
 
         public static void Start(AdjustConfig adjustConfig)
         {
@@ -288,6 +289,18 @@ namespace com.adjust.sdk
             if (adjustEvent.callbackId != null)
             {
                 ajoAdjustEvent.Call("setCallbackId", adjustEvent.callbackId);
+            }
+
+            // Check if user has added product ID to the event.
+            if (adjustEvent.productId != null)
+            {
+                ajoAdjustEvent.Call("setProductId", adjustEvent.productId);
+            }
+
+            // Check if user has added purchase token to the event.
+            if (adjustEvent.purchaseToken != null)
+            {
+                ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.purchaseToken);
             }
 
             // Track the event.
@@ -638,6 +651,16 @@ namespace com.adjust.sdk
             return sdkPrefix + "@" + nativeSdkVersion;
         }
 
+        public static void VerifyPlayStorePurchase(AdjustPlayStorePurchase purchase, Action<AdjustPurchaseVerificationInfo> verificationInfoCallback)
+        {
+            AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPurchase",
+                purchase.productId,
+                purchase.purchaseToken);
+            onVerificationInfoListener = new VerificationInfoListener(verificationInfoCallback);
+
+            ajcAdjust.CallStatic("verifyPurchase", ajoPurchase, onVerificationInfoListener);
+        }
+
         // Used for testing only.
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
@@ -949,6 +972,32 @@ namespace com.adjust.sdk
                 }
 
                 this.onGoogleAdIdRead(ajoAdId.Call<string>("toString"));
+            }
+        }
+
+        private class VerificationInfoListener : AndroidJavaProxy
+        {
+            private Action<AdjustPurchaseVerificationInfo> callback;
+
+            public VerificationInfoListener(Action<AdjustPurchaseVerificationInfo> pCallback) : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onVerificationFinished(AndroidJavaObject verificationInfo)
+            {
+                AdjustPurchaseVerificationInfo purchaseVerificationInfo = new AdjustPurchaseVerificationInfo();
+                // verification status
+                purchaseVerificationInfo.verificationStatus = verificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus);
+                // status code
+                purchaseVerificationInfo.code = verificationInfo.Get<int>(AdjustUtils.KeyCode);
+                // message
+                purchaseVerificationInfo.message = verificationInfo.Get<string>(AdjustUtils.KeyMessage);
+
+                if (callback != null)
+                {
+                    callback(purchaseVerificationInfo);
+                }
             }
         }
 
