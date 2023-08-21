@@ -152,6 +152,7 @@ namespace com.adjust.sdk
             string baseUrl,
             string gdprUrl,
             string subscriptionUrl,
+            string purchaseVerificationUrl,
             string extraPath,
             long timerIntervalInMilliseconds,
             long timerStartInMilliseconds,
@@ -520,6 +521,7 @@ namespace com.adjust.sdk
             string baseUrl = testOptions[AdjustUtils.KeyTestOptionsBaseUrl];
             string gdprUrl = testOptions[AdjustUtils.KeyTestOptionsGdprUrl];
             string subscriptionUrl = testOptions[AdjustUtils.KeyTestOptionsSubscriptionUrl];
+            string purchaseVerificationUrl = testOptions[AdjustUtils.KeyTestOptionsPurchaseVerificationUrl];
             string extraPath = testOptions.ContainsKey(AdjustUtils.KeyTestOptionsExtraPath) ? testOptions[AdjustUtils.KeyTestOptionsExtraPath] : null;
             long timerIntervalMilis = -1;
             long timerStartMilis = -1;
@@ -567,6 +569,7 @@ namespace com.adjust.sdk
                 baseUrl,
                 gdprUrl,
                 subscriptionUrl,
+                purchaseVerificationUrl,
                 extraPath,
                 timerIntervalMilis,
                 timerStartMilis,
