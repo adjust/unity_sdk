@@ -291,6 +291,18 @@ namespace com.adjust.sdk
                 ajoAdjustEvent.Call("setCallbackId", adjustEvent.callbackId);
             }
 
+            // Check if user has added product ID to the event.
+            if (adjustEvent.productId != null)
+            {
+                ajoAdjustEvent.Call("setProductId", adjustEvent.productId);
+            }
+
+            // Check if user has added purchase token to the event.
+            if (adjustEvent.purchaseToken != null)
+            {
+                ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.purchaseToken);
+            }
+
             // Track the event.
             ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
         }
