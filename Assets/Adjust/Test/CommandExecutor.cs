@@ -20,14 +20,21 @@ namespace com.adjust.sdk.test
         private string _baseUrl;
         private string _gdprUrl;
         private string _subscriptionUrl;
+        private string _purchaseVerificationUrl;
         private Command _command;
         private ITestLibrary _testLibrary;
 
-        public CommandExecutor(ITestLibrary testLibrary, string baseUrl, string gdprUrl, string subscriptionUrl)
+        public CommandExecutor(
+            ITestLibrary testLibrary,
+            string baseUrl,
+            string gdprUrl,
+            string subscriptionUrl,
+            string purchaseVerificationUrl)
         {
             _baseUrl = baseUrl;
             _gdprUrl = gdprUrl;
             _subscriptionUrl = subscriptionUrl;
+            _purchaseVerificationUrl = purchaseVerificationUrl;
             _testLibrary = testLibrary;
         }
             
@@ -74,6 +81,7 @@ namespace com.adjust.sdk.test
                     case "measurementConsent": MeasurementConsent(); break;
                     case "trackAdRevenueV2": TrackAdRevenueV2(); break;
                     case "getLastDeeplink": GetLastDeeplink(); break;
+                    case "verifyPurchase": VerifyPurchase(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -90,6 +98,7 @@ namespace com.adjust.sdk.test
             testOptions[AdjustUtils.KeyTestOptionsBaseUrl] = _baseUrl;
             testOptions[AdjustUtils.KeyTestOptionsGdprUrl] = _gdprUrl;
             testOptions[AdjustUtils.KeyTestOptionsSubscriptionUrl] = _subscriptionUrl;
+            testOptions[AdjustUtils.KeyTestOptionsPurchaseVerificationUrl] = _purchaseVerificationUrl;
 
             if (_command.ContainsParameter("basePath"))
             {
@@ -553,6 +562,30 @@ namespace com.adjust.sdk.test
                 var callbackId = _command.GetFirstParameterValue("callbackId");
                 adjustEvent.setCallbackId(callbackId);
             }
+
+            if (_command.ContainsParameter("transactionId"))
+            {
+                var transactionId = _command.GetFirstParameterValue("transactionId");
+                adjustEvent.setTransactionId(transactionId);
+            }
+
+            if (_command.ContainsParameter("productId"))
+            {
+                var productId = _command.GetFirstParameterValue("productId");
+                adjustEvent.setProductId(productId);
+            }
+
+            if (_command.ContainsParameter("receipt"))
+            {
+                var receipt = _command.GetFirstParameterValue("receipt");
+                adjustEvent.setReceipt(receipt);
+            }
+
+            if (_command.ContainsParameter("purchaseToken"))
+            {
+                var purchaseToken = _command.GetFirstParameterValue("purchaseToken");
+                adjustEvent.setPurchaseToken(purchaseToken);
+            }
         }
 
         private void TrackEvent()
@@ -941,8 +974,44 @@ namespace com.adjust.sdk.test
             string localExtraPath = ExtraPath;
             string lastDeeplink = Adjust.getLastDeeplink();
             _testLibrary.AddInfoToSend("last_deeplink", lastDeeplink);
-            _testLibrary.SendInfoToServer(localExtraPath);            
+            _testLibrary.SendInfoToServer(localExtraPath);        
 #endif
+        }
+
+        private void VerifyPurchase()
+        {
+#if UNITY_IOS
+            string transactionId = _command.GetFirstParameterValue("transactionId");
+            string productId = _command.GetFirstParameterValue("productId");
+            string receipt = _command.GetFirstParameterValue("receipt");
+
+            AdjustAppStorePurchase purchase = new AdjustAppStorePurchase(
+                transactionId,
+                productId,
+                receipt);
+
+            Adjust.verifyAppStorePurchase(purchase, VerificationInfoCallback);
+#elif UNITY_ANDROID
+            string productId = _command.GetFirstParameterValue("productId");
+            string purchaseToken = _command.GetFirstParameterValue("purchaseToken");
+
+            AdjustPlayStorePurchase purchase = new AdjustPlayStorePurchase(
+                productId,
+                purchaseToken);
+
+            Adjust.verifyPlayStorePurchase(purchase, VerificationInfoCallback);
+#endif
+        }
+
+        // helper methods
+
+        private void VerificationInfoCallback(AdjustPurchaseVerificationInfo verificationInfo)
+        {
+            string localExtraPath = ExtraPath;
+            _testLibrary.AddInfoToSend("verification_status", verificationInfo.verificationStatus);
+            _testLibrary.AddInfoToSend("code", verificationInfo.code.ToString());
+            _testLibrary.AddInfoToSend("message", verificationInfo.message);
+            _testLibrary.SendInfoToServer(localExtraPath);
         }
 
         private void CommandNotFound(string className, string methodName)

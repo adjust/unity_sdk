@@ -861,6 +861,7 @@ extern "C"
     void _AdjustSetTestOptions(const char* baseUrl,
                                const char* gdprUrl,
                                const char* subscriptionUrl,
+                               const char* purchaseVerificationUrl,
                                const char* extraPath,
                                long timerIntervalInMilliseconds,
                                long timerStartInMilliseconds,
@@ -885,6 +886,11 @@ extern "C"
         NSString *stringSubscriptionUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:subscriptionUrl] : nil;
         if (stringSubscriptionUrl != nil) {
             [testOptions setSubscriptionUrl:stringSubscriptionUrl];
+        }
+
+        NSString *stringPurchaseVerificationUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:purchaseVerificationUrl] : nil;
+        if (stringPurchaseVerificationUrl != nil) {
+            [testOptions setPurchaseVerificationUrl:stringPurchaseVerificationUrl];
         }
 
         NSString *stringExtraPath = isStringValid(extraPath) == true ? [NSString stringWithUTF8String:extraPath] : nil;
