@@ -107,6 +107,7 @@ extern "C"
                           int64_t info3,
                           int64_t info4,
                           double delayStart,
+                          int attConsentWaitingInterval,
                           int launchDeferredDeeplink,
                           int isAttributionCallbackImplemented,
                           int isEventSuccessCallbackImplemented,
@@ -204,6 +205,11 @@ extern "C"
         // Delay start.
         if (delayStart != -1) {
             [adjustConfig setDelayStart:delayStart];
+        }
+
+        // ATT dialog delay.
+        if (attConsentWaitingInterval != -1) {
+            [adjustConfig setAttConsentWaitingInterval:attConsentWaitingInterval];
         }
 
         // Cost data in attribution callback.
