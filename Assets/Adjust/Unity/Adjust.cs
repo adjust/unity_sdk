@@ -893,8 +893,7 @@ namespace com.adjust.sdk
             if (purchase == null ||
                 purchase.transactionId == null ||
                 purchase.productId == null ||
-                purchase.receipt == null ||
-                verificationInfoDelegate == null)
+                purchase.receipt == null)
             {
                 Debug.Log("Adjust: Invalid App Store purchase parameters.");
                 return;
