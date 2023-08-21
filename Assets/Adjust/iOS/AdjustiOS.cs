@@ -188,6 +188,13 @@ namespace com.adjust.sdk
         [DllImport("__Internal")]
         private static extern string _AdjustGetLastDeeplink();
 
+        [DllImport("__Internal")]
+        private static extern void _AdjustVerifyAppStorePurchase(
+            string transactionId,
+            string productId,
+            string receipt,
+            string sceneName);
+
         public AdjustiOS() {}
 
         public static void Start(AdjustConfig adjustConfig)
@@ -489,6 +496,20 @@ namespace com.adjust.sdk
         public static string GetLastDeeplink()
         {
             return _AdjustGetLastDeeplink();
+        }
+
+        public static void VerifyAppStorePurchase(AdjustAppStorePurchase purchase, string sceneName)
+        {
+            string transactionId = purchase.transactionId;
+            string productId = purchase.productId;
+            string receipt = purchase.receipt;
+            string cSceneName = sceneName != null ? sceneName : "ADJ_INVALID";
+            
+            _AdjustVerifyAppStorePurchase(
+                transactionId,
+                productId,
+                receipt,
+                cSceneName);
         }
 
         // Used for testing only.

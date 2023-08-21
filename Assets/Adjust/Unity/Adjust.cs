@@ -85,6 +85,7 @@ namespace com.adjust.sdk
         private static Action<int, string, bool> skad4ConversionValueUpdatedDelegate = null;
         private static Action<string> skadUpdateConversionValueDelegate = null;
         private static Action<string> skad4UpdateConversionValueDelegate = null;
+        private static Action<AdjustPurchaseVerificationInfo> verificationInfoDelegate = null;
 #endif
 
         void Awake()
@@ -878,6 +879,38 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static void verifyAppStorePurchase(
+            AdjustAppStorePurchase purchase,
+            Action<AdjustPurchaseVerificationInfo> verificationInfoDelegate,
+            string sceneName = "Adjust")
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            if (purchase == null ||
+                purchase.transactionId == null ||
+                purchase.productId == null ||
+                purchase.receipt == null ||
+                verificationInfoDelegate == null)
+            {
+                Debug.Log("Adjust: Invalid App Store purchase parameters.");
+                return;
+            }
+
+            Adjust.verificationInfoDelegate = verificationInfoDelegate;
+            AdjustiOS.VerifyAppStorePurchase(purchase, sceneName);
+#elif UNITY_ANDROID
+            Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
 #if UNITY_IOS
         public void GetNativeAttribution(string attributionData)
         {
@@ -1079,6 +1112,23 @@ namespace com.adjust.sdk
                 callback(Int16.Parse(authorizationStatus));
             }
             Adjust.authorizationStatusDelegates.Clear();
+        }
+
+        public void GetNativeVerificationInfo(string verificationInfoData)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+            if (Adjust.verificationInfoDelegate == null)
+            {
+                Debug.Log("[Adjust]: Purchase verification info delegate was not set.");
+                return;
+            }
+
+            var verificationInfo = new AdjustPurchaseVerificationInfo(verificationInfoData);
+            Adjust.verificationInfoDelegate(verificationInfo);
         }
 #endif
 
