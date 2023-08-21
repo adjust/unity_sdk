@@ -262,6 +262,7 @@ extern "C"
                            double revenue,
                            const char* currency,
                            const char* receipt,
+                           const char* productId,
                            const char* transactionId,
                            const char* callbackId,
                            int isReceiptSet,
@@ -303,6 +304,18 @@ extern "C"
             [event setTransactionId:stringTransactionId];
         }
 
+        // Product ID.
+        if (productId != NULL) {
+            NSString *stringProductId = [NSString stringWithUTF8String:productId];
+            [event setProductId:stringProductId];
+        }
+
+        // Receipt.
+        if (receipt != NULL) {
+            NSString *stringReceipt = [NSString stringWithUTF8String:receipt];
+            [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+
         // Callback ID.
         if (callbackId != NULL) {
             NSString *stringCallbackId = [NSString stringWithUTF8String:callbackId];
@@ -310,19 +323,19 @@ extern "C"
         }
 
         // Receipt (legacy).
-        if ([[NSNumber numberWithInt:isReceiptSet] boolValue]) {
-            NSString *stringReceipt = nil;
-            NSString *stringTransactionId = nil;
+        // if ([[NSNumber numberWithInt:isReceiptSet] boolValue]) {
+        //     NSString *stringReceipt = nil;
+        //     NSString *stringTransactionId = nil;
 
-            if (receipt != NULL) {
-                stringReceipt = [NSString stringWithUTF8String:receipt];
-            }
-            if (transactionId != NULL) {
-                stringTransactionId = [NSString stringWithUTF8String:transactionId];
-            }
+        //     if (receipt != NULL) {
+        //         stringReceipt = [NSString stringWithUTF8String:receipt];
+        //     }
+        //     if (transactionId != NULL) {
+        //         stringTransactionId = [NSString stringWithUTF8String:transactionId];
+        //     }
 
-            [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding] transactionId:stringTransactionId];
-        }
+        //     [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding] transactionId:stringTransactionId];
+        // }
 
         // Track event.
         [Adjust trackEvent:event];
