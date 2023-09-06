@@ -4,6 +4,7 @@
 
 #### Fixed
 - Fixed issue where subsequent calls to active state callback would make ATT delay timer elapse sooner.
+- Removed unnecessary `AdjustSettings.asset` file out of `.unitypackage`.
 
 #### Native SDKs
 - [iOS@v4.34.2][ios_sdk_v4.34.2]
