@@ -1,3 +1,18 @@
+### Version 4.34.1 (6th September 2023)
+#### Added
+- Added more logging around ATT delay timer feature to indicate that it's activated.
+
+#### Fixed
+- Fixed issue where subsequent calls to active state callback would make ATT delay timer elapse sooner.
+- Removed unnecessary `AdjustSettings.asset` file out of `.unitypackage`.
+
+#### Native SDKs
+- [iOS@v4.34.2][ios_sdk_v4.34.2]
+- [Android@v4.34.0][android_sdk_v4.34.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.34.0 (21st August 2023)
 #### Added
 - Added ability to delay SDK start on iOS platform in order to wait for an answer to the ATT dialog. You can set the number of seconds to wait (capped internally to 120) by calling the `setAttConsentWaitingInterval` method of the `AdjustConfig` instance.
@@ -1118,6 +1133,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.33.2]: https://github.com/adjust/ios_sdk/tree/v4.33.2
 [ios_sdk_v4.33.4]: https://github.com/adjust/ios_sdk/tree/v4.33.4
 [ios_sdk_v4.34.1]: https://github.com/adjust/ios_sdk/tree/v4.34.1
+[ios_sdk_v4.34.2]: https://github.com/adjust/ios_sdk/tree/v4.34.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
