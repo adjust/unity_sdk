@@ -336,6 +336,13 @@ namespace com.adjust.sdk.test
                 adjustConfig.setPlayStoreKidsAppEnabled(playStoreKids);
             }
 
+            if (_command.ContainsParameter("finalAttributionEnabled"))
+            {
+                var finalAndroidAttributionEnabledS = _command.GetFirstParameterValue("finalAttributionEnabled");
+                var finalAndroidAttributionEnabled = finalAndroidAttributionEnabledS.ToLower() == "true";
+                adjustConfig.setFinalAndroidAttributionEnabled(finalAndroidAttributionEnabled);
+            }
+
             if (_command.ContainsParameter("sendInBackground"))
             {
                 var sendInBackgroundS = _command.GetFirstParameterValue("sendInBackground");

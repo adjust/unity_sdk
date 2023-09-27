@@ -87,6 +87,12 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setCoppaCompliantEnabled", adjustConfig.coppaCompliantEnabled.Value);
             }
 
+            // Check final Android attribution setting.
+            if (adjustConfig.finalAndroidAttributionEnabled != null)
+            {
+                ajoAdjustConfig.Call("setFinalAttributionEnabled", adjustConfig.finalAndroidAttributionEnabled.Value);
+            }
+
             // Check Play Store Kids Apps setting.
             if (adjustConfig.playStoreKidsAppEnabled != null)
             {
