@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.34.1";
+        private const string sdkPrefix = "unity4.35.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -85,6 +85,12 @@ namespace com.adjust.sdk
             if (adjustConfig.coppaCompliantEnabled != null)
             {
                 ajoAdjustConfig.Call("setCoppaCompliantEnabled", adjustConfig.coppaCompliantEnabled.Value);
+            }
+
+            // Check final Android attribution setting.
+            if (adjustConfig.finalAndroidAttributionEnabled != null)
+            {
+                ajoAdjustConfig.Call("setFinalAttributionEnabled", adjustConfig.finalAndroidAttributionEnabled.Value);
             }
 
             // Check Play Store Kids Apps setting.
