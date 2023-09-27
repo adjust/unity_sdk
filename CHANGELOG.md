@@ -1,3 +1,15 @@
+### Version 4.35.0 (27th September 2023)
+#### Added
+- Added support for SigV3 library. Update authorization header building logic to use `adj_signing_id`.
+- Added `setAndroidFinalAttributionEnabled` method to `AdjustConfig` to indicate if only final Android attribution is needed in attribution callback (by default attribution callback return intermediate attribution as well before final attribution if not enabled with this setter method).
+
+#### Native SDKs
+- [iOS@v4.35.0][ios_sdk_v4.35.0]
+- [Android@v4.35.0][android_sdk_v4.35.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.34.1 (6th September 2023)
 #### Added
 - Added more logging around ATT delay timer feature to indicate that it's activated.
@@ -1134,6 +1146,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.33.4]: https://github.com/adjust/ios_sdk/tree/v4.33.4
 [ios_sdk_v4.34.1]: https://github.com/adjust/ios_sdk/tree/v4.34.1
 [ios_sdk_v4.34.2]: https://github.com/adjust/ios_sdk/tree/v4.34.2
+[ios_sdk_v4.35.0]: https://github.com/adjust/ios_sdk/tree/v4.35.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1179,6 +1192,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.33.2]: https://github.com/adjust/android_sdk/tree/v4.33.2
 [android_sdk_v4.33.5]: https://github.com/adjust/android_sdk/tree/v4.33.5
 [android_sdk_v4.34.0]: https://github.com/adjust/android_sdk/tree/v4.34.0
+[android_sdk_v4.35.0]: https://github.com/adjust/android_sdk/tree/v4.35.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
