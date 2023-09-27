@@ -41,6 +41,7 @@ namespace com.adjust.sdk
         internal bool? allowSuppressLogLevel;
         internal bool? needsCost;
         internal bool launchDeferredDeeplink;
+        internal bool? finalAndroidAttributionEnabled;
         internal AdjustLogLevel? logLevel;
         internal AdjustEnvironment environment;
         internal Action<string> deferredDeeplinkDelegate;
@@ -296,6 +297,11 @@ namespace com.adjust.sdk
         public void setPlayStoreKidsAppEnabled(bool playStoreKidsAppEnabled)
         {
             this.playStoreKidsAppEnabled = playStoreKidsAppEnabled;
+        }
+
+        public void setFinalAndroidAttributionEnabled(bool finalAndroidAttributionEnabled)
+        {
+            this.finalAndroidAttributionEnabled = finalAndroidAttributionEnabled;
         }
 
         // Windows specific methods.
