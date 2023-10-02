@@ -1,3 +1,14 @@
+### Version 4.35.1 (2nd October 2023)
+#### Fixed
+- Fixed issue with signing iOS requests post ATT delay timer expiry.
+
+#### Native SDKs
+- [iOS@v4.35.1][ios_sdk_v4.35.1]
+- [Android@v4.35.0][android_sdk_v4.35.0]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.35.0 (27th September 2023)
 #### Added
 - Added support for SigV3 library. Update authorization header building logic to use `adj_signing_id`.
@@ -1147,6 +1158,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.34.1]: https://github.com/adjust/ios_sdk/tree/v4.34.1
 [ios_sdk_v4.34.2]: https://github.com/adjust/ios_sdk/tree/v4.34.2
 [ios_sdk_v4.35.0]: https://github.com/adjust/ios_sdk/tree/v4.35.0
+[ios_sdk_v4.35.1]: https://github.com/adjust/ios_sdk/tree/v4.35.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
