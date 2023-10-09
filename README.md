@@ -242,7 +242,6 @@ Log output messages describing the post build process are written to the Unity I
 
 When it comes to iOS post-build process, you have the ability to control which native iOS frameworks you would like to see linked with your app. Each one of these frameworks offers certain functionality which Adjust SDK will take the advantage of, in case corresponding framework is linked with your app. Here is the list of frameworks you can select and short explanation why would you want to have them linked:
 
-- `iAd.framework`: needed for Apple Search Ads tracking (deprecated API)
 - `AdServices.framework`: needed for Apple Search Ads tracking (new API, available as of iOS 14.3)
 - `AdSupport.framework`: needed for reading IDFA
 - `AppTrackingTransparency.framework`: needed to ask for user's consent to be tracked and obtain status of that consent
