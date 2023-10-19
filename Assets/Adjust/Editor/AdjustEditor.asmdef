@@ -4,12 +4,7 @@
         "Adjust"
     ],
     "includePlatforms": [
-        "Android",
-        "Editor",
-        "iOS",
-        "WindowsStandalone32",
-        "WindowsStandalone64",
-        "WSA"
+        "Editor"
     ],
     "excludePlatforms": []
 }
