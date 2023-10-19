@@ -1,0 +1,13 @@
+{
+    "name": "Adjust",
+    "references": [],
+    "includePlatforms": [
+        "Android",
+        "Editor",
+        "iOS",
+        "WindowsStandalone32",
+        "WindowsStandalone64",
+        "WSA"
+    ],
+    "excludePlatforms": []
+}
