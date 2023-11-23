@@ -80,6 +80,9 @@ namespace com.adjust.sdk
         private static extern string _AdjustGetIdfa();
 
         [DllImport("__Internal")]
+        private static extern string _AdjustGetIdfv();
+
+        [DllImport("__Internal")]
         private static extern string _AdjustGetAdid();
 
         [DllImport("__Internal")]
@@ -465,6 +468,11 @@ namespace com.adjust.sdk
         public static string GetIdfa()
         {
             return _AdjustGetIdfa();
+        }
+
+        public static string GetIdfv()
+        {
+            return _AdjustGetIdfv();
         }
 
         public static string GetAdid()
