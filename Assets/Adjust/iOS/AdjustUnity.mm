@@ -245,6 +245,8 @@ extern "C"
                 [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
             } else if ([stringUrlStrategy isEqualToString:@"cn"]) {
                 [adjustConfig setUrlStrategy:ADJUrlStrategyCn];
+            } else if ([stringUrlStrategy isEqualToString:@"cn-only"]) {
+                [adjustConfig setUrlStrategy:ADJUrlStrategyCnOnly];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
                 [adjustConfig setUrlStrategy:ADJDataResidencyEU];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-tr"]) {

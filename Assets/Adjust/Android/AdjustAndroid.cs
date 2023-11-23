@@ -171,6 +171,11 @@ namespace com.adjust.sdk
                     AndroidJavaObject ajoUrlStrategyCn = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("URL_STRATEGY_CN");
                     ajoAdjustConfig.Call("setUrlStrategy", ajoUrlStrategyCn);
                 }
+                else if (adjustConfig.urlStrategy == AdjustConfig.AdjustUrlStrategyCnOnly)
+                {
+                    AndroidJavaObject ajoUrlStrategyCnOnly = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("URL_STRATEGY_CN_ONLY");
+                    ajoAdjustConfig.Call("setUrlStrategy", ajoUrlStrategyCnOnly);
+                }
                 else if (adjustConfig.urlStrategy == AdjustConfig.AdjustDataResidencyEU)
                 {
                     AndroidJavaObject ajoDataResidencyEU = new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("DATA_RESIDENCY_EU");
