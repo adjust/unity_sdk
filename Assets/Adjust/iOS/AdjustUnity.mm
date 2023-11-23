@@ -412,6 +412,21 @@ extern "C"
         return idfaCStringCopy;
     }
 
+    char* _AdjustGetIdfv() {
+        NSString *idfv = [Adjust idfv];
+        if (nil == idfv) {
+            return NULL;
+        }
+
+        const char* idfvCString = [idfv UTF8String];
+        if (NULL == idfvCString) {
+            return NULL;
+        }
+
+        char* idfvCStringCopy = strdup(idfvCString);
+        return idfvCStringCopy;
+    }
+
     char* _AdjustGetAdid() {
         NSString *adid = [Adjust adid];
         if (nil == adid) {
