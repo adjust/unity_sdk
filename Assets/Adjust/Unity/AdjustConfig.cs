@@ -62,7 +62,7 @@ namespace com.adjust.sdk
         internal string preinstallFilePath;
         internal bool? finalAndroidAttributionEnabled;
         internal string fbAppId;
-        internal bool readDeviceInfoOnceEnabled;
+        internal bool? readDeviceInfoOnceEnabled;
         // iOS specific members
         internal bool? allowAdServicesInfoReading;
         internal bool? allowIdfaReading;
