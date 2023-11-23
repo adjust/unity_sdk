@@ -20,6 +20,8 @@ namespace com.adjust.sdk
         public const string AdjustAdRevenueSourceUnity = "unity_sdk";
         public const string AdjustAdRevenueSourceHeliumChartboost = "helium_chartboost_sdk";
         public const string AdjustAdRevenueSourcePublisher = "publisher_sdk";
+        public const string AdjustAdRevenueSourceTopOn = "topon_sdk";
+        public const string AdjustAdRevenueSourceAdx = "adx_sdk";
 
         internal string appToken;
         internal string sceneName;
