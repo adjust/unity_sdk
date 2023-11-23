@@ -44,7 +44,6 @@ namespace com.adjust.sdk
         internal bool? allowSuppressLogLevel;
         internal bool? needsCost;
         internal bool launchDeferredDeeplink;
-        internal bool? finalAndroidAttributionEnabled;
         internal AdjustLogLevel? logLevel;
         internal AdjustEnvironment environment;
         internal Action<string> deferredDeeplinkDelegate;
@@ -61,7 +60,9 @@ namespace com.adjust.sdk
         internal bool? readImei;
         internal bool? preinstallTrackingEnabled;
         internal string preinstallFilePath;
+        internal bool? finalAndroidAttributionEnabled;
         internal string fbAppId;
+        internal bool readDeviceInfoOnceEnabled;
         // iOS specific members
         internal bool? allowAdServicesInfoReading;
         internal bool? allowIdfaReading;
@@ -311,6 +312,11 @@ namespace com.adjust.sdk
         public void setFbAppId(string fbAppId)
         {
             this.fbAppId = fbAppId;
+        }
+
+        public void setReadDeviceInfoOnceEnabled(bool readDeviceInfoOnceEnabled)
+        {
+            this.readDeviceInfoOnceEnabled = readDeviceInfoOnceEnabled;
         }
 
         // Windows specific methods.
