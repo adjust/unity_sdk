@@ -58,6 +58,7 @@ namespace com.adjust.sdk
         internal bool? readImei;
         internal bool? preinstallTrackingEnabled;
         internal string preinstallFilePath;
+        internal string fbAppId;
         // iOS specific members
         internal bool? allowAdServicesInfoReading;
         internal bool? allowIdfaReading;
@@ -302,6 +303,11 @@ namespace com.adjust.sdk
         public void setFinalAndroidAttributionEnabled(bool finalAndroidAttributionEnabled)
         {
             this.finalAndroidAttributionEnabled = finalAndroidAttributionEnabled;
+        }
+
+        public void setFbAppId(string fbAppId)
+        {
+            this.fbAppId = fbAppId;
         }
 
         // Windows specific methods.
