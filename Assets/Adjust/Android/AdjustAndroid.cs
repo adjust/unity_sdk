@@ -93,6 +93,12 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setFinalAttributionEnabled", adjustConfig.finalAndroidAttributionEnabled.Value);
             }
 
+            // Check read Android IDs only once.
+            if (adjustConfig.readDeviceInfoOnceEnabled != null)
+            {
+                ajoAdjustConfig.Call("setReadDeviceInfoOnceEnabled", adjustConfig.readDeviceInfoOnceEnabled.Value);
+            }
+
             // Check Play Store Kids Apps setting.
             if (adjustConfig.playStoreKidsAppEnabled != null)
             {
