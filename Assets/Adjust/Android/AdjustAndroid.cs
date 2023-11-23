@@ -123,6 +123,12 @@ namespace com.adjust.sdk
                 ajoAdjustConfig.Call("setPreinstallFilePath", adjustConfig.preinstallFilePath);
             }
 
+            // Check if FB app ID has been set.
+            if (adjustConfig.fbAppId != null)
+            {
+                ajoAdjustConfig.Call("setFbAppId", adjustConfig.fbAppId);
+            }
+
             // Check if user has set user agent value.
             if (adjustConfig.userAgent != null)
             {
