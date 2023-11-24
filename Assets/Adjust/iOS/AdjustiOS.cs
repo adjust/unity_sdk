@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.35.2";
+        private const string sdkPrefix = "unity4.36.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -78,6 +78,9 @@ namespace com.adjust.sdk
 
         [DllImport("__Internal")]
         private static extern string _AdjustGetIdfa();
+
+        [DllImport("__Internal")]
+        private static extern string _AdjustGetIdfv();
 
         [DllImport("__Internal")]
         private static extern string _AdjustGetAdid();
@@ -465,6 +468,11 @@ namespace com.adjust.sdk
         public static string GetIdfa()
         {
             return _AdjustGetIdfa();
+        }
+
+        public static string GetIdfv()
+        {
+            return _AdjustGetIdfv();
         }
 
         public static string GetAdid()

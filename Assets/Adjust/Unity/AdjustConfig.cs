@@ -7,6 +7,7 @@ namespace com.adjust.sdk
         public const string AdjustUrlStrategyChina = "china";
         public const string AdjustUrlStrategyIndia = "india";
         public const string AdjustUrlStrategyCn = "cn";
+        public const string AdjustUrlStrategyCnOnly = "cn-only";
 
         public const string AdjustDataResidencyEU = "data-residency-eu";
         public const string AdjustDataResidencyTR = "data-residency-tr";
@@ -20,6 +21,8 @@ namespace com.adjust.sdk
         public const string AdjustAdRevenueSourceUnity = "unity_sdk";
         public const string AdjustAdRevenueSourceHeliumChartboost = "helium_chartboost_sdk";
         public const string AdjustAdRevenueSourcePublisher = "publisher_sdk";
+        public const string AdjustAdRevenueSourceTopOn = "topon_sdk";
+        public const string AdjustAdRevenueSourceAdx = "adx_sdk";
 
         internal string appToken;
         internal string sceneName;
@@ -41,7 +44,6 @@ namespace com.adjust.sdk
         internal bool? allowSuppressLogLevel;
         internal bool? needsCost;
         internal bool launchDeferredDeeplink;
-        internal bool? finalAndroidAttributionEnabled;
         internal AdjustLogLevel? logLevel;
         internal AdjustEnvironment environment;
         internal Action<string> deferredDeeplinkDelegate;
@@ -58,6 +60,9 @@ namespace com.adjust.sdk
         internal bool? readImei;
         internal bool? preinstallTrackingEnabled;
         internal string preinstallFilePath;
+        internal bool? finalAndroidAttributionEnabled;
+        internal string fbAppId;
+        internal bool? readDeviceInfoOnceEnabled;
         // iOS specific members
         internal bool? allowAdServicesInfoReading;
         internal bool? allowIdfaReading;
@@ -302,6 +307,16 @@ namespace com.adjust.sdk
         public void setFinalAndroidAttributionEnabled(bool finalAndroidAttributionEnabled)
         {
             this.finalAndroidAttributionEnabled = finalAndroidAttributionEnabled;
+        }
+
+        public void setFbAppId(string fbAppId)
+        {
+            this.fbAppId = fbAppId;
+        }
+
+        public void setReadDeviceInfoOnceEnabled(bool readDeviceInfoOnceEnabled)
+        {
+            this.readDeviceInfoOnceEnabled = readDeviceInfoOnceEnabled;
         }
 
         // Windows specific methods.

@@ -779,6 +779,27 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static string getIdfv()
+        {
+            if (IsEditor())
+            {
+                return string.Empty;
+            }
+
+#if UNITY_IOS
+            return AdjustiOS.GetIdfv();
+#elif UNITY_ANDROID
+            Debug.Log("[Adjust]: Error! IDFV is not available on Android platform.");
+            return string.Empty;
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Error! IDFV is not available on Windows platform.");
+            return string.Empty;
+#else
+            Debug.Log(errorMsgPlatform);
+            return string.Empty;
+#endif
+        }
+
         public static string getSdkVersion()
         {
             if (IsEditor())

@@ -245,6 +245,8 @@ extern "C"
                 [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
             } else if ([stringUrlStrategy isEqualToString:@"cn"]) {
                 [adjustConfig setUrlStrategy:ADJUrlStrategyCn];
+            } else if ([stringUrlStrategy isEqualToString:@"cn-only"]) {
+                [adjustConfig setUrlStrategy:ADJUrlStrategyCnOnly];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
                 [adjustConfig setUrlStrategy:ADJDataResidencyEU];
             } else if ([stringUrlStrategy isEqualToString:@"data-residency-tr"]) {
@@ -408,6 +410,21 @@ extern "C"
 
         char* idfaCStringCopy = strdup(idfaCString);
         return idfaCStringCopy;
+    }
+
+    char* _AdjustGetIdfv() {
+        NSString *idfv = [Adjust idfv];
+        if (nil == idfv) {
+            return NULL;
+        }
+
+        const char* idfvCString = [idfv UTF8String];
+        if (NULL == idfvCString) {
+            return NULL;
+        }
+
+        char* idfvCStringCopy = strdup(idfvCString);
+        return idfvCStringCopy;
     }
 
     char* _AdjustGetAdid() {
