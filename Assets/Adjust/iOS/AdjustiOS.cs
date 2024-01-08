@@ -54,6 +54,7 @@ namespace com.adjust.sdk
             double revenue,
             string currency,
             string receipt,
+            string receiptBase64,
             string productId,
             string transactionId,
             string callbackId,
@@ -285,13 +286,25 @@ namespace com.adjust.sdk
             string eventToken = adjustEvent.eventToken;
             string currency = adjustEvent.currency;
             string receipt = adjustEvent.receipt;
+            string receiptBase64 = adjustEvent.receiptBase64;
             string productId = adjustEvent.productId;
             string transactionId = adjustEvent.transactionId;
             string callbackId = adjustEvent.callbackId;
             string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
 
-            _AdjustTrackEvent(eventToken, revenue, currency, receipt, productId, transactionId, callbackId, isReceiptSet, stringJsonCallbackParameters, stringJsonPartnerParameters);
+            _AdjustTrackEvent(
+                eventToken,
+                revenue,
+                currency,
+                receipt,
+                receiptBase64,
+                productId,
+                transactionId,
+                callbackId,
+                isReceiptSet,
+                stringJsonCallbackParameters,
+                stringJsonPartnerParameters);
         }        
 
         public static void SetEnabled(bool enabled)

@@ -270,6 +270,7 @@ extern "C"
                            double revenue,
                            const char* currency,
                            const char* receipt,
+                           const char* receiptBase64,
                            const char* productId,
                            const char* transactionId,
                            const char* callbackId,
@@ -322,6 +323,13 @@ extern "C"
         if (receipt != NULL) {
             NSString *stringReceipt = [NSString stringWithUTF8String:receipt];
             [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+
+        // Base64 encoded receipt.
+        if (receiptBase64 != NULL) {
+            // If both (receipt and receiptBase64) set, receiptBase64 will be used.
+            NSString *stringReceiptBase64 = [NSString stringWithUTF8String:receiptBase64];
+            [event setReceipt:[stringReceiptBase64 dataUsingEncoding:NSUTF8StringEncoding]];
         }
 
         // Callback ID.
