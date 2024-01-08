@@ -329,7 +329,8 @@ extern "C"
         if (receiptBase64 != NULL) {
             // If both (receipt and receiptBase64) set, receiptBase64 will be used.
             NSString *stringReceiptBase64 = [NSString stringWithUTF8String:receiptBase64];
-            [event setReceipt:[stringReceiptBase64 dataUsingEncoding:NSUTF8StringEncoding]];
+            NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:stringReceiptBase64 options:0];
+            [event setReceipt:decodedData];
         }
 
         // Callback ID.
