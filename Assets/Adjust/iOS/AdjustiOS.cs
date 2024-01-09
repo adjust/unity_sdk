@@ -31,6 +31,7 @@ namespace com.adjust.sdk
             int linkMeEnabled,
             int needsCost,
             int coppaCompliant,
+            int readDeviceInfoOnce,
             long secretId,
             long info1,
             long info2,
@@ -232,6 +233,7 @@ namespace com.adjust.sdk
             int linkMeEnabled = AdjustUtils.ConvertBool(adjustConfig.linkMeEnabled);
             int needsCost = AdjustUtils.ConvertBool(adjustConfig.needsCost);
             int coppaCompliant = AdjustUtils.ConvertBool(adjustConfig.coppaCompliantEnabled);
+            int readDeviceInfoOnce = AdjustUtils.ConvertBool(adjustConfig.readDeviceInfoOnceEnabled);
             int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
             int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventSuccessDelegate() != null);
             int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventFailureDelegate() != null);
@@ -261,6 +263,7 @@ namespace com.adjust.sdk
                 linkMeEnabled,
                 needsCost,
                 coppaCompliant,
+                readDeviceInfoOnce,
                 secretId,
                 info1,
                 info2,

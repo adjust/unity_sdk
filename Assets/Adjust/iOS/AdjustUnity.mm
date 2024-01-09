@@ -101,6 +101,7 @@ extern "C"
                           int linkMeEnabled,
                           int needsCost,
                           int coppaCompliant,
+                          int readDeviceInfoOnce,
                           int64_t secretId,
                           int64_t info1,
                           int64_t info2,
@@ -220,6 +221,11 @@ extern "C"
         // COPPA compliance.
         if (coppaCompliant != -1) {
             [adjustConfig setCoppaCompliantEnabled:(BOOL)coppaCompliant];
+        }
+
+        // Read device info just once.
+        if (readDeviceInfoOnce != -1) {
+            [adjustConfig setReadDeviceInfoOnceEnabled:(BOOL)readDeviceInfoOnce];
         }
 
         // User agent.
