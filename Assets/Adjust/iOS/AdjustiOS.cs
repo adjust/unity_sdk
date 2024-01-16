@@ -203,6 +203,9 @@ namespace com.adjust.sdk
             string receipt,
             string sceneName);
 
+        [DllImport("__Internal")]
+        private static extern void _AdjustProcessDeeplink(string url, string sceneName);
+
         public AdjustiOS() {}
 
         public static void Start(AdjustConfig adjustConfig)
@@ -540,6 +543,11 @@ namespace com.adjust.sdk
                 productId,
                 receipt,
                 cSceneName);
+        }
+
+        public static void ProcessDeeplink(string url, string sceneName)
+        {
+            _AdjustProcessDeeplink(url, sceneName);
         }
 
         // Used for testing only.

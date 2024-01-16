@@ -896,6 +896,33 @@ extern "C"
         }];
     }
 
+    void _AdjustProcessDeeplink(const char* url, const char* sceneName) {
+        NSString *strSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+        if (url != NULL) {
+            NSString *stringUrl = [NSString stringWithUTF8String:url];
+            NSURL *nsUrl;
+            if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
+                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
+            } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            }
+#pragma clang diagnostic pop
+
+            [Adjust processDeeplink:nsUrl completionHandler:^(NSString * _Nonnull resolvedLink) {
+                if (strSceneName == nil) {
+                    return;
+                }
+                if (resolvedLink == nil) {
+                    return;
+                }
+                const char* resolvedLinkCString = [resolvedLink UTF8String];
+                UnitySendMessage([strSceneName UTF8String], "GetNativeResolvedLink", resolvedLinkCString);
+            }];
+        }
+    }
+
     void _AdjustSetTestOptions(const char* baseUrl,
                                const char* gdprUrl,
                                const char* subscriptionUrl,
