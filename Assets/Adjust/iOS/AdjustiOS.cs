@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity4.36.0";
+        private const string sdkPrefix = "unity4.37.0";
 
         [DllImport("__Internal")]
         private static extern void _AdjustLaunchApp(
@@ -31,6 +31,7 @@ namespace com.adjust.sdk
             int linkMeEnabled,
             int needsCost,
             int coppaCompliant,
+            int readDeviceInfoOnce,
             long secretId,
             long info1,
             long info2,
@@ -54,6 +55,7 @@ namespace com.adjust.sdk
             double revenue,
             string currency,
             string receipt,
+            string receiptBase64,
             string productId,
             string transactionId,
             string callbackId,
@@ -201,6 +203,9 @@ namespace com.adjust.sdk
             string receipt,
             string sceneName);
 
+        [DllImport("__Internal")]
+        private static extern void _AdjustProcessDeeplink(string url, string sceneName);
+
         public AdjustiOS() {}
 
         public static void Start(AdjustConfig adjustConfig)
@@ -231,6 +236,7 @@ namespace com.adjust.sdk
             int linkMeEnabled = AdjustUtils.ConvertBool(adjustConfig.linkMeEnabled);
             int needsCost = AdjustUtils.ConvertBool(adjustConfig.needsCost);
             int coppaCompliant = AdjustUtils.ConvertBool(adjustConfig.coppaCompliantEnabled);
+            int readDeviceInfoOnce = AdjustUtils.ConvertBool(adjustConfig.readDeviceInfoOnceEnabled);
             int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getAttributionChangedDelegate() != null);
             int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventSuccessDelegate() != null);
             int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.getEventFailureDelegate() != null);
@@ -260,6 +266,7 @@ namespace com.adjust.sdk
                 linkMeEnabled,
                 needsCost,
                 coppaCompliant,
+                readDeviceInfoOnce,
                 secretId,
                 info1,
                 info2,
@@ -285,13 +292,25 @@ namespace com.adjust.sdk
             string eventToken = adjustEvent.eventToken;
             string currency = adjustEvent.currency;
             string receipt = adjustEvent.receipt;
+            string receiptBase64 = adjustEvent.receiptBase64;
             string productId = adjustEvent.productId;
             string transactionId = adjustEvent.transactionId;
             string callbackId = adjustEvent.callbackId;
             string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
             string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
 
-            _AdjustTrackEvent(eventToken, revenue, currency, receipt, productId, transactionId, callbackId, isReceiptSet, stringJsonCallbackParameters, stringJsonPartnerParameters);
+            _AdjustTrackEvent(
+                eventToken,
+                revenue,
+                currency,
+                receipt,
+                receiptBase64,
+                productId,
+                transactionId,
+                callbackId,
+                isReceiptSet,
+                stringJsonCallbackParameters,
+                stringJsonPartnerParameters);
         }        
 
         public static void SetEnabled(bool enabled)
@@ -524,6 +543,11 @@ namespace com.adjust.sdk
                 productId,
                 receipt,
                 cSceneName);
+        }
+
+        public static void ProcessDeeplink(string url, string sceneName)
+        {
+            _AdjustProcessDeeplink(url, sceneName);
         }
 
         // Used for testing only.
