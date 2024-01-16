@@ -8,7 +8,7 @@ namespace com.adjust.sdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity4.36.0";
+        private const string sdkPrefix = "unity4.37.0";
         private static bool launchDeferredDeeplink = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -19,6 +19,7 @@ namespace com.adjust.sdk
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
         private static VerificationInfoListener onVerificationInfoListener;
+        private static DeeplinkResolutionListener onDeeplinkResolvedListener;
 
         public static void Start(AdjustConfig adjustConfig)
         {
@@ -684,6 +685,14 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("verifyPurchase", ajoPurchase, onVerificationInfoListener);
         }
 
+        public static void ProcessDeeplink(string url, Action<string> resolvedLinkCallback)
+        {
+            onDeeplinkResolvedListener = new DeeplinkResolutionListener(resolvedLinkCallback);
+            AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
+            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
+            ajcAdjust.CallStatic("processDeeplink", ajoUri, ajoCurrentActivity, onDeeplinkResolvedListener);
+        }
+
         // Used for testing only.
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
@@ -1020,6 +1029,24 @@ namespace com.adjust.sdk
                 if (callback != null)
                 {
                     callback(purchaseVerificationInfo);
+                }
+            }
+        }
+
+        private class DeeplinkResolutionListener : AndroidJavaProxy
+        {
+            private Action<string> callback;
+
+            public DeeplinkResolutionListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeeplinkResolvedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            public void onDeeplinkResolved(string resolvedLink)
+            {
+                if (callback != null)
+                {
+                    callback(resolvedLink);
                 }
             }
         }

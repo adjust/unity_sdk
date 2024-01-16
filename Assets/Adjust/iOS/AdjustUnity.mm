@@ -101,6 +101,7 @@ extern "C"
                           int linkMeEnabled,
                           int needsCost,
                           int coppaCompliant,
+                          int readDeviceInfoOnce,
                           int64_t secretId,
                           int64_t info1,
                           int64_t info2,
@@ -222,6 +223,11 @@ extern "C"
             [adjustConfig setCoppaCompliantEnabled:(BOOL)coppaCompliant];
         }
 
+        // Read device info just once.
+        if (readDeviceInfoOnce != -1) {
+            [adjustConfig setReadDeviceInfoOnceEnabled:(BOOL)readDeviceInfoOnce];
+        }
+
         // User agent.
         if (stringUserAgent != nil) {
             [adjustConfig setUserAgent:stringUserAgent];
@@ -270,6 +276,7 @@ extern "C"
                            double revenue,
                            const char* currency,
                            const char* receipt,
+                           const char* receiptBase64,
                            const char* productId,
                            const char* transactionId,
                            const char* callbackId,
@@ -322,6 +329,14 @@ extern "C"
         if (receipt != NULL) {
             NSString *stringReceipt = [NSString stringWithUTF8String:receipt];
             [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+
+        // Base64 encoded receipt.
+        if (receiptBase64 != NULL) {
+            // If both (receipt and receiptBase64) set, receiptBase64 will be used.
+            NSString *stringReceiptBase64 = [NSString stringWithUTF8String:receiptBase64];
+            NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:stringReceiptBase64 options:0];
+            [event setReceipt:decodedData];
         }
 
         // Callback ID.
@@ -879,6 +894,33 @@ extern "C"
                 const char* verificationInfoCString = [strVerificationInfo UTF8String];
                 UnitySendMessage([strSceneName UTF8String], "GetNativeVerificationInfo", verificationInfoCString);
         }];
+    }
+
+    void _AdjustProcessDeeplink(const char* url, const char* sceneName) {
+        NSString *strSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+        if (url != NULL) {
+            NSString *stringUrl = [NSString stringWithUTF8String:url];
+            NSURL *nsUrl;
+            if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
+                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
+            } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            }
+#pragma clang diagnostic pop
+
+            [Adjust processDeeplink:nsUrl completionHandler:^(NSString * _Nonnull resolvedLink) {
+                if (strSceneName == nil) {
+                    return;
+                }
+                if (resolvedLink == nil) {
+                    return;
+                }
+                const char* resolvedLinkCString = [resolvedLink UTF8String];
+                UnitySendMessage([strSceneName UTF8String], "GetNativeResolvedLink", resolvedLinkCString);
+            }];
+        }
     }
 
     void _AdjustSetTestOptions(const char* baseUrl,

@@ -86,6 +86,7 @@ namespace com.adjust.sdk
         private static Action<string> skadUpdateConversionValueDelegate = null;
         private static Action<string> skad4UpdateConversionValueDelegate = null;
         private static Action<AdjustPurchaseVerificationInfo> verificationInfoDelegate = null;
+        private static Action<string> deeplinkResolutionDelegate = null;
 #endif
 
         void Awake()
@@ -959,6 +960,28 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static void processDeeplink(
+            string url,
+            Action<string> resolvedLinkDelegate,
+            string sceneName = "Adjust")
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Adjust.deeplinkResolutionDelegate = resolvedLinkDelegate;
+            AdjustiOS.ProcessDeeplink(url, sceneName);
+#elif UNITY_ANDROID
+            AdjustAndroid.ProcessDeeplink(url, resolvedLinkDelegate);
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Deep link processing is only supported for Android and iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
 #if UNITY_IOS
         public void GetNativeAttribution(string attributionData)
         {
@@ -1177,6 +1200,22 @@ namespace com.adjust.sdk
 
             var verificationInfo = new AdjustPurchaseVerificationInfo(verificationInfoData);
             Adjust.verificationInfoDelegate(verificationInfo);
+        }
+
+        public void GetNativeResolvedLink(string resolvedLink)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+            if (Adjust.deeplinkResolutionDelegate == null)
+            {
+                Debug.Log("[Adjust]: Deep link reoslution delegate was not set.");
+                return;
+            }
+
+            Adjust.deeplinkResolutionDelegate(resolvedLink);
         }
 #endif
 
