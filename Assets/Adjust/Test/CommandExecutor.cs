@@ -82,6 +82,7 @@ namespace com.adjust.sdk.test
                     case "trackAdRevenueV2": TrackAdRevenueV2(); break;
                     case "getLastDeeplink": GetLastDeeplink(); break;
                     case "verifyPurchase": VerifyPurchase(); break;
+                    case "processDeeplink": ProcessDeeplink(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -1010,6 +1011,12 @@ namespace com.adjust.sdk.test
 #endif
         }
 
+        private void ProcessDeeplink()
+        {
+            var deeplink = _command.GetFirstParameterValue("deeplink");
+            Adjust.processDeeplink(deeplink, DeeplinkResolvedCallback);
+        }
+
         // helper methods
 
         private void VerificationInfoCallback(AdjustPurchaseVerificationInfo verificationInfo)
@@ -1018,6 +1025,13 @@ namespace com.adjust.sdk.test
             _testLibrary.AddInfoToSend("verification_status", verificationInfo.verificationStatus);
             _testLibrary.AddInfoToSend("code", verificationInfo.code.ToString());
             _testLibrary.AddInfoToSend("message", verificationInfo.message);
+            _testLibrary.SendInfoToServer(localExtraPath);
+        }
+
+        private void DeeplinkResolvedCallback(string resolvedLink)
+        {
+            string localExtraPath = ExtraPath;
+            _testLibrary.AddInfoToSend("resolved_link", resolvedLink);
             _testLibrary.SendInfoToServer(localExtraPath);
         }
 
