@@ -44,7 +44,7 @@ public class AdjustEditorPreprocessor : IPreprocessBuild
     {
         var isAdjustManifestUsed = false;
         var androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
-        var adjustManifestPath = Path.Combine(Application.dataPath, "Adjust/Android/AdjustAndroidManifest.xml");
+        var adjustManifestPath =  "Packages/com.adjust.sdk/Android/AdjustAndroidManifest.xml";
         var appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
 
         // Check if user has already created AndroidManifest.xml file in its location.
