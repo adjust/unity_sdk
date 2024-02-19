@@ -993,10 +993,14 @@ namespace com.adjust.sdk.test
             string productId = _command.GetFirstParameterValue("productId");
             string receipt = _command.GetFirstParameterValue("receipt");
 
+            // recreate UnityIAP base64 encoding of the receipt
+            var receiptBytes = System.Text.Encoding.UTF8.GetBytes(receipt);
+            string receiptBase64 = System.Convert.ToBase64String(receiptBytes);
+
             AdjustAppStorePurchase purchase = new AdjustAppStorePurchase(
                 transactionId,
                 productId,
-                receipt);
+                receiptBase64);
 
             Adjust.verifyAppStorePurchase(purchase, VerificationInfoCallback);
 #elif UNITY_ANDROID
