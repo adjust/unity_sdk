@@ -863,7 +863,8 @@ extern "C"
 
         // Receipt.
         if (receipt != NULL) {
-            dataReceipt = [[NSString stringWithUTF8String:receipt] dataUsingEncoding:NSUTF8StringEncoding];
+            NSString *stringReceiptBase64 = [NSString stringWithUTF8String:receipt];
+            dataReceipt = [[NSData alloc] initWithBase64EncodedString:stringReceiptBase64 options:0];
         }
 
         // Scene name.
