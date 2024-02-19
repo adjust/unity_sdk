@@ -1,3 +1,16 @@
+### Version 4.37.1 (19th February 2024)
+#### Added
+- Added support for `TradPlus` ad revenue tracking.
+
+#### Changed
+- Changed the semantics of the `AdjustAppStorePurchase`'s `receipt` property to represent UnityIAP base64 encoded receipt string to avoid the need for the base64 decoding by the clients.
+
+#### Native SDKs
+- [iOS@v4.37.1][ios_sdk_v4.37.1]
+- [Android@v4.38.1][android_sdk_v4.38.1]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+---
+
 ### Version 4.37.0 (16th January 2024)
 #### Added
 - Added ability to process shortened deep links and provide the unshortened link back as a response. You can achieve this by invoking `processDeeplink` method of the `Adjust` instance.
@@ -1198,6 +1211,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.35.2]: https://github.com/adjust/ios_sdk/tree/v4.35.2
 [ios_sdk_v4.36.0]: https://github.com/adjust/ios_sdk/tree/v4.36.0
 [ios_sdk_v4.37.0]: https://github.com/adjust/ios_sdk/tree/v4.37.0
+[ios_sdk_v4.37.1]: https://github.com/adjust/ios_sdk/tree/v4.37.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1247,6 +1261,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.35.1]: https://github.com/adjust/android_sdk/tree/v4.35.1
 [android_sdk_v4.37.0]: https://github.com/adjust/android_sdk/tree/v4.37.0
 [android_sdk_v4.38.0]: https://github.com/adjust/android_sdk/tree/v4.38.0
+[android_sdk_v4.38.1]: https://github.com/adjust/android_sdk/tree/v4.38.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
