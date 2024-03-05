@@ -1,3 +1,17 @@
+### Version 4.37.2 (6th March 2024)
+#### Fixed
+- Fixed occasional invalid signature cases in Android when SDK package payload would be altered right before sending.
+
+#### Changed
+- Added tracking of `third_party_sharing` and `measurement_consent` packages if invoked before SDK initialization in subsequent SDK initializations.
+
+#### Native SDKs
+- [iOS@v4.37.2][ios_sdk_v4.37.2]
+- [Android@v4.38.2][android_sdk_v4.38.2]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.37.1 (19th February 2024)
 #### Added
 - Added support for `TradPlus` ad revenue tracking.
@@ -1212,6 +1226,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.36.0]: https://github.com/adjust/ios_sdk/tree/v4.36.0
 [ios_sdk_v4.37.0]: https://github.com/adjust/ios_sdk/tree/v4.37.0
 [ios_sdk_v4.37.1]: https://github.com/adjust/ios_sdk/tree/v4.37.1
+[ios_sdk_v4.37.2]: https://github.com/adjust/ios_sdk/tree/v4.37.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1262,6 +1277,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.37.0]: https://github.com/adjust/android_sdk/tree/v4.37.0
 [android_sdk_v4.38.0]: https://github.com/adjust/android_sdk/tree/v4.38.0
 [android_sdk_v4.38.1]: https://github.com/adjust/android_sdk/tree/v4.38.1
+[android_sdk_v4.38.2]: https://github.com/adjust/android_sdk/tree/v4.38.2
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
