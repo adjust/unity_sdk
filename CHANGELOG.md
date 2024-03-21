@@ -1,4 +1,4 @@
-### Version 4.37.2 (6th March 2024)
+### Version 4.37.2 (21st March 2024)
 #### Fixed
 - Fixed occasional invalid signature cases in Android when SDK package payload would be altered right before sending.
 
