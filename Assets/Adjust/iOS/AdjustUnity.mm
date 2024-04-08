@@ -924,10 +924,7 @@ extern "C"
         }
     }
 
-    void _AdjustSetTestOptions(const char* baseUrl,
-                               const char* gdprUrl,
-                               const char* subscriptionUrl,
-                               const char* purchaseVerificationUrl,
+    void _AdjustSetTestOptions(const char* overwriteUrl,
                                const char* extraPath,
                                long timerIntervalInMilliseconds,
                                long timerStartInMilliseconds,
@@ -936,38 +933,29 @@ extern "C"
                                int teardown,
                                int deleteState,
                                int noBackoffWait,
-                               int adServicesFrameworkEnabled) {
+                               int adServicesFrameworkEnabled,
+                               int attStatus,
+                               const char *idfa) {
         AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
 
-        NSString *stringBaseUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:baseUrl] : nil;
-        if (stringBaseUrl != nil) {
-            [testOptions setBaseUrl:stringBaseUrl];
+        NSString *stringOverwriteUrl = isStringValid(overwriteUrl) == true ? [NSString stringWithUTF8String:overwriteUrl] : nil;
+        if (stringOverwriteUrl != nil) {
+            [testOptions setUrlOverwrite:stringOverwriteUrl];
         }
-
-        NSString *stringGdprUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:gdprUrl] : nil;
-        if (stringGdprUrl != nil) {
-            [testOptions setGdprUrl:stringGdprUrl];
-        }
-
-        NSString *stringSubscriptionUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:subscriptionUrl] : nil;
-        if (stringSubscriptionUrl != nil) {
-            [testOptions setSubscriptionUrl:stringSubscriptionUrl];
-        }
-
-        NSString *stringPurchaseVerificationUrl = isStringValid(baseUrl) == true ? [NSString stringWithUTF8String:purchaseVerificationUrl] : nil;
-        if (stringPurchaseVerificationUrl != nil) {
-            [testOptions setPurchaseVerificationUrl:stringPurchaseVerificationUrl];
-        }
-
         NSString *stringExtraPath = isStringValid(extraPath) == true ? [NSString stringWithUTF8String:extraPath] : nil;
         if (stringExtraPath != nil && [stringExtraPath length] > 0) {
             [testOptions setExtraPath:stringExtraPath];
+        }
+        NSString *stringIdfa = isStringValid(idfa) == true ? [NSString stringWithUTF8String:idfa] : nil;
+        if (stringIdfa != nil && [stringIdfa length] > 0) {
+            [testOptions setIdfa:stringIdfa];
         }
 
         testOptions.timerIntervalInMilliseconds = [NSNumber numberWithLong:timerIntervalInMilliseconds];
         testOptions.timerStartInMilliseconds = [NSNumber numberWithLong:timerStartInMilliseconds];
         testOptions.sessionIntervalInMilliseconds = [NSNumber numberWithLong:sessionIntervalInMilliseconds];
         testOptions.subsessionIntervalInMilliseconds = [NSNumber numberWithLong:subsessionIntervalInMilliseconds];
+        testOptions.attStatusInt = [NSNumber numberWithInt:attStatus];
 
         if (teardown != -1) {
             [AdjustUnityDelegate teardown];
