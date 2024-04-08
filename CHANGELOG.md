@@ -1,3 +1,18 @@
+### Version 4.38.0 (8th April 2024)
+#### Added
+- Added new domains and corresponding payload restrictions for the Adjust SDK to direct the iOS traffic to:
+    - https://consent.adjust.com - for consented users
+    - https://analytics.adjust.com - for non-consented users
+
+**Note:** For the time being, Adjust SDK does not bundle Privacy Manifest by default. Until the support for that is added, make sure to add content of the [Adjust Privacy Manifest](https://github.com/adjust/ios_sdk/blob/master/Adjust/PrivacyInfo.xcprivacy) to your app Privacy Manifest file.
+
+#### Native SDKs
+- [iOS@v4.38.0][ios_sdk_v4.38.0]
+- [Android@v4.38.3][android_sdk_v4.38.3]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.37.2 (21st March 2024)
 #### Fixed
 - Fixed occasional invalid signature cases in Android when SDK package payload would be altered right before sending.
@@ -1227,6 +1242,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.37.0]: https://github.com/adjust/ios_sdk/tree/v4.37.0
 [ios_sdk_v4.37.1]: https://github.com/adjust/ios_sdk/tree/v4.37.1
 [ios_sdk_v4.37.2]: https://github.com/adjust/ios_sdk/tree/v4.37.2
+[ios_sdk_v4.38.0]: https://github.com/adjust/ios_sdk/tree/v4.38.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1278,6 +1294,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.38.0]: https://github.com/adjust/android_sdk/tree/v4.38.0
 [android_sdk_v4.38.1]: https://github.com/adjust/android_sdk/tree/v4.38.1
 [android_sdk_v4.38.2]: https://github.com/adjust/android_sdk/tree/v4.38.2
+[android_sdk_v4.38.3]: https://github.com/adjust/android_sdk/tree/v4.38.3
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

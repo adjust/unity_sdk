@@ -7,7 +7,7 @@ namespace com.adjust.sdk.test
     public static class TestLibraryBridgeiOS
     {
         [DllImport("__Internal")]
-        private static extern void _ATLInitialize(string baseUrl, string controlUrl);
+        private static extern void _ATLInitialize(string overwriteUrl, string controlUrl);
 
         [DllImport("__Internal")]
         private static extern void _ATLStartTestSession(string clientSdk);
@@ -24,9 +24,9 @@ namespace com.adjust.sdk.test
         [DllImport("__Internal")]
         private static extern void _ATLAddTestDirectory(string testDirectory);
 
-        public static void Initialize(string baseUrl, string controlUrl)
+        public static void Initialize(string overwriteUrl, string controlUrl)
         {
-            _ATLInitialize(baseUrl, controlUrl);
+            _ATLInitialize(overwriteUrl, controlUrl);
         }
 
         public static void StartTestSession(string clientSdk)
