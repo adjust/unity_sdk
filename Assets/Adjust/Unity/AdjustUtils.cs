@@ -36,6 +36,7 @@ namespace com.adjust.sdk
         public static string KeyTestOptionsGdprUrl = "gdprUrl";
         public static string KeyTestOptionsSubscriptionUrl = "subscriptionUrl";
         public static string KeyTestOptionsPurchaseVerificationUrl = "purchaseVerificationUrl";
+        public static string KeyTestOptionsOverwriteUrl = "urlOverwrite";
         public static string KeyTestOptionsExtraPath = "extraPath";
         public static string KeyTestOptionsBasePath = "basePath";
         public static string KeyTestOptionsGdprPath = "gdprPath";
@@ -48,6 +49,8 @@ namespace com.adjust.sdk
         public static string KeyTestOptionsTeardown = "teardown";
         public static string KeyTestOptionsNoBackoffWait = "noBackoffWait";
         public static string KeyTestOptionsAdServicesFrameworkEnabled = "adServicesFrameworkEnabled";
+        public static string KeyTestOptionsAttStatus = "attStatus";
+        public static string KeyTestOptionsIdfa = "idfa";
 
         public static int ConvertLogLevel(AdjustLogLevel? logLevel)
         {

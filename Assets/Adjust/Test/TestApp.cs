@@ -12,21 +12,18 @@ namespace com.adjust.sdk.test
 #if UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
-        private const string IP = "192.168.8.98";
+        private const string IP = "192.168.8.65";
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string IP = "192.168.8.98";
+        private const string IP = "192.168.8.65";
         private TestLibraryiOS _testLibraryiOS;
 #else
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
         private const string IP = "localhost";
 #endif
-        private const string BASE_URL = PROTOCOL + IP + PORT;
-        private const string GDPR_URL = PROTOCOL + IP + PORT;
-        private const string SUBSCRIPTION_URL = PROTOCOL + IP + PORT;
-        private const string PURCHASE_VERIFICATION_URL = PROTOCOL + IP + PORT;
+        private const string OVERWRITE_URL = PROTOCOL + IP + PORT;
         private const string CONTROL_URL = "ws://" + IP + ":1987";
 
         void OnGUI()
@@ -54,24 +51,14 @@ namespace com.adjust.sdk.test
         private ITestLibrary GetPlatformSpecificTestLibrary()
         {
 #if UNITY_IOS
-            return new TestLibraryiOS(
-                BASE_URL,
-                GDPR_URL,
-                SUBSCRIPTION_URL,
-                PURCHASE_VERIFICATION_URL,
-                CONTROL_URL);
+            return new TestLibraryiOS(OVERWRITE_URL, CONTROL_URL);
 #elif UNITY_ANDROID
-            return new TestLibraryAndroid(
-                BASE_URL,
-                GDPR_URL,
-                SUBSCRIPTION_URL,
-                PURCHASE_VERIFICATION_URL,
-                CONTROL_URL);
+            return new TestLibraryAndroid(OVERWRITE_URL, CONTROL_URL);
 #elif (UNITY_WSA || UNITY_WP8)
             return new TestLibraryWindows(
-                BASE_URL,
+                OVERWRITE_URL,
                 CONTROL_URL,
-                GDPR_URL);
+                OVERWRITE_URL);
 #else
             Debug.Log("Cannot run integration tests (Error in TestApp.GetPlatformSpecificTestLibrary(...)). None of the supported platforms selected.");
             return null;
