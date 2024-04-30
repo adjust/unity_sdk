@@ -1,3 +1,14 @@
+### Version 4.38.1 (30th April 2024)
+#### Added
+- Added sending of the additional iOS SDK observability parameters for debugging purposes.
+
+#### Native SDKs
+- [iOS@v4.38.2][ios_sdk_v4.38.2]
+- [Android@v4.38.3][android_sdk_v4.38.3]
+- [Windows@v4.17.0][windows_sdk_v4.17.0]
+
+---
+
 ### Version 4.38.0 (8th April 2024)
 #### Added
 - Added new domains and corresponding payload restrictions for the Adjust SDK to direct the iOS traffic to:
@@ -38,6 +49,7 @@
 - [iOS@v4.37.1][ios_sdk_v4.37.1]
 - [Android@v4.38.1][android_sdk_v4.38.1]
 - [Windows@v4.17.0][windows_sdk_v4.17.0]
+
 ---
 
 ### Version 4.37.0 (16th January 2024)
@@ -49,6 +61,7 @@
 - [iOS@v4.37.0][ios_sdk_v4.37.0]
 - [Android@v4.38.0][android_sdk_v4.38.0]
 - [Windows@v4.17.0][windows_sdk_v4.17.0]
+
 ---
 
 ### Version 4.36.0 (24th November 2023)
@@ -64,6 +77,7 @@
 - [iOS@v4.36.0][ios_sdk_v4.36.0]
 - [Android@v4.37.0][android_sdk_v4.37.0]
 - [Windows@v4.17.0][windows_sdk_v4.17.0]
+
 ---
 
 ### Version 4.35.2 (9th October 2023)
@@ -74,6 +88,7 @@
 - [iOS@v4.35.2][ios_sdk_v4.35.2]
 - [Android@v4.35.1][android_sdk_v4.35.1]
 - [Windows@v4.17.0][windows_sdk_v4.17.0]
+
 ---
 
 ### Version 4.35.1 (2nd October 2023)
@@ -1243,6 +1258,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.37.1]: https://github.com/adjust/ios_sdk/tree/v4.37.1
 [ios_sdk_v4.37.2]: https://github.com/adjust/ios_sdk/tree/v4.37.2
 [ios_sdk_v4.38.0]: https://github.com/adjust/ios_sdk/tree/v4.38.0
+[ios_sdk_v4.38.2]: https://github.com/adjust/ios_sdk/tree/v4.38.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
