@@ -12,11 +12,11 @@ namespace com.adjust.sdk.test
 #if UNITY_ANDROID
         private const string PORT = ":8443";
         private const string PROTOCOL = "https://";
-        private const string IP = "192.168.8.65";
+        private const string IP = "192.168.8.218";
 #elif UNITY_IOS
         private const string PORT = ":8080";
         private const string PROTOCOL = "http://";
-        private const string IP = "192.168.8.65";
+        private const string IP = "192.168.8.218";
         private TestLibraryiOS _testLibraryiOS;
 #else
         private const string PORT = ":8080";
@@ -41,7 +41,7 @@ namespace com.adjust.sdk.test
             _testLibraryiOS = testLibrary as TestLibraryiOS;
 #endif
             // Set specific tests to run.
-            // testLibrary.AddTest("Test_PurchaseVerification_android_after_install");
+            // testLibrary.AddTest("Test_Event_purchase_verification_ios");
             // testLibrary.AddTestDirectory ("purchase-verification");
 
             Log("Starting test session.");

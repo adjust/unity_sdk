@@ -5,7 +5,6 @@ namespace com.adjust.sdk
 {
     public class AdjustAttribution
     {
-        public string adid { get; set; }
         public string network { get; set; }
         public string adgroup { get; set; }
         public string campaign { get; set; }
@@ -36,7 +35,6 @@ namespace com.adjust.sdk
             adgroup = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdgroup);
             creative = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCreative);
             clickLabel = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyClickLabel);
-            adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
             costType = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostType);
             try
             {
@@ -66,7 +64,6 @@ namespace com.adjust.sdk
             adgroup = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdgroup);
             creative = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCreative);
             clickLabel = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
-            adid = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdid);
             costType = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostType);
             try
             {

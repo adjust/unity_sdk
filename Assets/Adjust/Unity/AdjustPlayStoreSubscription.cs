@@ -16,7 +16,13 @@ namespace com.adjust.sdk
         internal List<string> partnerList;
         internal List<string> callbackList;
 
-        public AdjustPlayStoreSubscription(string price, string currency, string sku, string orderId, string signature, string purchaseToken)
+        public AdjustPlayStoreSubscription(
+            string price,
+            string currency,
+            string sku,
+            string orderId,
+            string signature,
+            string purchaseToken)
         {
             this.price = price;
             this.currency = currency;
@@ -26,12 +32,12 @@ namespace com.adjust.sdk
             this.purchaseToken = purchaseToken;
         }
 
-        public void setPurchaseTime(string purchaseTime)
+        public void SetPurchaseTime(string purchaseTime)
         {
             this.purchaseTime = purchaseTime;
         }
 
-        public void addCallbackParameter(string key, string value)
+        public void AddCallbackParameter(string key, string value)
         {
             if (callbackList == null)
             {
@@ -41,7 +47,7 @@ namespace com.adjust.sdk
             callbackList.Add(value);
         }
 
-        public void addPartnerParameter(string key, string value)
+        public void AddPartnerParameter(string key, string value)
         {
             if (partnerList == null)
             {

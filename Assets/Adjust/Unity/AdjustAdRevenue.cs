@@ -20,33 +20,33 @@ namespace com.adjust.sdk
             this.source = source;
         }
 
-        public void setRevenue(double amount, string currency)
+        public void SetRevenue(double amount, string currency)
         {
             this.revenue = amount;
             this.currency = currency;
         }
 
-        public void setAdImpressionsCount(int adImpressionsCount)
+        public void SetAdImpressionsCount(int adImpressionsCount)
         {
             this.adImpressionsCount = adImpressionsCount;
         }
 
-        public void setAdRevenueNetwork(string adRevenueNetwork)
+        public void SetAdRevenueNetwork(string adRevenueNetwork)
         {
             this.adRevenueNetwork = adRevenueNetwork;
         }
 
-        public void setAdRevenueUnit(string adRevenueUnit)
+        public void SetAdRevenueUnit(string adRevenueUnit)
         {
             this.adRevenueUnit = adRevenueUnit;
         }
 
-        public void setAdRevenuePlacement(string adRevenuePlacement)
+        public void SetAdRevenuePlacement(string adRevenuePlacement)
         {
             this.adRevenuePlacement = adRevenuePlacement;
         }
 
-        public void addCallbackParameter(string key, string value)
+        public void AddCallbackParameter(string key, string value)
         {
             if (callbackList == null)
             {
@@ -56,7 +56,7 @@ namespace com.adjust.sdk
             callbackList.Add(value);
         }
 
-        public void addPartnerParameter(string key, string value)
+        public void AddPartnerParameter(string key, string value)
         {
             if (partnerList == null)
             {

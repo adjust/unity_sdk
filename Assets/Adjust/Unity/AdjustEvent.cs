@@ -5,34 +5,33 @@ namespace com.adjust.sdk
 {
     public class AdjustEvent
     {
-        internal string currency;
         internal string eventToken;
-        internal string callbackId;
-        internal string transactionId;
-        internal string productId;
         internal double? revenue;
+        internal string currency;
+        internal string callbackId;
+        internal string deduplicationId;
         internal List<string> partnerList;
         internal List<string> callbackList;
-        // iOS specific members
+        // iOS specific
         internal string receipt;
-        internal string receiptBase64;
-        internal bool isReceiptSet;
-        // Android specific members
+        internal string productId;
+        internal string transactionId;
+        // Android specific
+        internal string orderId;
         internal string purchaseToken;
 
         public AdjustEvent(string eventToken)
         {
             this.eventToken = eventToken;
-            this.isReceiptSet = false;
         }
 
-        public void setRevenue(double amount, string currency)
+        public void SetRevenue(double amount, string currency)
         {
             this.revenue = amount;
             this.currency = currency;
         }
 
-        public void addCallbackParameter(string key, string value)
+        public void AddCallbackParameter(string key, string value)
         {
             if (callbackList == null)
             {
@@ -42,7 +41,7 @@ namespace com.adjust.sdk
             callbackList.Add(value);
         }
 
-        public void addPartnerParameter(string key, string value)
+        public void AddPartnerParameter(string key, string value)
         {
             if (partnerList == null)
             {
@@ -52,43 +51,39 @@ namespace com.adjust.sdk
             partnerList.Add(value);
         }
 
-        public void setCallbackId(string callbackId)
+        public void SetCallbackId(string callbackId)
         {
             this.callbackId = callbackId;
         }
 
-        // iOS / Android mixed
-        public void setTransactionId(string transactionId)
+        public void SetDeduplicationId(string deduplicationId)
         {
-            this.transactionId = transactionId;
+            this.deduplicationId = deduplicationId;
         }
 
-        public void setProductId(string productId)
+        public void SetProductId(string productId)
         {
             this.productId = productId;
         }
 
-        // iOS specific methods
-        [Obsolete("This is an obsolete method. Please use separate setter methods for purchase verification parameters.")]
-        public void setReceipt(string receipt, string transactionId)
+        // iOS specific
+        public void SetTransactionId(string transactionId)
         {
-            // this.receipt = receipt;
-            // this.transactionId = transactionId;
-            // this.isReceiptSet = true;
+            this.transactionId = transactionId;
         }
 
-        public void setReceipt(string receipt)
+        public void SetReceipt(string receipt)
         {
             this.receipt = receipt;
         }
 
-        public void setReceiptBase64(string receiptBase64)
+        // Android specific
+        public void SetOrderId(string orderId)
         {
-            this.receiptBase64 = receiptBase64;
+            this.orderId = orderId;
         }
 
-        // Android specific methods
-        public void setPurchaseToken(string purchaseToken)
+        public void SetPurchaseToken(string purchaseToken)
         {
             this.purchaseToken = purchaseToken;
         }

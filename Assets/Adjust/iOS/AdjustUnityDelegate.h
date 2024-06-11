@@ -3,10 +3,10 @@
 //  Adjust SDK
 //
 //  Created by Uglješa Erceg (@uerceg) on 5th December 2016.
-//  Copyright © 2012-2018 Adjust GmbH. All rights reserved.
+//  Copyright © 2012-Present Adjust GmbH. All rights reserved.
 //
 
-#import "Adjust.h"
+#import <AdjustSdk/Adjust.h>
 
 /**
  * @brief The main interface to Adjust Unity delegate. Used to do callback methods swizzling where needed.
@@ -19,23 +19,22 @@
 @property (nonatomic) BOOL shouldLaunchDeferredDeeplink;
 
 /**
- * @brief Name of the Unity scene that loads Adjust SDK.
+ * @brief Name of the Unity game object that loads Adjust scene.
  */
-@property (nonatomic, copy) NSString *adjustUnitySceneName;
+@property (nonatomic, copy) NSString *adjustUnityGameObjectName;
 
 /**
  * @brief Get instance of the AdjustUnityDelegate with properly swizzled callback methods.
  *
- * @param swizzleAttributionCallback                  Indicator whether attribution callback should be swizzled or not.
- * @param swizzleEventSuccessCallback                 Indicator whether event success callback should be swizzled or not.
- * @param swizzleEventFailureCallback                 Indicator whether event failure callback should be swizzled or not.
- * @param swizzleSessionSuccessCallback               Indicator whether session success callback should be swizzled or not.
- * @param swizzleSessionFailureCallback               Indicator whether session failure callback should be swizzled or not.
- * @param swizzleDeferredDeeplinkCallback             Indicator whether deferred deep link callback should be swizzled or not.
- * @param swizzleConversionValueUpdatedCallback       Indicator whether SKAD conversion value update callback should be swizzled or not.
- * @param swizzleSkad4ConversionValueUpdatedCallback  Indicator whether SKAD4 conversion value update callback should be swizzled or not.
- * @param shouldLaunchDeferredDeeplink                Indicator whether SDK should launch deferred deep link by default or not.
- * @param adjustUnitySceneName                        Name of the Unity scene that loads Adjust SDK.
+ * @param swizzleAttributionCallback        Indicator whether attribution callback should be swizzled or not.
+ * @param swizzleEventSuccessCallback       Indicator whether event success callback should be swizzled or not.
+ * @param swizzleEventFailureCallback       Indicator whether event failure callback should be swizzled or not.
+ * @param swizzleSessionSuccessCallback     Indicator whether session success callback should be swizzled or not.
+ * @param swizzleSessionFailureCallback     Indicator whether session failure callback should be swizzled or not.
+ * @param swizzleDeferredDeeplinkCallback   Indicator whether deferred deep link callback should be swizzled or not.
+ * @param swizzleSkanUpdatedCallback        Indicator whether SKAD conversion value update callback should be swizzled or not.
+ * @param shouldLaunchDeferredDeeplink      Indicator whether SDK should launch deferred deep link by default or not.
+ * @param adjustUnityGameObjectName         Name of the Unity game object that loads Adjust script.
  *
  * @return AdjustUnityDelegate object instance with properly swizzled callback methods.
  */
@@ -45,10 +44,9 @@
                            sessionSuccessCallback:(BOOL)swizzleSessionSuccessCallback
                            sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
                          deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
-                   conversionValueUpdatedCallback:(BOOL)swizzleConversionValueUpdatedCallback
-              skad4ConversionValueUpdatedCallback:(BOOL)swizzleSkad4ConversionValueUpdatedCallback
+                              skanUpdatedCallback:(BOOL)swizzleSkanUpdatedCallback
                      shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
-                         withAdjustUnitySceneName:(NSString *)adjustUnitySceneName;
+                     andAdjustUnityGameObjectName:(NSString *)adjustUnityGameObjectName;
 
 /**
  * @brief Teardown method used to reset static AdjustUnityDelegate instance.

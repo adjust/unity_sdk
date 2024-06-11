@@ -23,17 +23,17 @@ namespace com.adjust.sdk
             this.receipt = receipt;
         }
 
-        public void setTransactionDate(string transactionDate)
+        public void SetTransactionDate(string transactionDate)
         {
             this.transactionDate = transactionDate;
         }
 
-        public void setSalesRegion(string salesRegion)
+        public void SetSalesRegion(string salesRegion)
         {
             this.salesRegion = salesRegion;
         }
 
-        public void addCallbackParameter(string key, string value)
+        public void AddCallbackParameter(string key, string value)
         {
             if (callbackList == null)
             {
@@ -43,7 +43,7 @@ namespace com.adjust.sdk
             callbackList.Add(value);
         }
 
-        public void addPartnerParameter(string key, string value)
+        public void AddPartnerParameter(string key, string value)
         {
             if (partnerList == null)
             {
