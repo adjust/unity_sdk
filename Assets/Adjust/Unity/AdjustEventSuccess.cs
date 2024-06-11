@@ -10,7 +10,6 @@ namespace com.adjust.sdk
         public string Timestamp { get; set; }
         public string EventToken { get; set; }
         public string CallbackId { get; set; }
-
         public Dictionary<string, object> JsonResponse { get; set; }
 
         public AdjustEventSuccess() {}

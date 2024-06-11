@@ -6,19 +6,22 @@
 //  Copyright © 2012-2018 Adjust GmbH. All rights reserved.
 //
 
-#import "Adjust.h"
-#import "ADJEvent.h"
-#import "ADJConfig.h"
+#import <AdjustSdk/Adjust.h>
 #import "AdjustUnity.h"
-#import "AdjustUnityAppDelegate.h"
 #import "AdjustUnityDelegate.h"
+#import "AdjustUnityAppDelegate.h"
 
 @implementation AdjustUnity
+
+#pragma mark - Typedefs
+
+typedef void (*DelegateCallbackIdfvGetter)(const char* idfv);
 
 #pragma mark - Object lifecycle methods
 
 + (void)load {
-    // Swizzle AppDelegate on the load. It should be done as early as possible.
+    // swizzle AppDelegate on the load
+    // it should be done as early as possible
     [AdjustUnityAppDelegate swizzleAppDelegateCallbacks];
 }
 
@@ -26,7 +29,7 @@
 
 #pragma mark - Helper C methods
 
-// Method for converting JSON stirng parameters into NSArray object.
+// method for converting JSON stirng parameters into NSArray object
 NSArray* convertArrayParameters(const char* cStringJsonArrayParameters) {
     if (cStringJsonArrayParameters == NULL) {
         return nil;
@@ -82,74 +85,63 @@ void addValueOrEmpty(NSMutableDictionary *dictionary, NSString *key, NSObject *v
 
 extern "C"
 {
-    void _AdjustLaunchApp(const char* appToken,
-                          const char* environment,
-                          const char* sdkPrefix,
-                          const char* userAgent,
-                          const char* defaultTracker,
-                          const char* externalDeviceId,
-                          const char* urlStrategy,
-                          const char* sceneName,
-                          int allowSuppressLogLevel,
-                          int logLevel,
-                          int isDeviceKnown,
-                          int eventBuffering,
-                          int sendInBackground,
-                          int allowAdServicesInfoReading,
-                          int allowIdfaReading,
-                          int deactivateSkAdNetworkHandling,
-                          int linkMeEnabled,
-                          int needsCost,
-                          int coppaCompliant,
-                          int readDeviceInfoOnce,
-                          int64_t secretId,
-                          int64_t info1,
-                          int64_t info2,
-                          int64_t info3,
-                          int64_t info4,
-                          double delayStart,
-                          int attConsentWaitingInterval,
-                          int launchDeferredDeeplink,
-                          int isAttributionCallbackImplemented,
-                          int isEventSuccessCallbackImplemented,
-                          int isEventFailureCallbackImplemented,
-                          int isSessionSuccessCallbackImplemented,
-                          int isSessionFailureCallbackImplemented,
-                          int isDeferredDeeplinkCallbackImplemented,
-                          int isConversionValueUpdatedCallbackImplemented,
-                          int isSkad4ConversionValueUpdatedCallbackImplemented) {
-        NSString *stringAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
-        NSString *stringEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
-        NSString *stringSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
-        NSString *stringUserAgent = isStringValid(userAgent) == true ? [NSString stringWithUTF8String:userAgent] : nil;
-        NSString *stringDefaultTracker = isStringValid(defaultTracker) == true ? [NSString stringWithUTF8String:defaultTracker] : nil;
-        NSString *stringExternalDeviceId = isStringValid(externalDeviceId) == true ? [NSString stringWithUTF8String:externalDeviceId] : nil;
-        NSString *stringUrlStrategy = isStringValid(urlStrategy) == true ? [NSString stringWithUTF8String:urlStrategy] : nil;
-        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
+    void _AdjustInitSdk(const char* gameObjectName,
+                        const char* appToken,
+                        const char* environment,
+                        const char* sdkPrefix,
+                        const char* defaultTracker,
+                        const char* externalDeviceId,
+                        const char* jsonUrlStrategyDomains,
+                        int allowSuppressLogLevel,
+                        int logLevel,
+                        int attConsentWaitingInterval,
+                        int eventDeduplicationIdsMaxSize,
+                        int shouldUseSubdomains,
+                        int isDataResidency,
+                        int isSendingInBackgroundEnabled,
+                        int isAdServicesEnabled,
+                        int isIdfaReadingEnabled,
+                        int isSkanAttributionEnabled,
+                        int isLinkMeEnabled,
+                        int isCostDataInAttributionEnabled,
+                        int isDeviceIdsReadingOnceEnabled,
+                        int isDeferredDeeplinkOpeningEnabled,
+                        int isAttributionCallbackImplemented,
+                        int isEventSuccessCallbackImplemented,
+                        int isEventFailureCallbackImplemented,
+                        int isSessionSuccessCallbackImplemented,
+                        int isSessionFailureCallbackImplemented,
+                        int isDeferredDeeplinkCallbackImplemented,
+                        int isSkanUpdatedCallbackImplemented) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        NSString *strAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
+        NSString *strEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
+        NSString *strSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
+        NSString *strDefaultTracker = isStringValid(defaultTracker) == true ? [NSString stringWithUTF8String:defaultTracker] : nil;
+        NSString *strExternalDeviceId = isStringValid(externalDeviceId) == true ? [NSString stringWithUTF8String:externalDeviceId] : nil;
 
         ADJConfig *adjustConfig;
 
         if (allowSuppressLogLevel != -1) {
-            adjustConfig = [ADJConfig configWithAppToken:stringAppToken
-                                             environment:stringEnvironment
-                                   allowSuppressLogLevel:(BOOL)allowSuppressLogLevel];
+            adjustConfig = [[ADJConfig alloc] initWithAppToken:strAppToken
+                                                   environment:strEnvironment
+                                           andSuppressLogLevel:(BOOL)allowSuppressLogLevel];
         } else {
-            adjustConfig = [ADJConfig configWithAppToken:stringAppToken
-                                             environment:stringEnvironment];
+            adjustConfig = [[ADJConfig alloc] initWithAppToken:strAppToken
+                                                andEnvironment:strEnvironment];
         }
 
-        // Set SDK prefix.
-        [adjustConfig setSdkPrefix:stringSdkPrefix];
+        // set SDK prefix
+        [adjustConfig setSdkPrefix:strSdkPrefix];
 
-        // Check if user has selected to implement any of the callbacks.
-        if (isAttributionCallbackImplemented
-            || isEventSuccessCallbackImplemented
-            || isEventFailureCallbackImplemented
-            || isSessionSuccessCallbackImplemented
-            || isSessionFailureCallbackImplemented
-            || isDeferredDeeplinkCallbackImplemented
-            || isConversionValueUpdatedCallbackImplemented
-            || isSkad4ConversionValueUpdatedCallbackImplemented) {
+        // check if user has selected to implement any of the callbacks
+        if (isAttributionCallbackImplemented ||
+            isEventSuccessCallbackImplemented ||
+            isEventFailureCallbackImplemented ||
+            isSessionSuccessCallbackImplemented ||
+            isSessionFailureCallbackImplemented ||
+            isDeferredDeeplinkCallbackImplemented ||
+            isSkanUpdatedCallbackImplemented) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
                                                             eventSuccessCallback:isEventSuccessCallbackImplemented
@@ -157,142 +149,119 @@ extern "C"
                                                           sessionSuccessCallback:isSessionSuccessCallbackImplemented
                                                           sessionFailureCallback:isSessionFailureCallbackImplemented
                                                         deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
-                                                  conversionValueUpdatedCallback:isConversionValueUpdatedCallbackImplemented
-                                             skad4ConversionValueUpdatedCallback:isSkad4ConversionValueUpdatedCallbackImplemented
-                                                    shouldLaunchDeferredDeeplink:launchDeferredDeeplink
-                                                        withAdjustUnitySceneName:stringSceneName]];
+                                                             skanUpdatedCallback:isSkanUpdatedCallbackImplemented
+                                                    shouldLaunchDeferredDeeplink:isDeferredDeeplinkOpeningEnabled
+                                                    andAdjustUnityGameObjectName:strGameObjectName]];
         }
 
-        // Log level.
+        // log level
         if (logLevel != -1) {
             [adjustConfig setLogLevel:(ADJLogLevel)logLevel];
         }
 
-        // Event buffering.
-        if (eventBuffering != -1) {
-            [adjustConfig setEventBufferingEnabled:(BOOL)eventBuffering];
-        }
-
         // Send in background.
-        if (sendInBackground != -1) {
-            [adjustConfig setSendInBackground:(BOOL)sendInBackground];
+        if (isSendingInBackgroundEnabled != -1) {
+            if ((BOOL)isSendingInBackgroundEnabled == YES) {
+                [adjustConfig enableSendingInBackground];
+            }
         }
 
-        // Allow AdServices info reading.
-        if (allowAdServicesInfoReading != -1) {
-            [adjustConfig setAllowAdServicesInfoReading:(BOOL)allowAdServicesInfoReading];
+        // AdServices.framework handling
+        if (isAdServicesEnabled != -1) {
+            if ((BOOL)isAdServicesEnabled == NO) {
+                [adjustConfig disableAdServices];
+            }
         }
 
-        // Deactivate default SKAdNetwork handling.
-        if (deactivateSkAdNetworkHandling != -1) {
-            [adjustConfig deactivateSKAdNetworkHandling];
+        // SKAN attribution
+        if (isSkanAttributionEnabled != -1) {
+            if ((BOOL)isSkanAttributionEnabled == NO) {
+                [adjustConfig disableSkanAttribution];
+            }
         }
 
-        // Allow IDFA reading.
-        if (allowIdfaReading != -1) {
-            [adjustConfig setAllowIdfaReading:(BOOL)allowIdfaReading];
+        // IDFA reading
+        if (isIdfaReadingEnabled != -1) {
+            if ((BOOL)isIdfaReadingEnabled == NO) {
+                [adjustConfig disableIdfaReading];
+            }
         }
 
-        // Enable LinkMe feature.
-        if (linkMeEnabled != -1) {
-            [adjustConfig setLinkMeEnabled:(BOOL)linkMeEnabled];
+        // LinkMe
+        if (isLinkMeEnabled != -1) {
+            if ((BOOL)isLinkMeEnabled == YES) {
+                [adjustConfig enableLinkMe];
+            }
         }
 
-        // Device known.
-        if (isDeviceKnown != -1) {
-            [adjustConfig setIsDeviceKnown:(BOOL)isDeviceKnown];
-        }
-
-        // Delay start.
-        if (delayStart != -1) {
-            [adjustConfig setDelayStart:delayStart];
-        }
-
-        // ATT dialog delay.
+        // ATT dialog delay
         if (attConsentWaitingInterval != -1) {
             [adjustConfig setAttConsentWaitingInterval:attConsentWaitingInterval];
         }
 
-        // Cost data in attribution callback.
-        if (needsCost != -1) {
-            [adjustConfig setNeedsCost:(BOOL)needsCost];
+        // deduplication IDs max number
+        if (eventDeduplicationIdsMaxSize != -1) {
+            [adjustConfig setEventDeduplicationIdsMaxSize:eventDeduplicationIdsMaxSize];
         }
 
-        // COPPA compliance.
-        if (coppaCompliant != -1) {
-            [adjustConfig setCoppaCompliantEnabled:(BOOL)coppaCompliant];
-        }
-
-        // Read device info just once.
-        if (readDeviceInfoOnce != -1) {
-            [adjustConfig setReadDeviceInfoOnceEnabled:(BOOL)readDeviceInfoOnce];
-        }
-
-        // User agent.
-        if (stringUserAgent != nil) {
-            [adjustConfig setUserAgent:stringUserAgent];
-        }
-
-        // Default tracker.
-        if (stringDefaultTracker != nil) {
-            [adjustConfig setDefaultTracker:stringDefaultTracker];
-        }
-
-        // External device identifier.
-        if (stringExternalDeviceId != nil) {
-            [adjustConfig setExternalDeviceId:stringExternalDeviceId];
-        }
-
-        // URL strategy.
-        if (stringUrlStrategy != nil) {
-            if ([stringUrlStrategy isEqualToString:@"china"]) {
-                [adjustConfig setUrlStrategy:ADJUrlStrategyChina];
-            } else if ([stringUrlStrategy isEqualToString:@"india"]) {
-                [adjustConfig setUrlStrategy:ADJUrlStrategyIndia];
-            } else if ([stringUrlStrategy isEqualToString:@"cn"]) {
-                [adjustConfig setUrlStrategy:ADJUrlStrategyCn];
-            } else if ([stringUrlStrategy isEqualToString:@"cn-only"]) {
-                [adjustConfig setUrlStrategy:ADJUrlStrategyCnOnly];
-            } else if ([stringUrlStrategy isEqualToString:@"data-residency-eu"]) {
-                [adjustConfig setUrlStrategy:ADJDataResidencyEU];
-            } else if ([stringUrlStrategy isEqualToString:@"data-residency-tr"]) {
-                [adjustConfig setUrlStrategy:ADJDataResidencyTR];
-            } else if ([stringUrlStrategy isEqualToString:@"data-residency-us"]) {
-                [adjustConfig setUrlStrategy:ADJDataResidencyUS];
+        // cost data in attribution callback
+        if (isCostDataInAttributionEnabled != -1) {
+            if ((BOOL)isCostDataInAttributionEnabled == YES) {
+                [adjustConfig enableCostDataInAttribution];
             }
         }
 
-        // App secret.
-        if (secretId != -1 && info1 != -1 && info2 != -1 && info3 != -1 && info4 != 1) {
-            [adjustConfig setAppSecret:secretId info1:info1 info2:info2 info3:info3 info4:info4];
+        // read device info only once
+        if (isDeviceIdsReadingOnceEnabled != -1) {
+            if ((BOOL)isDeviceIdsReadingOnceEnabled == YES) {
+                [adjustConfig enableDeviceIdsReadingOnce];
+            }
         }
 
-        // Start the SDK.
-        [Adjust appDidLaunch:adjustConfig];
-        [Adjust trackSubsessionStart];
+        // default tracker
+        if (strDefaultTracker != nil) {
+            [adjustConfig setDefaultTracker:strDefaultTracker];
+        }
+
+        // external device identifier
+        if (strExternalDeviceId != nil) {
+            [adjustConfig setExternalDeviceId:strExternalDeviceId];
+        }
+
+        // URL strategy
+        if (shouldUseSubdomains != -1 && isDataResidency != -1) {
+            NSArray *urlStrategyDomains = convertArrayParameters(jsonUrlStrategyDomains);
+            if (urlStrategyDomains != nil) {
+                [adjustConfig setUrlStrategy:urlStrategyDomains
+                              withSubdomains:(BOOL)shouldUseSubdomains
+                            andDataResidency:(BOOL)isDataResidency];
+            }
+        }
+
+        // initialize the SDK
+        [Adjust initSdk:adjustConfig];
     }
 
     void _AdjustTrackEvent(const char* eventToken,
                            double revenue,
                            const char* currency,
                            const char* receipt,
-                           const char* receiptBase64,
                            const char* productId,
                            const char* transactionId,
                            const char* callbackId,
-                           int isReceiptSet,
+                           const char* deduplicationId,
                            const char* jsonCallbackParameters,
                            const char* jsonPartnerParameters) {
-        NSString *stringEventToken = isStringValid(eventToken) == true ? [NSString stringWithUTF8String:eventToken] : nil;
-        ADJEvent *event = [ADJEvent eventWithEventToken:stringEventToken];
+        NSString *strEventToken = isStringValid(eventToken) == true ? [NSString stringWithUTF8String:eventToken] : nil;
+        ADJEvent *event = [[ADJEvent alloc] initWithEventToken:strEventToken];
 
-        // Revenue and currency.
+        // revenue and currency
         if (revenue != -1 && currency != NULL) {
             NSString *stringCurrency = [NSString stringWithUTF8String:currency];
             [event setRevenue:revenue currency:stringCurrency];
         }
 
-        // Callback parameters.
+        // callback parameters
         NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
         if (arrayCallbackParameters != nil) {
             NSUInteger count = [arrayCallbackParameters count];
@@ -303,6 +272,7 @@ extern "C"
             }
         }
 
+        // partner parameters
         NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
         if (arrayPartnerParameters != nil) {
             NSUInteger count = [arrayPartnerParameters count];
@@ -313,54 +283,38 @@ extern "C"
             }
         }
 
-        // Transaction ID.
+        // transaction ID
         if (transactionId != NULL) {
-            NSString *stringTransactionId = [NSString stringWithUTF8String:transactionId];
-            [event setTransactionId:stringTransactionId];
+            NSString *strTransactionId = [NSString stringWithUTF8String:transactionId];
+            [event setTransactionId:strTransactionId];
         }
 
-        // Product ID.
+        // product ID
         if (productId != NULL) {
-            NSString *stringProductId = [NSString stringWithUTF8String:productId];
-            [event setProductId:stringProductId];
+            NSString *strProductId = [NSString stringWithUTF8String:productId];
+            [event setProductId:strProductId];
         }
 
-        // Receipt.
+        // receipt (base64 encoded string)
         if (receipt != NULL) {
-            NSString *stringReceipt = [NSString stringWithUTF8String:receipt];
-            [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding]];
+            NSString *strReceipt = [NSString stringWithUTF8String:receipt];
+            NSData *dataReceipt = [[NSData alloc] initWithBase64EncodedString:strReceipt options:0];
+            [event setReceipt:dataReceipt];
         }
 
-        // Base64 encoded receipt.
-        if (receiptBase64 != NULL) {
-            // If both (receipt and receiptBase64) set, receiptBase64 will be used.
-            NSString *stringReceiptBase64 = [NSString stringWithUTF8String:receiptBase64];
-            NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:stringReceiptBase64 options:0];
-            [event setReceipt:decodedData];
-        }
-
-        // Callback ID.
+        // callback ID
         if (callbackId != NULL) {
-            NSString *stringCallbackId = [NSString stringWithUTF8String:callbackId];
-            [event setCallbackId:stringCallbackId];
+            NSString *strCallbackId = [NSString stringWithUTF8String:callbackId];
+            [event setCallbackId:strCallbackId];
         }
 
-        // Receipt (legacy).
-        // if ([[NSNumber numberWithInt:isReceiptSet] boolValue]) {
-        //     NSString *stringReceipt = nil;
-        //     NSString *stringTransactionId = nil;
+        // deduplication ID
+        if (deduplicationId != NULL) {
+            NSString *strDeduplicationId = [NSString stringWithUTF8String:deduplicationId];
+            [event setDeduplicationId:strDeduplicationId];
+        }
 
-        //     if (receipt != NULL) {
-        //         stringReceipt = [NSString stringWithUTF8String:receipt];
-        //     }
-        //     if (transactionId != NULL) {
-        //         stringTransactionId = [NSString stringWithUTF8String:transactionId];
-        //     }
-
-        //     [event setReceipt:[stringReceipt dataUsingEncoding:NSUTF8StringEncoding] transactionId:stringTransactionId];
-        // }
-
-        // Track event.
+        // track event
         [Adjust trackEvent:event];
     }
 
@@ -372,235 +326,218 @@ extern "C"
         [Adjust trackSubsessionEnd];
     }
 
-    void _AdjustSetEnabled(int enabled) {
-        BOOL bEnabled = (BOOL)enabled;
-        [Adjust setEnabled:bEnabled];
+    void _AdjustEnable() {
+        [Adjust enable];
     }
 
-    int _AdjustIsEnabled() {
-        BOOL isEnabled = [Adjust isEnabled];
-        int iIsEnabled = (int)isEnabled;
-        return iIsEnabled;
+    void _AdjustDisable() {
+        [Adjust disable];
     }
 
-    void _AdjustSetOfflineMode(int enabled) {
-        BOOL bEnabled = (BOOL)enabled;
-        [Adjust setOfflineMode:bEnabled];
+    void _AdjustEnableCoppaCompliance() {
+        [Adjust enableCoppaCompliance];
     }
 
-    void _AdjustSetDeviceToken(const char* deviceToken) {
-        if (deviceToken != NULL) {
-            NSString *stringDeviceToken = [NSString stringWithUTF8String:deviceToken];
-            [Adjust setPushToken:stringDeviceToken];
+    void _AdjustDisableCoppaCompliance() {
+        [Adjust disableCoppaCompliance];
+    }
+
+    void _AdjustIsEnabled(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        [Adjust isEnabledWithCompletionHandler:^(BOOL isEnabled) {
+            NSString *strIsEnabled = isEnabled ? @"true" : @"false";
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustIsEnabledGetter",
+                             [strIsEnabled UTF8String]);
+        }];
+    }
+
+    void _AdjustSwitchToOfflineMode() {
+        [Adjust switchToOfflineMode];
+    }
+
+    void _AdjustSwitchBackToOnlineMode() {
+        [Adjust switchBackToOnlineMode];
+    }
+
+    void _AdjustSetPushToken(const char* pushToken) {
+        if (pushToken != NULL) {
+            NSString *strPushToken = [NSString stringWithUTF8String:pushToken];
+            [Adjust setPushTokenAsString:strPushToken];
         }
     }
 
-    void _AdjustAppWillOpenUrl(const char* url) {
-        if (url != NULL) {
-            NSString *stringUrl = [NSString stringWithUTF8String:url];
-            NSURL *nsUrl;
+    void _AdjustProcessDeeplink(const char* deeplink) {
+        if (deeplink != NULL) {
+            NSString *strDeeplink = [NSString stringWithUTF8String:deeplink];
+            NSURL *urlDeeplink;
             if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
-                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
+                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
             } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             }
 #pragma clang diagnostic pop
 
-            [Adjust appWillOpenUrl:nsUrl];
+            [Adjust processDeeplink:urlDeeplink];
         }
     }
 
-    char* _AdjustGetIdfa() {
-        NSString *idfa = [Adjust idfa];
-        if (nil == idfa) {
-            return NULL;
-        }
-
-        const char* idfaCString = [idfa UTF8String];
-        if (NULL == idfaCString) {
-            return NULL;
-        }
-
-        char* idfaCStringCopy = strdup(idfaCString);
-        return idfaCStringCopy;
+    void _AdjustGetIdfa(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        [Adjust idfaWithCompletionHandler:^(NSString * _Nullable idfa) {
+            // TODO: nil checks
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustIdfaGetter",
+                             [idfa UTF8String]);
+        }];
     }
 
-    char* _AdjustGetIdfv() {
-        NSString *idfv = [Adjust idfv];
-        if (nil == idfv) {
-            return NULL;
-        }
-
-        const char* idfvCString = [idfv UTF8String];
-        if (NULL == idfvCString) {
-            return NULL;
-        }
-
-        char* idfvCStringCopy = strdup(idfvCString);
-        return idfvCStringCopy;
+    // void _AdjustGetIdfv(DelegateCallbackIdfvGetter callback) {
+    void _AdjustGetIdfv(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        [Adjust idfvWithCompletionHandler:^(NSString * _Nullable idfv) {
+            // TODO: nil checks
+            // callback([idfv UTF8String]);
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustIdfvGetter",
+                             [idfv UTF8String]);
+        }];
     }
 
-    char* _AdjustGetAdid() {
-        NSString *adid = [Adjust adid];
-        if (nil == adid) {
-            return NULL;
-        }
-
-        const char* adidCString = [adid UTF8String];
-        if (NULL == adidCString) {
-            return NULL;
-        }
-
-        char* adidCStringCopy = strdup(adidCString);
-        return adidCStringCopy;
+    void _AdjustGetAdid(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        [Adjust adidWithCompletionHandler:^(NSString * _Nullable adid) {
+            // TODO: nil checks
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustAdidGetter",
+                             [adid UTF8String]);
+        }];
     }
 
-    char* _AdjustGetSdkVersion() {
-        NSString *sdkVersion = [Adjust sdkVersion];
-        if (nil == sdkVersion) {
-            return NULL;
-        }
-
-        const char* sdkVersionCString = [sdkVersion UTF8String];
-        if (NULL == sdkVersionCString) {
-            return NULL;
-        }
-
-        char* sdkVersionCStringCopy = strdup(sdkVersionCString);
-        return sdkVersionCStringCopy;
+    void _AdjustGetSdkVersion(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        [Adjust sdkVersionWithCompletionHandler:^(NSString * _Nullable sdkVersion) {
+            // TODO: nil checks
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustSdkVersionGetter",
+                             [sdkVersion UTF8String]);
+        }];
     }
 
-    char* _AdjustGetAttribution() {
-        ADJAttribution *attribution = [Adjust attribution];
-        if (nil == attribution) {
-            return NULL;
-        }
-
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        addValueOrEmpty(dictionary, @"trackerToken", attribution.trackerToken);
-        addValueOrEmpty(dictionary, @"trackerName", attribution.trackerName);
-        addValueOrEmpty(dictionary, @"network", attribution.network);
-        addValueOrEmpty(dictionary, @"campaign", attribution.campaign);
-        addValueOrEmpty(dictionary, @"creative", attribution.creative);
-        addValueOrEmpty(dictionary, @"adgroup", attribution.adgroup);
-        addValueOrEmpty(dictionary, @"clickLabel", attribution.clickLabel);
-        addValueOrEmpty(dictionary, @"adid", attribution.adid);
-        addValueOrEmpty(dictionary, @"costType", attribution.costType);
-        addValueOrEmpty(dictionary, @"costAmount", attribution.costAmount);
-        addValueOrEmpty(dictionary, @"costCurrency", attribution.costCurrency);
-
-        NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
-        NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
-                                                               length:[dataAttribution length]
-                                                             encoding:NSUTF8StringEncoding];
-        const char* attributionCString = [stringAttribution UTF8String];
-        char* attributionCStringCopy = strdup(attributionCString);
-        return attributionCStringCopy;
-    }
-
-    void _AdjustSendFirstPackages() {
-        [Adjust sendFirstPackages];
+    void _AdjustGetAttribution(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        [Adjust attributionWithCompletionHandler:^(ADJAttribution * _Nullable attribution) {
+            // TODO: nil checks
+            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+            addValueOrEmpty(dictionary, @"trackerToken", attribution.trackerToken);
+            addValueOrEmpty(dictionary, @"trackerName", attribution.trackerName);
+            addValueOrEmpty(dictionary, @"network", attribution.network);
+            addValueOrEmpty(dictionary, @"campaign", attribution.campaign);
+            addValueOrEmpty(dictionary, @"creative", attribution.creative);
+            addValueOrEmpty(dictionary, @"adgroup", attribution.adgroup);
+            addValueOrEmpty(dictionary, @"clickLabel", attribution.clickLabel);
+            addValueOrEmpty(dictionary, @"costType", attribution.costType);
+            addValueOrEmpty(dictionary, @"costAmount", attribution.costAmount);
+            addValueOrEmpty(dictionary, @"costCurrency", attribution.costCurrency);
+            NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                                      options:0
+                                                                        error:nil];
+            NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
+                                                                   length:[dataAttribution length]
+                                                                 encoding:NSUTF8StringEncoding];
+            const char* attributionCString = [stringAttribution UTF8String];
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustAttributionGetter",
+                             attributionCString);
+        }];
     }
 
     void _AdjustGdprForgetMe() {
         [Adjust gdprForgetMe];
     }
 
-    void _AdjustDisableThirdPartySharing() {
-        [Adjust disableThirdPartySharing];
-    }
-
-    void _AdjustAddSessionPartnerParameter(const char* key, const char* value) {
+    void _AdjustAddGlobalPartnerParameter(const char* key, const char* value) {
         if (key != NULL && value != NULL) {
-            NSString *stringKey = [NSString stringWithUTF8String:key];
-            NSString *stringValue = [NSString stringWithUTF8String:value];
-            [Adjust addSessionPartnerParameter:stringKey value:stringValue];
+            NSString *strKey = [NSString stringWithUTF8String:key];
+            NSString *strValue = [NSString stringWithUTF8String:value];
+            [Adjust addGlobalPartnerParameter:strValue forKey:strKey];
         }
     }
 
-    void _AdjustAddSessionCallbackParameter(const char* key, const char* value) {
+    void _AdjustAddGlobalCallbackParameter(const char* key, const char* value) {
         if (key != NULL && value != NULL) {
-            NSString *stringKey = [NSString stringWithUTF8String:key];
-            NSString *stringValue = [NSString stringWithUTF8String:value];
-            [Adjust addSessionCallbackParameter:stringKey value:stringValue];
+            NSString *strKey = [NSString stringWithUTF8String:key];
+            NSString *strValue = [NSString stringWithUTF8String:value];
+            [Adjust addGlobalCallbackParameter:strValue forKey:strKey];
         }
     }
 
-    void _AdjustRemoveSessionPartnerParameter(const char* key) {
+    void _AdjustRemoveGlobalPartnerParameter(const char* key) {
         if (key != NULL) {
-            NSString *stringKey = [NSString stringWithUTF8String:key];
-            [Adjust removeSessionPartnerParameter:stringKey];
+            NSString *strKey = [NSString stringWithUTF8String:key];
+            [Adjust removeGlobalPartnerParameterForKey:strKey];
         }
     }
 
-    void _AdjustRemoveSessionCallbackParameter(const char* key) {
+    void _AdjustRemoveGlobalCallbackParameter(const char* key) {
         if (key != NULL) {
-            NSString *stringKey = [NSString stringWithUTF8String:key];
-            [Adjust removeSessionCallbackParameter:stringKey];
+            NSString *strKey = [NSString stringWithUTF8String:key];
+            [Adjust removeGlobalCallbackParameterForKey:strKey];
         }
     }
 
-    void _AdjustResetSessionPartnerParameters() {
-        [Adjust resetSessionPartnerParameters];
+    void _AdjustRemoveGlobalPartnerParameters() {
+        [Adjust removeGlobalPartnerParameters];
     }
 
-    void _AdjustResetSessionCallbackParameters() {
-        [Adjust resetSessionCallbackParameters];
+    void _AdjustRemoveGlobalCallbackParameters() {
+        [Adjust removeGlobalCallbackParameters];
     }
 
-    void _AdjustTrackAdRevenue(const char* source, const char* payload) {
-        if (source != NULL && payload != NULL) {
-            NSString *stringSource = [NSString stringWithUTF8String:source];
-            NSString *stringPayload = [NSString stringWithUTF8String:payload];
-            NSData *dataPayload = [stringPayload dataUsingEncoding:NSUTF8StringEncoding];
-            [Adjust trackAdRevenue:stringSource payload:dataPayload];
-        }
-    }
-
-    void _AdjustTrackAdRevenueNew(const char* source,
-                                  double revenue,
-                                  const char* currency,
-                                  int adImpressionsCount,
-                                  const char* adRevenueNetwork,
-                                  const char* adRevenueUnit,
-                                  const char* adRevenuePlacement,
-                                  const char* jsonCallbackParameters,
-                                  const char* jsonPartnerParameters) {
+    void _AdjustTrackAdRevenue(const char* source,
+                               double revenue,
+                               const char* currency,
+                               int adImpressionsCount,
+                               const char* adRevenueNetwork,
+                               const char* adRevenueUnit,
+                               const char* adRevenuePlacement,
+                               const char* jsonCallbackParameters,
+                               const char* jsonPartnerParameters) {
         NSString *stringSource = isStringValid(source) == true ? [NSString stringWithUTF8String:source] : nil;
         ADJAdRevenue *adRevenue = [[ADJAdRevenue alloc] initWithSource:stringSource];
 
-        // Revenue and currency.
+        // revenue and currency
         if (revenue != -1 && currency != NULL) {
             NSString *stringCurrency = [NSString stringWithUTF8String:currency];
             [adRevenue setRevenue:revenue currency:stringCurrency];
         }
 
-        // Ad impressions count.
+        // ad impressions count
         if (adImpressionsCount != -1) {
             [adRevenue setAdImpressionsCount:adImpressionsCount];
         }
 
-        // Ad revenue network.
+        // ad revenue network
         if (adRevenueNetwork != NULL) {
             NSString *stringAdRevenueNetwork = [NSString stringWithUTF8String:adRevenueNetwork];
             [adRevenue setAdRevenueNetwork:stringAdRevenueNetwork];
         }
 
-        // Ad revenue unit.
+        // ad revenue unit
         if (adRevenueUnit != NULL) {
             NSString *stringAdRevenueUnit = [NSString stringWithUTF8String:adRevenueUnit];
             [adRevenue setAdRevenueUnit:stringAdRevenueUnit];
         }
 
-        // Ad revenue placement.
+        // ad revenue placement
         if (adRevenuePlacement != NULL) {
             NSString *stringAdRevenuePlacement = [NSString stringWithUTF8String:adRevenuePlacement];
             [adRevenue setAdRevenuePlacement:stringAdRevenuePlacement];
         }
 
-        // Callback parameters.
+        // callback parameters
         NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
         if (arrayCallbackParameters != nil) {
             NSUInteger count = [arrayCallbackParameters count];
@@ -611,6 +548,7 @@ extern "C"
             }
         }
 
+        // partner parameters
         NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
         if (arrayPartnerParameters != nil) {
             NSUInteger count = [arrayPartnerParameters count];
@@ -621,72 +559,68 @@ extern "C"
             }
         }
 
-        // Track ad revenue.
+        // track ad revenue
         [Adjust trackAdRevenue:adRevenue];
     }
 
+    // TODO: consider non-string types for some fields?
     void _AdjustTrackAppStoreSubscription(const char* price,
                                           const char* currency,
                                           const char* transactionId,
                                           const char* receipt,
-                                          const char* billingStore,
                                           const char* transactionDate,
                                           const char* salesRegion,
                                           const char* jsonCallbackParameters,
                                           const char* jsonPartnerParameters) {
-        // Mandatory fields.
+        // mandatory fields
         NSDecimalNumber *mPrice;
         NSString *mCurrency;
         NSString *mTransactionId;
         NSData *mReceipt;
-        NSString *mBillingStore;
 
-        // Price.
+        // price
         if (price != NULL) {
             mPrice = [NSDecimalNumber decimalNumberWithString:[NSString stringWithUTF8String:price]];
         }
 
-        // Currency.
+        // currency
         if (currency != NULL) {
             mCurrency = [NSString stringWithUTF8String:currency];
         }
 
-        // Transaction ID.
+        // transaction ID
         if (transactionId != NULL) {
             mTransactionId = [NSString stringWithUTF8String:transactionId];
         }
 
-        // Receipt.
+        // TODO: check if this is equivalent to event receipt logic
+        // receipt
         if (receipt != NULL) {
             mReceipt = [[NSString stringWithUTF8String:receipt] dataUsingEncoding:NSUTF8StringEncoding];
         }
 
-        // Billing store (not used ATM, maybe in the future).
-        if (billingStore != NULL) {
-            mBillingStore = [NSString stringWithUTF8String:billingStore];
-        }
+        ADJAppStoreSubscription *subscription =
+        [[ADJAppStoreSubscription alloc] initWithPrice:mPrice
+                                              currency:mCurrency
+                                         transactionId:mTransactionId
+                                            andReceipt:mReceipt];
 
-        ADJSubscription *subscription = [[ADJSubscription alloc] initWithPrice:mPrice
-                                                                      currency:mCurrency
-                                                                 transactionId:mTransactionId
-                                                                    andReceipt:mReceipt];
+        // optional fields below
 
-        // Optional fields.
-
-        // Transaction date.
+        // transaction date
         if (transactionDate != NULL) {
             NSTimeInterval transactionDateInterval = [[NSString stringWithUTF8String:transactionDate] doubleValue] / 1000.0;
             NSDate *oTransactionDate = [NSDate dateWithTimeIntervalSince1970:transactionDateInterval];
             [subscription setTransactionDate:oTransactionDate];
         }
 
-        // Sales region.
+        // sales region
         if (salesRegion != NULL) {
             NSString *oSalesRegion = [NSString stringWithUTF8String:salesRegion];
             [subscription setSalesRegion:oSalesRegion];
         }
 
-        // Callback parameters.
+        // callback parameters
         NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
         if (arrayCallbackParameters != nil) {
             NSUInteger count = [arrayCallbackParameters count];
@@ -697,7 +631,7 @@ extern "C"
             }
         }
 
-        // Partner parameters.
+        // partner parameters
         NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
         if (arrayPartnerParameters != nil) {
             NSUInteger count = [arrayPartnerParameters count];
@@ -708,13 +642,13 @@ extern "C"
             }
         }
         
-        // Track subscription.
-        [Adjust trackSubscription:subscription];
+        // track subscription
+        [Adjust trackAppStoreSubscription:subscription];
     }
 
     void _AdjustTrackThirdPartySharing(int enabled, const char* jsonGranularOptions, const char* jsonPartnerSharingSettings) {
         NSNumber *nEnabled = enabled >= 0 ? [NSNumber numberWithInt:enabled] : nil;
-        ADJThirdPartySharing *adjustThirdPartySharing = [[ADJThirdPartySharing alloc] initWithIsEnabledNumberBool:nEnabled];
+        ADJThirdPartySharing *adjustThirdPartySharing = [[ADJThirdPartySharing alloc] initWithIsEnabled:nEnabled];
 
         NSArray *arrayGranularOptions = convertArrayParameters(jsonGranularOptions);
         if (arrayGranularOptions != nil) {
@@ -767,159 +701,144 @@ extern "C"
         [Adjust trackMeasurementConsent:bEnabled];
     }
 
-    void _AdjustRequestTrackingAuthorizationWithCompletionHandler(const char* sceneName) {
-        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
-        if (stringSceneName == nil) {
+    void _AdjustRequestAppTrackingAuthorizationWithCompletionHandler(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        if (strGameObjectName == nil) {
             return;
         }
 
-        [Adjust requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {
+        [Adjust requestAppTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {
             NSString *stringStatus = [NSString stringWithFormat:@"%tu", status];
             const char* charStatus = [stringStatus UTF8String];
-            UnitySendMessage([stringSceneName UTF8String], "GetAuthorizationStatus", charStatus);
+            UnitySendMessage([stringStatus UTF8String],
+                             "UnityAdjustAttDialogCallback",
+                             charStatus);
         }];
     }
 
-    void _AdjustUpdateConversionValue(int conversionValue) {
-        [Adjust updateConversionValue:conversionValue];
-    }
+    void _AdjustUpdateSkanConversionValue(int conversionValue,
+                                          const char* coarseValue,
+                                          int lockWindow,
+                                          const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
 
-    void _AdjustUpdateConversionValueWithCallback(int conversionValue, const char* sceneName) {
-        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
-        [Adjust updatePostbackConversionValue:conversionValue completionHandler:^(NSError * _Nullable error) {
-            if (stringSceneName == nil) {
-                return;
-            }
-            NSString *errorString = [error description];
-            const char* errorChar = [errorString UTF8String];
-            UnitySendMessage([stringSceneName UTF8String], "GetNativeSkadCompletionDelegate", errorChar);
-        }];
-    }
-
-    void _AdjustUpdateConversionValueWithCallbackSkad4(int conversionValue, const char* coarseValue, int lockWindow, const char* sceneName) {
-        NSString *stringSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
         if (coarseValue != NULL) {
-            NSString *stringCoarseValue = [NSString stringWithUTF8String:coarseValue];
+            NSString *strCoarseValue = [NSString stringWithUTF8String:coarseValue];
             BOOL bLockWindow = (BOOL)lockWindow;
-            [Adjust updatePostbackConversionValue:conversionValue
-                                      coarseValue:stringCoarseValue
-                                       lockWindow:bLockWindow
-                                completionHandler:^(NSError * _Nullable error) {
-                if (stringSceneName == nil) {
+            [Adjust updateSkanConversionValue:conversionValue
+                                  coarseValue:strCoarseValue
+                                   lockWindow:[NSNumber numberWithBool:bLockWindow]
+                        withCompletionHandler:^(NSError * _Nullable error) {
+                if (strGameObjectName == nil) {
                     return;
                 }
-                NSString *errorString = [error description];
+
+                // TODO: nil checks
+                NSString *errorString = [error localizedDescription];
                 const char* errorChar = [errorString UTF8String];
-                UnitySendMessage([stringSceneName UTF8String], "GetNativeSkad4CompletionDelegate", errorChar);
+                UnitySendMessage([strGameObjectName UTF8String],
+                                 "UnityAdjustSkanErrorCallback",
+                                 errorChar);
             }];
         }
-    }
-
-    void _AdjustCheckForNewAttStatus() {
-        [Adjust checkForNewAttStatus];
     }
 
     int _AdjustGetAppTrackingAuthorizationStatus() {
         return [Adjust appTrackingAuthorizationStatus];
     }
 
-    char* _AdjustGetLastDeeplink() {
-        NSURL *lastDeeplink = [Adjust lastDeeplink];
-        if (nil == lastDeeplink) {
-            return NULL;
-        }
-        NSString *lastDeeplinkString = [lastDeeplink absoluteString];
-        if (nil == lastDeeplinkString) {
-            return NULL;
-        }
-        const char* lastDeeplinkCString = [lastDeeplinkString UTF8String];
-        if (NULL == lastDeeplinkCString) {
-            return NULL;
+    void _AdjustGetLastDeeplink(const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        if (strGameObjectName == nil) {
+            return;
         }
 
-        char* lastDeeplinkCStringCopy = strdup(lastDeeplinkCString);
-        return lastDeeplinkCStringCopy;
+        [Adjust lastDeeplinkWithCompletionHandler:^(NSURL * _Nullable lastDeeplink) {
+            // TODO: nil checks
+            NSString *strLastDeeplink = [lastDeeplink absoluteString];
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustLastDeeplinkGetter",
+                             [strLastDeeplink UTF8String]);
+        }];
     }
 
     void _AdjustVerifyAppStorePurchase(const char* transactionId,
                                        const char* productId,
                                        const char* receipt,
-                                       const char* sceneName) {
-        // Mandatory fields.
+                                       const char* gameObjectName) {
+        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        if (strGameObjectName == nil) {
+            return;
+        }
+
         NSString *strTransactionId;
         NSString *strProductId;
         NSData *dataReceipt;
-        NSString *strSceneName;
 
-        // Transaction ID.
+        // transaction ID
         if (transactionId != NULL) {
             strTransactionId = [NSString stringWithUTF8String:transactionId];
         }
 
-        // Product ID.
+        // product ID
         if (productId != NULL) {
             strProductId = [NSString stringWithUTF8String:productId];
         }
 
-        // Receipt.
+        // receipt (base64 encoded string)
         if (receipt != NULL) {
-            NSString *stringReceiptBase64 = [NSString stringWithUTF8String:receipt];
-            dataReceipt = [[NSData alloc] initWithBase64EncodedString:stringReceiptBase64 options:0];
+            NSString *strReceipt = [NSString stringWithUTF8String:receipt];
+            dataReceipt = [[NSData alloc] initWithBase64EncodedString:strReceipt options:0];
         }
 
-        // Scene name.
-        strSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
 
-        // Verify the purchase.
-        ADJPurchase *purchase = [[ADJPurchase alloc] initWithTransactionId:strTransactionId
-                                                                 productId:strProductId
-                                                                andReceipt:dataReceipt];
-        [Adjust verifyPurchase:purchase
-             completionHandler:^(ADJPurchaseVerificationResult * _Nonnull verificationResult) {
-                if (strSceneName == nil) {
-                    return;
-                }
-                if (verificationResult == nil) {
-                    return;
-                }
-                
-                NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-                addValueOrEmpty(dictionary, @"verificationStatus", verificationResult.verificationStatus);
-                addValueOrEmpty(dictionary, @"code", [NSString stringWithFormat:@"%d", verificationResult.code]);
-                addValueOrEmpty(dictionary, @"message", verificationResult.message);
+        // verify the purchase
+        ADJAppStorePurchase *purchase =
+        [[ADJAppStorePurchase alloc] initWithTransactionId:strTransactionId
+                                                 productId:strProductId
+                                                andReceipt:dataReceipt];
 
-                NSData *dataVerificationInfo = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
-                NSString *strVerificationInfo = [[NSString alloc] initWithBytes:[dataVerificationInfo bytes]
-                                                                         length:[dataVerificationInfo length]
-                                                                       encoding:NSUTF8StringEncoding];
-                const char* verificationInfoCString = [strVerificationInfo UTF8String];
-                UnitySendMessage([strSceneName UTF8String], "GetNativeVerificationInfo", verificationInfoCString);
+        [Adjust verifyAppStorePurchase:purchase
+                 withCompletionHandler:^(ADJPurchaseVerificationResult * _Nonnull verificationResult) {
+            // TODO: nil checks
+            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+            addValueOrEmpty(dictionary, @"verificationStatus", verificationResult.verificationStatus);
+            addValueOrEmpty(dictionary, @"code", [NSString stringWithFormat:@"%d", verificationResult.code]);
+            addValueOrEmpty(dictionary, @"message", verificationResult.message);
+
+            NSData *dataVerificationInfo = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                                           options:0
+                                                                             error:nil];
+            NSString *strVerificationInfo = [[NSString alloc] initWithBytes:[dataVerificationInfo bytes]
+                                                                     length:[dataVerificationInfo length]
+                                                                   encoding:NSUTF8StringEncoding];
+            const char* verificationInfoCString = [strVerificationInfo UTF8String];
+            UnitySendMessage([strGameObjectName UTF8String],
+                             "UnityAdjustPurchaseVerificationCallback",
+                             verificationInfoCString);
         }];
     }
 
-    void _AdjustProcessDeeplink(const char* url, const char* sceneName) {
-        NSString *strSceneName = isStringValid(sceneName) == true ? [NSString stringWithUTF8String:sceneName] : nil;
-        if (url != NULL) {
-            NSString *stringUrl = [NSString stringWithUTF8String:url];
-            NSURL *nsUrl;
+    void _AdjustProcessAndResolveDeeplink(const char* deeplink, const char* gameObjectName) {
+        NSString *strSceneName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+        if (deeplink != NULL) {
+            NSString *strDeeplink = [NSString stringWithUTF8String:deeplink];
+            NSURL *urlDeeplink;
             if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
-                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
+                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
             } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                nsUrl = [NSURL URLWithString:[stringUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             }
 #pragma clang diagnostic pop
 
-            [Adjust processDeeplink:nsUrl completionHandler:^(NSString * _Nonnull resolvedLink) {
-                if (strSceneName == nil) {
-                    return;
-                }
-                if (resolvedLink == nil) {
-                    return;
-                }
+            [Adjust processAndResolveDeeplink:urlDeeplink withCompletionHandler:^(NSString * _Nullable resolvedLink) {
+                // TODO: nil checks
                 const char* resolvedLinkCString = [resolvedLink UTF8String];
-                UnitySendMessage([strSceneName UTF8String], "GetNativeResolvedLink", resolvedLinkCString);
+                UnitySendMessage([strSceneName UTF8String],
+                                 "UnityAdjustResolvedDeeplinkCallback",
+                                 resolvedLinkCString);
             }];
         }
     }
@@ -936,39 +855,39 @@ extern "C"
                                int adServicesFrameworkEnabled,
                                int attStatus,
                                const char *idfa) {
-        AdjustTestOptions *testOptions = [[AdjustTestOptions alloc] init];
+        NSMutableDictionary *testOptions = [NSMutableDictionary dictionary];
 
-        NSString *stringOverwriteUrl = isStringValid(overwriteUrl) == true ? [NSString stringWithUTF8String:overwriteUrl] : nil;
-        if (stringOverwriteUrl != nil) {
-            [testOptions setUrlOverwrite:stringOverwriteUrl];
+        NSString *strOverwriteUrl = isStringValid(overwriteUrl) == true ? [NSString stringWithUTF8String:overwriteUrl] : nil;
+        if (strOverwriteUrl != nil) {
+            testOptions[@"testUrlOverwrite"] = strOverwriteUrl;
         }
-        NSString *stringExtraPath = isStringValid(extraPath) == true ? [NSString stringWithUTF8String:extraPath] : nil;
-        if (stringExtraPath != nil && [stringExtraPath length] > 0) {
-            [testOptions setExtraPath:stringExtraPath];
+        NSString *strExtraPath = isStringValid(extraPath) == true ? [NSString stringWithUTF8String:extraPath] : nil;
+        if (strExtraPath != nil && [strExtraPath length] > 0) {
+            testOptions[@"extraPath"] = strExtraPath;
         }
-        NSString *stringIdfa = isStringValid(idfa) == true ? [NSString stringWithUTF8String:idfa] : nil;
-        if (stringIdfa != nil && [stringIdfa length] > 0) {
-            [testOptions setIdfa:stringIdfa];
+        NSString *strIdfa = isStringValid(idfa) == true ? [NSString stringWithUTF8String:idfa] : nil;
+        if (strIdfa != nil && [strIdfa length] > 0) {
+            testOptions[@"idfa"] = strIdfa;
         }
 
-        testOptions.timerIntervalInMilliseconds = [NSNumber numberWithLong:timerIntervalInMilliseconds];
-        testOptions.timerStartInMilliseconds = [NSNumber numberWithLong:timerStartInMilliseconds];
-        testOptions.sessionIntervalInMilliseconds = [NSNumber numberWithLong:sessionIntervalInMilliseconds];
-        testOptions.subsessionIntervalInMilliseconds = [NSNumber numberWithLong:subsessionIntervalInMilliseconds];
-        testOptions.attStatusInt = [NSNumber numberWithInt:attStatus];
+        testOptions[@"timerIntervalInMilliseconds"] = [NSNumber numberWithLong:timerIntervalInMilliseconds];
+        testOptions[@"timerStartInMilliseconds"] = [NSNumber numberWithLong:timerStartInMilliseconds];
+        testOptions[@"sessionIntervalInMilliseconds"] = [NSNumber numberWithLong:sessionIntervalInMilliseconds];
+        testOptions[@"subsessionIntervalInMilliseconds"] = [NSNumber numberWithLong:subsessionIntervalInMilliseconds];
+        testOptions[@"attStatusInt"] = [NSNumber numberWithInt:attStatus];
 
         if (teardown != -1) {
             [AdjustUnityDelegate teardown];
-            [testOptions setTeardown:(BOOL)teardown];
+            testOptions[@"teardown"] = [NSNumber numberWithInt:teardown];
         }
         if (deleteState != -1) {
-            [testOptions setDeleteState:(BOOL)deleteState];
+            testOptions[@"deleteState"] = [NSNumber numberWithInt:deleteState];
         }
         if (noBackoffWait != -1) {
-            [testOptions setNoBackoffWait:(BOOL)noBackoffWait];
+            testOptions[@"noBackoffWait"] = [NSNumber numberWithInt:noBackoffWait];
         }
         if (adServicesFrameworkEnabled != -1) {
-            [testOptions setAdServicesFrameworkEnabled:(BOOL)adServicesFrameworkEnabled];
+            testOptions[@"adServicesFrameworkEnabled"] = [NSNumber numberWithInt:adServicesFrameworkEnabled];
         }
 
         [Adjust setTestOptions:testOptions];

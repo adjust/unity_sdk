@@ -34,36 +34,25 @@ namespace com.adjust.sdk
                 adjust.appToken = EditorGUILayout.TextField("App Token", adjust.appToken);
                 adjust.environment = (AdjustEnvironment)EditorGUILayout.EnumPopup("Environment", adjust.environment);
                 adjust.logLevel = (AdjustLogLevel)EditorGUILayout.EnumPopup("Log Level", adjust.logLevel);
-                adjust.urlStrategy = (AdjustUrlStrategy)EditorGUILayout.EnumPopup("URL Strategy", adjust.urlStrategy);
-                adjust.eventBuffering = EditorGUILayout.Toggle("Event Buffering", adjust.eventBuffering);
+                // TODO: URL strategy missing
                 adjust.sendInBackground = EditorGUILayout.Toggle("Send In Background", adjust.sendInBackground);
                 adjust.launchDeferredDeeplink = EditorGUILayout.Toggle("Launch Deferred Deep Link", adjust.launchDeferredDeeplink);
-                adjust.needsCost = EditorGUILayout.Toggle("Cost Data In Attribution Callback", adjust.needsCost);
-                adjust.coppaCompliant = EditorGUILayout.Toggle("COPPA Compliant", adjust.coppaCompliant);
+                adjust.costDataInAttribution = EditorGUILayout.Toggle("Cost Data In Attribution Callback", adjust.costDataInAttribution);
                 adjust.linkMe = EditorGUILayout.Toggle("LinkMe", adjust.linkMe);
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
-                adjust.startDelay = EditorGUILayout.DoubleField("Start Delay", adjust.startDelay);
-                EditorGUILayout.LabelField("App Secret:", EditorStyles.label);
-                EditorGUI.indentLevel += 1;
-                adjust.secretId = EditorGUILayout.LongField("Secret ID", adjust.secretId);
-                adjust.info1 = EditorGUILayout.LongField("Info 1", adjust.info1);
-                adjust.info2 = EditorGUILayout.LongField("Info 2", adjust.info2);
-                adjust.info3 = EditorGUILayout.LongField("Info 3", adjust.info3);
-                adjust.info4 = EditorGUILayout.LongField("Info 4", adjust.info4);
-                EditorGUI.indentLevel -= 2;
+                EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
                 adjust.preinstallTracking = EditorGUILayout.Toggle("Preinstall Tracking", adjust.preinstallTracking);
                 adjust.preinstallFilePath = EditorGUILayout.TextField("Preinstall File Path", adjust.preinstallFilePath);
-                adjust.playStoreKidsApp = EditorGUILayout.Toggle("Play Store Kids App", adjust.playStoreKidsApp);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
-                adjust.adServicesInfoReading = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServicesInfoReading);
-                adjust.idfaInfoReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaInfoReading);
-                adjust.skAdNetworkHandling = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skAdNetworkHandling);
+                adjust.adServices = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServices);
+                adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
+                adjust.skanAttribution = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skanAttribution);
                 EditorGUI.indentLevel -= 1;
             }
 

@@ -25,9 +25,9 @@ namespace com.adjust.sdk
         public static string KeyCostAmount = "costAmount";
         public static string KeyCostCurrency = "costCurrency";
         public static string KeyFbInstallReferrer = "fbInstallReferrer";
-        public static string KeySkadConversionValue = "fineValue";
-        public static string KeySkadCoarseValue = "coarseValue";
-        public static string KeySkadLockWindow = "lockWindow";
+        public static string KeySkanConversionValue = "fineValue";
+        public static string KeySkanCoarseValue = "coarseValue";
+        public static string KeySkanLockWindow = "lockWindow";
         public static string KeyCode = "code";
         public static string KeyVerificationStatus = "verificationStatus";
 
@@ -265,46 +265,20 @@ namespace com.adjust.sdk
             return null;
         }
 
-        public static int GetSkad4ConversionValue(string conversionValueUpdate)
+        public static Dictionary<string, string> GetSkanUpdateDataDictionary(string skanUpdateData)
         {
-            var jsonNode = JSON.Parse(conversionValueUpdate);
-            if (jsonNode == null) 
+            Dictionary<string, string> skanUpdateDataDictionary = new Dictionary<string, string>();
+            var skanUpdateDataNode = JSON.Parse(skanUpdateData);
+            if (skanUpdateDataNode != null && skanUpdateDataNode.AsObject != null)
             {
-                return -1;
+                Dictionary<string, object> temp = new Dictionary<string, object>();
+                AdjustUtils.WriteJsonResponseDictionary(skanUpdateDataNode.AsObject, temp);
+                foreach (KeyValuePair<string, object> entry in temp)
+                {
+                    skanUpdateDataDictionary.Add(entry.Key, entry.Value.ToString());
+                }
             }
-
-            string strConversionValue = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadConversionValue);
-            int conversionValue = 0;
-            if (Int32.TryParse(strConversionValue, out conversionValue))
-            {
-                return conversionValue;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
-        public static string GetSkad4CoarseValue(string conversionValueUpdate)
-        {
-            var jsonNode = JSON.Parse(conversionValueUpdate);
-            if (jsonNode == null) 
-            {
-                return null;
-            }
-            string coarseValue = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadCoarseValue);
-            return coarseValue;
-        }
-
-        public static bool GetSkad4LockWindow(string conversionValueUpdate)
-        {
-            var jsonNode = JSON.Parse(conversionValueUpdate);
-            if (jsonNode == null) 
-            {
-                return false;
-            }
-            bool lockWindow = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeySkadLockWindow));
-            return lockWindow;
+            return skanUpdateDataDictionary;
         }
 
 #if UNITY_ANDROID

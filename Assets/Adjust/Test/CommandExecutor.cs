@@ -50,28 +50,26 @@ namespace com.adjust.sdk.test
                     case "resume": Resume(); break;
                     case "pause": Pause(); break;
                     case "setEnabled": SetEnabled(); break;
-                    case "setReferrer": SetReferrer(); break;
                     case "setOfflineMode": SetOfflineMode(); break;
-                    case "sendFirstPackages": SendFirstPackages(); break;
-                    case "addSessionCallbackParameter": AddSessionCallbackParameter(); break;
-                    case "addSessionPartnerParameter": AddSessionPartnerParameter(); break;
-                    case "removeSessionCallbackParameter": RemoveSessionCallbackParameter(); break;
-                    case "removeSessionPartnerParameter": RemoveSessionPartnerParameter(); break;
-                    case "resetSessionCallbackParameters": ResetSessionCallbackParameters(); break;
-                    case "resetSessionPartnerParameters": ResetSessionPartnerParameters(); break;
+                    case "addGlobalCallbackParameter": AddGlobalCallbackParameter(); break;
+                    case "addGlobalPartnerParameter": AddGlobalPartnerParameter(); break;
+                    case "removeGlobalCallbackParameter": RemoveGlobalCallbackParameter(); break;
+                    case "removeGlobalPartnerParameter": RemoveGlobalPartnerParameter(); break;
+                    case "removeGlobalCallbackParameters": RemoveGlobalCallbackParameters(); break;
+                    case "removeGlobalPartnerParameters": RemoveGlobalPartnerParameters(); break;
                     case "setPushToken": SetPushToken(); break;
                     case "openDeeplink": OpenDeepLink(); break;
-                    case "sendReferrer": SetReferrer(); break;
                     case "gdprForgetMe": GdprForgetMe(); break;
-                    case "trackAdRevenue": TrackAdRevenue(); break;
-                    case "disableThirdPartySharing": DisableThirdPartySharing(); break;
                     case "trackSubscription": TrackSubscription(); break;
                     case "thirdPartySharing": ThirdPartySharing(); break;
                     case "measurementConsent": MeasurementConsent(); break;
-                    case "trackAdRevenueV2": TrackAdRevenueV2(); break;
+                    case "trackAdRevenue": TrackAdRevenue(); break;
                     case "getLastDeeplink": GetLastDeeplink(); break;
                     case "verifyPurchase": VerifyPurchase(); break;
-                    case "processDeeplink": ProcessDeeplink(); break;
+                    case "processDeeplink": ProcessAndResolveDeeplink(); break;
+                    case "attributionGetter": AttributionGetter(); break;
+                    case "enableCoppaCompliance": EnableCoppaCompliance(); break;
+                    case "disableCoppaCompliance": DisableCoppaCompliance(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -260,7 +258,7 @@ namespace com.adjust.sdk.test
 
                 if (logLevel.HasValue)
                 {
-                    adjustConfig.setLogLevel(logLevel.Value);
+                    adjustConfig.SetLogLevel(logLevel.Value);
                 }
 
 #if (UNITY_WSA || UNITY_WP8)
@@ -276,91 +274,42 @@ namespace com.adjust.sdk.test
 
             if (_command.ContainsParameter("defaultTracker"))
             {
-                adjustConfig.setDefaultTracker(_command.GetFirstParameterValue("defaultTracker"));
+                adjustConfig.SetDefaultTracker(_command.GetFirstParameterValue("defaultTracker"));
             }
 
             if (_command.ContainsParameter("externalDeviceId"))
             {
-                adjustConfig.setExternalDeviceId(_command.GetFirstParameterValue("externalDeviceId"));
-            }
-
-            if (_command.ContainsParameter("delayStart"))
-            {
-                var delayStartStr = _command.GetFirstParameterValue("delayStart");
-                var delayStart = double.Parse(delayStartStr, System.Globalization.CultureInfo.InvariantCulture);
-                adjustConfig.setDelayStart(delayStart);
-            }
-
-            if (_command.ContainsParameter("appSecret"))
-            {
-                var appSecretList = _command.Parameters["appSecret"];
-                if (!string.IsNullOrEmpty(appSecretList[0]) && appSecretList.Count == 5)
-                {
-                    long secretId, info1, info2, info3, info4;
-                    long.TryParse(appSecretList[0], out secretId);
-                    long.TryParse(appSecretList[1], out info1);
-                    long.TryParse(appSecretList[2], out info2);
-                    long.TryParse(appSecretList[3], out info3);
-                    long.TryParse(appSecretList[4], out info4);
-
-                    adjustConfig.setAppSecret(secretId, info1, info2, info3, info4);
-                }
-            }
-
-            if (_command.ContainsParameter("deviceKnown"))
-            {
-                var deviceKnownS = _command.GetFirstParameterValue("deviceKnown");
-                var deviceKnown = deviceKnownS.ToLower() == "true";
-                adjustConfig.setIsDeviceKnown(deviceKnown);
-            }
-
-            if (_command.ContainsParameter("eventBufferingEnabled"))
-            {
-                var eventBufferingEnabledS = _command.GetFirstParameterValue("eventBufferingEnabled");
-                var eventBufferingEnabled = eventBufferingEnabledS.ToLower() == "true";
-                adjustConfig.setEventBufferingEnabled(eventBufferingEnabled);
-            }
-
-            if (_command.ContainsParameter("coppaCompliant"))
-            {
-                var coppaCompliantS = _command.GetFirstParameterValue("coppaCompliant");
-                var coppaCompliant = coppaCompliantS.ToLower() == "true";
-                adjustConfig.setCoppaCompliantEnabled(coppaCompliant);
-            }
-
-            if (_command.ContainsParameter("playStoreKids"))
-            {
-                var playStoreKidsS = _command.GetFirstParameterValue("playStoreKids");
-                var playStoreKids = playStoreKidsS.ToLower() == "true";
-                adjustConfig.setPlayStoreKidsAppEnabled(playStoreKids);
-            }
-
-            if (_command.ContainsParameter("finalAttributionEnabled"))
-            {
-                var finalAndroidAttributionEnabledS = _command.GetFirstParameterValue("finalAttributionEnabled");
-                var finalAndroidAttributionEnabled = finalAndroidAttributionEnabledS.ToLower() == "true";
-                adjustConfig.setFinalAndroidAttributionEnabled(finalAndroidAttributionEnabled);
+                adjustConfig.SetExternalDeviceId(_command.GetFirstParameterValue("externalDeviceId"));
             }
 
             if (_command.ContainsParameter("sendInBackground"))
             {
                 var sendInBackgroundS = _command.GetFirstParameterValue("sendInBackground");
                 var sendInBackground = sendInBackgroundS.ToLower() == "true";
-                adjustConfig.sendInBackground = sendInBackground;
+                if (sendInBackground == true)
+                {
+                    adjustConfig.EnableSendingInBackground();
+                }
             }
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
             {
                 var allowAdServicesInfoReadingS = _command.GetFirstParameterValue("allowAdServicesInfoReading");
                 var allowAdServicesInfoReading = allowAdServicesInfoReadingS.ToLower() == "true";
-                adjustConfig.allowAdServicesInfoReading = allowAdServicesInfoReading;
+                if (allowAdServicesInfoReading == false)
+                {
+                    adjustConfig.DisableAdServices();
+                }
             }
 
             if (_command.ContainsParameter("allowIdfaReading"))
             {
                 var allowIdfaReadingS = _command.GetFirstParameterValue("allowIdfaReading");
                 var allowIdfaReading = allowIdfaReadingS.ToLower() == "true";
-                adjustConfig.allowIdfaReading = allowIdfaReading;
+                if (allowIdfaReading == false)
+                {
+                    adjustConfig.DisableIdfaReading();
+                }
             }
 
             if (_command.ContainsParameter("allowSkAdNetworkHandling"))
@@ -369,20 +318,7 @@ namespace com.adjust.sdk.test
                 var allowSkAdNetworkHandling = allowSkAdNetworkHandlingS.ToLower() == "true";
                 if (allowSkAdNetworkHandling == false)
                 {
-                    adjustConfig.deactivateSKAdNetworkHandling();
-                }
-            }
-
-            if (_command.ContainsParameter("userAgent"))
-            {
-                var userAgent = _command.GetFirstParameterValue("userAgent");
-                if (userAgent.Equals("null"))
-                {
-                    adjustConfig.setUserAgent(null);
-                }
-                else
-                {
-                    adjustConfig.setUserAgent(userAgent);
+                    adjustConfig.DisableSkanAttribution();
                 }
             }
 
@@ -390,15 +326,25 @@ namespace com.adjust.sdk.test
             {
                 var attConsentWaitingSecondsStr = _command.GetFirstParameterValue("attConsentWaitingSeconds");
                 var attConsentWaitingSeconds = int.Parse(attConsentWaitingSecondsStr, System.Globalization.CultureInfo.InvariantCulture);
-                adjustConfig.setAttConsentWaitingInterval(attConsentWaitingSeconds);
+                adjustConfig.SetAttConsentWaitingInterval(attConsentWaitingSeconds);
+            }
+
+            if (_command.ContainsParameter("eventDeduplicationIdsMaxSize"))
+            {
+                var eventDeduplicationIdsMaxSizeStr = _command.GetFirstParameterValue("eventDeduplicationIdsMaxSize");
+                var eventDeduplicationIdsMaxSize = int.Parse(eventDeduplicationIdsMaxSizeStr, System.Globalization.CultureInfo.InvariantCulture);
+                adjustConfig.SetEventDeduplicationIdsMaxSize(eventDeduplicationIdsMaxSize);
             }
 
             if (_command.ContainsParameter("deferredDeeplinkCallback"))
             {
                 bool launchDeferredDeeplink = _command.GetFirstParameterValue("deferredDeeplinkCallback") == "true";
-                adjustConfig.setLaunchDeferredDeeplink(launchDeferredDeeplink);
+                if (launchDeferredDeeplink == false)
+                {
+                    adjustConfig.DisableDeferredDeeplinkOpening();
+                }
                 string localExtraPath = ExtraPath;
-                adjustConfig.setDeferredDeeplinkDelegate(uri =>
+                adjustConfig.SetDeferredDeeplinkDelegate(uri =>
                 {
                     _testLibrary.AddInfoToSend("deeplink", uri);
                     _testLibrary.SendInfoToServer(localExtraPath);
@@ -408,20 +354,19 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("attributionCallbackSendAll"))
             {
                 string localExtraPath = ExtraPath;
-                adjustConfig.setAttributionChangedDelegate(attribution =>
+                adjustConfig.SetAttributionChangedDelegate(attribution =>
                 {
-                    _testLibrary.AddInfoToSend("trackerToken", attribution.trackerToken);
-                    _testLibrary.AddInfoToSend("trackerName", attribution.trackerName);
+                    _testLibrary.AddInfoToSend("tracker_token", attribution.trackerToken);
+                    _testLibrary.AddInfoToSend("tracker_name", attribution.trackerName);
                     _testLibrary.AddInfoToSend("network", attribution.network);
                     _testLibrary.AddInfoToSend("campaign", attribution.campaign);
                     _testLibrary.AddInfoToSend("adgroup", attribution.adgroup);
                     _testLibrary.AddInfoToSend("creative", attribution.creative);
-                    _testLibrary.AddInfoToSend("clickLabel", attribution.clickLabel);
-                    _testLibrary.AddInfoToSend("adid", attribution.adid);
-                    _testLibrary.AddInfoToSend("costType", attribution.costType);
-                    _testLibrary.AddInfoToSend("costAmount", attribution.costAmount.ToString());
-                    _testLibrary.AddInfoToSend("costCurrency", attribution.costCurrency);
-                    _testLibrary.AddInfoToSend("fbInstallReferrer", attribution.fbInstallReferrer);
+                    _testLibrary.AddInfoToSend("click_label", attribution.clickLabel);
+                    _testLibrary.AddInfoToSend("cost_type", attribution.costType);
+                    _testLibrary.AddInfoToSend("cost_amount", attribution.costAmount.ToString());
+                    _testLibrary.AddInfoToSend("cost_currency", attribution.costCurrency);
+                    _testLibrary.AddInfoToSend("fb_install_referrer", attribution.fbInstallReferrer);
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
@@ -429,7 +374,7 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("sessionCallbackSendSuccess"))
             {
                 string localExtraPath = ExtraPath;
-                adjustConfig.setSessionSuccessDelegate(sessionSuccessResponseData =>
+                adjustConfig.SetSessionSuccessDelegate(sessionSuccessResponseData =>
                 {
                     _testLibrary.AddInfoToSend("message", sessionSuccessResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", sessionSuccessResponseData.Timestamp);
@@ -445,7 +390,7 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("sessionCallbackSendFailure"))
             {
                 string localExtraPath = ExtraPath;
-                adjustConfig.setSessionFailureDelegate(sessionFailureResponseData =>
+                adjustConfig.SetSessionFailureDelegate(sessionFailureResponseData =>
                 {
                     _testLibrary.AddInfoToSend("message", sessionFailureResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", sessionFailureResponseData.Timestamp);
@@ -462,7 +407,7 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("eventCallbackSendSuccess"))
             {
                 string localExtraPath = ExtraPath;
-                adjustConfig.setEventSuccessDelegate(eventSuccessResponseData =>
+                adjustConfig.SetEventSuccessDelegate(eventSuccessResponseData =>
                 {
                     _testLibrary.AddInfoToSend("message", eventSuccessResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", eventSuccessResponseData.Timestamp);
@@ -480,7 +425,7 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("eventCallbackSendFailure"))
             {
                 string localExtraPath = ExtraPath;
-                adjustConfig.setEventFailureDelegate(eventFailureResponseData =>
+                adjustConfig.SetEventFailureDelegate(eventFailureResponseData =>
                 {
                     _testLibrary.AddInfoToSend("message", eventFailureResponseData.Message);
                     _testLibrary.AddInfoToSend("timestamp", eventFailureResponseData.Timestamp);
@@ -491,6 +436,19 @@ namespace com.adjust.sdk.test
                     if (eventFailureResponseData.JsonResponse != null)
                     {
                         _testLibrary.AddInfoToSend("jsonResponse", eventFailureResponseData.GetJsonResponse());
+                    }
+                    _testLibrary.SendInfoToServer(localExtraPath);
+                });
+            }
+
+            if (_command.ContainsParameter("skanCallback"))
+            {
+                string localExtraPath = ExtraPath;
+                adjustConfig.SetSkanUpdatedDelegate(skanUpdatedData =>
+                {
+                    foreach (KeyValuePair<string, string> entry in skanUpdatedData)
+                    {
+                        _testLibrary.AddInfoToSend(entry.Key, entry.Value);
                     }
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
@@ -509,7 +467,7 @@ namespace com.adjust.sdk.test
             }
 
             var adjustConfig = _savedConfigs[configNumber];
-            Adjust.start(adjustConfig);
+            Adjust.InitSdk(adjustConfig);
             _savedConfigs.Remove(0);
         }
 
@@ -539,7 +497,7 @@ namespace com.adjust.sdk.test
                 var revenueParams = _command.Parameters["revenue"];
                 var currency = revenueParams[0];
                 var revenue = double.Parse(revenueParams[1], System.Globalization.CultureInfo.InvariantCulture);
-                adjustEvent.setRevenue(revenue, currency);
+                adjustEvent.SetRevenue(revenue, currency);
             }
 
             if (_command.ContainsParameter("callbackParams"))
@@ -549,7 +507,7 @@ namespace com.adjust.sdk.test
                 {
                     var key = callbackParams[i];
                     var value = callbackParams[i + 1];
-                    adjustEvent.addCallbackParameter(key, value);
+                    adjustEvent.AddCallbackParameter(key, value);
                 }
             }
 
@@ -560,44 +518,50 @@ namespace com.adjust.sdk.test
                 {
                     var key = partnerParams[i];
                     var value = partnerParams[i + 1];
-                    adjustEvent.addPartnerParameter(key, value);
+                    adjustEvent.AddPartnerParameter(key, value);
                 }
             }
 
             if (_command.ContainsParameter("orderId"))
             {
                 var orderId = _command.GetFirstParameterValue("orderId");
-                adjustEvent.setTransactionId(orderId);
+                adjustEvent.SetOrderId(orderId);
             }
 
             if (_command.ContainsParameter("callbackId"))
             {
                 var callbackId = _command.GetFirstParameterValue("callbackId");
-                adjustEvent.setCallbackId(callbackId);
+                adjustEvent.SetCallbackId(callbackId);
             }
 
             if (_command.ContainsParameter("transactionId"))
             {
                 var transactionId = _command.GetFirstParameterValue("transactionId");
-                adjustEvent.setTransactionId(transactionId);
+                adjustEvent.SetTransactionId(transactionId);
             }
 
             if (_command.ContainsParameter("productId"))
             {
                 var productId = _command.GetFirstParameterValue("productId");
-                adjustEvent.setProductId(productId);
+                adjustEvent.SetProductId(productId);
             }
 
             if (_command.ContainsParameter("receipt"))
             {
                 var receipt = _command.GetFirstParameterValue("receipt");
-                adjustEvent.setReceipt(receipt);
+                adjustEvent.SetReceipt(receipt);
             }
 
             if (_command.ContainsParameter("purchaseToken"))
             {
                 var purchaseToken = _command.GetFirstParameterValue("purchaseToken");
-                adjustEvent.setPurchaseToken(purchaseToken);
+                adjustEvent.SetPurchaseToken(purchaseToken);
+            }
+
+            if (_command.ContainsParameter("deduplicationId"))
+            {
+                var deduplicationId = _command.GetFirstParameterValue("deduplicationId");
+                adjustEvent.SetDeduplicationId(deduplicationId);
             }
         }
 
@@ -613,7 +577,7 @@ namespace com.adjust.sdk.test
             }
 
             var adjustEvent = _savedEvents[eventNumber];
-            Adjust.trackEvent(adjustEvent);
+            Adjust.TrackEvent(adjustEvent);
             _savedEvents.Remove(0);
         }
 
@@ -646,34 +610,35 @@ namespace com.adjust.sdk.test
         private void SetEnabled()
         {
             var enabled = bool.Parse(_command.GetFirstParameterValue("enabled"));
-            Adjust.setEnabled(enabled);
+            if (enabled == true)
+            {
+                Adjust.Enable();
+            }
+            else
+            {
+                Adjust.Disable();
+            }
         }
 
         public void GdprForgetMe()
         {
-            Adjust.gdprForgetMe();
-        }
-
-        public void DisableThirdPartySharing()
-        {
-            Adjust.disableThirdPartySharing();
+            Adjust.GdprForgetMe();
         }
 
         private void SetOfflineMode()
         {
             var enabled = bool.Parse(_command.GetFirstParameterValue("enabled"));
-            Adjust.setOfflineMode(enabled);
+            if (enabled == true)
+            {
+                Adjust.SwitchToOfflineMode();
+            }
+            else
+            {
+                Adjust.SwitchBackToOnlineMode();
+            }
         }
 
-        private void SetReferrer()
-        {
-            string referrer = _command.GetFirstParameterValue("referrer");
-            #pragma warning disable CS0618
-            Adjust.setReferrer(referrer);
-            #pragma warning restore CS0618
-        }
-
-        private void AddSessionCallbackParameter()
+        private void AddGlobalCallbackParameter()
         {
             if (!_command.ContainsParameter("KeyValue"))
             {
@@ -685,16 +650,11 @@ namespace com.adjust.sdk.test
             {
                 var key = keyValuePairs[i];
                 var value = keyValuePairs[i + 1];
-                Adjust.addSessionCallbackParameter(key, value);
+                Adjust.AddGlobalCallbackParameter(key, value);
             }
         }
 
-        private void SendFirstPackages()
-        {
-            Adjust.sendFirstPackages();
-        }
-
-        private void AddSessionPartnerParameter()
+        private void AddGlobalPartnerParameter()
         {
             if (!_command.ContainsParameter("KeyValue"))
             {
@@ -706,11 +666,11 @@ namespace com.adjust.sdk.test
             {
                 var key = keyValuePairs[i];
                 var value = keyValuePairs[i + 1];
-                Adjust.addSessionPartnerParameter(key, value);
+                Adjust.AddGlobalPartnerParameter(key, value);
             }
         }
 
-        private void RemoveSessionCallbackParameter()
+        private void RemoveGlobalCallbackParameter()
         {
             if (!_command.ContainsParameter("key"))
             {
@@ -721,11 +681,11 @@ namespace com.adjust.sdk.test
             for (var i = 0; i < keys.Count; i = i + 1)
             {
                 var key = keys[i];
-                Adjust.removeSessionCallbackParameter(key);
+                Adjust.RemoveGlobalCallbackParameter(key);
             }
         }
 
-        private void RemoveSessionPartnerParameter()
+        private void RemoveGlobalPartnerParameter()
         {
             if (!_command.ContainsParameter("key"))
             {
@@ -736,28 +696,18 @@ namespace com.adjust.sdk.test
             for (var i = 0; i < keys.Count; i = i + 1)
             {
                 var key = keys[i];
-                Adjust.removeSessionPartnerParameter(key);
+                Adjust.RemoveGlobalPartnerParameter(key);
             }
         }
 
-        private void ResetSessionCallbackParameters()
+        private void RemoveGlobalCallbackParameters()
         {
-            Adjust.resetSessionCallbackParameters();
+            Adjust.RemoveGlobalCallbackParameters();
         }
 
-        private void ResetSessionPartnerParameters()
+        private void RemoveGlobalPartnerParameters()
         {
-            Adjust.resetSessionPartnerParameters();
-        }
-
-        private void ResetSessionCallbackParameters(JSONNode parameters)
-        {
-            Adjust.resetSessionCallbackParameters();
-        }
-
-        private void ResetSessionPartnerParameters(JSONNode parameters)
-        {
-            Adjust.resetSessionPartnerParameters();
+            Adjust.RemoveGlobalPartnerParameters();
         }
 
         private void SetPushToken()
@@ -768,11 +718,11 @@ namespace com.adjust.sdk.test
             {
                 if (pushToken.Equals("null"))
                 {
-                    Adjust.setDeviceToken(null);
+                    Adjust.SetPushToken(null);
                 }
                 else
                 {
-                    Adjust.setDeviceToken(pushToken);
+                    Adjust.SetPushToken(pushToken);
                 }
             }
         }
@@ -780,14 +730,7 @@ namespace com.adjust.sdk.test
         private void OpenDeepLink()
         {
             var deeplink = _command.GetFirstParameterValue("deeplink");
-            Adjust.appWillOpenUrl(deeplink);
-        }
-
-        private void TrackAdRevenue()
-        {
-            string source = _command.GetFirstParameterValue("adRevenueSource");
-            string payload = _command.GetFirstParameterValue("adRevenueJsonString");
-            Adjust.trackAdRevenue(source, payload);
+            Adjust.ProcessDeeplink(deeplink);
         }
 
         private void TrackSubscription()
@@ -805,8 +748,8 @@ namespace com.adjust.sdk.test
                 currency,
                 transactionId,
                 receipt);
-            subscription.setTransactionDate(transactionDate);
-            subscription.setSalesRegion(salesRegion);
+            subscription.SetTransactionDate(transactionDate);
+            subscription.SetSalesRegion(salesRegion);
 
             if (_command.ContainsParameter("callbackParams"))
             {
@@ -815,7 +758,7 @@ namespace com.adjust.sdk.test
                 {
                     var key = callbackParams[i];
                     var value = callbackParams[i + 1];
-                    subscription.addCallbackParameter(key, value);
+                    subscription.AddCallbackParameter(key, value);
                 }
             }
 
@@ -826,11 +769,11 @@ namespace com.adjust.sdk.test
                 {
                     var key = partnerParams[i];
                     var value = partnerParams[i + 1];
-                    subscription.addPartnerParameter(key, value);
+                    subscription.AddPartnerParameter(key, value);
                 }
             }
 
-            Adjust.trackAppStoreSubscription(subscription);
+            Adjust.TrackAppStoreSubscription(subscription);
 #elif UNITY_ANDROID
             string price = _command.GetFirstParameterValue("revenue");
             string currency = _command.GetFirstParameterValue("currency");
@@ -847,7 +790,7 @@ namespace com.adjust.sdk.test
                 orderId,
                 signature,
                 purchaseToken);
-            subscription.setPurchaseTime(purchaseTime);
+            subscription.SetPurchaseTime(purchaseTime);
 
             if (_command.ContainsParameter("callbackParams"))
             {
@@ -856,7 +799,7 @@ namespace com.adjust.sdk.test
                 {
                     var key = callbackParams[i];
                     var value = callbackParams[i + 1];
-                    subscription.addCallbackParameter(key, value);
+                    subscription.AddCallbackParameter(key, value);
                 }
             }
 
@@ -867,11 +810,11 @@ namespace com.adjust.sdk.test
                 {
                     var key = partnerParams[i];
                     var value = partnerParams[i + 1];
-                    subscription.addPartnerParameter(key, value);
+                    subscription.AddPartnerParameter(key, value);
                 }
             }
 
-            Adjust.trackPlayStoreSubscription(subscription);
+            Adjust.TrackPlayStoreSubscription(subscription);
 #endif
         }
 
@@ -894,7 +837,7 @@ namespace com.adjust.sdk.test
                     var partnerName = granularOptions[i];
                     var key = granularOptions[i+1];
                     var value = granularOptions[i+2];
-                    adjustThirdPartySharing.addGranularOption(partnerName, key, value);
+                    adjustThirdPartySharing.AddGranularOption(partnerName, key, value);
                 }
             }
 
@@ -906,20 +849,20 @@ namespace com.adjust.sdk.test
                     var partnerName = partnerSharingSettings[i];
                     var key = partnerSharingSettings[i+1];
                     var value = partnerSharingSettings[i+2];
-                    adjustThirdPartySharing.addPartnerSharingSetting(partnerName, key, bool.Parse(value));
+                    adjustThirdPartySharing.AddPartnerSharingSetting(partnerName, key, bool.Parse(value));
                 }
             }
 
-            Adjust.trackThirdPartySharing(adjustThirdPartySharing);
+            Adjust.TrackThirdPartySharing(adjustThirdPartySharing);
         }
 
         private void MeasurementConsent()
         {
             var enabled = bool.Parse(_command.GetFirstParameterValue("isEnabled"));
-            Adjust.trackMeasurementConsent(enabled);
+            Adjust.TrackMeasurementConsent(enabled);
         }
 
-        private void TrackAdRevenueV2()
+        private void TrackAdRevenue()
         {
             string source = _command.GetFirstParameterValue("adRevenueSource");
             AdjustAdRevenue adRevenue = new AdjustAdRevenue(source);
@@ -929,31 +872,31 @@ namespace com.adjust.sdk.test
                 var revenueParams = _command.Parameters["revenue"];
                 var currency = revenueParams[0];
                 var revenue = double.Parse(revenueParams[1], System.Globalization.CultureInfo.InvariantCulture);
-                adRevenue.setRevenue(revenue, currency);
+                adRevenue.SetRevenue(revenue, currency);
             }
 
             if (_command.ContainsParameter("adImpressionsCount"))
             {
                 int adImpressionsCount = int.Parse(_command.GetFirstParameterValue("adImpressionsCount"));
-                adRevenue.setAdImpressionsCount(adImpressionsCount);
+                adRevenue.SetAdImpressionsCount(adImpressionsCount);
             }
 
             if (_command.ContainsParameter("adRevenueUnit"))
             {
                 string adRevenueUnit = _command.GetFirstParameterValue("adRevenueUnit");
-                adRevenue.setAdRevenueUnit(adRevenueUnit);
+                adRevenue.SetAdRevenueUnit(adRevenueUnit);
             }
 
             if (_command.ContainsParameter("adRevenuePlacement"))
             {
                 string adRevenuePlacement = _command.GetFirstParameterValue("adRevenuePlacement");
-                adRevenue.setAdRevenuePlacement(adRevenuePlacement);
+                adRevenue.SetAdRevenuePlacement(adRevenuePlacement);
             }
 
             if (_command.ContainsParameter("adRevenueNetwork"))
             {
                 string adRevenueNetwork = _command.GetFirstParameterValue("adRevenueNetwork");
-                adRevenue.setAdRevenueNetwork(adRevenueNetwork);
+                adRevenue.SetAdRevenueNetwork(adRevenueNetwork);
             }
 
             if (_command.ContainsParameter("callbackParams"))
@@ -963,7 +906,7 @@ namespace com.adjust.sdk.test
                 {
                     var key = callbackParams[i];
                     var value = callbackParams[i + 1];
-                    adRevenue.addCallbackParameter(key, value);
+                    adRevenue.AddCallbackParameter(key, value);
                 }
             }
 
@@ -974,20 +917,17 @@ namespace com.adjust.sdk.test
                 {
                     var key = partnerParams[i];
                     var value = partnerParams[i + 1];
-                    adRevenue.addPartnerParameter(key, value);
+                    adRevenue.AddPartnerParameter(key, value);
                 }
             }
 
-            Adjust.trackAdRevenue(adRevenue);
+            Adjust.TrackAdRevenue(adRevenue);
         }
 
         private void GetLastDeeplink()
         {
 #if UNITY_IOS
-            string localExtraPath = ExtraPath;
-            string lastDeeplink = Adjust.getLastDeeplink();
-            _testLibrary.AddInfoToSend("last_deeplink", lastDeeplink);
-            _testLibrary.SendInfoToServer(localExtraPath);        
+            Adjust.GetLastDeeplink(LastDeeplinkCallback);
 #endif
         }
 
@@ -998,16 +938,12 @@ namespace com.adjust.sdk.test
             string productId = _command.GetFirstParameterValue("productId");
             string receipt = _command.GetFirstParameterValue("receipt");
 
-            // recreate UnityIAP base64 encoding of the receipt
-            var receiptBytes = System.Text.Encoding.UTF8.GetBytes(receipt);
-            string receiptBase64 = System.Convert.ToBase64String(receiptBytes);
-
             AdjustAppStorePurchase purchase = new AdjustAppStorePurchase(
                 transactionId,
                 productId,
-                receiptBase64);
+                receipt);
 
-            Adjust.verifyAppStorePurchase(purchase, VerificationInfoCallback);
+            Adjust.VerifyAppStorePurchase(purchase, VerificationInfoCallback);
 #elif UNITY_ANDROID
             string productId = _command.GetFirstParameterValue("productId");
             string purchaseToken = _command.GetFirstParameterValue("purchaseToken");
@@ -1020,20 +956,48 @@ namespace com.adjust.sdk.test
 #endif
         }
 
-        private void ProcessDeeplink()
+        private void ProcessAndResolveDeeplink()
         {
             var deeplink = _command.GetFirstParameterValue("deeplink");
-            Adjust.processDeeplink(deeplink, DeeplinkResolvedCallback);
+            Adjust.ProcessAndResolveDeeplink(deeplink, DeeplinkResolvedCallback);
+        }
+
+        private void AttributionGetter()
+        {
+            string localExtraPath = ExtraPath;
+            Adjust.GetAttribution((attribution) => {
+                _testLibrary.AddInfoToSend("tracker_token", attribution.trackerToken);
+                _testLibrary.AddInfoToSend("tracker_name", attribution.trackerName);
+                _testLibrary.AddInfoToSend("network", attribution.network);
+                _testLibrary.AddInfoToSend("campaign", attribution.campaign);
+                _testLibrary.AddInfoToSend("adgroup", attribution.adgroup);
+                _testLibrary.AddInfoToSend("creative", attribution.creative);
+                _testLibrary.AddInfoToSend("click_label", attribution.clickLabel);
+                _testLibrary.AddInfoToSend("cost_type", attribution.costType);
+                _testLibrary.AddInfoToSend("cost_amount", attribution.costAmount.ToString());
+                _testLibrary.AddInfoToSend("cost_currency", attribution.costCurrency);
+                _testLibrary.AddInfoToSend("fb_install_referrer", attribution.fbInstallReferrer);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void EnableCoppaCompliance()
+        {
+            Adjust.EnableCoppaCompliance();
+        }
+
+        private void DisableCoppaCompliance()
+        {
+            Adjust.DisableCoppaCompliance();
         }
 
         // helper methods
-
         private void VerificationInfoCallback(AdjustPurchaseVerificationInfo verificationInfo)
         {
             string localExtraPath = ExtraPath;
-            _testLibrary.AddInfoToSend("verification_status", verificationInfo.verificationStatus);
-            _testLibrary.AddInfoToSend("code", verificationInfo.code.ToString());
-            _testLibrary.AddInfoToSend("message", verificationInfo.message);
+            _testLibrary.AddInfoToSend("verification_status", verificationInfo.VerificationStatus);
+            _testLibrary.AddInfoToSend("code", verificationInfo.Code.ToString());
+            _testLibrary.AddInfoToSend("message", verificationInfo.Message);
             _testLibrary.SendInfoToServer(localExtraPath);
         }
 
@@ -1041,6 +1005,13 @@ namespace com.adjust.sdk.test
         {
             string localExtraPath = ExtraPath;
             _testLibrary.AddInfoToSend("resolved_link", resolvedLink);
+            _testLibrary.SendInfoToServer(localExtraPath);
+        }
+
+        private void LastDeeplinkCallback(string lastDeeplink)
+        {
+            string localExtraPath = ExtraPath;
+            _testLibrary.AddInfoToSend("last_deeplink", lastDeeplink);
             _testLibrary.SendInfoToServer(localExtraPath);
         }
 

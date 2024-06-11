@@ -32,10 +32,9 @@ static AdjustUnityDelegate *defaultInstance = nil;
                            sessionSuccessCallback:(BOOL)swizzleSessionSuccessCallback
                            sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
                          deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
-                   conversionValueUpdatedCallback:(BOOL)swizzleConversionValueUpdatedCallback
-              skad4ConversionValueUpdatedCallback:(BOOL)swizzleSkad4ConversionValueUpdatedCallback
+                              skanUpdatedCallback:(BOOL)swizzleSkanUpdatedCallback
                      shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
-                         withAdjustUnitySceneName:(NSString *)adjustUnitySceneName {
+                     andAdjustUnityGameObjectName:(NSString *)adjustUnityGameObjectName {
     dispatch_once(&onceToken, ^{
         defaultInstance = [[AdjustUnityDelegate alloc] init];
 
@@ -64,17 +63,13 @@ static AdjustUnityDelegate *defaultInstance = nil;
             [defaultInstance swizzleOriginalSelector:@selector(adjustDeeplinkResponse:)
                                         withSelector:@selector(adjustDeeplinkResponseWannabe:)];
         }
-        if (swizzleConversionValueUpdatedCallback) {
-            [defaultInstance swizzleOriginalSelector:@selector(adjustConversionValueUpdated:)
-                                        withSelector:@selector(adjustConversionValueUpdatedWannabe:)];
-        }
-        if (swizzleSkad4ConversionValueUpdatedCallback) {
-            [defaultInstance swizzleOriginalSelector:@selector(adjustConversionValueUpdated:coarseValue:lockWindow:)
-                                        withSelector:@selector(adjustConversionValueUpdatedWannabe:coarseValue:lockWindow:)];
+        if (swizzleSkanUpdatedCallback) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustSkanUpdatedWithConversionData:)
+                                        withSelector:@selector(adjustSkanUpdatedWithConversionDataWannabe:)];
         }
 
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
-        [defaultInstance setAdjustUnitySceneName:adjustUnitySceneName];
+        [defaultInstance setAdjustUnityGameObjectName:adjustUnityGameObjectName];
     });
     
     return defaultInstance;
@@ -93,24 +88,47 @@ static AdjustUnityDelegate *defaultInstance = nil;
     }
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [self addValueOrEmpty:attribution.trackerToken forKey:@"trackerToken" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.trackerName forKey:@"trackerName" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.network forKey:@"network" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.campaign forKey:@"campaign" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.creative forKey:@"creative" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.adgroup forKey:@"adgroup" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.clickLabel forKey:@"clickLabel" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.adid forKey:@"adid" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.costType forKey:@"costType" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.costAmount forKey:@"costAmount" toDictionary:dictionary];
-    [self addValueOrEmpty:attribution.costCurrency forKey:@"costCurrency" toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.trackerToken
+                   forKey:@"trackerToken"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.trackerName
+                   forKey:@"trackerName"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.network
+                   forKey:@"network"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.campaign
+                   forKey:@"campaign"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.creative
+                   forKey:@"creative"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.adgroup
+                   forKey:@"adgroup"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.clickLabel
+                   forKey:@"clickLabel"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.costType
+                   forKey:@"costType"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.costAmount
+                   forKey:@"costAmount"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:attribution.costCurrency
+                   forKey:@"costCurrency"
+             toDictionary:dictionary];
 
-    NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+    NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                              options:0
+                                                                error:nil];
     NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
                                                            length:[dataAttribution length]
                                                          encoding:NSUTF8StringEncoding];
     const char* charArrayAttribution = [stringAttribution UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeAttribution", charArrayAttribution);
+    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
+                     "UnityAdjustAttributionCallback",
+                     charArrayAttribution);
 }
 
 - (void)adjustEventTrackingSucceededWannabe:(ADJEventSuccess *)eventSuccessResponseData {
@@ -119,21 +137,36 @@ static AdjustUnityDelegate *defaultInstance = nil;
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [self addValueOrEmpty:eventSuccessResponseData.message forKey:@"message" toDictionary:dictionary];
-    [self addValueOrEmpty:eventSuccessResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
-    [self addValueOrEmpty:eventSuccessResponseData.adid forKey:@"adid" toDictionary:dictionary];
-    [self addValueOrEmpty:eventSuccessResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
-    [self addValueOrEmpty:eventSuccessResponseData.callbackId forKey:@"callbackId" toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.message
+                   forKey:@"message"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.timeStamp
+                   forKey:@"timestamp"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.adid
+                   forKey:@"adid"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.eventToken
+                   forKey:@"eventToken"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventSuccessResponseData.callbackId
+                   forKey:@"callbackId"
+             toDictionary:dictionary];
     if (eventSuccessResponseData.jsonResponse != nil) {
-        [dictionary setObject:eventSuccessResponseData.jsonResponse forKey:@"jsonResponse"];
+        [dictionary setObject:eventSuccessResponseData.jsonResponse
+                       forKey:@"jsonResponse"];
     }
 
-    NSData *dataEventSuccess = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+    NSData *dataEventSuccess = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                               options:0
+                                                                 error:nil];
     NSString *stringEventSuccess = [[NSString alloc] initWithBytes:[dataEventSuccess bytes]
                                                             length:[dataEventSuccess length]
                                                           encoding:NSUTF8StringEncoding];
     const char* charArrayEventSuccess = [stringEventSuccess UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeEventSuccess", charArrayEventSuccess);
+    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
+                     "UnityAdjustEventSuccessCallback",
+                     charArrayEventSuccess);
 }
 
 - (void)adjustEventTrackingFailedWannabe:(ADJEventFailure *)eventFailureResponseData {
@@ -142,22 +175,38 @@ static AdjustUnityDelegate *defaultInstance = nil;
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [self addValueOrEmpty:eventFailureResponseData.message forKey:@"message" toDictionary:dictionary];
-    [self addValueOrEmpty:eventFailureResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
-    [self addValueOrEmpty:eventFailureResponseData.adid forKey:@"adid" toDictionary:dictionary];
-    [self addValueOrEmpty:eventFailureResponseData.eventToken forKey:@"eventToken" toDictionary:dictionary];
-    [self addValueOrEmpty:eventFailureResponseData.callbackId forKey:@"callbackId" toDictionary:dictionary];
-    [dictionary setObject:(eventFailureResponseData.willRetry ? @"true" : @"false") forKey:@"willRetry"];
+    [self addValueOrEmpty:eventFailureResponseData.message
+                   forKey:@"message"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.timeStamp
+                   forKey:@"timestamp"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.adid
+                   forKey:@"adid"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.eventToken
+                   forKey:@"eventToken"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:eventFailureResponseData.callbackId
+                   forKey:@"callbackId"
+             toDictionary:dictionary];
+    [dictionary setObject:(eventFailureResponseData.willRetry ? @"true" : @"false")
+                   forKey:@"willRetry"];
     if (eventFailureResponseData.jsonResponse != nil) {
-        [dictionary setObject:eventFailureResponseData.jsonResponse forKey:@"jsonResponse"];
+        [dictionary setObject:eventFailureResponseData.jsonResponse
+                       forKey:@"jsonResponse"];
     }
 
-    NSData *dataEventFailure = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+    NSData *dataEventFailure = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                               options:0
+                                                                 error:nil];
     NSString *stringEventFailure = [[NSString alloc] initWithBytes:[dataEventFailure bytes]
                                                             length:[dataEventFailure length]
                                                           encoding:NSUTF8StringEncoding];
     const char* charArrayEventFailure = [stringEventFailure UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeEventFailure", charArrayEventFailure);
+    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
+                     "UnityAdjustEventFailureCallback",
+                     charArrayEventFailure);
 }
 
 - (void)adjustSessionTrackingSucceededWannabe:(ADJSessionSuccess *)sessionSuccessResponseData {
@@ -166,19 +215,30 @@ static AdjustUnityDelegate *defaultInstance = nil;
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [self addValueOrEmpty:sessionSuccessResponseData.message forKey:@"message" toDictionary:dictionary];
-    [self addValueOrEmpty:sessionSuccessResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
-    [self addValueOrEmpty:sessionSuccessResponseData.adid forKey:@"adid" toDictionary:dictionary];
+    [self addValueOrEmpty:sessionSuccessResponseData.message
+                   forKey:@"message"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:sessionSuccessResponseData.timeStamp
+                   forKey:@"timestamp"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:sessionSuccessResponseData.adid
+                   forKey:@"adid"
+             toDictionary:dictionary];
     if (sessionSuccessResponseData.jsonResponse != nil) {
-        [dictionary setObject:sessionSuccessResponseData.jsonResponse forKey:@"jsonResponse"];
+        [dictionary setObject:sessionSuccessResponseData.jsonResponse
+                       forKey:@"jsonResponse"];
     }
 
-    NSData *dataSessionSuccess = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+    NSData *dataSessionSuccess = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                                 options:0
+                                                                   error:nil];
     NSString *stringSessionSuccess = [[NSString alloc] initWithBytes:[dataSessionSuccess bytes]
                                                               length:[dataSessionSuccess length]
                                                             encoding:NSUTF8StringEncoding];
     const char* charArraySessionSuccess = [stringSessionSuccess UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeSessionSuccess", charArraySessionSuccess);
+    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
+                     "UnityAdjustSessionSuccessCallback",
+                     charArraySessionSuccess);
 }
 
 - (void)adjustSessionTrackingFailedWannabe:(ADJSessionFailure *)sessionFailureResponseData {
@@ -187,48 +247,58 @@ static AdjustUnityDelegate *defaultInstance = nil;
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [self addValueOrEmpty:sessionFailureResponseData.message forKey:@"message" toDictionary:dictionary];
-    [self addValueOrEmpty:sessionFailureResponseData.timeStamp forKey:@"timestamp" toDictionary:dictionary];
-    [self addValueOrEmpty:sessionFailureResponseData.adid forKey:@"adid" toDictionary:dictionary];
-    [dictionary setObject:(sessionFailureResponseData.willRetry ? @"true" : @"false") forKey:@"willRetry"];
+    [self addValueOrEmpty:sessionFailureResponseData.message
+                   forKey:@"message"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:sessionFailureResponseData.timeStamp
+                   forKey:@"timestamp"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:sessionFailureResponseData.adid
+                   forKey:@"adid"
+             toDictionary:dictionary];
+    [dictionary setObject:(sessionFailureResponseData.willRetry ? @"true" : @"false")
+                   forKey:@"willRetry"];
     if (sessionFailureResponseData.jsonResponse != nil) {
-        [dictionary setObject:sessionFailureResponseData.jsonResponse forKey:@"jsonResponse"];
+        [dictionary setObject:sessionFailureResponseData.jsonResponse
+                       forKey:@"jsonResponse"];
     }
 
-    NSData *dataSessionFailure = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
+    NSData *dataSessionFailure = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                                 options:0
+                                                                   error:nil];
     NSString *stringSessionFailure = [[NSString alloc] initWithBytes:[dataSessionFailure bytes]
                                                               length:[dataSessionFailure length]
                                                             encoding:NSUTF8StringEncoding];
     const char* charArraySessionFailure = [stringSessionFailure UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeSessionFailure", charArraySessionFailure);
+    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
+                     "UnityAdjustSessionFailureCallback",
+                     charArraySessionFailure);
 }
 
 - (BOOL)adjustDeeplinkResponseWannabe:(NSURL *)deeplink {
     NSString *stringDeeplink = [deeplink absoluteString];
     const char* charDeeplink = [stringDeeplink UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeDeferredDeeplink", charDeeplink);
+    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
+                     "UnityAdjustDeferredDeeplinkCallback",
+                     charDeeplink);
     return _shouldLaunchDeferredDeeplink;
 }
 
-- (void)adjustConversionValueUpdatedWannabe:(NSNumber *)conversionValue {
-    NSString *stringConversionValue = [conversionValue stringValue];
-    const char* charConversionValue = [stringConversionValue UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeConversionValueUpdated", charConversionValue);
-}
+- (void)adjustSkanUpdatedWithConversionDataWannabe:(NSDictionary<NSString *,NSString *> *)data {
+    if (data == nil) {
+        return;
+    }
 
-- (void)adjustConversionValueUpdatedWannabe:(nullable NSNumber *)fineValue
-                                coarseValue:(nullable NSString *)coarseValue
-                                 lockWindow:(nullable NSNumber *)lockWindow {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [self addValueOrEmpty:fineValue forKey:@"fineValue" toDictionary:dictionary];
-    [self addValueOrEmpty:coarseValue forKey:@"coarseValue" toDictionary:dictionary];
-    [self addValueOrEmpty:lockWindow forKey:@"lockWindow" toDictionary:dictionary];
-    NSData *dataConversionValueUpdate = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil];
-    NSString *stringConversionValueUpdate = [[NSString alloc] initWithBytes:[dataConversionValueUpdate bytes]
-                                                                     length:[dataConversionValueUpdate length]
-                                                                   encoding:NSUTF8StringEncoding];
-    const char* charConversionValueUpdate = [stringConversionValueUpdate UTF8String];
-    UnitySendMessage([self.adjustUnitySceneName UTF8String], "GetNativeSkad4ConversionValueUpdated", charConversionValueUpdate);
+    NSData *dataSkanUpdatedData = [NSJSONSerialization dataWithJSONObject:data
+                                                                  options:0
+                                                                    error:nil];
+    NSString *strSkanUpdatedData = [[NSString alloc] initWithBytes:[dataSkanUpdatedData bytes]
+                                                            length:[dataSkanUpdatedData length]
+                                                          encoding:NSUTF8StringEncoding];
+    const char* charSkanUpdatedData = [strSkanUpdatedData UTF8String];
+    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
+                     "UnityAdjustSkanUpdatedCallback",
+                     charSkanUpdatedData);
 }
 
 - (void)swizzleOriginalSelector:(SEL)originalSelector
@@ -256,9 +326,11 @@ static AdjustUnityDelegate *defaultInstance = nil;
            toDictionary:(NSMutableDictionary *)dictionary {
     if (nil != value) {
         if ([value isKindOfClass:[NSString class]]) {
-            [dictionary setObject:[NSString stringWithFormat:@"%@", value] forKey:key];
+            [dictionary setObject:[NSString stringWithFormat:@"%@", value]
+                           forKey:key];
         } else if ([value isKindOfClass:[NSNumber class]]) {
-            [dictionary setObject:[NSString stringWithFormat:@"%@", [((NSNumber *)value) stringValue]] forKey:key];
+            [dictionary setObject:[NSString stringWithFormat:@"%@", [((NSNumber *)value) stringValue]]
+                           forKey:key];
         } else {
             [dictionary setObject:@"" forKey:key];
         }

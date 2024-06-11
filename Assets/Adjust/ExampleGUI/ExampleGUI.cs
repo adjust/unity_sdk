@@ -27,15 +27,15 @@ public class ExampleGUI : MonoBehaviour
             if (!string.Equals(txtManualLaunch, "SDK Launched", StringComparison.OrdinalIgnoreCase))
             {
                 AdjustConfig adjustConfig = new AdjustConfig("2fm9gkqubvpc", AdjustEnvironment.Sandbox);
-                adjustConfig.setLogLevel(AdjustLogLevel.Verbose);
-                adjustConfig.setLogDelegate(msg => Debug.Log(msg));
-                adjustConfig.setEventSuccessDelegate(EventSuccessCallback);
-                adjustConfig.setEventFailureDelegate(EventFailureCallback);
-                adjustConfig.setSessionSuccessDelegate(SessionSuccessCallback);
-                adjustConfig.setSessionFailureDelegate(SessionFailureCallback);
-                adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
-                adjustConfig.setAttributionChangedDelegate(AttributionChangedCallback);
-                Adjust.start(adjustConfig);
+                adjustConfig.SetLogLevel(AdjustLogLevel.Verbose);
+                // adjustConfig.setLogDelegate(msg => Debug.Log(msg));
+                // adjustConfig.setEventSuccessDelegate(EventSuccessCallback);
+                // adjustConfig.setEventFailureDelegate(EventFailureCallback);
+                // adjustConfig.setSessionSuccessDelegate(SessionSuccessCallback);
+                // adjustConfig.setSessionFailureDelegate(SessionFailureCallback);
+                // adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
+                // adjustConfig.setAttributionChangedDelegate(AttributionChangedCallback);
+                Adjust.InitSdk(adjustConfig);
 
                 isEnabled = true;
                 txtManualLaunch = "SDK Launched";
@@ -45,64 +45,64 @@ public class ExampleGUI : MonoBehaviour
         if (GUI.Button(new Rect(0, Screen.height * 1 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Simple Event"))
         {
             AdjustEvent adjustEvent = new AdjustEvent("g3mfiw");
-            Adjust.trackEvent(adjustEvent);
+            Adjust.TrackEvent(adjustEvent);
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 2 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Revenue Event"))
         {
             AdjustEvent adjustEvent = new AdjustEvent("a4fd35");
-            adjustEvent.setRevenue(0.25, "EUR");
-            Adjust.trackEvent(adjustEvent);
+            adjustEvent.SetRevenue(0.25, "EUR");
+            Adjust.TrackEvent(adjustEvent);
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 3 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Callback Event"))
         {
-            AdjustEvent adjustEvent = new AdjustEvent("34vgg9");
-            adjustEvent.addCallbackParameter("key", "value");
-            adjustEvent.addCallbackParameter("foo", "bar");
-            Adjust.trackEvent(adjustEvent);
+            // AdjustEvent adjustEvent = new AdjustEvent("34vgg9");
+            // adjustEvent.addCallbackParameter("key", "value");
+            // adjustEvent.addCallbackParameter("foo", "bar");
+            // Adjust.trackEvent(adjustEvent);
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 4 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Partner Event"))
         {
-            AdjustEvent adjustEvent = new AdjustEvent("w788qs");
-            adjustEvent.addPartnerParameter("key", "value");
-            adjustEvent.addPartnerParameter("foo", "bar");
-            Adjust.trackEvent(adjustEvent);
+            // AdjustEvent adjustEvent = new AdjustEvent("w788qs");
+            // adjustEvent.addPartnerParameter("key", "value");
+            // adjustEvent.addPartnerParameter("foo", "bar");
+            // Adjust.trackEvent(adjustEvent);
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 5 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), txtSetOfflineMode))
         {
-            if (string.Equals(txtSetOfflineMode, "Turn Offline Mode ON", StringComparison.OrdinalIgnoreCase))
-            {
-                Adjust.setOfflineMode(true);
-                txtSetOfflineMode = "Turn Offline Mode OFF";
-            }
-            else
-            {
-                Adjust.setOfflineMode(false);
-                txtSetOfflineMode = "Turn Offline Mode ON";
-            }
+            // if (string.Equals(txtSetOfflineMode, "Turn Offline Mode ON", StringComparison.OrdinalIgnoreCase))
+            // {
+            //     Adjust.setOfflineMode(true);
+            //     txtSetOfflineMode = "Turn Offline Mode OFF";
+            // }
+            // else
+            // {
+            //     Adjust.setOfflineMode(false);
+            //     txtSetOfflineMode = "Turn Offline Mode ON";
+            // }
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 6 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), txtSetEnabled))
         {
-            if (string.Equals(txtSetEnabled, "Disable SDK", StringComparison.OrdinalIgnoreCase))
-            {
-                Adjust.setEnabled(false);
-                txtSetEnabled = "Enable SDK";
-            }
-            else
-            {
-                Adjust.setEnabled(true);
-                txtSetEnabled = "Disable SDK";
-            }
+            // if (string.Equals(txtSetEnabled, "Disable SDK", StringComparison.OrdinalIgnoreCase))
+            // {
+            //     Adjust.setEnabled(false);
+            //     txtSetEnabled = "Enable SDK";
+            // }
+            // else
+            // {
+            //     Adjust.setEnabled(true);
+            //     txtSetEnabled = "Disable SDK";
+            // }
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 7 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Is SDK Enabled?"))
         {
-            isEnabled = Adjust.isEnabled();
-            showPopUp = true;
+            // isEnabled = Adjust.isEnabled();
+            // showPopUp = true;
         }
     }
 
@@ -159,10 +159,6 @@ public class ExampleGUI : MonoBehaviour
         if (attributionData.clickLabel != null)
         {
             Debug.Log("Click label: " + attributionData.clickLabel);
-        }
-        if (attributionData.adid != null)
-        {
-            Debug.Log("ADID: " + attributionData.adid);
         }
     }
 

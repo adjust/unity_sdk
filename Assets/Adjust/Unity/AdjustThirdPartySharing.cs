@@ -16,7 +16,7 @@ namespace com.adjust.sdk
             this.partnerSharingSettings = new Dictionary<string, List<string>>();
         }
 
-        public void addGranularOption(string partnerName, string key, string value)
+        public void AddGranularOption(string partnerName, string key, string value)
         {
             // TODO: consider to add some logs about the error case
             if (partnerName == null || key == null || value == null)
@@ -39,7 +39,7 @@ namespace com.adjust.sdk
             partnerOptions.Add(value);
         }
 
-        public void addPartnerSharingSetting(string partnerName, string key, bool value)
+        public void AddPartnerSharingSetting(string partnerName, string key, bool value)
         {
             // TODO: consider to add some logs about the error case
             if (partnerName == null || key == null)

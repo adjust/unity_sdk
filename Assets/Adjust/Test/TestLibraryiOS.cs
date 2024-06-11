@@ -17,7 +17,9 @@ namespace com.adjust.sdk.test
         public void StartTestSession() 
         {
             TestApp.Log("TestLibrary -> StartTestSession()");
-            TestLibraryBridgeiOS.StartTestSession(Adjust.getSdkVersion());
+            Adjust.GetSdkVersion((sdkVersion) => {
+                TestLibraryBridgeiOS.StartTestSession("unity5.0.0@" + sdkVersion);
+            });
         }
 
         public void AddInfoToSend(string key, string paramValue) 
