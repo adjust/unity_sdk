@@ -21,7 +21,10 @@ namespace com.adjust.sdk.test
 
         public void StartTestSession()
         {
-            ajoTestLibrary.Call("startTestSession", Adjust.getSdkVersion());
+            Adjust.GetSdkVersion(sdkVersion =>
+            {
+                ajoTestLibrary.Call("startTestSession", sdkVersion);
+            });
         }
 
         public void AddInfoToSend(string key, string paramValue)

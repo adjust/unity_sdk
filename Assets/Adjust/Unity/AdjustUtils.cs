@@ -51,6 +51,7 @@ namespace com.adjust.sdk
         public static string KeyTestOptionsAdServicesFrameworkEnabled = "adServicesFrameworkEnabled";
         public static string KeyTestOptionsAttStatus = "attStatus";
         public static string KeyTestOptionsIdfa = "idfa";
+        public static string KeyTestOptionsIgnoreSystemLifecycleBootstrap = "ignoreSystemLifecycleBootstrap";
 
         public static int ConvertLogLevel(AdjustLogLevel? logLevel)
         {
@@ -342,6 +343,13 @@ namespace com.adjust.sdk
                 bool noBackoffWait = testOptionsMap[KeyTestOptionsNoBackoffWait].ToLower() == "true";
                 AndroidJavaObject ajoNoBackoffWait = new AndroidJavaObject("java.lang.Boolean", noBackoffWait);
                 ajoTestOptions.Set<AndroidJavaObject>("noBackoffWait", ajoNoBackoffWait);
+            }
+            if (testOptionsMap.ContainsKey(KeyTestOptionsIgnoreSystemLifecycleBootstrap))
+            {
+                // TODO: fix native logic not to have negation in naming throughout the chain of calls
+                bool doNotIgnoreSystemLifecycleBootstrap = testOptionsMap[KeyTestOptionsIgnoreSystemLifecycleBootstrap].ToLower() == "true";
+                AndroidJavaObject ajoDoNotIgnoreSystemLifecycleBootstrap = new AndroidJavaObject("java.lang.Boolean", doNotIgnoreSystemLifecycleBootstrap);
+                ajoTestOptions.Set<AndroidJavaObject>("ignoreSystemLifecycleBootstrap", ajoDoNotIgnoreSystemLifecycleBootstrap);
             }
 
             return ajoTestOptions;

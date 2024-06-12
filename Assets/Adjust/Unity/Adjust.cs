@@ -84,11 +84,11 @@ namespace com.adjust.sdk
 
             // TODO: double-check the state of Unity on deep linking nowadays
 #if UNITY_ANDROID && UNITY_2019_2_OR_NEWER
-            Application.deepLinkActivated += Adjust.appWillOpenUrl;
+            Application.deepLinkActivated += Adjust.ProcessDeeplink;
             if (!string.IsNullOrEmpty(Application.absoluteURL))
             {
                 // cold start and Application.absoluteURL not null so process deep link
-                Adjust.appWillOpenUrl(Application.absoluteURL);
+                Adjust.ProcessDeeplink(Application.absoluteURL);
             }
 #endif
 
@@ -161,7 +161,7 @@ namespace com.adjust.sdk
             Adjust.skanUpdatedDelegate = adjustConfig.GetSkanUpdatedDelegate();
             AdjustiOS.InitSdk(adjustConfig);
 #elif UNITY_ANDROID
-            AdjustAndroid.Start(adjustConfig);
+            AdjustAndroid.InitSdk(adjustConfig);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.Start(adjustConfig);
 #else
@@ -202,7 +202,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.Enable();
 #elif UNITY_ANDROID
-            AdjustAndroid.SetEnabled(enabled);
+            AdjustAndroid.Enable();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.SetEnabled(enabled);
 #else
@@ -220,7 +220,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.Disable();
 #elif UNITY_ANDROID
-            AdjustAndroid.SetEnabled(enabled);
+            AdjustAndroid.Disable();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.SetEnabled(enabled);
 #else
@@ -260,6 +260,38 @@ namespace com.adjust.sdk
 #endif
         }
 
+        public static void EnablePlayStoreKidsApp()
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Marking apps as Play Store kids app is only supported for Android platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.EnablePlayStoreKidsApp();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void DisablePlayStoreKidsApp()
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Marking apps as Play Store kids app is only supported for Android platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.DisablePlayStoreKidsApp();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static void IsEnabled(Action<bool> callback, string gameObjectName = "Adjust")
         {
             if (IsEditor())
@@ -271,7 +303,7 @@ namespace com.adjust.sdk
             Adjust.getIsEnabledDelegate = callback;
             AdjustiOS.IsEnabled(gameObjectName);
 #elif UNITY_ANDROID
-            return AdjustAndroid.IsEnabled();
+            AdjustAndroid.IsEnabled(callback);
 #elif (UNITY_WSA || UNITY_WP8)
             return AdjustWindows.IsEnabled();
 #else
@@ -290,7 +322,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.SwitchToOfflineMode();
 #elif UNITY_ANDROID
-            AdjustAndroid.SetOfflineMode(enabled);
+            AdjustAndroid.SwitchToOfflineMode();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.SetOfflineMode(enabled);
 #else
@@ -308,7 +340,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.SwitchBackToOnlineMode();
 #elif UNITY_ANDROID
-            AdjustAndroid.SetOfflineMode(enabled);
+            AdjustAndroid.SwitchBackToOnlineMode();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.SetOfflineMode(enabled);
 #else
@@ -326,7 +358,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.SetPushToken(pushToken);
 #elif UNITY_ANDROID
-            AdjustAndroid.SetDeviceToken(deviceToken);
+            AdjustAndroid.SetPushToken(pushToken);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.SetDeviceToken(deviceToken);
 #else
@@ -362,7 +394,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.ProcessDeeplink(deeplink);
 #elif UNITY_ANDROID
-            AdjustAndroid.AppWillOpenUrl(url);
+            AdjustAndroid.ProcessDeeplink(deeplink);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.AppWillOpenUrl(url);
 #else
@@ -380,7 +412,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.AddGlobalPartnerParameter(key, value);
 #elif UNITY_ANDROID
-            AdjustAndroid.AddSessionPartnerParameter(key, value);
+            AdjustAndroid.AddGlobalPartnerParameter(key, value);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.AddSessionPartnerParameter(key, value);
 #else
@@ -398,7 +430,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.AddGlobalCallbackParameter(key, value);
 #elif UNITY_ANDROID
-            AdjustAndroid.AddSessionCallbackParameter(key, value);
+            AdjustAndroid.AddGlobalCallbackParameter(key, value);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.AddSessionCallbackParameter(key, value);
 #else
@@ -416,7 +448,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.RemoveGlobalPartnerParameter(key);
 #elif UNITY_ANDROID
-            AdjustAndroid.RemoveSessionPartnerParameter(key);
+            AdjustAndroid.RemoveGlobalPartnerParameter(key);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.RemoveSessionPartnerParameter(key);
 #else
@@ -434,7 +466,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.RemoveGlobalCallbackParameter(key);
 #elif UNITY_ANDROID
-            AdjustAndroid.RemoveSessionCallbackParameter(key);
+            AdjustAndroid.RemoveGlobalCallbackParameter(key);
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.RemoveSessionCallbackParameter(key);
 #else
@@ -452,7 +484,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.RemoveGlobalPartnerParameters();
 #elif UNITY_ANDROID
-            AdjustAndroid.ResetSessionPartnerParameters();
+            AdjustAndroid.RemoveGlobalPartnerParameters();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.ResetSessionPartnerParameters();
 #else
@@ -470,7 +502,7 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.RemoveGlobalCallbackParameters();
 #elif UNITY_ANDROID
-            AdjustAndroid.ResetSessionCallbackParameters();
+            AdjustAndroid.RemoveGlobalCallbackParameters();
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.ResetSessionCallbackParameters();
 #else
@@ -649,7 +681,7 @@ namespace com.adjust.sdk
             Adjust.getIdfaDelegate = callback;
             AdjustiOS.GetAdid(gameObjectName);
 #elif UNITY_ANDROID
-            return AdjustAndroid.GetAdid();
+            AdjustAndroid.GetAdid(callback);
 #elif (UNITY_WSA || UNITY_WP8)
             return AdjustWindows.GetAdid();
 #else
@@ -671,7 +703,7 @@ namespace com.adjust.sdk
             Adjust.getAttributionDelegate = callback;
             AdjustiOS.GetAttribution(gameObjectName);
 #elif UNITY_ANDROID
-            return AdjustAndroid.GetAttribution();
+            AdjustAndroid.GetAttribution(callback);
 #elif (UNITY_WSA || UNITY_WP8)
             return AdjustWindows.GetAttribution();
 #else
@@ -713,7 +745,7 @@ namespace com.adjust.sdk
             AdjustiOS.GetIdfa(gameObjectName);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFA is not available on Android platform.");
-            return string.Empty;
+            return;
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: Error! IDFA is not available on Windows platform.");
             return string.Empty;
@@ -735,7 +767,7 @@ namespace com.adjust.sdk
             AdjustiOS.GetIdfv(gameObjectName);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFV is not available on Android platform.");
-            return string.Empty;
+            return;
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: Error! IDFV is not available on Windows platform.");
             return string.Empty;
@@ -756,7 +788,7 @@ namespace com.adjust.sdk
             Adjust.getSdkVersionDelegate = callback;
             AdjustiOS.GetSdkVersion(gameObjectName);
 #elif UNITY_ANDROID
-            return AdjustAndroid.GetSdkVersion();
+            AdjustAndroid.GetSdkVersion(callback);
 #elif (UNITY_WSA || UNITY_WP8)
             return AdjustWindows.GetSdkVersion();
 #else
@@ -777,7 +809,7 @@ namespace com.adjust.sdk
             AdjustiOS.GetLastDeeplink(gameObjectName);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Android platform.");
-            return string.Empty;
+            return;
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Windows platform.");
             return string.Empty;
@@ -818,37 +850,37 @@ namespace com.adjust.sdk
 #endif
         }
 
-//         public static void verifyPlayStorePurchase(
-//             AdjustPlayStorePurchase purchase,
-//             Action<AdjustPurchaseVerificationInfo> verificationInfoDelegate)
-//         {
-//             if (IsEditor())
-//             {
-//                 return;
-//             }
+        public static void VerifyPlayStorePurchase(
+            AdjustPlayStorePurchase purchase,
+            Action<AdjustPurchaseVerificationInfo> verificationResultCallback)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
 
-// #if UNITY_IOS
-//             Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
-// #elif UNITY_ANDROID
-//             if (purchase == null ||
-//                 purchase.productId == null ||
-//                 purchase.purchaseToken == null)
-//             {
-//                 Debug.Log("[Adjust]: Invalid Play Store purchase parameters.");
-//                 return;
-//             }
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
+#elif UNITY_ANDROID
+            if (purchase == null ||
+                purchase.productId == null ||
+                purchase.purchaseToken == null)
+            {
+                Debug.Log("[Adjust]: Invalid Play Store purchase parameters.");
+                return;
+            }
 
-//             AdjustAndroid.VerifyPlayStorePurchase(purchase, verificationInfoDelegate);
-// #elif (UNITY_WSA || UNITY_WP8)
-//             Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
-// #else
-//             Debug.Log(errorMsgPlatform);
-// #endif
-//         }
+            AdjustAndroid.VerifyPlayStorePurchase(purchase, verificationResultCallback);
+#elif (UNITY_WSA || UNITY_WP8)
+            Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
 
         public static void ProcessAndResolveDeeplink(
             string deeplink,
-            Action<string> resolvedLinkDelegate,
+            Action<string> resolvedDeeplinkCallback,
             string gameObjectName = "Adjust")
         {
             if (IsEditor())
@@ -857,10 +889,10 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.deeplinkResolutionDelegate = resolvedLinkDelegate;
+            Adjust.deeplinkResolutionDelegate = resolvedDeeplinkCallback;
             AdjustiOS.ProcessAndResolveDeeplink(deeplink, gameObjectName);
 #elif UNITY_ANDROID
-            AdjustAndroid.ProcessDeeplink(url, resolvedLinkDelegate);
+            AdjustAndroid.ProcessAndResolveDeeplink(deeplink, resolvedDeeplinkCallback);
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: Deep link processing is only supported for Android and iOS platform.");
 #else

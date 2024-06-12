@@ -70,6 +70,8 @@ namespace com.adjust.sdk.test
                     case "attributionGetter": AttributionGetter(); break;
                     case "enableCoppaCompliance": EnableCoppaCompliance(); break;
                     case "disableCoppaCompliance": DisableCoppaCompliance(); break;
+                    case "enablePlayStoreKidsApp" : EnablePlayStoreKidsApp(); break;
+                    case "disablePlayStoreKidsApp" : DisablePlayStoreKidsApp(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -126,6 +128,18 @@ namespace com.adjust.sdk.test
             if (_command.ContainsParameter("idfa"))
             {
                 testOptions[AdjustUtils.KeyTestOptionsIdfa] = _command.GetFirstParameterValue("idfa");
+            }
+            if (_command.ContainsParameter("doNotIgnoreSystemLifecycleBootstrap"))
+            {
+                string strDoNotIgnoreSystemLifecycleBootstrap = _command.GetFirstParameterValue("doNotIgnoreSystemLifecycleBootstrap");
+                if (strDoNotIgnoreSystemLifecycleBootstrap != null)
+                {
+                    bool bDoNotIgnoreSystemLifecycleBootstrap = bool.Parse(strDoNotIgnoreSystemLifecycleBootstrap);
+                    if (bDoNotIgnoreSystemLifecycleBootstrap == true)
+                    {
+                        testOptions[AdjustUtils.KeyTestOptionsIgnoreSystemLifecycleBootstrap] = "false";
+                    }
+                }
             }
 #if UNITY_ANDROID
             bool useTestConnectionOptions = false;
@@ -290,6 +304,13 @@ namespace com.adjust.sdk.test
                 {
                     adjustConfig.EnableSendingInBackground();
                 }
+            }
+
+            if (_command.ContainsParameter("eventDeduplicationIdsMaxSize"))
+            {
+                var eventDeduplicationIdsMaxSizeStr = _command.GetFirstParameterValue("eventDeduplicationIdsMaxSize");
+                var eventDeduplicationIdsMaxSize = int.Parse(eventDeduplicationIdsMaxSizeStr, System.Globalization.CultureInfo.InvariantCulture);
+                adjustConfig.SetEventDeduplicationIdsMaxSize(eventDeduplicationIdsMaxSize);
             }
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
@@ -586,7 +607,7 @@ namespace com.adjust.sdk.test
 #if UNITY_IOS
             AdjustiOS.TrackSubsessionStart("test");
 #elif UNITY_ANDROID
-            AdjustAndroid.OnResume();
+            AdjustAndroid.OnResume("test");
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.OnResume();
 #else
@@ -599,7 +620,7 @@ namespace com.adjust.sdk.test
 #if UNITY_IOS
             AdjustiOS.TrackSubsessionEnd("test");
 #elif UNITY_ANDROID
-            AdjustAndroid.OnPause();
+            AdjustAndroid.OnPause("test");
 #elif (UNITY_WSA || UNITY_WP8)
             AdjustWindows.OnPause();
 #else
@@ -952,7 +973,7 @@ namespace com.adjust.sdk.test
                 productId,
                 purchaseToken);
 
-            Adjust.verifyPlayStorePurchase(purchase, VerificationInfoCallback);
+            Adjust.VerifyPlayStorePurchase(purchase, VerificationInfoCallback);
 #endif
         }
 
@@ -989,6 +1010,16 @@ namespace com.adjust.sdk.test
         private void DisableCoppaCompliance()
         {
             Adjust.DisableCoppaCompliance();
+        }
+
+        private void EnablePlayStoreKidsApp()
+        {
+            Adjust.EnablePlayStoreKidsApp();
+        }
+
+        private void DisablePlayStoreKidsApp()
+        {
+            Adjust.DisablePlayStoreKidsApp();
         }
 
         // helper methods
