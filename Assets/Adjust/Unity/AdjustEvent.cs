@@ -10,11 +10,11 @@ namespace com.adjust.sdk
         internal string currency;
         internal string callbackId;
         internal string deduplicationId;
+        internal string productId;
         internal List<string> partnerList;
         internal List<string> callbackList;
         // iOS specific
         internal string receipt;
-        internal string productId;
         internal string transactionId;
         // Android specific
         internal string orderId;
