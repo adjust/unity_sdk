@@ -13,10 +13,6 @@
 
 @implementation AdjustUnity
 
-#pragma mark - Typedefs
-
-typedef void (*DelegateCallbackIdfvGetter)(const char* idfv);
-
 #pragma mark - Object lifecycle methods
 
 + (void)load {
@@ -85,35 +81,34 @@ void addValueOrEmpty(NSMutableDictionary *dictionary, NSString *key, NSObject *v
 
 extern "C"
 {
-    void _AdjustInitSdk(const char* gameObjectName,
-                        const char* appToken,
-                        const char* environment,
-                        const char* sdkPrefix,
-                        const char* defaultTracker,
-                        const char* externalDeviceId,
-                        const char* jsonUrlStrategyDomains,
-                        int allowSuppressLogLevel,
-                        int logLevel,
-                        int attConsentWaitingInterval,
-                        int eventDeduplicationIdsMaxSize,
-                        int shouldUseSubdomains,
-                        int isDataResidency,
-                        int isSendingInBackgroundEnabled,
-                        int isAdServicesEnabled,
-                        int isIdfaReadingEnabled,
-                        int isSkanAttributionEnabled,
-                        int isLinkMeEnabled,
-                        int isCostDataInAttributionEnabled,
-                        int isDeviceIdsReadingOnceEnabled,
-                        int isDeferredDeeplinkOpeningEnabled,
-                        int isAttributionCallbackImplemented,
-                        int isEventSuccessCallbackImplemented,
-                        int isEventFailureCallbackImplemented,
-                        int isSessionSuccessCallbackImplemented,
-                        int isSessionFailureCallbackImplemented,
-                        int isDeferredDeeplinkCallbackImplemented,
-                        int isSkanUpdatedCallbackImplemented) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+    void _AdjustInitSdk(
+        const char* appToken,
+        const char* environment,
+        const char* sdkPrefix,
+        const char* defaultTracker,
+        const char* externalDeviceId,
+        const char* jsonUrlStrategyDomains,
+        int allowSuppressLogLevel,
+        int logLevel,
+        int attConsentWaitingInterval,
+        int eventDeduplicationIdsMaxSize,
+        int shouldUseSubdomains,
+        int isDataResidency,
+        int isSendingInBackgroundEnabled,
+        int isAdServicesEnabled,
+        int isIdfaReadingEnabled,
+        int isSkanAttributionEnabled,
+        int isLinkMeEnabled,
+        int isCostDataInAttributionEnabled,
+        int isDeviceIdsReadingOnceEnabled,
+        int isDeferredDeeplinkOpeningEnabled,
+        AdjustDelegateAttributionCallback attributionCallback,
+        AdjustDelegateEventSuccessCallback eventSuccessCallback,
+        AdjustDelegateEventFailureCallback eventFailureCallback,
+        AdjustDelegateSessionSuccessCallback sessionSuccessCallback,
+        AdjustDelegateSessionFailureCallback sessionFailureCallback,
+        AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback,
+        AdjustDelegateSkanUpdatedCallback skanUpdatedCallback) {
         NSString *strAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *strEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
         NSString *strSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
@@ -135,23 +130,22 @@ extern "C"
         [adjustConfig setSdkPrefix:strSdkPrefix];
 
         // check if user has selected to implement any of the callbacks
-        if (isAttributionCallbackImplemented ||
-            isEventSuccessCallbackImplemented ||
-            isEventFailureCallbackImplemented ||
-            isSessionSuccessCallbackImplemented ||
-            isSessionFailureCallbackImplemented ||
-            isDeferredDeeplinkCallbackImplemented ||
-            isSkanUpdatedCallbackImplemented) {
+        if (attributionCallback != nil ||
+            sessionSuccessCallback != nil ||
+            sessionFailureCallback != nil ||
+            eventSuccessCallback != nil ||
+            eventFailureCallback != nil ||
+            deferredDeeplinkCallback != nil ||
+            skanUpdatedCallback != nil) {
             [adjustConfig setDelegate:
-                [AdjustUnityDelegate getInstanceWithSwizzleOfAttributionCallback:isAttributionCallbackImplemented
-                                                            eventSuccessCallback:isEventSuccessCallbackImplemented
-                                                            eventFailureCallback:isEventFailureCallbackImplemented
-                                                          sessionSuccessCallback:isSessionSuccessCallbackImplemented
-                                                          sessionFailureCallback:isSessionFailureCallbackImplemented
-                                                        deferredDeeplinkCallback:isDeferredDeeplinkCallbackImplemented
-                                                             skanUpdatedCallback:isSkanUpdatedCallbackImplemented
-                                                    shouldLaunchDeferredDeeplink:isDeferredDeeplinkOpeningEnabled
-                                                    andAdjustUnityGameObjectName:strGameObjectName]];
+                [AdjustUnityDelegate getInstanceWithAttributionCallback:attributionCallback
+                                                   eventSuccessCallback:eventSuccessCallback
+                                                   eventFailureCallback:eventFailureCallback
+                                                 sessionSuccessCallback:sessionSuccessCallback
+                                                 sessionFailureCallback:sessionFailureCallback
+                                               deferredDeeplinkCallback:deferredDeeplinkCallback
+                                                    skanUpdatedCallback:skanUpdatedCallback
+                                           shouldLaunchDeferredDeeplink:isDeferredDeeplinkOpeningEnabled]];
         }
 
         // log level
@@ -342,16 +336,6 @@ extern "C"
         [Adjust disableCoppaCompliance];
     }
 
-    void _AdjustIsEnabled(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        [Adjust isEnabledWithCompletionHandler:^(BOOL isEnabled) {
-            NSString *strIsEnabled = isEnabled ? @"true" : @"false";
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustIsEnabledGetter",
-                             [strIsEnabled UTF8String]);
-        }];
-    }
-
     void _AdjustSwitchToOfflineMode() {
         [Adjust switchToOfflineMode];
     }
@@ -384,50 +368,14 @@ extern "C"
         }
     }
 
-    void _AdjustGetIdfa(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        [Adjust idfaWithCompletionHandler:^(NSString * _Nullable idfa) {
-            // TODO: nil checks
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustIdfaGetter",
-                             [idfa UTF8String]);
+    void _AdjustIsEnabled(AdjustDelegateIsEnabledGetter callback) {
+        [Adjust isEnabledWithCompletionHandler:^(BOOL isEnabled) {
+            NSString *strIsEnabled = isEnabled ? @"true" : @"false";
+            callback(isEnabled);
         }];
     }
 
-    // void _AdjustGetIdfv(DelegateCallbackIdfvGetter callback) {
-    void _AdjustGetIdfv(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        [Adjust idfvWithCompletionHandler:^(NSString * _Nullable idfv) {
-            // TODO: nil checks
-            // callback([idfv UTF8String]);
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustIdfvGetter",
-                             [idfv UTF8String]);
-        }];
-    }
-
-    void _AdjustGetAdid(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        [Adjust adidWithCompletionHandler:^(NSString * _Nullable adid) {
-            // TODO: nil checks
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustAdidGetter",
-                             [adid UTF8String]);
-        }];
-    }
-
-    void _AdjustGetSdkVersion(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        [Adjust sdkVersionWithCompletionHandler:^(NSString * _Nullable sdkVersion) {
-            // TODO: nil checks
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustSdkVersionGetter",
-                             [sdkVersion UTF8String]);
-        }];
-    }
-
-    void _AdjustGetAttribution(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+    void _AdjustGetAttribution(AdjustDelegateAttributionGetter callback) {
         [Adjust attributionWithCompletionHandler:^(ADJAttribution * _Nullable attribution) {
             // TODO: nil checks
             NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
@@ -448,9 +396,43 @@ extern "C"
                                                                    length:[dataAttribution length]
                                                                  encoding:NSUTF8StringEncoding];
             const char* attributionCString = [stringAttribution UTF8String];
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustAttributionGetter",
-                             attributionCString);
+            callback(attributionCString);
+        }];
+    }
+
+    void _AdjustGetAdid(AdjustDelegateAdidGetter callback) {
+        [Adjust adidWithCompletionHandler:^(NSString * _Nullable adid) {
+            // TODO: nil checks
+            callback([adid UTF8String]);
+        }];
+    }
+
+    void _AdjustGetIdfa(AdjustDelegateIdfaGetter callback) {
+        [Adjust idfaWithCompletionHandler:^(NSString * _Nullable idfa) {
+            // TODO: nil checks
+            callback([idfa UTF8String]);
+        }];
+    }
+
+    void _AdjustGetIdfv(AdjustDelegateIdfvGetter callback) {
+        [Adjust idfvWithCompletionHandler:^(NSString * _Nullable idfv) {
+            // TODO: nil checks
+            callback([idfv UTF8String]);
+        }];
+    }
+
+    void _AdjustGetLastDeeplink(AdjustDelegateLastDeeplinkGetter callback) {
+        [Adjust lastDeeplinkWithCompletionHandler:^(NSURL * _Nullable lastDeeplink) {
+            // TODO: nil checks
+            NSString *strLastDeeplink = [lastDeeplink absoluteString];
+            callback([strLastDeeplink UTF8String]);
+        }];
+    }
+
+    void _AdjustGetSdkVersion(AdjustDelegateSdkVersionGetter callback) {
+        [Adjust sdkVersionWithCompletionHandler:^(NSString * _Nullable sdkVersion) {
+            // TODO: nil checks
+            callback([sdkVersion UTF8String]);
         }];
     }
 
@@ -652,44 +634,25 @@ extern "C"
 
         NSArray *arrayGranularOptions = convertArrayParameters(jsonGranularOptions);
         if (arrayGranularOptions != nil) {
-            NSUInteger count = [arrayGranularOptions count];
-            for (int i = 0; i < count;) {
+            for (int i = 0; i < [arrayGranularOptions count];) {
                 NSString *partnerName = arrayGranularOptions[i++];
-                NSString *granularOptions = arrayGranularOptions[i++];
-                // granularOptions is now NSString which pretty much contains array of partner key-value pairs
-                if (granularOptions != nil) {
-                    NSData *dataJson = [granularOptions dataUsingEncoding:NSUTF8StringEncoding];
-                    NSArray *partnerGranularOptions = [NSJSONSerialization JSONObjectWithData:dataJson options:0 error:nil];
-                    if (partnerGranularOptions != nil) {
-                        // in here we have partner and key-value pair for it
-                        for (int j = 0; j < [partnerGranularOptions count];) {
-                            [adjustThirdPartySharing addGranularOption:partnerName
-                                                                   key:partnerGranularOptions[j++]
-                                                                 value:partnerGranularOptions[j++]];
-                        }
-                    }
-                }
+                NSString *key = arrayGranularOptions[i++];
+                NSString *value = arrayGranularOptions[i++];
+                [adjustThirdPartySharing addGranularOption:partnerName
+                                                       key:key
+                                                     value:value];
             }
         }
+
         NSArray *arrayPartnerSharingSettings = convertArrayParameters(jsonPartnerSharingSettings);
         if (arrayPartnerSharingSettings != nil) {
-            NSUInteger count = [arrayPartnerSharingSettings count];
-            for (int i = 0; i < count;) {
+            for (int i = 0; i < [arrayPartnerSharingSettings count];) {
                 NSString *partnerName = arrayPartnerSharingSettings[i++];
-                NSString *sharingSettings = arrayPartnerSharingSettings[i++];
-                // sharingSettings is now NSString which pretty much contains array of partner key-value pairs
-                if (sharingSettings != nil) {
-                    NSData *dataJson = [sharingSettings dataUsingEncoding:NSUTF8StringEncoding];
-                    NSArray *partnerSharingSettings = [NSJSONSerialization JSONObjectWithData:dataJson options:0 error:nil];
-                    if (partnerSharingSettings != nil) {
-                        // in here we have partner and key-value pair for it
-                        for (int j = 0; j < [partnerSharingSettings count];) {
-                            [adjustThirdPartySharing addPartnerSharingSetting:partnerName
-                                                                          key:partnerSharingSettings[j++]
-                                                                        value:[partnerSharingSettings[j++] boolValue]];
-                        }
-                    }
-                }
+                NSString *key = arrayPartnerSharingSettings[i++];
+                NSString *value = arrayPartnerSharingSettings[i++];
+                [adjustThirdPartySharing addPartnerSharingSetting:partnerName
+                                                              key:key
+                                                            value:[value boolValue]];
             }
         }
 
@@ -701,27 +664,16 @@ extern "C"
         [Adjust trackMeasurementConsent:bEnabled];
     }
 
-    void _AdjustRequestAppTrackingAuthorizationWithCompletionHandler(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        if (strGameObjectName == nil) {
-            return;
-        }
-
+    void _AdjustRequestAppTrackingAuthorization(AdjustDelegateAttCallback callback) {
         [Adjust requestAppTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {
-            NSString *stringStatus = [NSString stringWithFormat:@"%tu", status];
-            const char* charStatus = [stringStatus UTF8String];
-            UnitySendMessage([stringStatus UTF8String],
-                             "UnityAdjustAttDialogCallback",
-                             charStatus);
+            callback((int)status);
         }];
     }
 
     void _AdjustUpdateSkanConversionValue(int conversionValue,
                                           const char* coarseValue,
                                           int lockWindow,
-                                          const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-
+                                          AdjustDelegateSkanErrorCallback callback) {
         if (coarseValue != NULL) {
             NSString *strCoarseValue = [NSString stringWithUTF8String:coarseValue];
             BOOL bLockWindow = (BOOL)lockWindow;
@@ -729,16 +681,10 @@ extern "C"
                                   coarseValue:strCoarseValue
                                    lockWindow:[NSNumber numberWithBool:bLockWindow]
                         withCompletionHandler:^(NSError * _Nullable error) {
-                if (strGameObjectName == nil) {
-                    return;
-                }
-
                 // TODO: nil checks
                 NSString *errorString = [error localizedDescription];
                 const char* errorChar = [errorString UTF8String];
-                UnitySendMessage([strGameObjectName UTF8String],
-                                 "UnityAdjustSkanErrorCallback",
-                                 errorChar);
+                callback(errorChar);
             }];
         }
     }
@@ -747,30 +693,10 @@ extern "C"
         return [Adjust appTrackingAuthorizationStatus];
     }
 
-    void _AdjustGetLastDeeplink(const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        if (strGameObjectName == nil) {
-            return;
-        }
-
-        [Adjust lastDeeplinkWithCompletionHandler:^(NSURL * _Nullable lastDeeplink) {
-            // TODO: nil checks
-            NSString *strLastDeeplink = [lastDeeplink absoluteString];
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustLastDeeplinkGetter",
-                             [strLastDeeplink UTF8String]);
-        }];
-    }
-
     void _AdjustVerifyAppStorePurchase(const char* transactionId,
                                        const char* productId,
                                        const char* receipt,
-                                       const char* gameObjectName) {
-        NSString *strGameObjectName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
-        if (strGameObjectName == nil) {
-            return;
-        }
-
+                                       AdjustDelegatePurchaseVerificationCallback callback) {
         NSString *strTransactionId;
         NSString *strProductId;
         NSData *dataReceipt;
@@ -813,14 +739,11 @@ extern "C"
                                                                      length:[dataVerificationInfo length]
                                                                    encoding:NSUTF8StringEncoding];
             const char* verificationInfoCString = [strVerificationInfo UTF8String];
-            UnitySendMessage([strGameObjectName UTF8String],
-                             "UnityAdjustPurchaseVerificationCallback",
-                             verificationInfoCString);
+            callback(verificationInfoCString);
         }];
     }
 
-    void _AdjustProcessAndResolveDeeplink(const char* deeplink, const char* gameObjectName) {
-        NSString *strSceneName = isStringValid(gameObjectName) == true ? [NSString stringWithUTF8String:gameObjectName] : nil;
+    void _AdjustProcessAndResolveDeeplink(const char* deeplink, AdjustDelegateResolvedDeeplinkCallback callback) {
         if (deeplink != NULL) {
             NSString *strDeeplink = [NSString stringWithUTF8String:deeplink];
             NSURL *urlDeeplink;
@@ -836,9 +759,7 @@ extern "C"
             [Adjust processAndResolveDeeplink:urlDeeplink withCompletionHandler:^(NSString * _Nullable resolvedLink) {
                 // TODO: nil checks
                 const char* resolvedLinkCString = [resolvedLink UTF8String];
-                UnitySendMessage([strSceneName UTF8String],
-                                 "UnityAdjustResolvedDeeplinkCallback",
-                                 resolvedLinkCString);
+                callback(resolvedLinkCString);
             }];
         }
     }

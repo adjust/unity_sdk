@@ -27,14 +27,7 @@ public class ExampleGUI : MonoBehaviour
             if (!string.Equals(txtManualLaunch, "SDK Launched", StringComparison.OrdinalIgnoreCase))
             {
                 AdjustConfig adjustConfig = new AdjustConfig("2fm9gkqubvpc", AdjustEnvironment.Sandbox);
-                adjustConfig.SetLogLevel(AdjustLogLevel.Verbose);
-                // adjustConfig.setLogDelegate(msg => Debug.Log(msg));
-                // adjustConfig.setEventSuccessDelegate(EventSuccessCallback);
-                // adjustConfig.setEventFailureDelegate(EventFailureCallback);
-                // adjustConfig.setSessionSuccessDelegate(SessionSuccessCallback);
-                // adjustConfig.setSessionFailureDelegate(SessionFailureCallback);
-                // adjustConfig.setDeferredDeeplinkDelegate(DeferredDeeplinkCallback);
-                // adjustConfig.setAttributionChangedDelegate(AttributionChangedCallback);
+                adjustConfig.LogLevel = AdjustLogLevel.Verbose;
                 Adjust.InitSdk(adjustConfig);
 
                 isEnabled = true;
@@ -132,33 +125,33 @@ public class ExampleGUI : MonoBehaviour
     {
         Debug.Log("Attribution changed!");
 
-        if (attributionData.trackerName != null)
+        if (attributionData.TrackerName != null)
         {
-            Debug.Log("Tracker name: " + attributionData.trackerName);
+            Debug.Log("Tracker name: " + attributionData.TrackerName);
         }
-        if (attributionData.trackerToken != null)
+        if (attributionData.TrackerToken != null)
         {
-            Debug.Log("Tracker token: " + attributionData.trackerToken);
+            Debug.Log("Tracker token: " + attributionData.TrackerToken);
         }
-        if (attributionData.network != null)
+        if (attributionData.Network != null)
         {
-            Debug.Log("Network: " + attributionData.network);
+            Debug.Log("Network: " + attributionData.Network);
         }
-        if (attributionData.campaign != null)
+        if (attributionData.Campaign != null)
         {
-            Debug.Log("Campaign: " + attributionData.campaign);
+            Debug.Log("Campaign: " + attributionData.Campaign);
         }
-        if (attributionData.adgroup != null)
+        if (attributionData.Adgroup != null)
         {
-            Debug.Log("Adgroup: " + attributionData.adgroup);
+            Debug.Log("Adgroup: " + attributionData.Adgroup);
         }
-        if (attributionData.creative != null)
+        if (attributionData.Creative != null)
         {
-            Debug.Log("Creative: " + attributionData.creative);
+            Debug.Log("Creative: " + attributionData.Creative);
         }
-        if (attributionData.clickLabel != null)
+        if (attributionData.ClickLabel != null)
         {
-            Debug.Log("Click label: " + attributionData.clickLabel);
+            Debug.Log("Click label: " + attributionData.ClickLabel);
         }
     }
 
@@ -188,7 +181,7 @@ public class ExampleGUI : MonoBehaviour
         }
         if (eventSuccessData.JsonResponse != null)
         {
-            Debug.Log("JsonResponse: " + eventSuccessData.GetJsonResponse());
+            Debug.Log("JsonResponse: " + eventSuccessData.GetJsonResponseAsString());
         }
     }
 
@@ -218,7 +211,7 @@ public class ExampleGUI : MonoBehaviour
         }
         if (eventFailureData.JsonResponse != null)
         {
-            Debug.Log("JsonResponse: " + eventFailureData.GetJsonResponse());
+            Debug.Log("JsonResponse: " + eventFailureData.GetJsonResponseAsString());
         }
 
         Debug.Log("WillRetry: " + eventFailureData.WillRetry.ToString());
@@ -242,7 +235,7 @@ public class ExampleGUI : MonoBehaviour
         }
         if (sessionSuccessData.JsonResponse != null)
         {
-            Debug.Log("JsonResponse: " + sessionSuccessData.GetJsonResponse());
+            Debug.Log("JsonResponse: " + sessionSuccessData.GetJsonResponseAsString());
         }
     }
 
@@ -264,7 +257,7 @@ public class ExampleGUI : MonoBehaviour
         }
         if (sessionFailureData.JsonResponse != null)
         {
-            Debug.Log("JsonResponse: " + sessionFailureData.GetJsonResponse());
+            Debug.Log("JsonResponse: " + sessionFailureData.GetJsonResponseAsString());
         }
 
         Debug.Log("WillRetry: " + sessionFailureData.WillRetry.ToString());

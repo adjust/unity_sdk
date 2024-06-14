@@ -5,18 +5,18 @@ namespace com.adjust.sdk
 {
     public class AdjustAttribution
     {
-        public string network { get; set; }
-        public string adgroup { get; set; }
-        public string campaign { get; set; }
-        public string creative { get; set; }
-        public string clickLabel { get; set; }
-        public string trackerName { get; set; }
-        public string trackerToken { get; set; }
-        public string costType { get; set; }
-        public double? costAmount { get; set; }
-        public string costCurrency { get; set; }
+        public string TrackerToken { get; set; }
+        public string TrackerName { get; set; }
+        public string Network { get; set; }
+        public string Campaign { get; set; }
+        public string Adgroup { get; set; }
+        public string Creative { get; set; }
+        public string ClickLabel { get; set; }
+        public string CostType { get; set; }
+        public double? CostAmount { get; set; }
+        public string CostCurrency { get; set; }
         // Android only
-        public string fbInstallReferrer { get; set; }
+        public string FbInstallReferrer { get; set; }
 
         public AdjustAttribution() {}
 
@@ -28,26 +28,27 @@ namespace com.adjust.sdk
                 return;
             }
 
-            trackerName = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTrackerName);
-            trackerToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTrackerToken);
-            network = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyNetwork);
-            campaign = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCampaign);
-            adgroup = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdgroup);
-            creative = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCreative);
-            clickLabel = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyClickLabel);
-            costType = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostType);
+            this.TrackerName = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTrackerName);
+            this.TrackerToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTrackerToken);
+            this.Network = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyNetwork);
+            this.Campaign = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCampaign);
+            this.Adgroup = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdgroup);
+            this.Creative = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCreative);
+            this.ClickLabel = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyClickLabel);
+            this.CostType = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostType);
             try
             {
-                costAmount = double.Parse(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostAmount),
-                System.Globalization.CultureInfo.InvariantCulture);
+                this.CostAmount = double.Parse(
+                    AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostAmount),
+                    System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (Exception)
             {
                 // attribution response doesn't contain cost amount attached
                 // value will default to null
             }
-            costCurrency = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostCurrency);
-            fbInstallReferrer = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyFbInstallReferrer);
+            this.CostCurrency = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostCurrency);
+            this.FbInstallReferrer = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyFbInstallReferrer);
         }
 
         public AdjustAttribution(Dictionary<string, string> dicAttributionData)
@@ -57,26 +58,27 @@ namespace com.adjust.sdk
                 return;
             }
 
-            trackerName = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerName);
-            trackerToken = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerToken);
-            network = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyNetwork);
-            campaign = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCampaign);
-            adgroup = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdgroup);
-            creative = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCreative);
-            clickLabel = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
-            costType = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostType);
+            this.TrackerName = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerName);
+            this.TrackerToken = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyTrackerToken);
+            this.Network = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyNetwork);
+            this.Campaign = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCampaign);
+            this.Adgroup = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyAdgroup);
+            this.Creative = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCreative);
+            this.ClickLabel = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyClickLabel);
+            this.CostType = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostType);
             try
             {
-                costAmount = double.Parse(AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostAmount),
-                System.Globalization.CultureInfo.InvariantCulture);
+                this.CostAmount = double.Parse(
+                    AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostAmount),
+                    System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (Exception)
             {
                 // attribution response doesn't contain cost amount attached
                 // value will default to null
             }
-            costCurrency = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostCurrency);
-            fbInstallReferrer = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyFbInstallReferrer);
+            this.CostCurrency = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyCostCurrency);
+            this.FbInstallReferrer = AdjustUtils.TryGetValue(dicAttributionData, AdjustUtils.KeyFbInstallReferrer);
         }
     }
 }

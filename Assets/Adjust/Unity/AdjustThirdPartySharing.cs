@@ -1,65 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace com.adjust.sdk
 {
     public class AdjustThirdPartySharing
     {
-        internal bool? isEnabled;
-        internal Dictionary<string, List<string>> granularOptions;
-        internal Dictionary<string, List<string>> partnerSharingSettings;
+        private List<string> innerGranularOptions;
+        private List<string> innerPartnerSharingSettings;
+
+        public bool? IsEnabled { get; private set; }
+        public ReadOnlyCollection<string> GranularOptions
+        {
+            get
+            {
+                if (innerGranularOptions == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerGranularOptions.AsReadOnly();
+                }
+            }
+        }
+        public ReadOnlyCollection<string> PartnerSharingSettings
+        {
+            get
+            {
+                if (innerPartnerSharingSettings == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerPartnerSharingSettings.AsReadOnly();
+                }
+            }
+        }
 
         public AdjustThirdPartySharing(bool? isEnabled)
         {
-            this.isEnabled = isEnabled;
-            this.granularOptions = new Dictionary<string, List<string>>();
-            this.partnerSharingSettings = new Dictionary<string, List<string>>();
+            this.IsEnabled = isEnabled;
         }
 
         public void AddGranularOption(string partnerName, string key, string value)
         {
-            // TODO: consider to add some logs about the error case
-            if (partnerName == null || key == null || value == null)
+            if (this.innerGranularOptions == null)
             {
-                return;
+                this.innerGranularOptions = new List<string>();
             }
-
-            List<string> partnerOptions;
-            if (granularOptions.ContainsKey(partnerName))
-            {
-                partnerOptions = granularOptions[partnerName];
-            }
-            else
-            {
-                partnerOptions = new List<string>();
-                granularOptions.Add(partnerName, partnerOptions);
-            }
-
-            partnerOptions.Add(key);
-            partnerOptions.Add(value);
+            this.innerGranularOptions.Add(partnerName);
+            this.innerGranularOptions.Add(key);
+            this.innerGranularOptions.Add(value);
         }
 
         public void AddPartnerSharingSetting(string partnerName, string key, bool value)
         {
-            // TODO: consider to add some logs about the error case
-            if (partnerName == null || key == null)
+            if (this.innerPartnerSharingSettings == null)
             {
-                return;
+                this.innerPartnerSharingSettings = new List<string>();
             }
-
-            List<string> partnerSharingSetting;
-            if (partnerSharingSettings.ContainsKey(partnerName))
-            {
-                partnerSharingSetting = partnerSharingSettings[partnerName];
-            }
-            else
-            {
-                partnerSharingSetting = new List<string>();
-                partnerSharingSettings.Add(partnerName, partnerSharingSetting);
-            }
-
-            partnerSharingSetting.Add(key);
-            partnerSharingSetting.Add(value.ToString());
+            this.innerPartnerSharingSettings.Add(partnerName);
+            this.innerPartnerSharingSettings.Add(key);
+            this.innerPartnerSharingSettings.Add(value.ToString());
         }
     }
 }

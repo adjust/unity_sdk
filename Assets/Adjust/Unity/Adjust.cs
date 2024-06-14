@@ -49,30 +49,6 @@ namespace com.adjust.sdk
         [HideInInspector]
         public bool skanAttribution = true;
 
-#if UNITY_IOS
-        // subscriptions
-        private static Action<AdjustAttribution> attributionChangedDelegate = null;
-        private static Action<AdjustSessionSuccess> sessionSuccessDelegate = null;
-        private static Action<AdjustSessionFailure> sessionFailureDelegate = null;
-        private static Action<AdjustEventSuccess> eventSuccessDelegate = null;
-        private static Action<AdjustEventFailure> eventFailureDelegate = null;
-        private static Action<string> deferredDeeplinkDelegate = null;
-        private static Action<Dictionary<string, string>> skanUpdatedDelegate = null;
-
-        // callbacks as method parameters
-        private static List<Action<int>> authorizationStatusDelegates = null;
-        private static Action<AdjustPurchaseVerificationInfo> verificationInfoDelegate = null;
-        private static Action<string> deeplinkResolutionDelegate = null;
-        private static Action<string> skanErrorDelegate = null;
-        private static Action<bool> getIsEnabledDelegate = null;
-        private static Action<AdjustAttribution> getAttributionDelegate = null;
-        private static Action<string> getAdidDelegate = null;
-        private static Action<string> getIdfaDelegate = null;
-        private static Action<string> getIdfvDelegate = null;
-        private static Action<string> getSdkVersionDelegate = null;
-        private static Action<string> getLastDeeplinkDelegate = null;
-#endif
-
         void Awake()
         {
             if (IsEditor())
@@ -98,42 +74,18 @@ namespace com.adjust.sdk
                     this.appToken,
                     this.environment,
                     (this.logLevel == AdjustLogLevel.Suppress));
-                adjustConfig.SetLogLevel(this.logLevel);
-                if (this.sendInBackground == true)
-                {
-                    adjustConfig.EnableSendingInBackground();
-                }
-                if (this.launchDeferredDeeplink == false)
-                {
-                    adjustConfig.DisableDeferredDeeplinkOpening();
-                }
-                adjustConfig.SetDefaultTracker(this.defaultTracker);
+                adjustConfig.LogLevel = this.logLevel;
+                adjustConfig.IsSendingInBackgroundEnabled = this.sendInBackground;
+                adjustConfig.IsDeferredDeeplinkOpeningEnabled = this.launchDeferredDeeplink;
+                adjustConfig.DefaultTracker = this.defaultTracker;
                 // TODO: URL strategy
-                if (this.costDataInAttribution == true)
-                {
-                    adjustConfig.EnableCostDataInAttribution();
-                }
-                if (this.preinstallTracking == true)
-                {
-                    adjustConfig.EnablePreinstallTracking();
-                }
-                adjustConfig.SetPreinstallFilePath(this.preinstallFilePath);
-                if (this.adServices == false)
-                {
-                    adjustConfig.DisableAdServices();
-                }
-                if (this.idfaReading == false)
-                {
-                    adjustConfig.DisableIdfaReading();
-                }
-                if (this.linkMe == true)
-                {
-                    adjustConfig.EnableLinkMe();
-                }
-                if (this.skanAttribution == false)
-                {
-                    adjustConfig.DisableSkanAttribution();
-                }
+                adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
+                adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
+                adjustConfig.PreinstallFilePath = this.preinstallFilePath;
+                adjustConfig.IsAdServicesEnabled = this.adServices;
+                adjustConfig.IsIdfaReadingEnabled = this.idfaReading;
+                adjustConfig.IsLinkMeEnabled = this.linkMe;
+                adjustConfig.IsSkanAttributionEnabled = this.skanAttribution;
                 Adjust.InitSdk(adjustConfig);
             }
         }
@@ -152,13 +104,6 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.eventSuccessDelegate = adjustConfig.GetEventSuccessDelegate();
-            Adjust.eventFailureDelegate = adjustConfig.GetEventFailureDelegate();
-            Adjust.sessionSuccessDelegate = adjustConfig.GetSessionSuccessDelegate();
-            Adjust.sessionFailureDelegate = adjustConfig.GetSessionFailureDelegate();
-            Adjust.deferredDeeplinkDelegate = adjustConfig.GetDeferredDeeplinkDelegate();
-            Adjust.attributionChangedDelegate = adjustConfig.GetAttributionChangedDelegate();
-            Adjust.skanUpdatedDelegate = adjustConfig.GetSkanUpdatedDelegate();
             AdjustiOS.InitSdk(adjustConfig);
 #elif UNITY_ANDROID
             AdjustAndroid.InitSdk(adjustConfig);
@@ -292,7 +237,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void IsEnabled(Action<bool> callback, string gameObjectName = "Adjust")
+        public static void IsEnabled(Action<bool> callback)
         {
             if (IsEditor())
             {
@@ -300,8 +245,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.getIsEnabledDelegate = callback;
-            AdjustiOS.IsEnabled(gameObjectName);
+            AdjustiOS.IsEnabled(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.IsEnabled(callback);
 #elif (UNITY_WSA || UNITY_WP8)
@@ -600,9 +544,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void RequestAppTrackingAuthorizationWithCompletionHandler(
-            Action<int> callback,
-            string gameObjectName = "Adjust")
+        public static void RequestAppTrackingAuthorization(Action<int> callback)
         {
             if (IsEditor())
             {
@@ -610,12 +552,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            if (Adjust.authorizationStatusDelegates == null)
-            {
-                Adjust.authorizationStatusDelegates = new List<Action<int>>();
-            }
-            Adjust.authorizationStatusDelegates.Add(callback);
-            AdjustiOS.RequestAppTrackingAuthorizationWithCompletionHandler(gameObjectName);
+            AdjustiOS.RequestAppTrackingAuthorization(callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Requesting tracking authorization is only supported for iOS platform.");
 #elif (UNITY_WSA || UNITY_WP8)
@@ -629,8 +566,7 @@ namespace com.adjust.sdk
             int conversionValue,
             string coarseValue,
             bool lockWindow,
-            Action<string> callback,
-            string gameObjectName = "Adjust")
+            Action<string> callback)
         {
             if (IsEditor())
             {
@@ -638,8 +574,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.skanErrorDelegate = callback;
-            AdjustiOS.UpdateSkanConversionValue(conversionValue, coarseValue, lockWindow, gameObjectName);
+            AdjustiOS.UpdateSkanConversionValue(conversionValue, coarseValue, lockWindow, callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Updating SKAdNetwork conversion value is only supported for iOS platform.");
 #elif (UNITY_WSA || UNITY_WP8)
@@ -670,7 +605,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void GetAdid(Action<string> callback, string gameObjectName = "Adjust")
+        public static void GetAdid(Action<string> callback)
         {
             if (IsEditor())
             {
@@ -678,8 +613,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.getIdfaDelegate = callback;
-            AdjustiOS.GetAdid(gameObjectName);
+            AdjustiOS.GetAdid(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.GetAdid(callback);
 #elif (UNITY_WSA || UNITY_WP8)
@@ -690,9 +624,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void GetAttribution(
-            Action<AdjustAttribution> callback,
-            string gameObjectName = "Adjust")
+        public static void GetAttribution(Action<AdjustAttribution> callback)
         {
             if (IsEditor())
             {
@@ -700,8 +632,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.getAttributionDelegate = callback;
-            AdjustiOS.GetAttribution(gameObjectName);
+            AdjustiOS.GetAttribution(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.GetAttribution(callback);
 #elif (UNITY_WSA || UNITY_WP8)
@@ -733,7 +664,7 @@ namespace com.adjust.sdk
 // #endif
 //         }
 
-        public static void GetIdfa(Action<string> callback, string gameObjectName = "Adjust")
+        public static void GetIdfa(Action<string> callback)
         {
             if (IsEditor())
             {
@@ -741,8 +672,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.getIdfaDelegate = callback;
-            AdjustiOS.GetIdfa(gameObjectName);
+            AdjustiOS.GetIdfa(callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFA is not available on Android platform.");
             return;
@@ -755,7 +685,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void GetIdfv(Action<string> callback, string gameObjectName = "Adjust")
+        public static void GetIdfv(Action<string> callback)
         {
             if (IsEditor())
             {
@@ -763,8 +693,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.getIdfvDelegate = callback;
-            AdjustiOS.GetIdfv(gameObjectName);
+            AdjustiOS.GetIdfv(callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFV is not available on Android platform.");
             return;
@@ -777,7 +706,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void GetSdkVersion(Action<string> callback, string gameObjectName = "Adjust")
+        public static void GetSdkVersion(Action<string> callback)
         {
             if (IsEditor())
             {
@@ -785,8 +714,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.getSdkVersionDelegate = callback;
-            AdjustiOS.GetSdkVersion(gameObjectName);
+            AdjustiOS.GetSdkVersion(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.GetSdkVersion(callback);
 #elif (UNITY_WSA || UNITY_WP8)
@@ -797,7 +725,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void GetLastDeeplink(Action<string> callback, string gameObjectName = "Adjust")
+        public static void GetLastDeeplink(Action<string> callback)
         {
             if (IsEditor())
             {
@@ -805,8 +733,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.getLastDeeplinkDelegate = callback;
-            AdjustiOS.GetLastDeeplink(gameObjectName);
+            AdjustiOS.GetLastDeeplink(callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Android platform.");
             return;
@@ -821,8 +748,7 @@ namespace com.adjust.sdk
 
         public static void VerifyAppStorePurchase(
             AdjustAppStorePurchase purchase,
-            Action<AdjustPurchaseVerificationInfo> verificationInfoDelegate,
-            string gameObjectName = "Adjust")
+            Action<AdjustPurchaseVerificationInfo> callback)
         {
             if (IsEditor())
             {
@@ -830,17 +756,7 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            if (purchase == null ||
-                purchase.transactionId == null ||
-                purchase.productId == null ||
-                purchase.receipt == null)
-            {
-                Debug.Log("[Adjust]: Invalid App Store purchase parameters.");
-                return;
-            }
-
-            Adjust.verificationInfoDelegate = verificationInfoDelegate;
-            AdjustiOS.VerifyAppStorePurchase(purchase, gameObjectName);
+            AdjustiOS.VerifyAppStorePurchase(purchase, callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
 #elif (UNITY_WSA || UNITY_WP8)
@@ -863,8 +779,8 @@ namespace com.adjust.sdk
             Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
 #elif UNITY_ANDROID
             if (purchase == null ||
-                purchase.productId == null ||
-                purchase.purchaseToken == null)
+                purchase.ProductId == null ||
+                purchase.PurchaseToken == null)
             {
                 Debug.Log("[Adjust]: Invalid Play Store purchase parameters.");
                 return;
@@ -878,10 +794,7 @@ namespace com.adjust.sdk
 #endif
         }
 
-        public static void ProcessAndResolveDeeplink(
-            string deeplink,
-            Action<string> resolvedDeeplinkCallback,
-            string gameObjectName = "Adjust")
+        public static void ProcessAndResolveDeeplink(string deeplink, Action<string> callback)
         {
             if (IsEditor())
             {
@@ -889,317 +802,15 @@ namespace com.adjust.sdk
             }
 
 #if UNITY_IOS
-            Adjust.deeplinkResolutionDelegate = resolvedDeeplinkCallback;
-            AdjustiOS.ProcessAndResolveDeeplink(deeplink, gameObjectName);
+            AdjustiOS.ProcessAndResolveDeeplink(deeplink, callback);
 #elif UNITY_ANDROID
-            AdjustAndroid.ProcessAndResolveDeeplink(deeplink, resolvedDeeplinkCallback);
+            AdjustAndroid.ProcessAndResolveDeeplink(deeplink, callback);
 #elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: Deep link processing is only supported for Android and iOS platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
         }
-
-#if UNITY_IOS
-        public void UnityAdjustAttributionCallback(string attributionData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.attributionChangedDelegate == null)
-            {
-                Debug.Log("[Adjust]: Attribution changed delegate was not set.");
-                return;
-            }
-
-            var attribution = new AdjustAttribution(attributionData);
-            Adjust.attributionChangedDelegate(attribution);
-        }
-
-        public void UnityAdjustEventSuccessCallback(string eventSuccessData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.eventSuccessDelegate == null)
-            {
-                Debug.Log("[Adjust]: Event success delegate was not set.");
-                return;
-            }
-
-            var eventSuccess = new AdjustEventSuccess(eventSuccessData);
-            Adjust.eventSuccessDelegate(eventSuccess);
-        }
-
-        public void UnityAdjustEventFailureCallback(string eventFailureData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.eventFailureDelegate == null)
-            {
-                Debug.Log("[Adjust]: Event failure delegate was not set.");
-                return;
-            }
-
-            var eventFailure = new AdjustEventFailure(eventFailureData);
-            Adjust.eventFailureDelegate(eventFailure);
-        }
-
-        public void UnityAdjustSessionSuccessCallback(string sessionSuccessData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.sessionSuccessDelegate == null)
-            {
-                Debug.Log("[Adjust]: Session success delegate was not set.");
-                return;
-            }
-
-            var sessionSuccess = new AdjustSessionSuccess(sessionSuccessData);
-            Adjust.sessionSuccessDelegate(sessionSuccess);
-        }
-
-        public void UnityAdjustSessionFailureCallback(string sessionFailureData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.sessionFailureDelegate == null)
-            {
-                Debug.Log("[Adjust]: Session failure delegate was not set.");
-                return;
-            }
-
-            var sessionFailure = new AdjustSessionFailure(sessionFailureData);
-            Adjust.sessionFailureDelegate(sessionFailure);
-        }
-
-        public void UnityAdjustDeferredDeeplinkCallback(string deeplinkURL)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.deferredDeeplinkDelegate == null)
-            {
-                Debug.Log("[Adjust]: Deferred deeplink delegate was not set.");
-                return;
-            }
-
-            Adjust.deferredDeeplinkDelegate(deeplinkURL);
-        }
-
-        public void UnityAdjustSkanUpdatedCallback(string skanUpdateData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.skanUpdatedDelegate == null)
-            {
-                Debug.Log("[Adjust]: SKAN update delegate was not set.");
-                return;
-            }
-
-            Adjust.skanUpdatedDelegate(AdjustUtils.GetSkanUpdateDataDictionary(skanUpdateData));
-        }
-
-        public void UnityAdjustAttDialogCallback(string authorizationStatus)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.authorizationStatusDelegates == null)
-            {
-                Debug.Log("[Adjust]: Authorization status delegates were not set.");
-                return;
-            }
-
-            foreach (Action<int> callback in Adjust.authorizationStatusDelegates)
-            {
-                callback(Int16.Parse(authorizationStatus));
-            }
-            Adjust.authorizationStatusDelegates.Clear();
-        }
-
-        public void UnityAdjustPurchaseVerificationCallback(string verificationInfoData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.verificationInfoDelegate == null)
-            {
-                Debug.Log("[Adjust]: Purchase verification info delegate was not set.");
-                return;
-            }
-
-            var verificationInfo = new AdjustPurchaseVerificationInfo(verificationInfoData);
-            Adjust.verificationInfoDelegate(verificationInfo);
-        }
-
-        public void UnityAdjustResolvedDeeplinkCallback(string resolvedLink)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.deeplinkResolutionDelegate == null)
-            {
-                Debug.Log("[Adjust]: Deep link reoslution delegate was not set.");
-                return;
-            }
-
-            Adjust.deeplinkResolutionDelegate(resolvedLink);
-        }
-
-        public void UnityAdjustSkanErrorCallback(string skanError)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.skanErrorDelegate == null)
-            {
-                Debug.Log("[Adjust]: SKAN error delegate was not set.");
-                return;
-            }
-
-            Adjust.skanErrorDelegate(skanError);
-        }
-
-        public void UnityAdjustIsEnabledGetter(string isEnabled)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.getIsEnabledDelegate == null)
-            {
-                Debug.Log("[Adjust]: Is enabled delegate was not set.");
-                return;
-            }
-
-            Adjust.getIsEnabledDelegate(bool.Parse(isEnabled));
-        }
-
-        public void UnityAdjustAttributionGetter(string attributionData)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.getAttributionDelegate == null)
-            {
-                Debug.Log("[Adjust]: Attribution delegate was not set.");
-                return;
-            }
-
-            var attribution = new AdjustAttribution(attributionData);
-            Adjust.getAttributionDelegate(attribution);
-        }
-
-        public void UnityAdjustAdidGetter(string adid)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.getAdidDelegate == null)
-            {
-                Debug.Log("[Adjust]: Adid delegate was not set.");
-                return;
-            }
-
-            Adjust.getAdidDelegate(adid);
-        }
-
-        public void UnityAdjustIdfaGetter(string idfa)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.getIdfaDelegate == null)
-            {
-                Debug.Log("[Adjust]: IDFA delegate was not set.");
-                return;
-            }
-
-            Adjust.getIdfaDelegate(idfa);
-        }
-
-        public void UnityAdjustIdfvGetter(string idfv)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.getIdfvDelegate == null)
-            {
-                Debug.Log("[Adjust]: IDFV delegate was not set.");
-                return;
-            }
-
-            Adjust.getIdfvDelegate(idfv);
-        }
-
-        public void UnityAdjustSdkVersionGetter(string sdkVersion)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.getSdkVersionDelegate == null)
-            {
-                Debug.Log("[Adjust]: SDK version delegate was not set.");
-                return;
-            }
-
-            Adjust.getSdkVersionDelegate(sdkVersion);
-        }
-
-        public void UnityAdjustLastDeeplinkGetter(string lastDeeplink)
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-            if (Adjust.getLastDeeplinkDelegate == null)
-            {
-                Debug.Log("[Adjust]: Last deep link delegate was not set.");
-                return;
-            }
-
-            Adjust.getLastDeeplinkDelegate(lastDeeplink);
-        }
-#endif
 
         private static bool IsEditor()
         {
