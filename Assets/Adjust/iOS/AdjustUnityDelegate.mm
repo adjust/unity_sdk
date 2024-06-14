@@ -26,50 +26,55 @@ static AdjustUnityDelegate *defaultInstance = nil;
 
 #pragma mark - Public methods
 
-+ (id)getInstanceWithSwizzleOfAttributionCallback:(BOOL)swizzleAttributionCallback
-                             eventSuccessCallback:(BOOL)swizzleEventSuccessCallback
-                             eventFailureCallback:(BOOL)swizzleEventFailureCallback
-                           sessionSuccessCallback:(BOOL)swizzleSessionSuccessCallback
-                           sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
-                         deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
-                              skanUpdatedCallback:(BOOL)swizzleSkanUpdatedCallback
-                     shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
-                     andAdjustUnityGameObjectName:(NSString *)adjustUnityGameObjectName {
++ (id)getInstanceWithAttributionCallback:(AdjustDelegateAttributionCallback)attributionCallback
+                    eventSuccessCallback:(AdjustDelegateEventSuccessCallback)eventSuccessCallback
+                    eventFailureCallback:(AdjustDelegateEventFailureCallback)eventFailureCallback
+                  sessionSuccessCallback:(AdjustDelegateSessionSuccessCallback)sessionSuccessCallback
+                  sessionFailureCallback:(AdjustDelegateSessionFailureCallback)sessionFailureCallback
+                deferredDeeplinkCallback:(AdjustDelegateDeferredDeeplinkCallback)deferredDeeplinkCallback
+                     skanUpdatedCallback:(AdjustDelegateSkanUpdatedCallback)skanUpdatedCallback
+            shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink {
     dispatch_once(&onceToken, ^{
         defaultInstance = [[AdjustUnityDelegate alloc] init];
 
         // Do the swizzling where and if needed.
-        if (swizzleAttributionCallback) {
+        if (attributionCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustAttributionChanged:)
                                         withSelector:@selector(adjustAttributionChangedWannabe:)];
         }
-        if (swizzleEventSuccessCallback) {
+        if (eventSuccessCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustEventTrackingSucceeded:)
                                         withSelector:@selector(adjustEventTrackingSucceededWannabe:)];
         }
-        if (swizzleEventFailureCallback) {
+        if (eventFailureCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustEventTrackingFailed:)
                                         withSelector:@selector(adjustEventTrackingFailedWannabe:)];
         }
-        if (swizzleSessionSuccessCallback) {
+        if (sessionSuccessCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustSessionTrackingSucceeded:)
                                         withSelector:@selector(adjustSessionTrackingSucceededWannabe:)];
         }
-        if (swizzleSessionFailureCallback) {
+        if (sessionFailureCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustSessionTrackingFailed:)
                                         withSelector:@selector(adjustSessionTrackingFailedWannabe:)];
         }
-        if (swizzleDeferredDeeplinkCallback) {
+        if (deferredDeeplinkCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustDeeplinkResponse:)
                                         withSelector:@selector(adjustDeeplinkResponseWannabe:)];
         }
-        if (swizzleSkanUpdatedCallback) {
+        if (skanUpdatedCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustSkanUpdatedWithConversionData:)
                                         withSelector:@selector(adjustSkanUpdatedWithConversionDataWannabe:)];
         }
 
+        [defaultInstance setAttributionCallback:attributionCallback];
+        [defaultInstance setEventSuccessCallback:eventSuccessCallback];
+        [defaultInstance setEventFailureCallback:eventFailureCallback];
+        [defaultInstance setSessionSuccessCallback:sessionSuccessCallback];
+        [defaultInstance setSessionFailureCallback:sessionFailureCallback];
+        [defaultInstance setDeferredDeeplinkCallback:deferredDeeplinkCallback];
+        [defaultInstance setSkanUpdatedCallback:skanUpdatedCallback];
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
-        [defaultInstance setAdjustUnityGameObjectName:adjustUnityGameObjectName];
     });
     
     return defaultInstance;
@@ -83,7 +88,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
 #pragma mark - Private & helper methods
 
 - (void)adjustAttributionChangedWannabe:(ADJAttribution *)attribution {
-    if (attribution == nil) {
+    if (attribution == nil || _attributionCallback == nil) {
         return;
     }
     
@@ -126,13 +131,11 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                            length:[dataAttribution length]
                                                          encoding:NSUTF8StringEncoding];
     const char* charArrayAttribution = [stringAttribution UTF8String];
-    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
-                     "UnityAdjustAttributionCallback",
-                     charArrayAttribution);
+    _attributionCallback(charArrayAttribution);
 }
 
 - (void)adjustEventTrackingSucceededWannabe:(ADJEventSuccess *)eventSuccessResponseData {
-    if (nil == eventSuccessResponseData) {
+    if (nil == eventSuccessResponseData || _eventSuccessCallback == nil) {
         return;
     }
 
@@ -164,13 +167,11 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                             length:[dataEventSuccess length]
                                                           encoding:NSUTF8StringEncoding];
     const char* charArrayEventSuccess = [stringEventSuccess UTF8String];
-    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
-                     "UnityAdjustEventSuccessCallback",
-                     charArrayEventSuccess);
+    _eventSuccessCallback(charArrayEventSuccess);
 }
 
 - (void)adjustEventTrackingFailedWannabe:(ADJEventFailure *)eventFailureResponseData {
-    if (nil == eventFailureResponseData) {
+    if (nil == eventFailureResponseData || _eventFailureCallback == nil) {
         return;
     }
 
@@ -204,13 +205,11 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                             length:[dataEventFailure length]
                                                           encoding:NSUTF8StringEncoding];
     const char* charArrayEventFailure = [stringEventFailure UTF8String];
-    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
-                     "UnityAdjustEventFailureCallback",
-                     charArrayEventFailure);
+    _eventFailureCallback(charArrayEventFailure);
 }
 
 - (void)adjustSessionTrackingSucceededWannabe:(ADJSessionSuccess *)sessionSuccessResponseData {
-    if (nil == sessionSuccessResponseData) {
+    if (nil == sessionSuccessResponseData || _sessionSuccessCallback == nil) {
         return;
     }
 
@@ -236,13 +235,11 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                               length:[dataSessionSuccess length]
                                                             encoding:NSUTF8StringEncoding];
     const char* charArraySessionSuccess = [stringSessionSuccess UTF8String];
-    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
-                     "UnityAdjustSessionSuccessCallback",
-                     charArraySessionSuccess);
+    _sessionSuccessCallback(charArraySessionSuccess);
 }
 
 - (void)adjustSessionTrackingFailedWannabe:(ADJSessionFailure *)sessionFailureResponseData {
-    if (nil == sessionFailureResponseData) {
+    if (nil == sessionFailureResponseData || _sessionFailureCallback == nil) {
         return;
     }
 
@@ -270,22 +267,20 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                               length:[dataSessionFailure length]
                                                             encoding:NSUTF8StringEncoding];
     const char* charArraySessionFailure = [stringSessionFailure UTF8String];
-    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
-                     "UnityAdjustSessionFailureCallback",
-                     charArraySessionFailure);
+    _sessionFailureCallback(charArraySessionFailure);
 }
 
 - (BOOL)adjustDeeplinkResponseWannabe:(NSURL *)deeplink {
-    NSString *stringDeeplink = [deeplink absoluteString];
-    const char* charDeeplink = [stringDeeplink UTF8String];
-    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
-                     "UnityAdjustDeferredDeeplinkCallback",
-                     charDeeplink);
+    if (_deferredDeeplinkCallback != nil) {
+        NSString *stringDeeplink = [deeplink absoluteString];
+        const char* charDeeplink = [stringDeeplink UTF8String];
+        _deferredDeeplinkCallback(charDeeplink);
+    }
     return _shouldLaunchDeferredDeeplink;
 }
 
 - (void)adjustSkanUpdatedWithConversionDataWannabe:(NSDictionary<NSString *,NSString *> *)data {
-    if (data == nil) {
+    if (data == nil || _skanUpdatedCallback == nil) {
         return;
     }
 
@@ -296,9 +291,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                             length:[dataSkanUpdatedData length]
                                                           encoding:NSUTF8StringEncoding];
     const char* charSkanUpdatedData = [strSkanUpdatedData UTF8String];
-    UnitySendMessage([self.adjustUnityGameObjectName UTF8String],
-                     "UnityAdjustSkanUpdatedCallback",
-                     charSkanUpdatedData);
+    _skanUpdatedCallback(charSkanUpdatedData);
 }
 
 - (void)swizzleOriginalSelector:(SEL)originalSelector

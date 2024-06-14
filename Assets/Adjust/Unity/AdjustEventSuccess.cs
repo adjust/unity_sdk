@@ -21,17 +21,17 @@ namespace com.adjust.sdk
                 return;
             }
 
-            Adid = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyAdid);
-            Message = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyMessage);
-            Timestamp = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyTimestamp);
-            EventToken = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyEventToken);
-            CallbackId = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyCallbackId);
+            this.Adid = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyAdid);
+            this.Message = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyMessage);
+            this.Timestamp = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyTimestamp);
+            this.EventToken = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyEventToken);
+            this.CallbackId = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyCallbackId);
 
             string jsonResponseString = AdjustUtils.TryGetValue(eventSuccessDataMap, AdjustUtils.KeyJsonResponse);
             var jsonResponseNode = JSON.Parse(jsonResponseString);
             if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
             {
-                JsonResponse = new Dictionary<string, object>();
+                this.JsonResponse = new Dictionary<string, object>();
                 AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
             }
         }
@@ -44,11 +44,11 @@ namespace com.adjust.sdk
                 return;
             }
 
-            Adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
-            Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
-            Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
-            EventToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyEventToken);
-            CallbackId = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCallbackId);
+            this.Adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
+            this.Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
+            this.Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
+            this.EventToken = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyEventToken);
+            this.CallbackId = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCallbackId);
 
             var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
             if (jsonResponseNode == null)
@@ -60,7 +60,7 @@ namespace com.adjust.sdk
                 return;
             }
 
-            JsonResponse = new Dictionary<string, object>();
+            this.JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
 
@@ -72,11 +72,11 @@ namespace com.adjust.sdk
                 return;
             }
 
-            JsonResponse = new Dictionary<string, object>();
+            this.JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonNode.AsObject, JsonResponse);
         }
 
-        public string GetJsonResponse()
+        public string GetJsonResponseAsString()
         {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }

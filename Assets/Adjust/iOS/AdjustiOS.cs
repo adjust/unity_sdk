@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
-using AOT;
 
 namespace com.adjust.sdk
 {
@@ -11,9 +10,38 @@ namespace com.adjust.sdk
     {
         private const string sdkPrefix = "unity5.0.0";
 
+        // app callbacks as method parameters
+        private static List<Action<bool>> appIsEnabledGetterCallbacks;
+        private static List<Action<AdjustAttribution>> appAttributionGetterCallbacks;
+        private static List<Action<string>> appAdidGetterCallbacks;
+        private static List<Action<string>> appIdfaGetterCallbacks;
+        private static List<Action<string>> appIdfvGetterCallbacks;
+        private static List<Action<string>> appLastDeeplinkGetterCallbacks;
+        private static List<Action<string>> appSdkVersionGetterCallbacks;
+        private static List<Action<int>> appAttCallbacks;
+        private static Action<AdjustPurchaseVerificationInfo> appPurchaseVerificationCallback;
+        private static Action<string> appResolvedDeeplinkCallback;
+        private static Action<string> appSkanErrorCallback;
+
+        // app callbacks as subscriptions
+        private static Action<AdjustAttribution> appAttributionCallback;
+        private static Action<AdjustSessionSuccess> appSessionSuccessCallback;
+        private static Action<AdjustSessionFailure> appSessionFailureCallback;
+        private static Action<AdjustEventSuccess> appEventSuccessCallback;
+        private static Action<AdjustEventFailure> appEventFailureCallback;
+        private static Action<string> appDeferredDeeplinkCallback;
+        private static Action<Dictionary<string, string>> appSkanUpdatedCallback;
+
+        // extenral C methods
+        private delegate void AdjustDelegateAttributionCallback(string attribution);
+        private delegate void AdjustDelegateSessionSuccessCallback(string sessionSuccess);
+        private delegate void AdjustDelegateSessionFailureCallback(string sessionFailure);
+        private delegate void AdjustDelegateEventSuccessCallback(string eventSuccess);
+        private delegate void AdjustDelegateEventFailureCallback(string eventFailure);
+        private delegate void AdjustDelegateDeferredDeeplinkCallback(string callback);
+        private delegate void AdjustDelegateSkanUpdatedCallback(string callback);
         [DllImport("__Internal")]
         private static extern void _AdjustInitSdk(
-            string gameObjectName,
             string appToken,
             string environment,
             string sdkPrefix,
@@ -34,13 +62,13 @@ namespace com.adjust.sdk
             int isCostDataInAttributionEnabled,
             int isDeviceIdsReadingOnceEnabled,
             int isDeferredDeeplinkOpeningEnabled,
-            int isAttributionCallbackImplemented,
-            int isEventSuccessCallbackImplemented,
-            int isEventFailureCallbackImplemented,
-            int isSessionSuccessCallbackImplemented,
-            int isSessionFailureCallbackImplemented,
-            int isDeferredDeeplinkCallbackImplemented,
-            int isSkanUpdatedCallbackImplemented);
+            AdjustDelegateAttributionCallback attributionCallback,
+            AdjustDelegateEventSuccessCallback eventSuccessCallback,
+            AdjustDelegateEventFailureCallback eventFailureCallback,
+            AdjustDelegateSessionSuccessCallback sessionSuccessCallback,
+            AdjustDelegateSessionFailureCallback sessionFailureCallback,
+            AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback,
+            AdjustDelegateSkanUpdatedCallback skanUpdatedCallback);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackEvent(
@@ -68,9 +96,6 @@ namespace com.adjust.sdk
         private static extern void _AdjustDisableCoppaCompliance();
 
         [DllImport("__Internal")]
-        private static extern void _AdjustIsEnabled(string gameObjectName);
-
-        [DllImport("__Internal")]
         private static extern void _AdjustSwitchToOfflineMode();
 
         [DllImport("__Internal")]
@@ -82,30 +107,42 @@ namespace com.adjust.sdk
         [DllImport("__Internal")]
         private static extern void _AdjustProcessDeeplink(string deeplink);
 
+        private delegate void AdjustDelegateResolvedDeeplinkCallback(string deeplink);
         [DllImport("__Internal")]
         private static extern void _AdjustProcessAndResolveDeeplink(
             string deeplink,
-            string gameObjectName);
+            AdjustDelegateResolvedDeeplinkCallback callback);
 
+        private delegate void AdjustDelegateIsEnabledGetter(bool isEnabed);
         [DllImport("__Internal")]
-        private static extern void _AdjustGetIdfa(string gameObjectName);
+        private static extern void _AdjustIsEnabled(AdjustDelegateIsEnabledGetter callback);
 
-        // private delegate void DelegateCallbackIdfvGetter(string idfv);
+        private delegate void AdjustDelegateAttributionGetter(string attribution);
         [DllImport("__Internal")]
-        private static extern void _AdjustGetIdfv(string gameObjectName);
-        // private static extern void _AdjustGetIdfv(DelegateCallbackIdfvGetter callback);
+        private static extern void _AdjustGetAttribution(AdjustDelegateAttributionGetter callback);
 
+        private delegate void AdjustDelegateAdidGetter(string adid);
         [DllImport("__Internal")]
-        private static extern void _AdjustGetAdid(string gameObjectName);
+        private static extern void _AdjustGetAdid(AdjustDelegateAdidGetter callback);
 
+        private delegate void AdjustDelegateIdfaGetter(string idfa);
         [DllImport("__Internal")]
-        private static extern void _AdjustGetSdkVersion(string gameObjectName);
+        private static extern void _AdjustGetIdfa(AdjustDelegateIdfaGetter callback);
+
+        private delegate void AdjustDelegateIdfvGetter(string idfv);
+        [DllImport("__Internal")]
+        private static extern void _AdjustGetIdfv(AdjustDelegateIdfvGetter callback);
+
+        private delegate void AdjustDelegateLastDeeplinkGetter(string lastDeeplink);
+        [DllImport("__Internal")]
+        private static extern void _AdjustGetLastDeeplink(AdjustDelegateLastDeeplinkGetter callback);
+
+        private delegate void AdjustDelegateSdkVersionGetter(string sdkVersion);
+        [DllImport("__Internal")]
+        private static extern void _AdjustGetSdkVersion(AdjustDelegateSdkVersionGetter callback);
 
         [DllImport("__Internal")]
         private static extern void _AdjustGdprForgetMe();
-
-        [DllImport("__Internal")]
-        private static extern void _AdjustGetAttribution(string gameObjectName);
 
         [DllImport("__Internal")]
         private static extern void _AdjustAddGlobalPartnerParameter(string key, string value);
@@ -172,15 +209,17 @@ namespace com.adjust.sdk
             int attStatus,
             string idfa);
 
+        private delegate void AdjustDelegateAttCallback(int status);
         [DllImport("__Internal")]
-        private static extern void _AdjustRequestAppTrackingAuthorizationWithCompletionHandler(string gameObjectName);
+        private static extern void _AdjustRequestAppTrackingAuthorization(AdjustDelegateAttCallback callback);
 
+        private delegate void AdjustDelegateSkanErrorCallback(string error);
         [DllImport("__Internal")]
         private static extern void _AdjustUpdateSkanConversionValue(
             int conversionValue,
             string coarseValue,
             int lockWindow,
-            string gameObjectName);
+            AdjustDelegateSkanErrorCallback callback);
 
         [DllImport("__Internal")]
         private static extern int _AdjustGetAppTrackingAuthorizationStatus();
@@ -191,50 +230,48 @@ namespace com.adjust.sdk
         [DllImport("__Internal")]
         private static extern void _AdjustTrackSubsessionEnd();
 
-        [DllImport("__Internal")]
-        private static extern void _AdjustGetLastDeeplink(string gameObjectName);
-
+        private delegate void AdjustDelegatePurchaseVerificationCallback(string verificationResult);
         [DllImport("__Internal")]
         private static extern void _AdjustVerifyAppStorePurchase(
             string transactionId,
             string productId,
             string receipt,
-            string gameObjectName);
+            AdjustDelegatePurchaseVerificationCallback callback);
 
+        // public API
         public AdjustiOS() {}
 
         public static void InitSdk(AdjustConfig adjustConfig)
         {
-            string gameObjectName = adjustConfig.gameObjectName != null ? adjustConfig.gameObjectName : "ADJ_INVALID";
-            string appToken = adjustConfig.appToken != null ? adjustConfig.appToken : "ADJ_INVALID";
-            string environment = adjustConfig.environment.ToLowercaseString();
-            string defaultTracker = adjustConfig.defaultTracker != null ? adjustConfig.defaultTracker : "ADJ_INVALID";
-            string externalDeviceId = adjustConfig.externalDeviceId != null ? adjustConfig.externalDeviceId : "ADJ_INVALID";
-            string stringJsonUrlStrategyDomains = AdjustUtils.ConvertListToJson(adjustConfig.urlStrategyDomains);
-            int attConsentWaitingInterval = AdjustUtils.ConvertInt(adjustConfig.attConsentWaitingInterval);
-            int eventDeduplicationIdsMaxSize = AdjustUtils.ConvertInt(adjustConfig.eventDeduplicationIdsMaxSize);
-            int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.logLevel);
-            int isSendingInBackgroundEnabled = AdjustUtils.ConvertBool(adjustConfig.isSendingInBackgroundEnabled);
-            int isAdServicesEnabled = AdjustUtils.ConvertBool(adjustConfig.isAdServicesEnabled);
-            int isIdfaReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.isIdfaReadingEnabled);
-            int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.allowSuppressLogLevel);
-            int isDeferredDeeplinkOpeningEnabled = AdjustUtils.ConvertBool(adjustConfig.isDeferredDeeplinkOpeningEnabled);
-            int isSkanAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.isSkanAttributionEnabled);
-            int isLinkMeEnabled = AdjustUtils.ConvertBool(adjustConfig.isLinkMeEnabled);
-            int isCostDataInAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.isCostDataInAttributionEnabled);
-            int isDeviceIdsReadingOnceEnabled = AdjustUtils.ConvertBool(adjustConfig.isDeviceIdsReadingOnceEnabled);
-            int shouldUseSubdomains = AdjustUtils.ConvertBool(adjustConfig.shouldUseSubdomains);
-            int isDataResidency = AdjustUtils.ConvertBool(adjustConfig.isDataResidency);
-            int isAttributionCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.GetAttributionChangedDelegate() != null);
-            int isEventSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.GetEventSuccessDelegate() != null);
-            int isEventFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.GetEventFailureDelegate() != null);
-            int isSessionSuccessCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.GetSessionSuccessDelegate() != null);
-            int isSessionFailureCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.GetSessionFailureDelegate() != null);
-            int isDeferredDeeplinkCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.GetDeferredDeeplinkDelegate() != null);
-            int isSkanUpdatedCallbackImplemented = AdjustUtils.ConvertBool(adjustConfig.GetSkanUpdatedDelegate() != null);
+            string appToken = adjustConfig.AppToken != null ? adjustConfig.AppToken : "ADJ_INVALID";
+            string environment = adjustConfig.Environment.ToLowercaseString();
+            string defaultTracker = adjustConfig.DefaultTracker != null ? adjustConfig.DefaultTracker : "ADJ_INVALID";
+            string externalDeviceId = adjustConfig.ExternalDeviceId != null ? adjustConfig.ExternalDeviceId : "ADJ_INVALID";
+            string stringJsonUrlStrategyDomains = AdjustUtils.ConvertReadOnlyCollectionToJson(
+                adjustConfig.UrlStrategyDomains != null ? adjustConfig.UrlStrategyDomains.AsReadOnly() : null);
+            int attConsentWaitingInterval = AdjustUtils.ConvertInt(adjustConfig.AttConsentWaitingInterval);
+            int eventDeduplicationIdsMaxSize = AdjustUtils.ConvertInt(adjustConfig.EventDeduplicationIdsMaxSize);
+            int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.LogLevel);
+            int isSendingInBackgroundEnabled = AdjustUtils.ConvertBool(adjustConfig.IsSendingInBackgroundEnabled);
+            int isAdServicesEnabled = AdjustUtils.ConvertBool(adjustConfig.IsAdServicesEnabled);
+            int isIdfaReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.IsIdfaReadingEnabled);
+            int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.AllowSuppressLogLevel);
+            int isDeferredDeeplinkOpeningEnabled = AdjustUtils.ConvertBool(adjustConfig.IsDeferredDeeplinkOpeningEnabled);
+            int isSkanAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.IsSkanAttributionEnabled);
+            int isLinkMeEnabled = AdjustUtils.ConvertBool(adjustConfig.IsLinkMeEnabled);
+            int isCostDataInAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.IsCostDataInAttributionEnabled);
+            int isDeviceIdsReadingOnceEnabled = AdjustUtils.ConvertBool(adjustConfig.IsDeviceIdsReadingOnceEnabled);
+            int shouldUseSubdomains = AdjustUtils.ConvertBool(adjustConfig.ShouldUseSubdomains);
+            int isDataResidency = AdjustUtils.ConvertBool(adjustConfig.IsDataResidency);
+            appAttributionCallback = adjustConfig.AttributionChangedDelegate;
+            appEventSuccessCallback = adjustConfig.EventSuccessDelegate;
+            appEventFailureCallback = adjustConfig.EventFailureDelegate;
+            appSessionSuccessCallback = adjustConfig.SessionSuccessDelegate;
+            appSessionFailureCallback = adjustConfig.SessionFailureDelegate;
+            appDeferredDeeplinkCallback = adjustConfig.DeferredDeeplinkDelegate;
+            appSkanUpdatedCallback = adjustConfig.SkanUpdatedDelegate;
 
             _AdjustInitSdk(
-                gameObjectName,
                 appToken,
                 environment,
                 sdkPrefix,
@@ -255,27 +292,27 @@ namespace com.adjust.sdk
                 isCostDataInAttributionEnabled,
                 isDeviceIdsReadingOnceEnabled,
                 isDeferredDeeplinkOpeningEnabled,
-                isAttributionCallbackImplemented,
-                isEventSuccessCallbackImplemented,
-                isEventFailureCallbackImplemented,
-                isSessionSuccessCallbackImplemented,
-                isSessionFailureCallbackImplemented,
-                isDeferredDeeplinkCallbackImplemented,
-                isSkanUpdatedCallbackImplemented);
+                AttributionCallbackMonoPInvoke,
+                EventSuccessCallbackMonoPInvoke,
+                EventFailureCallbackMonoPInvoke,
+                SessionSuccessCallbackMonoPInvoke,
+                SessionFailureCallbackMonoPInvoke,
+                DeferredDeeplinkCallbackMonoPInvoke,
+                SkanUpdatedCallbackMonoPInvoke);
         }
 
         public static void TrackEvent(AdjustEvent adjustEvent)
         {
-            double revenue = AdjustUtils.ConvertDouble(adjustEvent.revenue);
-            string eventToken = adjustEvent.eventToken;
-            string currency = adjustEvent.currency;
-            string receipt = adjustEvent.receipt;
-            string productId = adjustEvent.productId;
-            string transactionId = adjustEvent.transactionId;
-            string callbackId = adjustEvent.callbackId;
-            string deduplicationId = adjustEvent.deduplicationId;
-            string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(adjustEvent.callbackList);
-            string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adjustEvent.partnerList);
+            double revenue = AdjustUtils.ConvertDouble(adjustEvent.Revenue);
+            string eventToken = adjustEvent.EventToken;
+            string currency = adjustEvent.Currency;
+            string receipt = adjustEvent.Receipt;
+            string productId = adjustEvent.ProductId;
+            string transactionId = adjustEvent.TransactionId;
+            string callbackId = adjustEvent.CallbackId;
+            string deduplicationId = adjustEvent.DeduplicationId;
+            string stringJsonCallbackParameters = AdjustUtils.ConvertReadOnlyCollectionOfPairsToJson(adjustEvent.CallbackParameters);
+            string stringJsonPartnerParameters = AdjustUtils.ConvertReadOnlyCollectionOfPairsToJson(adjustEvent.PartnerParameters);
 
             _AdjustTrackEvent(
                 eventToken,
@@ -308,12 +345,6 @@ namespace com.adjust.sdk
         public static void DisableCoppaCompliance()
         {
             _AdjustDisableCoppaCompliance();
-        }
-
-        public static void IsEnabled(string gameObjectName)
-        {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustIsEnabled(cGameObjectName);
         }
 
         public static void SwitchToOfflineMode()
@@ -363,15 +394,15 @@ namespace com.adjust.sdk
 
         public static void TrackAdRevenue(AdjustAdRevenue adRevenue)
         {
-            string source = adRevenue.source;
-            double revenue = AdjustUtils.ConvertDouble(adRevenue.revenue);
-            string currency = adRevenue.currency;
-            int adImpressionsCount = AdjustUtils.ConvertInt(adRevenue.adImpressionsCount);
-            string adRevenueNetwork = adRevenue.adRevenueNetwork;
-            string adRevenueUnit = adRevenue.adRevenueUnit;
-            string adRevenuePlacement = adRevenue.adRevenuePlacement;
-            string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(adRevenue.callbackList);
-            string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(adRevenue.partnerList);
+            string source = adRevenue.Source;
+            double revenue = AdjustUtils.ConvertDouble(adRevenue.Revenue);
+            string currency = adRevenue.Currency;
+            int adImpressionsCount = AdjustUtils.ConvertInt(adRevenue.AdImpressionsCount);
+            string adRevenueNetwork = adRevenue.AdRevenueNetwork;
+            string adRevenueUnit = adRevenue.AdRevenueUnit;
+            string adRevenuePlacement = adRevenue.AdRevenuePlacement;
+            string stringJsonCallbackParameters = AdjustUtils.ConvertReadOnlyCollectionOfPairsToJson(adRevenue.CallbackParameters);
+            string stringJsonPartnerParameters = AdjustUtils.ConvertReadOnlyCollectionOfPairsToJson(adRevenue.PartnerParameters);
 
             _AdjustTrackAdRevenue(
                 source,
@@ -387,14 +418,14 @@ namespace com.adjust.sdk
 
         public static void TrackAppStoreSubscription(AdjustAppStoreSubscription subscription)
         {
-            string price = subscription.price;
-            string currency = subscription.currency;
-            string transactionId = subscription.transactionId;
-            string receipt = subscription.receipt;
-            string transactionDate = subscription.transactionDate;
-            string salesRegion = subscription.salesRegion;
-            string stringJsonCallbackParameters = AdjustUtils.ConvertListToJson(subscription.callbackList);
-            string stringJsonPartnerParameters = AdjustUtils.ConvertListToJson(subscription.partnerList);
+            string price = subscription.Price;
+            string currency = subscription.Currency;
+            string transactionId = subscription.TransactionId;
+            string receipt = subscription.Receipt;
+            string transactionDate = subscription.TransactionDate;
+            string salesRegion = subscription.SalesRegion;
+            string stringJsonCallbackParameters = AdjustUtils.ConvertReadOnlyCollectionOfPairsToJson(subscription.CallbackParameters);
+            string stringJsonPartnerParameters = AdjustUtils.ConvertReadOnlyCollectionOfPairsToJson(subscription.PartnerParameters);
             
             _AdjustTrackAppStoreSubscription(
                 price,
@@ -409,21 +440,14 @@ namespace com.adjust.sdk
 
         public static void TrackThirdPartySharing(AdjustThirdPartySharing thirdPartySharing)
         {
-            int enabled = AdjustUtils.ConvertBool(thirdPartySharing.isEnabled);
-            List<string> jsonGranularOptions = new List<string>();
-            foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.granularOptions)
-            {
-                jsonGranularOptions.Add(entry.Key);
-                jsonGranularOptions.Add(AdjustUtils.ConvertListToJson(entry.Value));
-            }
-            List<string> jsonPartnerSharingSettings = new List<string>();
-            foreach (KeyValuePair<string, List<string>> entry in thirdPartySharing.partnerSharingSettings)
-            {
-                jsonPartnerSharingSettings.Add(entry.Key);
-                jsonPartnerSharingSettings.Add(AdjustUtils.ConvertListToJson(entry.Value));
-            }
+            int enabled = AdjustUtils.ConvertBool(thirdPartySharing.IsEnabled);
+            string stringJsonGranularOptions = AdjustUtils.ConvertReadOnlyCollectionOfTripletsToJson(thirdPartySharing.GranularOptions);
+            string stringJsonPartnerSharingSettings = AdjustUtils.ConvertReadOnlyCollectionOfTripletsToJson(thirdPartySharing.PartnerSharingSettings);
 
-            _AdjustTrackThirdPartySharing(enabled, AdjustUtils.ConvertListToJson(jsonGranularOptions), AdjustUtils.ConvertListToJson(jsonPartnerSharingSettings));
+            _AdjustTrackThirdPartySharing(
+                enabled,
+                stringJsonGranularOptions,
+                stringJsonPartnerSharingSettings);
         }
 
         public static void TrackMeasurementConsent(bool enabled)
@@ -431,24 +455,28 @@ namespace com.adjust.sdk
             _AdjustTrackMeasurementConsent(AdjustUtils.ConvertBool(enabled));
         }
 
-        public static void RequestAppTrackingAuthorizationWithCompletionHandler(string gameObjectName)
+        public static void RequestAppTrackingAuthorization(Action<int> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustRequestAppTrackingAuthorizationWithCompletionHandler(cGameObjectName);
+            if (appAttCallbacks == null)
+            {
+                appAttCallbacks = new List<Action<int>>();
+            }
+            appAttCallbacks.Add(callback);
+            _AdjustRequestAppTrackingAuthorization(AttCallbackMonoPInvoke);
         }
 
         public static void UpdateSkanConversionValue(
             int conversionValue,
             string coarseValue,
             bool lockedWindow,
-            string gameObjectName)
+            Action<string> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
+            appSkanErrorCallback = callback;
             _AdjustUpdateSkanConversionValue(
                 conversionValue,
                 coarseValue,
                 AdjustUtils.ConvertBool(lockedWindow),
-                cGameObjectName);
+                SkanErrorCallbackMonoPInvoke);
         }
 
         // TODO: consider making async
@@ -462,30 +490,74 @@ namespace com.adjust.sdk
             _AdjustSetPushToken(pushToken);
         }
 
-        public static void GetIdfa(string gameObjectName)
+        public static void IsEnabled(Action<bool> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustGetIdfa(cGameObjectName);
+            if (appIsEnabledGetterCallbacks == null)
+            {
+                appIsEnabledGetterCallbacks = new List<Action<bool>>();
+            }
+            appIsEnabledGetterCallbacks.Add(callback);
+            _AdjustIsEnabled(IsEnabledGetterMonoPInvoke);
         }
 
-        public static void GetIdfv(string gameObjectName)
+        public static void GetAttribution(Action<AdjustAttribution> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustGetIdfv(cGameObjectName);
-            // _AdjustGetIdfv(IdfvGetterTriggered);
+            if (appAttributionGetterCallbacks == null)
+            {
+                appAttributionGetterCallbacks = new List<Action<AdjustAttribution>>();
+            }
+            appAttributionGetterCallbacks.Add(callback);
+            _AdjustGetAttribution(AttributionGetterMonoPInvoke);
         }
 
-        public static void GetAdid(string gameObjectName)
+        public static void GetAdid(Action<string> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustGetAdid(cGameObjectName);
+            if (appAdidGetterCallbacks == null)
+            {
+                appAdidGetterCallbacks = new List<Action<string>>();
+            }
+            appAdidGetterCallbacks.Add(callback);
+            _AdjustGetAdid(AdidGetterMonoPInvoke);
         }
 
-        // TODO: consider sending the prefix down the drain to do the concatenation natively
-        public static void GetSdkVersion(string gameObjectName)
+        public static void GetIdfa(Action<string> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustGetSdkVersion(cGameObjectName);
+            if (appIdfaGetterCallbacks == null)
+            {
+                appIdfaGetterCallbacks = new List<Action<string>>();
+            }
+            appIdfaGetterCallbacks.Add(callback);
+            _AdjustGetIdfa(IdfaGetterMonoPInvoke);
+        }
+
+        public static void GetIdfv(Action<string> callback)
+        {
+            if (appIdfvGetterCallbacks == null)
+            {
+                appIdfvGetterCallbacks = new List<Action<string>>();
+            }
+            appIdfvGetterCallbacks.Add(callback);
+            _AdjustGetIdfv(IdfvGetterMonoPInvoke);
+        }
+
+        public static void GetLastDeeplink(Action<string> callback)
+        {
+            if (appLastDeeplinkGetterCallbacks == null)
+            {
+                appLastDeeplinkGetterCallbacks = new List<Action<string>>();
+            }
+            appLastDeeplinkGetterCallbacks.Add(callback);
+            _AdjustGetLastDeeplink(LastDeeplinkGetterMonoPInvoke);
+        }
+
+        public static void GetSdkVersion(Action<string> callback)
+        {
+            if (appSdkVersionGetterCallbacks == null)
+            {
+                appSdkVersionGetterCallbacks = new List<Action<string>>();
+            }
+            appSdkVersionGetterCallbacks.Add(callback);
+            _AdjustGetSdkVersion(SdkVersionGetterMonoPInvoke);
         }
 
         public static void GdprForgetMe()
@@ -493,39 +565,29 @@ namespace com.adjust.sdk
             _AdjustGdprForgetMe();
         }
 
-        public static void GetAttribution(string gameObjectName)
+        public static void VerifyAppStorePurchase(
+            AdjustAppStorePurchase purchase,
+            Action<AdjustPurchaseVerificationInfo> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustGetAttribution(cGameObjectName);
-        }
-
-        public static void GetLastDeeplink(string gameObjectName)
-        {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustGetLastDeeplink(cGameObjectName);
-        }
-
-        public static void VerifyAppStorePurchase(AdjustAppStorePurchase purchase, string gameObjectName)
-        {
-            string transactionId = purchase.transactionId;
-            string productId = purchase.productId;
-            string receipt = purchase.receipt;
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
+            string transactionId = purchase.TransactionId;
+            string productId = purchase.ProductId;
+            string receipt = purchase.Receipt;
+            appPurchaseVerificationCallback = callback;
             
             _AdjustVerifyAppStorePurchase(
                 transactionId,
                 productId,
                 receipt,
-                cGameObjectName);
+                PurchaseVerificationCallbackMonoPInvoke);
         }
 
-        public static void ProcessAndResolveDeeplink(string url, string gameObjectName)
+        public static void ProcessAndResolveDeeplink(string deeplink, Action<string> callback)
         {
-            string cGameObjectName = gameObjectName != null ? gameObjectName : "ADJ_INVALID";
-            _AdjustProcessAndResolveDeeplink(url, cGameObjectName);
+            appResolvedDeeplinkCallback = callback;
+            _AdjustProcessAndResolveDeeplink(deeplink, ResolvedDeeplinkCallbackMonoPInvoke);
         }
 
-        // Used for testing only.
+        // used for testing only (don't use this in your app)
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
             string overwriteUrl = testOptions[AdjustUtils.KeyTestOptionsOverwriteUrl];
@@ -609,11 +671,186 @@ namespace com.adjust.sdk
             }
         }
 
-        // // mono pinvoke
-        // [MonoPInvokeCallback(typeof(DelegateCallbackIdfvGetter))] 
-        // private static void IdfvGetterTriggered(string idfv) {
-        //     Debug.Log("IDFV message received: " + idfv);
-        // }
+        // MonoPInvokeCallback methods as method parameters
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateIsEnabledGetter))]
+        private static void IsEnabledGetterMonoPInvoke(bool isEnabled) {
+            if (appIsEnabledGetterCallbacks != null)
+            {
+                foreach (Action<bool> callback in appIsEnabledGetterCallbacks)
+                {
+                    callback(isEnabled);
+                }
+                appIsEnabledGetterCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateAttributionGetter))]
+        private static void AttributionGetterMonoPInvoke(string attribution) {
+            if (appAttributionGetterCallbacks != null)
+            {
+                foreach (Action<AdjustAttribution> callback in appAttributionGetterCallbacks)
+                {
+                    callback(new AdjustAttribution(attribution));    
+                }
+                appAttributionGetterCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateAdidGetter))]
+        private static void AdidGetterMonoPInvoke(string adid) {
+            if (appAdidGetterCallbacks != null)
+            {
+                foreach (Action<string> callback in appAdidGetterCallbacks)
+                {
+                    callback(adid);
+                }
+                appAdidGetterCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateIdfaGetter))]
+        private static void IdfaGetterMonoPInvoke(string idfa) {
+            if (appIdfaGetterCallbacks != null)
+            {
+                foreach (Action<string> callback in appIdfaGetterCallbacks)
+                {
+                    callback(idfa);
+                }
+                appIdfaGetterCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateIdfvGetter))]
+        private static void IdfvGetterMonoPInvoke(string idfv) {
+            if (appIdfvGetterCallbacks != null)
+            {
+                foreach (Action<string> callback in appIdfaGetterCallbacks)
+                {
+                    callback(idfv);
+                }
+                appIdfvGetterCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateLastDeeplinkGetter))]
+        private static void LastDeeplinkGetterMonoPInvoke(string lastDeeplink) {
+            if (appLastDeeplinkGetterCallbacks != null)
+            {
+                foreach (Action<string> callback in appLastDeeplinkGetterCallbacks)
+                {
+                    callback(lastDeeplink);
+                }
+                appLastDeeplinkGetterCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateSdkVersionGetter))]
+        private static void SdkVersionGetterMonoPInvoke(string sdkVersion) {
+            if (appSdkVersionGetterCallbacks != null)
+            {
+                foreach (Action<string> callback in appSdkVersionGetterCallbacks)
+                {
+                    callback(sdkPrefix + "@" + sdkVersion);
+                }
+                appSdkVersionGetterCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateAttCallback))]
+        private static void AttCallbackMonoPInvoke(int status) {
+            if (appAttCallbacks != null)
+            {
+                foreach (Action<int> callback in appAttCallbacks)
+                {
+                    callback(status);
+                }
+                appAttCallbacks.Clear();
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegatePurchaseVerificationCallback))]
+        private static void PurchaseVerificationCallbackMonoPInvoke(string verificationResult) {
+            if (appPurchaseVerificationCallback != null)
+            {
+                appPurchaseVerificationCallback(new AdjustPurchaseVerificationInfo(verificationResult));
+                appPurchaseVerificationCallback = null;
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateResolvedDeeplinkCallback))]
+        private static void ResolvedDeeplinkCallbackMonoPInvoke(string deeplink) {
+            if (appResolvedDeeplinkCallback != null)
+            {
+                appResolvedDeeplinkCallback(deeplink);
+                appResolvedDeeplinkCallback = null;
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateSkanErrorCallback))]
+        private static void SkanErrorCallbackMonoPInvoke(string error) {
+            if (appSkanErrorCallback != null)
+            {
+                appSkanErrorCallback(error);
+                appSkanErrorCallback = null;
+            }
+        }
+
+        // MonoPInvokeCallback methods as subscriptions
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateAttributionCallback))]
+        private static void AttributionCallbackMonoPInvoke(string attribution) {
+            if (appAttributionCallback != null)
+            {
+                appAttributionCallback(new AdjustAttribution(attribution));
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateSessionSuccessCallback))]
+        private static void SessionSuccessCallbackMonoPInvoke(string sessionSuccess) {
+            if (appSessionSuccessCallback != null)
+            {
+                appSessionSuccessCallback(new AdjustSessionSuccess(sessionSuccess));
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateSessionFailureCallback))]
+        private static void SessionFailureCallbackMonoPInvoke(string sessionFailure) {
+            if (appSessionFailureCallback != null)
+            {
+                appSessionFailureCallback(new AdjustSessionFailure(sessionFailure));
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateEventSuccessCallback))]
+        private static void EventSuccessCallbackMonoPInvoke(string eventSuccess) {
+            if (appEventSuccessCallback != null)
+            {
+                appEventSuccessCallback(new AdjustEventSuccess(eventSuccess));
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateEventFailureCallback))]
+        private static void EventFailureCallbackMonoPInvoke(string eventFailure) {
+            if (appEventFailureCallback != null)
+            {
+                appEventFailureCallback(new AdjustEventFailure(eventFailure));
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateDeferredDeeplinkCallback))]
+        private static void DeferredDeeplinkCallbackMonoPInvoke(string deeplink) {
+            if (appDeferredDeeplinkCallback != null)
+            {
+                appDeferredDeeplinkCallback(deeplink);
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateSkanUpdatedCallback))]
+        private static void SkanUpdatedCallbackMonoPInvoke(string skanData) {
+            if (appSkanUpdatedCallback != null)
+            {
+                appSkanUpdatedCallback(AdjustUtils.GetSkanUpdateDataDictionary(skanData));
+            }
+        }
     }
 #endif
 }

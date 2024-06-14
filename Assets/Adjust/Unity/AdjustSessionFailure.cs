@@ -20,21 +20,21 @@ namespace com.adjust.sdk
                 return;
             }
 
-            Adid = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyAdid);
-            Message = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyMessage);
-            Timestamp = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyTimestamp);
+            this.Adid = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyAdid);
+            this.Message = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyMessage);
+            this.Timestamp = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyTimestamp);
 
             bool willRetry;
             if (bool.TryParse(AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyWillRetry), out willRetry))
             {
-                WillRetry = willRetry;
+                this.WillRetry = willRetry;
             }
 
             string jsonResponseString = AdjustUtils.TryGetValue(sessionFailureDataMap, AdjustUtils.KeyJsonResponse);
             var jsonResponseNode = JSON.Parse(jsonResponseString);
             if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
             {
-                JsonResponse = new Dictionary<string, object>();
+                this.JsonResponse = new Dictionary<string, object>();
                 AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
             }
         }
@@ -47,10 +47,10 @@ namespace com.adjust.sdk
                 return;
             }
 
-            Adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
-            Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
-            Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
-            WillRetry = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyWillRetry));
+            this.Adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
+            this.Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
+            this.Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
+            this.WillRetry = Convert.ToBoolean(AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyWillRetry));
 
             var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
             if (jsonResponseNode == null)
@@ -62,7 +62,7 @@ namespace com.adjust.sdk
                 return;
             }
 
-            JsonResponse = new Dictionary<string, object>();
+            this.JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
 
@@ -74,11 +74,11 @@ namespace com.adjust.sdk
                 return;
             }
 
-            JsonResponse = new Dictionary<string, object>();
+            this.JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonNode.AsObject, JsonResponse);
         }
 
-        public string GetJsonResponse()
+        public string GetJsonResponseAsString()
         {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }

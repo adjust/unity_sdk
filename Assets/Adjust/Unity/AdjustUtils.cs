@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using UnityEngine;
 
@@ -109,7 +109,37 @@ namespace com.adjust.sdk
             return (long)value;
         }
 
-        public static string ConvertListToJson(List<String> list)
+        public static string ConvertReadOnlyCollectionToJson(ReadOnlyCollection<string> list)
+        {
+            if (list == null)
+            {
+                return null;
+            }
+
+            List<string> processedList = new List<string>();
+            for (int i = 0; i < list.Count; i += 1)
+            {
+                string item = list[i];
+
+                if (item == null)
+                {
+                    continue;
+                }
+
+                processedList.Add(item);
+            }
+
+            // create JSON array
+            var jsonArray = new JSONArray();
+            foreach (var listItem in processedList)
+            {
+                jsonArray.Add(new JSONData(listItem));
+            }
+
+            return jsonArray.ToString();
+        }
+
+        public static string ConvertReadOnlyCollectionOfPairsToJson(ReadOnlyCollection<string> list)
         {
             if (list == null)
             {
@@ -121,17 +151,56 @@ namespace com.adjust.sdk
                 return null;
             }
 
-            List<String> processedList = new List<String>();
+            List<string> processedList = new List<string>();
             for (int i = 0; i < list.Count; i += 2)
             {
-                String key = list[i];
-                String value = list[i + 1];
+                string key = list[i];
+                string value = list[i + 1];
 
                 if (key == null || value == null)
                 {
                     continue;
                 }
 
+                processedList.Add(key);
+                processedList.Add(value);
+            }
+
+            // create JSON array
+            var jsonArray = new JSONArray();
+            foreach (var listItem in processedList)
+            {
+                jsonArray.Add(new JSONData(listItem));
+            }
+
+            return jsonArray.ToString();
+        }
+
+        public static string ConvertReadOnlyCollectionOfTripletsToJson(ReadOnlyCollection<string> list)
+        {
+            if (list == null)
+            {
+                return null;
+            }
+            // list of third party sharing parameters must contain number of elements divisible by 3
+            if (list.Count % 3 != 0)
+            {
+                return null;
+            }
+
+            List<string> processedList = new List<string>();
+            for (int i = 0; i < list.Count; i += 3)
+            {
+                string partnerName = list[i];
+                string key = list[i + 1];
+                string value = list[i + 2];
+
+                if (partnerName == null || key == null || value == null)
+                {
+                    continue;
+                }
+
+                processedList.Add(partnerName);
                 processedList.Add(key);
                 processedList.Add(value);
             }
@@ -161,7 +230,7 @@ namespace com.adjust.sdk
 
                 foreach (KeyValuePair<string, object> pair in dictionary)
                 {
-                    String valueString = pair.Value as string;
+                    string valueString = pair.Value as string;
 
                     if (valueString != null)
                     {
@@ -200,7 +269,7 @@ namespace com.adjust.sdk
             return logJsonResponse;
         }
 
-        public static String GetJsonString(JSONNode node, string key)
+        public static string GetJsonString(JSONNode node, string key)
         {
             if (node == null)
             {
@@ -286,17 +355,17 @@ namespace com.adjust.sdk
         public static AndroidJavaObject TestOptionsMap2AndroidJavaObject(Dictionary<string, string> testOptionsMap, AndroidJavaObject ajoCurrentActivity)
         {
             AndroidJavaObject ajoTestOptions = new AndroidJavaObject("com.adjust.sdk.AdjustTestOptions");
-            ajoTestOptions.Set<String>("baseUrl", testOptionsMap[KeyTestOptionsBaseUrl]);
-            ajoTestOptions.Set<String>("gdprUrl", testOptionsMap[KeyTestOptionsGdprUrl]);
-            ajoTestOptions.Set<String>("subscriptionUrl", testOptionsMap[KeyTestOptionsSubscriptionUrl]);
-            ajoTestOptions.Set<String>("purchaseVerificationUrl", testOptionsMap[KeyTestOptionsPurchaseVerificationUrl]);
+            ajoTestOptions.Set<string>("baseUrl", testOptionsMap[KeyTestOptionsBaseUrl]);
+            ajoTestOptions.Set<string>("gdprUrl", testOptionsMap[KeyTestOptionsGdprUrl]);
+            ajoTestOptions.Set<string>("subscriptionUrl", testOptionsMap[KeyTestOptionsSubscriptionUrl]);
+            ajoTestOptions.Set<string>("purchaseVerificationUrl", testOptionsMap[KeyTestOptionsPurchaseVerificationUrl]);
 
             if (testOptionsMap.ContainsKey(KeyTestOptionsExtraPath) && !string.IsNullOrEmpty(testOptionsMap[KeyTestOptionsExtraPath]))
             {
-                ajoTestOptions.Set<String>("basePath", testOptionsMap[KeyTestOptionsExtraPath]);
-                ajoTestOptions.Set<String>("gdprPath", testOptionsMap[KeyTestOptionsExtraPath]);
-                ajoTestOptions.Set<String>("subscriptionPath", testOptionsMap[KeyTestOptionsExtraPath]);
-                ajoTestOptions.Set<String>("purchaseVerificationPath", testOptionsMap[KeyTestOptionsExtraPath]);
+                ajoTestOptions.Set<string>("basePath", testOptionsMap[KeyTestOptionsExtraPath]);
+                ajoTestOptions.Set<string>("gdprPath", testOptionsMap[KeyTestOptionsExtraPath]);
+                ajoTestOptions.Set<string>("subscriptionPath", testOptionsMap[KeyTestOptionsExtraPath]);
+                ajoTestOptions.Set<string>("purchaseVerificationPath", testOptionsMap[KeyTestOptionsExtraPath]);
             }
             if (testOptionsMap.ContainsKey(KeyTestOptionsDeleteState) && ajoCurrentActivity != null)
             {

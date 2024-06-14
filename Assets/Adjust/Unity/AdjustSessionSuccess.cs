@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace com.adjust.sdk
 {
@@ -19,15 +18,15 @@ namespace com.adjust.sdk
                 return;
             }
 
-            Adid = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyAdid);
-            Message = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyMessage);
-            Timestamp = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyTimestamp);
+            this.Adid = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyAdid);
+            this.Message = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyMessage);
+            this.Timestamp = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyTimestamp);
 
             string jsonResponseString = AdjustUtils.TryGetValue(sessionSuccessDataMap, AdjustUtils.KeyJsonResponse);
             var jsonResponseNode = JSON.Parse(jsonResponseString);
             if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
             {
-                JsonResponse = new Dictionary<string, object>();
+                this.JsonResponse = new Dictionary<string, object>();
                 AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
             }
         }
@@ -40,9 +39,9 @@ namespace com.adjust.sdk
                 return;
             }
 
-            Adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
-            Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
-            Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
+            this.Adid = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyAdid);
+            this.Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
+            this.Timestamp = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyTimestamp);
 
             var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
             if (jsonResponseNode == null)
@@ -54,7 +53,7 @@ namespace com.adjust.sdk
                 return;
             }
 
-            JsonResponse = new Dictionary<string, object>();
+            this.JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, JsonResponse);
         }
 
@@ -66,11 +65,11 @@ namespace com.adjust.sdk
                 return;
             }
 
-            JsonResponse = new Dictionary<string, object>();
+            this.JsonResponse = new Dictionary<string, object>();
             AdjustUtils.WriteJsonResponseDictionary(jsonNode.AsObject, JsonResponse);
         }
 
-        public string GetJsonResponse()
+        public string GetJsonResponseAsString()
         {
             return AdjustUtils.GetJsonResponseCompact(JsonResponse);
         }

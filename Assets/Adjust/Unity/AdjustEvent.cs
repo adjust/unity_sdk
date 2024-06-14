@@ -1,91 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace com.adjust.sdk
 {
     public class AdjustEvent
     {
-        internal string eventToken;
-        internal double? revenue;
-        internal string currency;
-        internal string callbackId;
-        internal string deduplicationId;
-        internal string productId;
-        internal List<string> partnerList;
-        internal List<string> callbackList;
-        // iOS specific
-        internal string receipt;
-        internal string transactionId;
-        // Android specific
-        internal string orderId;
-        internal string purchaseToken;
+        private List<string> innerCallbackParameters;
+        private List<string> innerPartnerParameters;
+
+        public string EventToken { get; private set; }
+        public double? Revenue { get; private set; }
+        public string Currency { get; private set; }
+        public string CallbackId { get; set; }
+        public string DeduplicationId { get; set; }
+        public string ProductId { get; set; }
+        public ReadOnlyCollection<string> CallbackParameters
+        {
+            get
+            {
+                if (innerCallbackParameters == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerCallbackParameters.AsReadOnly();
+                }
+            }
+        }
+        public ReadOnlyCollection<string> PartnerParameters
+        {
+            get
+            {
+                if (innerPartnerParameters == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerPartnerParameters.AsReadOnly();
+                }
+            }
+        }
+        // ios specific
+        public string Receipt { get; set; }
+        public string TransactionId { get; set; }
+        // android specific
+        public string PurchaseToken;
 
         public AdjustEvent(string eventToken)
         {
-            this.eventToken = eventToken;
+            this.EventToken = eventToken;
         }
 
         public void SetRevenue(double amount, string currency)
         {
-            this.revenue = amount;
-            this.currency = currency;
+            this.Revenue = amount;
+            this.Currency = currency;
         }
 
         public void AddCallbackParameter(string key, string value)
         {
-            if (callbackList == null)
+            if (this.innerCallbackParameters == null)
             {
-                callbackList = new List<string>();
+                this.innerCallbackParameters = new List<string>();
             }
-            callbackList.Add(key);
-            callbackList.Add(value);
+            this.innerCallbackParameters.Add(key);
+            this.innerCallbackParameters.Add(value);
         }
 
         public void AddPartnerParameter(string key, string value)
         {
-            if (partnerList == null)
+            if (this.innerPartnerParameters == null)
             {
-                partnerList = new List<string>();
+                this.innerPartnerParameters = new List<string>();
             }
-            partnerList.Add(key);
-            partnerList.Add(value);
-        }
-
-        public void SetCallbackId(string callbackId)
-        {
-            this.callbackId = callbackId;
-        }
-
-        public void SetDeduplicationId(string deduplicationId)
-        {
-            this.deduplicationId = deduplicationId;
-        }
-
-        public void SetProductId(string productId)
-        {
-            this.productId = productId;
-        }
-
-        // iOS specific
-        public void SetTransactionId(string transactionId)
-        {
-            this.transactionId = transactionId;
-        }
-
-        public void SetReceipt(string receipt)
-        {
-            this.receipt = receipt;
-        }
-
-        // Android specific
-        public void SetOrderId(string orderId)
-        {
-            this.orderId = orderId;
-        }
-
-        public void SetPurchaseToken(string purchaseToken)
-        {
-            this.purchaseToken = purchaseToken;
+            this.innerPartnerParameters.Add(key);
+            this.innerPartnerParameters.Add(value);
         }
     }
 }

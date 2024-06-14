@@ -7,6 +7,7 @@
 //
 
 #import <AdjustSdk/Adjust.h>
+#import "AdjustUnity.h"
 
 /**
  * @brief The main interface to Adjust Unity delegate. Used to do callback methods swizzling where needed.
@@ -18,10 +19,13 @@
  */
 @property (nonatomic) BOOL shouldLaunchDeferredDeeplink;
 
-/**
- * @brief Name of the Unity game object that loads Adjust scene.
- */
-@property (nonatomic, copy) NSString *adjustUnityGameObjectName;
+@property (nonatomic) AdjustDelegateAttributionCallback attributionCallback;
+@property (nonatomic) AdjustDelegateEventSuccessCallback eventSuccessCallback;
+@property (nonatomic) AdjustDelegateEventFailureCallback eventFailureCallback;
+@property (nonatomic) AdjustDelegateSessionSuccessCallback sessionSuccessCallback;
+@property (nonatomic) AdjustDelegateSessionFailureCallback sessionFailureCallback;
+@property (nonatomic) AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback;
+@property (nonatomic) AdjustDelegateSkanUpdatedCallback skanUpdatedCallback;
 
 /**
  * @brief Get instance of the AdjustUnityDelegate with properly swizzled callback methods.
@@ -38,15 +42,14 @@
  *
  * @return AdjustUnityDelegate object instance with properly swizzled callback methods.
  */
-+ (id)getInstanceWithSwizzleOfAttributionCallback:(BOOL)swizzleAttributionCallback
-                             eventSuccessCallback:(BOOL)swizzleEventSuccessCallback
-                             eventFailureCallback:(BOOL)swizzleEventFailureCallback
-                           sessionSuccessCallback:(BOOL)swizzleSessionSuccessCallback
-                           sessionFailureCallback:(BOOL)swizzleSessionFailureCallback
-                         deferredDeeplinkCallback:(BOOL)swizzleDeferredDeeplinkCallback
-                              skanUpdatedCallback:(BOOL)swizzleSkanUpdatedCallback
-                     shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink
-                     andAdjustUnityGameObjectName:(NSString *)adjustUnityGameObjectName;
++ (id)getInstanceWithAttributionCallback:(AdjustDelegateAttributionCallback)attributionCallback
+                    eventSuccessCallback:(AdjustDelegateEventSuccessCallback)eventSuccessCallback
+                    eventFailureCallback:(AdjustDelegateEventFailureCallback)eventFailureCallback
+                  sessionSuccessCallback:(AdjustDelegateSessionSuccessCallback)sessionSuccessCallback
+                  sessionFailureCallback:(AdjustDelegateSessionFailureCallback)sessionFailureCallback
+                deferredDeeplinkCallback:(AdjustDelegateDeferredDeeplinkCallback)deferredDeeplinkCallback
+                     skanUpdatedCallback:(AdjustDelegateSkanUpdatedCallback)skanUpdatedCallback
+            shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink;
 
 /**
  * @brief Teardown method used to reset static AdjustUnityDelegate instance.

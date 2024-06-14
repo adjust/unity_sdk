@@ -1,69 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace com.adjust.sdk
 {
     public class AdjustAdRevenue
     {
-        internal string source;
-        internal double? revenue;
-        internal string currency;
-        internal int? adImpressionsCount;
-        internal string adRevenueNetwork;
-        internal string adRevenueUnit;
-        internal string adRevenuePlacement;
-        internal List<string> partnerList;
-        internal List<string> callbackList;
+        private List<string> innerCallbackParameters;
+        private List<string> innerPartnerParameters;
+
+        public string Source { get; private set; }
+        public double? Revenue { get; private set; }
+        public string Currency { get; private set; }
+        public int? AdImpressionsCount { get; set; }
+        public string AdRevenueNetwork { get; set; }
+        public string AdRevenueUnit { get; set; }
+        public string AdRevenuePlacement { get; set; }
+        public ReadOnlyCollection<string> CallbackParameters
+        {
+            get
+            {
+                if (innerCallbackParameters == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerCallbackParameters.AsReadOnly();
+                }
+            }
+        }
+        public ReadOnlyCollection<string> PartnerParameters
+        {
+            get
+            {
+                if (innerPartnerParameters == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerPartnerParameters.AsReadOnly();
+                }
+            }
+        }
 
         public AdjustAdRevenue(string source)
         {
-            this.source = source;
+            this.Source = source;
         }
 
-        public void SetRevenue(double amount, string currency)
+        public void SetRevenue(double revenue, string currency)
         {
-            this.revenue = amount;
-            this.currency = currency;
-        }
-
-        public void SetAdImpressionsCount(int adImpressionsCount)
-        {
-            this.adImpressionsCount = adImpressionsCount;
-        }
-
-        public void SetAdRevenueNetwork(string adRevenueNetwork)
-        {
-            this.adRevenueNetwork = adRevenueNetwork;
-        }
-
-        public void SetAdRevenueUnit(string adRevenueUnit)
-        {
-            this.adRevenueUnit = adRevenueUnit;
-        }
-
-        public void SetAdRevenuePlacement(string adRevenuePlacement)
-        {
-            this.adRevenuePlacement = adRevenuePlacement;
+            this.Revenue = revenue;
+            this.Currency = currency;
         }
 
         public void AddCallbackParameter(string key, string value)
         {
-            if (callbackList == null)
+            if (this.innerCallbackParameters == null)
             {
-                callbackList = new List<string>();
+                this.innerCallbackParameters = new List<string>();
             }
-            callbackList.Add(key);
-            callbackList.Add(value);
+            this.innerCallbackParameters.Add(key);
+            this.innerCallbackParameters.Add(value);
         }
 
         public void AddPartnerParameter(string key, string value)
         {
-            if (partnerList == null)
+            if (this.innerPartnerParameters == null)
             {
-                partnerList = new List<string>();
+                this.innerPartnerParameters = new List<string>();
             }
-            partnerList.Add(key);
-            partnerList.Add(value);
+            this.innerPartnerParameters.Add(key);
+            this.innerPartnerParameters.Add(value);
         }
     }
 }

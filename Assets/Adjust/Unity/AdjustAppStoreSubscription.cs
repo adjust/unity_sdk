@@ -1,56 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace com.adjust.sdk
 {
     public class AdjustAppStoreSubscription
     {
-        internal string price;
-        internal string currency;
-        internal string transactionId;
-        internal string receipt;
-        internal string billingStore;
-        internal string transactionDate;
-        internal string salesRegion;
-        internal List<string> partnerList;
-        internal List<string> callbackList;
+        private List<string> innerCallbackParameters;
+        private List<string> innerPartnerParameters;
+
+        public string Price { get; private set; }
+        public string Currency { get; private set; }
+        public string TransactionId { get; private set; }
+        public string Receipt { get; private set; }
+        public string TransactionDate { get; set; }
+        public string SalesRegion { get; set; }
+        public ReadOnlyCollection<string> CallbackParameters
+        {
+            get
+            {
+                if (innerCallbackParameters == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerCallbackParameters.AsReadOnly();
+                }
+            }
+        }
+        public ReadOnlyCollection<string> PartnerParameters
+        {
+            get
+            {
+                if (innerPartnerParameters == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return innerPartnerParameters.AsReadOnly();
+                }
+            }
+        }
 
         public AdjustAppStoreSubscription(string price, string currency, string transactionId, string receipt)
         {
-            this.price = price;
-            this.currency = currency;
-            this.transactionId = transactionId;
-            this.receipt = receipt;
-        }
-
-        public void SetTransactionDate(string transactionDate)
-        {
-            this.transactionDate = transactionDate;
-        }
-
-        public void SetSalesRegion(string salesRegion)
-        {
-            this.salesRegion = salesRegion;
+            this.Price = price;
+            this.Currency = currency;
+            this.TransactionId = transactionId;
+            this.Receipt = receipt;
         }
 
         public void AddCallbackParameter(string key, string value)
         {
-            if (callbackList == null)
+            if (this.innerCallbackParameters == null)
             {
-                callbackList = new List<string>();
+                this.innerCallbackParameters = new List<string>();
             }
-            callbackList.Add(key);
-            callbackList.Add(value);
+            this.innerCallbackParameters.Add(key);
+            this.innerCallbackParameters.Add(value);
         }
 
         public void AddPartnerParameter(string key, string value)
         {
-            if (partnerList == null)
+            if (this.innerPartnerParameters == null)
             {
-                partnerList = new List<string>();
+                this.innerPartnerParameters = new List<string>();
             }
-            partnerList.Add(key);
-            partnerList.Add(value);
+            this.innerPartnerParameters.Add(key);
+            this.innerPartnerParameters.Add(value);
         }
     }
 }

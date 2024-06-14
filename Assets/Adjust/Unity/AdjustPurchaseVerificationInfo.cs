@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace com.adjust.sdk
 {
+    // TODO: rename class to AdjustPurchaseVerificationResult
     public class AdjustPurchaseVerificationInfo
     {
         public int Code { get; set; }
@@ -20,9 +20,9 @@ namespace com.adjust.sdk
             }
 
             string strCode = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCode);
-            Code = Int32.Parse(strCode);
-            Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
-            VerificationStatus = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyVerificationStatus);
+            this.Code = int.Parse(strCode);
+            this.Message = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyMessage);
+            this.VerificationStatus = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyVerificationStatus);
         }
     }
 }
