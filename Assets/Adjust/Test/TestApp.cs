@@ -54,11 +54,6 @@ namespace com.adjust.sdk.test
             return new TestLibraryiOS(OVERWRITE_URL, CONTROL_URL);
 #elif UNITY_ANDROID
             return new TestLibraryAndroid(OVERWRITE_URL, CONTROL_URL);
-#elif (UNITY_WSA || UNITY_WP8)
-            return new TestLibraryWindows(
-                OVERWRITE_URL,
-                CONTROL_URL,
-                OVERWRITE_URL);
 #else
             Debug.Log("Cannot run integration tests (Error in TestApp.GetPlatformSpecificTestLibrary(...)). None of the supported platforms selected.");
             return null;

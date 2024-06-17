@@ -1,17 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-#if (UNITY_WSA || UNITY_WP8)
-using TestLibraryInterface;
-#endif
 
 namespace com.adjust.sdk.test
 {
-#if (UNITY_WSA || UNITY_WP8)
-    public class CommandExecutor : IAdjustCommandExecutor
-#else
     public class CommandExecutor
-#endif
     {
         public string ExtraPath { get; set; }
 
@@ -275,9 +268,6 @@ namespace com.adjust.sdk.test
                     adjustConfig.LogLevel = logLevel.Value;
                 }
 
-#if (UNITY_WSA || UNITY_WP8)
-                adjustConfig.logDelegate = msg => Debug.Log(msg);
-#endif
                 _savedConfigs.Add(configNumber, adjustConfig);
             }
 
@@ -581,8 +571,6 @@ namespace com.adjust.sdk.test
             AdjustiOS.TrackSubsessionStart("test");
 #elif UNITY_ANDROID
             AdjustAndroid.OnResume("test");
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.OnResume();
 #else
             Debug.Log("TestApp - Command Executor - Error! Cannot Resume. None of the supported platforms selected.");
 #endif
@@ -594,8 +582,6 @@ namespace com.adjust.sdk.test
             AdjustiOS.TrackSubsessionEnd("test");
 #elif UNITY_ANDROID
             AdjustAndroid.OnPause("test");
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.OnPause();
 #else
             Debug.Log("TestApp - Command Executor - Error! Cannot Pause. None of the supported platforms selected.");
 #endif

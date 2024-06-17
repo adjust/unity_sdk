@@ -107,8 +107,6 @@ namespace com.adjust.sdk
             AdjustiOS.InitSdk(adjustConfig);
 #elif UNITY_ANDROID
             AdjustAndroid.InitSdk(adjustConfig);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.Start(adjustConfig);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -130,8 +128,6 @@ namespace com.adjust.sdk
             AdjustiOS.TrackEvent(adjustEvent);
 #elif UNITY_ANDROID
             AdjustAndroid.TrackEvent(adjustEvent);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.TrackEvent(adjustEvent);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -148,8 +144,6 @@ namespace com.adjust.sdk
             AdjustiOS.Enable();
 #elif UNITY_ANDROID
             AdjustAndroid.Enable();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.SetEnabled(enabled);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -166,8 +160,6 @@ namespace com.adjust.sdk
             AdjustiOS.Disable();
 #elif UNITY_ANDROID
             AdjustAndroid.Disable();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.SetEnabled(enabled);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -248,8 +240,6 @@ namespace com.adjust.sdk
             AdjustiOS.IsEnabled(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.IsEnabled(callback);
-#elif (UNITY_WSA || UNITY_WP8)
-            return AdjustWindows.IsEnabled();
 #else
             Debug.Log(errorMsgPlatform);
             return;
@@ -267,8 +257,6 @@ namespace com.adjust.sdk
             AdjustiOS.SwitchToOfflineMode();
 #elif UNITY_ANDROID
             AdjustAndroid.SwitchToOfflineMode();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.SetOfflineMode(enabled);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -285,8 +273,6 @@ namespace com.adjust.sdk
             AdjustiOS.SwitchBackToOnlineMode();
 #elif UNITY_ANDROID
             AdjustAndroid.SwitchBackToOnlineMode();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.SetOfflineMode(enabled);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -303,8 +289,6 @@ namespace com.adjust.sdk
             AdjustiOS.SetPushToken(pushToken);
 #elif UNITY_ANDROID
             AdjustAndroid.SetPushToken(pushToken);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.SetDeviceToken(deviceToken);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -321,8 +305,6 @@ namespace com.adjust.sdk
             AdjustiOS.GdprForgetMe();
 #elif UNITY_ANDROID
             AdjustAndroid.GdprForgetMe();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.GdprForgetMe();
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -339,8 +321,6 @@ namespace com.adjust.sdk
             AdjustiOS.ProcessDeeplink(deeplink);
 #elif UNITY_ANDROID
             AdjustAndroid.ProcessDeeplink(deeplink);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.AppWillOpenUrl(url);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -357,8 +337,6 @@ namespace com.adjust.sdk
             AdjustiOS.AddGlobalPartnerParameter(key, value);
 #elif UNITY_ANDROID
             AdjustAndroid.AddGlobalPartnerParameter(key, value);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.AddSessionPartnerParameter(key, value);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -375,8 +353,6 @@ namespace com.adjust.sdk
             AdjustiOS.AddGlobalCallbackParameter(key, value);
 #elif UNITY_ANDROID
             AdjustAndroid.AddGlobalCallbackParameter(key, value);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.AddSessionCallbackParameter(key, value);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -393,8 +369,6 @@ namespace com.adjust.sdk
             AdjustiOS.RemoveGlobalPartnerParameter(key);
 #elif UNITY_ANDROID
             AdjustAndroid.RemoveGlobalPartnerParameter(key);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.RemoveSessionPartnerParameter(key);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -411,8 +385,6 @@ namespace com.adjust.sdk
             AdjustiOS.RemoveGlobalCallbackParameter(key);
 #elif UNITY_ANDROID
             AdjustAndroid.RemoveGlobalCallbackParameter(key);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.RemoveSessionCallbackParameter(key);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -429,8 +401,6 @@ namespace com.adjust.sdk
             AdjustiOS.RemoveGlobalPartnerParameters();
 #elif UNITY_ANDROID
             AdjustAndroid.RemoveGlobalPartnerParameters();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.ResetSessionPartnerParameters();
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -447,8 +417,6 @@ namespace com.adjust.sdk
             AdjustiOS.RemoveGlobalCallbackParameters();
 #elif UNITY_ANDROID
             AdjustAndroid.RemoveGlobalCallbackParameters();
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.ResetSessionCallbackParameters();
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -465,8 +433,6 @@ namespace com.adjust.sdk
             AdjustiOS.TrackAdRevenue(adRevenue);
 #elif UNITY_ANDROID
             AdjustAndroid.TrackAdRevenue(adRevenue);
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Ad revenue tracking is only supported for Android and iOS platforms.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -482,8 +448,6 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.TrackAppStoreSubscription(subscription);
 #elif UNITY_ANDROID
-            Debug.Log("[Adjust]: App Store subscription tracking is only supported for iOS platform.");
-#elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: App Store subscription tracking is only supported for iOS platform.");
 #else
             Debug.Log(errorMsgPlatform);
@@ -501,8 +465,6 @@ namespace com.adjust.sdk
             Debug.Log("[Adjust]: Play Store subscription tracking is only supported for Android platform.");
 #elif UNITY_ANDROID
             AdjustAndroid.TrackPlayStoreSubscription(subscription);
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Play Store subscription tracking is only supported for Android platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -519,8 +481,6 @@ namespace com.adjust.sdk
             AdjustiOS.TrackThirdPartySharing(thirdPartySharing);
 #elif UNITY_ANDROID
             AdjustAndroid.TrackThirdPartySharing(thirdPartySharing);
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Third party sharing tracking is only supported for iOS and Android platforms.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -537,8 +497,6 @@ namespace com.adjust.sdk
             AdjustiOS.TrackMeasurementConsent(measurementConsent);
 #elif UNITY_ANDROID
             AdjustAndroid.TrackMeasurementConsent(measurementConsent);
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Measurement consent tracking is only supported for iOS and Android platforms.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -554,8 +512,6 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.RequestAppTrackingAuthorization(callback);
 #elif UNITY_ANDROID
-            Debug.Log("[Adjust]: Requesting tracking authorization is only supported for iOS platform.");
-#elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: Requesting tracking authorization is only supported for iOS platform.");
 #else
             Debug.Log(errorMsgPlatform);
@@ -577,8 +533,6 @@ namespace com.adjust.sdk
             AdjustiOS.UpdateSkanConversionValue(conversionValue, coarseValue, lockWindow, callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Updating SKAdNetwork conversion value is only supported for iOS platform.");
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Updating SKAdNetwork conversion value is only supported for iOS platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -594,9 +548,6 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             return AdjustiOS.GetAppTrackingAuthorizationStatus();
 #elif UNITY_ANDROID
-            Debug.Log("[Adjust]: Error! App tracking authorization status is only supported for iOS platform.");
-            return -1;
-#elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: Error! App tracking authorization status is only supported for iOS platform.");
             return -1;
 #else
@@ -616,8 +567,6 @@ namespace com.adjust.sdk
             AdjustiOS.GetAdid(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.GetAdid(callback);
-#elif (UNITY_WSA || UNITY_WP8)
-            return AdjustWindows.GetAdid();
 #else
             Debug.Log(errorMsgPlatform);
             return string.Empty;
@@ -635,34 +584,11 @@ namespace com.adjust.sdk
             AdjustiOS.GetAttribution(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.GetAttribution(callback);
-#elif (UNITY_WSA || UNITY_WP8)
-            return AdjustWindows.GetAttribution();
 #else
             Debug.Log(errorMsgPlatform);
             return null;
 #endif
         }
-
-//         public static string getWinAdid()
-//         {
-//             if (IsEditor())
-//             {
-//                 return string.Empty;
-//             }
-
-// #if UNITY_IOS
-//             Debug.Log("[Adjust]: Error! Windows Advertising ID is not available on iOS platform.");
-//             return string.Empty;
-// #elif UNITY_ANDROID
-//             Debug.Log("[Adjust]: Error! Windows Advertising ID is not available on Android platform.");
-//             return string.Empty;
-// #elif (UNITY_WSA || UNITY_WP8)
-//             return AdjustWindows.GetWinAdId();
-// #else
-//             Debug.Log(errorMsgPlatform);
-//             return string.Empty;
-// #endif
-//         }
 
         public static void GetIdfa(Action<string> callback)
         {
@@ -676,9 +602,6 @@ namespace com.adjust.sdk
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFA is not available on Android platform.");
             return;
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Error! IDFA is not available on Windows platform.");
-            return string.Empty;
 #else
             Debug.Log(errorMsgPlatform);
             return string.Empty;
@@ -697,9 +620,6 @@ namespace com.adjust.sdk
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFV is not available on Android platform.");
             return;
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Error! IDFV is not available on Windows platform.");
-            return string.Empty;
 #else
             Debug.Log(errorMsgPlatform);
             return string.Empty;
@@ -717,8 +637,6 @@ namespace com.adjust.sdk
             AdjustiOS.GetSdkVersion(callback);
 #elif UNITY_ANDROID
             AdjustAndroid.GetSdkVersion(callback);
-#elif (UNITY_WSA || UNITY_WP8)
-            return AdjustWindows.GetSdkVersion();
 #else
             Debug.Log(errorMsgPlatform);
             return string.Empty;
@@ -737,9 +655,6 @@ namespace com.adjust.sdk
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Android platform.");
             return;
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Windows platform.");
-            return string.Empty;
 #else
             Debug.Log(errorMsgPlatform);
             return string.Empty;
@@ -758,8 +673,6 @@ namespace com.adjust.sdk
 #if UNITY_IOS
             AdjustiOS.VerifyAppStorePurchase(purchase, callback);
 #elif UNITY_ANDROID
-            Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
-#elif (UNITY_WSA || UNITY_WP8)
             Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
 #else
             Debug.Log(errorMsgPlatform);
@@ -787,8 +700,6 @@ namespace com.adjust.sdk
             }
 
             AdjustAndroid.VerifyPlayStorePurchase(purchase, verificationResultCallback);
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -805,8 +716,6 @@ namespace com.adjust.sdk
             AdjustiOS.ProcessAndResolveDeeplink(deeplink, callback);
 #elif UNITY_ANDROID
             AdjustAndroid.ProcessAndResolveDeeplink(deeplink, callback);
-#elif (UNITY_WSA || UNITY_WP8)
-            Debug.Log("[Adjust]: Deep link processing is only supported for Android and iOS platform.");
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -833,8 +742,6 @@ namespace com.adjust.sdk
             AdjustiOS.SetTestOptions(testOptions);
 #elif UNITY_ANDROID
             AdjustAndroid.SetTestOptions(testOptions);
-#elif (UNITY_WSA || UNITY_WP8)
-            AdjustWindows.SetTestOptions(testOptions);
 #else
             Debug.Log("[Adjust]: Cannot run integration tests. None of the supported platforms selected.");
 #endif

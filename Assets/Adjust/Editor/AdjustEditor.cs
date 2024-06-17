@@ -70,20 +70,6 @@ public class AdjustEditor : AssetPostprocessor
         assetsToExport.Add(assetsPath + "/Unity/AdjustSessionSuccess.cs");
         assetsToExport.Add(assetsPath + "/Unity/AdjustUtils.cs");
 
-        assetsToExport.Add(assetsPath + "/Windows/AdjustWindows.cs");
-        assetsToExport.Add(assetsPath + "/Windows/WindowsPcl.dll");
-        assetsToExport.Add(assetsPath + "/Windows/WindowsUap.dll");
-        assetsToExport.Add(assetsPath + "/Windows/Stubs/Win10Interface.dll");
-        assetsToExport.Add(assetsPath + "/Windows/Stubs/Win81Interface.dll");
-        assetsToExport.Add(assetsPath + "/Windows/Stubs/WinWsInterface.dll");
-        assetsToExport.Add(assetsPath + "/Windows/W81/AdjustWP81.dll");
-        assetsToExport.Add(assetsPath + "/Windows/W81/Win81Interface.dll");
-        assetsToExport.Add(assetsPath + "/Windows/WS/AdjustWS.dll");
-        assetsToExport.Add(assetsPath + "/Windows/WS/WinWsInterface.dll");
-        assetsToExport.Add(assetsPath + "/Windows/WU10/AdjustUAP10.dll");
-        assetsToExport.Add(assetsPath + "/Windows/WU10/Win10Interface.dll");
-        assetsToExport.Add(assetsPath + "/Windows/Newtonsoft.Json.dll");
-
         AssetDatabase.ExportPackage(
             assetsToExport.ToArray(),
             exportedFileName,
