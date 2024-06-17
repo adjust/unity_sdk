@@ -937,7 +937,7 @@ namespace com.adjust.sdk.test
                 productId,
                 receipt);
 
-            Adjust.VerifyAppStorePurchase(purchase, VerificationInfoCallback);
+            Adjust.VerifyAppStorePurchase(purchase, VerificationResultCallback);
 #elif UNITY_ANDROID
             string productId = _command.GetFirstParameterValue("productId");
             string purchaseToken = _command.GetFirstParameterValue("purchaseToken");
@@ -946,7 +946,7 @@ namespace com.adjust.sdk.test
                 productId,
                 purchaseToken);
 
-            Adjust.VerifyPlayStorePurchase(purchase, VerificationInfoCallback);
+            Adjust.VerifyPlayStorePurchase(purchase, VerificationResultCallback);
 #endif
         }
 
@@ -996,12 +996,12 @@ namespace com.adjust.sdk.test
         }
 
         // helper methods
-        private void VerificationInfoCallback(AdjustPurchaseVerificationInfo verificationInfo)
+        private void VerificationResultCallback(AdjustPurchaseVerificationResult verificationResult)
         {
             string localExtraPath = ExtraPath;
-            _testLibrary.AddInfoToSend("verification_status", verificationInfo.VerificationStatus);
-            _testLibrary.AddInfoToSend("code", verificationInfo.Code.ToString());
-            _testLibrary.AddInfoToSend("message", verificationInfo.Message);
+            _testLibrary.AddInfoToSend("verification_status", verificationResult.VerificationStatus);
+            _testLibrary.AddInfoToSend("code", verificationResult.Code.ToString());
+            _testLibrary.AddInfoToSend("message", verificationResult.Message);
             _testLibrary.SendInfoToServer(localExtraPath);
         }
 

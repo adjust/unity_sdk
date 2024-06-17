@@ -3,15 +3,15 @@
 namespace com.adjust.sdk
 {
     // TODO: rename class to AdjustPurchaseVerificationResult
-    public class AdjustPurchaseVerificationInfo
+    public class AdjustPurchaseVerificationResult
     {
         public int Code { get; set; }
         public string Message { get; set; }
         public string VerificationStatus { get; set; }
 
-        public AdjustPurchaseVerificationInfo() {}
+        public AdjustPurchaseVerificationResult() {}
 
-        public AdjustPurchaseVerificationInfo(string jsonString)
+        public AdjustPurchaseVerificationResult(string jsonString)
         {
             var jsonNode = JSON.Parse(jsonString);
             if (jsonNode == null)

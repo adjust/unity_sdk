@@ -19,7 +19,7 @@ namespace com.adjust.sdk
         private static List<Action<string>> appLastDeeplinkGetterCallbacks;
         private static List<Action<string>> appSdkVersionGetterCallbacks;
         private static List<Action<int>> appAttCallbacks;
-        private static Action<AdjustPurchaseVerificationInfo> appPurchaseVerificationCallback;
+        private static Action<AdjustPurchaseVerificationResult> appPurchaseVerificationCallback;
         private static Action<string> appResolvedDeeplinkCallback;
         private static Action<string> appSkanErrorCallback;
 
@@ -567,7 +567,7 @@ namespace com.adjust.sdk
 
         public static void VerifyAppStorePurchase(
             AdjustAppStorePurchase purchase,
-            Action<AdjustPurchaseVerificationInfo> callback)
+            Action<AdjustPurchaseVerificationResult> callback)
         {
             string transactionId = purchase.TransactionId;
             string productId = purchase.ProductId;
@@ -772,7 +772,7 @@ namespace com.adjust.sdk
         private static void PurchaseVerificationCallbackMonoPInvoke(string verificationResult) {
             if (appPurchaseVerificationCallback != null)
             {
-                appPurchaseVerificationCallback(new AdjustPurchaseVerificationInfo(verificationResult));
+                appPurchaseVerificationCallback(new AdjustPurchaseVerificationResult(verificationResult));
                 appPurchaseVerificationCallback = null;
             }
         }

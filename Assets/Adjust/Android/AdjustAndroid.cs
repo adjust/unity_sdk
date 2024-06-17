@@ -18,7 +18,7 @@ namespace com.adjust.sdk
         private static EventTrackingSucceededListener onEventTrackingSucceededListener;
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
-        private static VerificationInfoListener onVerificationInfoListener;
+        private static VerificationResultListener onVerificationResultListener;
         private static DeeplinkResolutionListener onDeeplinkResolvedListener;
 
         public static void InitSdk(AdjustConfig adjustConfig)
@@ -558,14 +558,16 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("getSdkVersion", onSdkVersionReadProxy);
         }
 
-        public static void VerifyPlayStorePurchase(AdjustPlayStorePurchase purchase, Action<AdjustPurchaseVerificationInfo> verificationInfoCallback)
+        public static void VerifyPlayStorePurchase(
+            AdjustPlayStorePurchase purchase,
+            Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
         {
             AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStorePurchase",
                 purchase.ProductId,
                 purchase.PurchaseToken);
-            onVerificationInfoListener = new VerificationInfoListener(verificationInfoCallback);
+            onVerificationResultListener = new VerificationResultListener(verificationInfoCallback);
 
-            ajcAdjust.CallStatic("verifyPlayStorePurchase", ajoPurchase, onVerificationInfoListener);
+            ajcAdjust.CallStatic("verifyPlayStorePurchase", ajoPurchase, onVerificationResultListener);
         }
 
         public static void ProcessAndResolveDeeplink(string url, Action<string> resolvedLinkCallback)
@@ -905,28 +907,28 @@ namespace com.adjust.sdk
             }
         }
 
-        private class VerificationInfoListener : AndroidJavaProxy
+        private class VerificationResultListener : AndroidJavaProxy
         {
-            private Action<AdjustPurchaseVerificationInfo> callback;
+            private Action<AdjustPurchaseVerificationResult> callback;
 
-            public VerificationInfoListener(Action<AdjustPurchaseVerificationInfo> pCallback) : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
+            public VerificationResultListener(Action<AdjustPurchaseVerificationResult> pCallback) : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
             {
                 this.callback = pCallback;
             }
 
             public void onVerificationFinished(AndroidJavaObject verificationInfo)
             {
-                AdjustPurchaseVerificationInfo purchaseVerificationInfo = new AdjustPurchaseVerificationInfo();
+                AdjustPurchaseVerificationResult purchaseVerificationResult = new AdjustPurchaseVerificationResult();
                 // verification status
-                purchaseVerificationInfo.VerificationStatus = verificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus);
+                purchaseVerificationResult.VerificationStatus = verificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus);
                 // status code
-                purchaseVerificationInfo.Code = verificationInfo.Get<int>(AdjustUtils.KeyCode);
+                purchaseVerificationResult.Code = verificationInfo.Get<int>(AdjustUtils.KeyCode);
                 // message
-                purchaseVerificationInfo.Message = verificationInfo.Get<string>(AdjustUtils.KeyMessage);
+                purchaseVerificationResult.Message = verificationInfo.Get<string>(AdjustUtils.KeyMessage);
 
                 if (callback != null)
                 {
-                    callback(purchaseVerificationInfo);
+                    callback(purchaseVerificationResult);
                 }
             }
         }
