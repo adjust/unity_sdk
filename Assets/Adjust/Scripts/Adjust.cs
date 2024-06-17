@@ -569,7 +569,6 @@ namespace com.adjust.sdk
             AdjustAndroid.GetAdid(callback);
 #else
             Debug.Log(errorMsgPlatform);
-            return string.Empty;
 #endif
         }
 
@@ -586,7 +585,6 @@ namespace com.adjust.sdk
             AdjustAndroid.GetAttribution(callback);
 #else
             Debug.Log(errorMsgPlatform);
-            return null;
 #endif
         }
 
@@ -604,7 +602,6 @@ namespace com.adjust.sdk
             return;
 #else
             Debug.Log(errorMsgPlatform);
-            return string.Empty;
 #endif
         }
 
@@ -622,7 +619,6 @@ namespace com.adjust.sdk
             return;
 #else
             Debug.Log(errorMsgPlatform);
-            return string.Empty;
 #endif
         }
 
@@ -639,7 +635,6 @@ namespace com.adjust.sdk
             AdjustAndroid.GetSdkVersion(callback);
 #else
             Debug.Log(errorMsgPlatform);
-            return string.Empty;
 #endif
         }
 
@@ -657,7 +652,6 @@ namespace com.adjust.sdk
             return;
 #else
             Debug.Log(errorMsgPlatform);
-            return string.Empty;
 #endif
         }
 
