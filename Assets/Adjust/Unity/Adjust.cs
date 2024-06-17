@@ -748,7 +748,7 @@ namespace com.adjust.sdk
 
         public static void VerifyAppStorePurchase(
             AdjustAppStorePurchase purchase,
-            Action<AdjustPurchaseVerificationInfo> callback)
+            Action<AdjustPurchaseVerificationResult> callback)
         {
             if (IsEditor())
             {
@@ -768,7 +768,7 @@ namespace com.adjust.sdk
 
         public static void VerifyPlayStorePurchase(
             AdjustPlayStorePurchase purchase,
-            Action<AdjustPurchaseVerificationInfo> verificationResultCallback)
+            Action<AdjustPurchaseVerificationResult> verificationResultCallback)
         {
             if (IsEditor())
             {
