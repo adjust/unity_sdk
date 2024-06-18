@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace com.adjust.sdk.test
+namespace AdjustSdk.Test
 {
 #if UNITY_ANDROID
     public class TestConnectionOptions

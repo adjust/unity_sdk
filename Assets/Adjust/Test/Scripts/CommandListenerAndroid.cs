@@ -3,7 +3,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 #endif
 
-namespace com.adjust.sdk.test
+namespace AdjustSdk.Test
 {
     public class CommandListenerAndroid : AndroidJavaProxy
     {

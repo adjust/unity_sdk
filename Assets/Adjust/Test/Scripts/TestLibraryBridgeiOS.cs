@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace com.adjust.sdk.test
+namespace AdjustSdk.Test
 {
     #if UNITY_IOS
     public static class TestLibraryBridgeiOS

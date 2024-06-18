@@ -1,4 +1,4 @@
-﻿namespace com.adjust.sdk.test
+﻿namespace AdjustSdk.Test
 {
     public interface ITestLibrary
     {

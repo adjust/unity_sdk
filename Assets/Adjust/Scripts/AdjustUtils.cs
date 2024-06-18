@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
 using UnityEngine;
 
-namespace com.adjust.sdk
+namespace AdjustSdk
 {
     public class AdjustUtils
     {

@@ -1,4 +1,4 @@
-﻿namespace com.adjust.sdk
+﻿namespace AdjustSdk
 {
     [System.Serializable]
     public enum AdjustLogLevel

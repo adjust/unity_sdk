@@ -4,7 +4,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
-using com.adjust.sdk;
+using AdjustSdk;
 
 public class ExampleGUI : MonoBehaviour
 {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace com.adjust.sdk
+namespace AdjustSdk
 {
     [CustomEditor(typeof(AdjustSettings))]
     public class AdjustSettingsEditor : Editor

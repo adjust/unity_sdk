@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor.SceneManagement;
 using UnityEditor;
 
-namespace com.adjust.sdk
+namespace AdjustSdk
 {
     [CustomEditor(typeof(Adjust))]
     public class AdjustCustomEditor : Editor
