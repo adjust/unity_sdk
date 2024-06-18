@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using AdjustSdk;
 
-public class ExampleGUI : MonoBehaviour
+public class Example : MonoBehaviour
 {
     private int numberOfButtons = 8;
     private bool isEnabled;
@@ -50,52 +50,55 @@ public class ExampleGUI : MonoBehaviour
 
         if (GUI.Button(new Rect(0, Screen.height * 3 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Callback Event"))
         {
-            // AdjustEvent adjustEvent = new AdjustEvent("34vgg9");
-            // adjustEvent.addCallbackParameter("key", "value");
-            // adjustEvent.addCallbackParameter("foo", "bar");
-            // Adjust.trackEvent(adjustEvent);
+            AdjustEvent adjustEvent = new AdjustEvent("34vgg9");
+            adjustEvent.AddCallbackParameter("key", "value");
+            adjustEvent.AddCallbackParameter("foo", "bar");
+            Adjust.TrackEvent(adjustEvent);
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 4 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Track Partner Event"))
         {
-            // AdjustEvent adjustEvent = new AdjustEvent("w788qs");
-            // adjustEvent.addPartnerParameter("key", "value");
-            // adjustEvent.addPartnerParameter("foo", "bar");
-            // Adjust.trackEvent(adjustEvent);
+            AdjustEvent adjustEvent = new AdjustEvent("w788qs");
+            adjustEvent.AddPartnerParameter("key", "value");
+            adjustEvent.AddPartnerParameter("foo", "bar");
+            Adjust.TrackEvent(adjustEvent);
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 5 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), txtSetOfflineMode))
         {
-            // if (string.Equals(txtSetOfflineMode, "Turn Offline Mode ON", StringComparison.OrdinalIgnoreCase))
-            // {
-            //     Adjust.setOfflineMode(true);
-            //     txtSetOfflineMode = "Turn Offline Mode OFF";
-            // }
-            // else
-            // {
-            //     Adjust.setOfflineMode(false);
-            //     txtSetOfflineMode = "Turn Offline Mode ON";
-            // }
+            if (string.Equals(txtSetOfflineMode, "Turn Offline Mode ON", StringComparison.OrdinalIgnoreCase))
+            {
+                Adjust.SwitchToOfflineMode();
+                txtSetOfflineMode = "Turn Offline Mode OFF";
+            }
+            else
+            {
+                Adjust.SwitchBackToOnlineMode();
+                txtSetOfflineMode = "Turn Offline Mode ON";
+            }
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 6 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), txtSetEnabled))
         {
-            // if (string.Equals(txtSetEnabled, "Disable SDK", StringComparison.OrdinalIgnoreCase))
-            // {
-            //     Adjust.setEnabled(false);
-            //     txtSetEnabled = "Enable SDK";
-            // }
-            // else
-            // {
-            //     Adjust.setEnabled(true);
-            //     txtSetEnabled = "Disable SDK";
-            // }
+            if (string.Equals(txtSetEnabled, "Disable SDK", StringComparison.OrdinalIgnoreCase))
+            {
+                Adjust.Disable();
+                txtSetEnabled = "Enable SDK";
+            }
+            else
+            {
+                Adjust.Enable();
+                txtSetEnabled = "Disable SDK";
+            }
         }
 
         if (GUI.Button(new Rect(0, Screen.height * 7 / numberOfButtons, Screen.width, Screen.height / numberOfButtons), "Is SDK Enabled?"))
         {
-            // isEnabled = Adjust.isEnabled();
-            // showPopUp = true;
+            Adjust.IsEnabled(enabled =>
+            {
+                isEnabled = enabled;
+                showPopUp = true;
+            });
         }
     }
 
