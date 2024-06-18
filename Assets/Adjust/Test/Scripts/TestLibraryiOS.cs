@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace com.adjust.sdk.test
+namespace AdjustSdk.Test
 {
     public class TestLibraryiOS : ITestLibrary
     {

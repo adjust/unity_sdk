@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace com.adjust.sdk
+namespace AdjustSdk
 {
 #if UNITY_IOS
     public class AdjustiOS

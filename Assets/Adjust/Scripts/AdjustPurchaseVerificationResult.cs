@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace com.adjust.sdk
+namespace AdjustSdk
 {
-    // TODO: rename class to AdjustPurchaseVerificationResult
     public class AdjustPurchaseVerificationResult
     {
         public int Code { get; set; }

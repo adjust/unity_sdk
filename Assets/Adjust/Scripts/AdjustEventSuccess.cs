@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace com.adjust.sdk
+namespace AdjustSdk
 {
     public class AdjustEventSuccess
     {
