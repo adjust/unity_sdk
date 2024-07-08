@@ -685,14 +685,6 @@ namespace AdjustSdk
 #if UNITY_IOS
             Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
 #elif UNITY_ANDROID
-            if (purchase == null ||
-                purchase.ProductId == null ||
-                purchase.PurchaseToken == null)
-            {
-                Debug.Log("[Adjust]: Invalid Play Store purchase parameters.");
-                return;
-            }
-
             AdjustAndroid.VerifyPlayStorePurchase(purchase, verificationResultCallback);
 #else
             Debug.Log(errorMsgPlatform);
@@ -710,6 +702,42 @@ namespace AdjustSdk
             AdjustiOS.ProcessAndResolveDeeplink(deeplink, callback);
 #elif UNITY_ANDROID
             AdjustAndroid.ProcessAndResolveDeeplink(deeplink, callback);
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void VerifyAndTrackAppStorePurchase(
+            AdjustEvent adjustEvent,
+            Action<AdjustPurchaseVerificationResult> callback)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.VerifyAndTrackAppStorePurchase(adjustEvent, callback);
+#elif UNITY_ANDROID
+            Debug.Log("[Adjust]: App Store purchase verification is only supported for iOS platform.");
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void VerifyAndTrackPlayStorePurchase(
+            AdjustEvent adjustEvent,
+            Action<AdjustPurchaseVerificationResult> verificationResultCallback)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Play Store purchase verification is only supported for Android platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.VerifyAndTrackPlayStorePurchase(adjustEvent, verificationResultCallback);
 #else
             Debug.Log(errorMsgPlatform);
 #endif

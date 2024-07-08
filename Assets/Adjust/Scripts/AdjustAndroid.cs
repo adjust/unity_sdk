@@ -19,6 +19,7 @@ namespace AdjustSdk
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
         private static VerificationResultListener onVerificationResultListener;
+        private static VerificationResultListener onVerifyAndTrackListener;
         private static DeeplinkResolutionListener onDeeplinkResolvedListener;
 
         public static void InitSdk(AdjustConfig adjustConfig)
@@ -576,6 +577,69 @@ namespace AdjustSdk
             AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
             AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
             ajcAdjust.CallStatic("processAndResolveDeeplink", ajoUri, ajoCurrentActivity, onDeeplinkResolvedListener);
+        }
+
+        public static void VerifyAndTrackPlayStorePurchase(
+            AdjustEvent adjustEvent,
+            Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
+        {
+            AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken);
+
+            // check if user has set revenue for the event
+            if (adjustEvent.Revenue != null)
+            {
+                ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.Revenue, adjustEvent.Currency);
+            }
+
+            // check if user has added any callback parameters to the event
+            if (adjustEvent.CallbackParameters != null)
+            {
+                for (int i = 0; i < adjustEvent.CallbackParameters.Count; i += 2)
+                {
+                    string key = adjustEvent.CallbackParameters[i];
+                    string value = adjustEvent.CallbackParameters[i + 1];
+                    ajoAdjustEvent.Call("addCallbackParameter", key, value);
+                }
+            }
+
+            // check if user has added any partner parameters to the event
+            if (adjustEvent.PartnerParameters != null)
+            {
+                for (int i = 0; i < adjustEvent.PartnerParameters.Count; i += 2)
+                {
+                    string key = adjustEvent.PartnerParameters[i];
+                    string value = adjustEvent.PartnerParameters[i + 1];
+                    ajoAdjustEvent.Call("addPartnerParameter", key, value);
+                }
+            }
+
+            // check if user has set deduplication ID for the event
+            if (adjustEvent.DeduplicationId != null)
+            {
+                ajoAdjustEvent.Call("setDeduplicationId", adjustEvent.DeduplicationId);
+            }
+
+            // check if user has added callback ID to the event
+            if (adjustEvent.CallbackId != null)
+            {
+                ajoAdjustEvent.Call("setCallbackId", adjustEvent.CallbackId);
+            }
+
+            // check if user has added product ID to the event
+            if (adjustEvent.ProductId != null)
+            {
+                ajoAdjustEvent.Call("setProductId", adjustEvent.ProductId);
+            }
+
+            // check if user has added purchase token to the event
+            if (adjustEvent.PurchaseToken != null)
+            {
+                ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.PurchaseToken);
+            }
+
+            onVerifyAndTrackListener = new VerificationResultListener(verificationInfoCallback);
+
+            ajcAdjust.CallStatic("verifyAndTrackPlayStorePurchase", ajoAdjustEvent, onVerifyAndTrackListener);
         }
 
         // used for testing only

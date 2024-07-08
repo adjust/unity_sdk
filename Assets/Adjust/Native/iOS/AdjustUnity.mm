@@ -764,6 +764,99 @@ extern "C"
         }
     }
 
+    void _AdjustVerifyAndTrackAppStorePurchase(
+        const char* eventToken,
+        double revenue,
+        const char* currency,
+        const char* receipt,
+        const char* productId,
+        const char* transactionId,
+        const char* callbackId,
+        const char* deduplicationId,
+        const char* jsonCallbackParameters,
+        const char* jsonPartnerParameters,
+        AdjustDelegateVerifyAndTrackCallback callback) {
+        NSString *strEventToken = isStringValid(eventToken) == true ? [NSString stringWithUTF8String:eventToken] : nil;
+        ADJEvent *event = [[ADJEvent alloc] initWithEventToken:strEventToken];
+
+        // revenue and currency
+        if (revenue != -1 && currency != NULL) {
+            NSString *stringCurrency = [NSString stringWithUTF8String:currency];
+            [event setRevenue:revenue currency:stringCurrency];
+        }
+
+        // callback parameters
+        NSArray *arrayCallbackParameters = convertArrayParameters(jsonCallbackParameters);
+        if (arrayCallbackParameters != nil) {
+            NSUInteger count = [arrayCallbackParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayCallbackParameters[i++];
+                NSString *value = arrayCallbackParameters[i++];
+                [event addCallbackParameter:key value:value];
+            }
+        }
+
+        // partner parameters
+        NSArray *arrayPartnerParameters = convertArrayParameters(jsonPartnerParameters);
+        if (arrayPartnerParameters != nil) {
+            NSUInteger count = [arrayPartnerParameters count];
+            for (int i = 0; i < count;) {
+                NSString *key = arrayPartnerParameters[i++];
+                NSString *value = arrayPartnerParameters[i++];
+                [event addPartnerParameter:key value:value];
+            }
+        }
+
+        // transaction ID
+        if (transactionId != NULL) {
+            NSString *strTransactionId = [NSString stringWithUTF8String:transactionId];
+            [event setTransactionId:strTransactionId];
+        }
+
+        // product ID
+        if (productId != NULL) {
+            NSString *strProductId = [NSString stringWithUTF8String:productId];
+            [event setProductId:strProductId];
+        }
+
+        // receipt (base64 encoded string)
+        if (receipt != NULL) {
+            NSString *strReceipt = [NSString stringWithUTF8String:receipt];
+            NSData *dataReceipt = [[NSData alloc] initWithBase64EncodedString:strReceipt options:0];
+            [event setReceipt:dataReceipt];
+        }
+
+        // callback ID
+        if (callbackId != NULL) {
+            NSString *strCallbackId = [NSString stringWithUTF8String:callbackId];
+            [event setCallbackId:strCallbackId];
+        }
+
+        // deduplication ID
+        if (deduplicationId != NULL) {
+            NSString *strDeduplicationId = [NSString stringWithUTF8String:deduplicationId];
+            [event setDeduplicationId:strDeduplicationId];
+        }
+
+        [Adjust verifyAndTrackAppStorePurchase:event
+                         withCompletionHandler:^(ADJPurchaseVerificationResult * _Nonnull verificationResult) {
+            // TODO: nil checks
+            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+            addValueOrEmpty(dictionary, @"verificationStatus", verificationResult.verificationStatus);
+            addValueOrEmpty(dictionary, @"code", [NSString stringWithFormat:@"%d", verificationResult.code]);
+            addValueOrEmpty(dictionary, @"message", verificationResult.message);
+
+            NSData *dataVerificationInfo = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                                           options:0
+                                                                             error:nil];
+            NSString *strVerificationInfo = [[NSString alloc] initWithBytes:[dataVerificationInfo bytes]
+                                                                     length:[dataVerificationInfo length]
+                                                                   encoding:NSUTF8StringEncoding];
+            const char* verificationInfoCString = [strVerificationInfo UTF8String];
+            callback(verificationInfoCString);
+        }];
+    }
+
     void _AdjustSetTestOptions(const char* overwriteUrl,
                                const char* extraPath,
                                long timerIntervalInMilliseconds,
