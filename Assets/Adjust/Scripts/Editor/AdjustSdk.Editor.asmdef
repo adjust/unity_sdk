@@ -1,0 +1,8 @@
+{
+    "name": "AdjustSdk.Editor",
+    "references": [
+        "AdjustSdk.Scripts"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}
