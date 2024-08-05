@@ -53,6 +53,7 @@ namespace AdjustSdk
                         return instance;
                     }
                     var assetPath = AssetDatabase.GUIDToAssetPath(guids[0]).Replace("AdjustSettings.cs", "AdjustSettings.asset");
+                    Debug.Log("PATH: " + AssetDatabase.GUIDToAssetPath(guids[0]));
                     AssetDatabase.CreateAsset(instance, assetPath);
                 }
 
