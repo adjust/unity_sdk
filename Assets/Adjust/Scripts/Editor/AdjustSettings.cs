@@ -1,6 +1,7 @@
 // Inspired by: https://github.com/facebook/facebook-sdk-for-unity/blob/master/Facebook.Unity.Settings/FacebookSettings.cs
 
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace AdjustSdk
     public class AdjustSettings : ScriptableObject
     {
         private static AdjustSettings instance;
+        public const string AdjustSettingsExportPath = "Adjust/Resources/AdjustSettings.asset";
 
         [SerializeField]
         private bool _iOSFrameworkAdSupport = true;
@@ -52,8 +54,32 @@ namespace AdjustSdk
                     {
                         return instance;
                     }
+
                     var assetPath = AssetDatabase.GUIDToAssetPath(guids[0]).Replace("AdjustSettings.cs", "AdjustSettings.asset");
-                    Debug.Log("PATH: " + AssetDatabase.GUIDToAssetPath(guids[0]));
+                    Debug.Log("READ PATH = " + assetPath);
+                    // AdjustSettings.asset will be stored inside of the Adjust/Resources directory
+                    if (assetPath.StartsWith("Assets"))
+                    {
+                        // plugin located in Assets directory
+                        string rootDir = assetPath.Replace("/Adjust/Scripts/Editor/AdjustSettings.asset", "");
+                        Debug.Log("ROOT DIR = " + rootDir);
+                        string adjustResourcesPath = Path.Combine(rootDir, "Adjust/Resources");
+                        Debug.Log("ADJUST RESOURCES DIR = " + adjustResourcesPath);
+                        if (!Directory.Exists(adjustResourcesPath))
+                        {
+                            Debug.Log("CREATING ADJUST RESOURCES DIR = " + adjustResourcesPath);
+                            Directory.CreateDirectory(adjustResourcesPath);
+                        }
+                        assetPath = Path.Combine(rootDir, AdjustSettingsExportPath);
+                        Debug.Log("FINAL ASSET PATH = " + assetPath);
+                    }
+                    else
+                    {
+                        // plugin located in Packages folder
+                        assetPath = Path.Combine("Assets", AdjustSettingsExportPath);
+                        Debug.Log("FINAL ASSET PATH = " + assetPath);
+                    }
+
                     AssetDatabase.CreateAsset(instance, assetPath);
                 }
 
