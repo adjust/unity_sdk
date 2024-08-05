@@ -61,6 +61,7 @@ namespace AdjustSdk.Test
                     case "verifyPurchase": VerifyPurchase(); break;
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
+                    case "verifyTrack": VerifyAndTrack(); break;
                     case "enablePlayStoreKidsApp" : EnablePlayStoreKidsApp(); break;
                     case "disablePlayStoreKidsApp" : DisablePlayStoreKidsApp(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
@@ -952,7 +953,8 @@ namespace AdjustSdk.Test
         private void AttributionGetter()
         {
             string localExtraPath = ExtraPath;
-            Adjust.GetAttribution((attribution) => {
+            Adjust.GetAttribution((attribution) =>
+            {
                 _testLibrary.AddInfoToSend("tracker_token", attribution.TrackerToken);
                 _testLibrary.AddInfoToSend("tracker_name", attribution.TrackerName);
                 _testLibrary.AddInfoToSend("network", attribution.Network);
@@ -966,6 +968,33 @@ namespace AdjustSdk.Test
                 _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
+        }
+
+        private void VerifyAndTrack()
+        {
+            string localExtraPath = ExtraPath;
+
+            Event();
+            var eventNumber = 0;
+            if (_command.ContainsParameter("eventName"))
+            {
+                var eventName = _command.GetFirstParameterValue("eventName");
+                eventNumber = int.Parse(eventName.Substring(eventName.Length - 1));
+            }
+
+            var adjustEvent = _savedEvents[eventNumber];
+
+#if UNITY_IOS
+            Adjust.VerifyAndTrackAppStorePurchase(adjustEvent, (verificationResult) =>
+            {
+                _testLibrary.AddInfoToSend("verification_status", verificationResult.VerificationStatus);
+                _testLibrary.AddInfoToSend("code", verificationResult.Code.ToString());
+                _testLibrary.AddInfoToSend("message", verificationResult.Message);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#elif UNITY_ANDROID
+
+#endif
         }
 
         private void EnablePlayStoreKidsApp()
