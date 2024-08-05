@@ -1,5 +1,5 @@
 {
-    "name": "adjust-sdk",
+    "name": "com.adjust.sdk",
     "version": "5.0.0",
     "unity": "2019.4",
     "displayName": "Adjust",
