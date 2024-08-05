@@ -143,7 +143,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:eventSuccessResponseData.message
                    forKey:@"message"
              toDictionary:dictionary];
-    [self addValueOrEmpty:eventSuccessResponseData.timeStamp
+    [self addValueOrEmpty:eventSuccessResponseData.timestamp
                    forKey:@"timestamp"
              toDictionary:dictionary];
     [self addValueOrEmpty:eventSuccessResponseData.adid
@@ -179,7 +179,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:eventFailureResponseData.message
                    forKey:@"message"
              toDictionary:dictionary];
-    [self addValueOrEmpty:eventFailureResponseData.timeStamp
+    [self addValueOrEmpty:eventFailureResponseData.timestamp
                    forKey:@"timestamp"
              toDictionary:dictionary];
     [self addValueOrEmpty:eventFailureResponseData.adid
@@ -217,7 +217,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:sessionSuccessResponseData.message
                    forKey:@"message"
              toDictionary:dictionary];
-    [self addValueOrEmpty:sessionSuccessResponseData.timeStamp
+    [self addValueOrEmpty:sessionSuccessResponseData.timestamp
                    forKey:@"timestamp"
              toDictionary:dictionary];
     [self addValueOrEmpty:sessionSuccessResponseData.adid
@@ -247,7 +247,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
     [self addValueOrEmpty:sessionFailureResponseData.message
                    forKey:@"message"
              toDictionary:dictionary];
-    [self addValueOrEmpty:sessionFailureResponseData.timeStamp
+    [self addValueOrEmpty:sessionFailureResponseData.timestamp
                    forKey:@"timestamp"
              toDictionary:dictionary];
     [self addValueOrEmpty:sessionFailureResponseData.adid

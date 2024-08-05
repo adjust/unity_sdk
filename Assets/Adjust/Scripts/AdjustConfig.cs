@@ -8,6 +8,7 @@ namespace AdjustSdk
         public string AppToken { get; private set; }
         public string DefaultTracker { get; set; }
         public string ExternalDeviceId { get; set; }
+        public bool? IsCoppaComplianceEnabled { get; set; }
         public bool? IsSendingInBackgroundEnabled { get; set; }
         public bool? IsCostDataInAttributionEnabled { get; set; }
         public bool? IsDeviceIdsReadingOnceEnabled { get; set; }

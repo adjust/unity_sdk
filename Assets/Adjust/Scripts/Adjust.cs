@@ -23,6 +23,8 @@ namespace AdjustSdk
         [HideInInspector]
         public AdjustLogLevel logLevel = AdjustLogLevel.Info;
         [HideInInspector]
+        public bool coppaCompliance = false;
+        [HideInInspector]
         public bool sendInBackground = false;
         [HideInInspector]
         public bool launchDeferredDeeplink = true;
@@ -79,6 +81,7 @@ namespace AdjustSdk
                 adjustConfig.IsDeferredDeeplinkOpeningEnabled = this.launchDeferredDeeplink;
                 adjustConfig.DefaultTracker = this.defaultTracker;
                 // TODO: URL strategy
+                adjustConfig.IsCoppaComplianceEnabled = this.coppaCompliance;
                 adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
@@ -160,38 +163,6 @@ namespace AdjustSdk
             AdjustiOS.Disable();
 #elif UNITY_ANDROID
             AdjustAndroid.Disable();
-#else
-            Debug.Log(errorMsgPlatform);
-#endif
-        }
-
-        public static void EnableCoppaCompliance()
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-#if UNITY_IOS
-            AdjustiOS.EnableCoppaCompliance();
-#elif UNITY_ANDROID
-            AdjustAndroid.EnableCoppaCompliance();
-#else
-            Debug.Log(errorMsgPlatform);
-#endif
-        }
-
-        public static void DisableCoppaCompliance()
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-#if UNITY_IOS
-            AdjustiOS.DisableCoppaCompliance();
-#elif UNITY_ANDROID
-            AdjustAndroid.DisableCoppaCompliance();
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -310,7 +281,7 @@ namespace AdjustSdk
 #endif
         }
 
-        public static void ProcessDeeplink(string deeplink)
+        public static void ProcessDeeplink(AdjustDeeplink deeplink)
         {
             if (IsEditor())
             {
@@ -691,7 +662,7 @@ namespace AdjustSdk
 #endif
         }
 
-        public static void ProcessAndResolveDeeplink(string deeplink, Action<string> callback)
+        public static void ProcessAndResolveDeeplink(AdjustDeeplink deeplink, Action<string> callback)
         {
             if (IsEditor())
             {

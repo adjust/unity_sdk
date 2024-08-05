@@ -61,8 +61,6 @@ namespace AdjustSdk.Test
                     case "verifyPurchase": VerifyPurchase(); break;
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
-                    case "enableCoppaCompliance": EnableCoppaCompliance(); break;
-                    case "disableCoppaCompliance": DisableCoppaCompliance(); break;
                     case "enablePlayStoreKidsApp" : EnablePlayStoreKidsApp(); break;
                     case "disablePlayStoreKidsApp" : DisablePlayStoreKidsApp(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
@@ -291,6 +289,13 @@ namespace AdjustSdk.Test
                 var sendInBackgroundS = _command.GetFirstParameterValue("sendInBackground");
                 var sendInBackground = sendInBackgroundS.ToLower() == "true";
                 adjustConfig.IsSendingInBackgroundEnabled = sendInBackground;
+            }
+
+            if (_command.ContainsParameter("coppaCompliant"))
+            {
+                var coppaCompliantS = _command.GetFirstParameterValue("coppaCompliant");
+                var coppaCompliant = coppaCompliantS.ToLower() == "true";
+                adjustConfig.IsCoppaComplianceEnabled = coppaCompliant;
             }
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
@@ -710,7 +715,8 @@ namespace AdjustSdk.Test
         private void OpenDeepLink()
         {
             var deeplink = _command.GetFirstParameterValue("deeplink");
-            Adjust.ProcessDeeplink(deeplink);
+            AdjustDeeplink adjustDeeplink = new AdjustDeeplink(deeplink);
+            Adjust.ProcessDeeplink(adjustDeeplink);
         }
 
         private void TrackSubscription()
@@ -939,7 +945,8 @@ namespace AdjustSdk.Test
         private void ProcessAndResolveDeeplink()
         {
             var deeplink = _command.GetFirstParameterValue("deeplink");
-            Adjust.ProcessAndResolveDeeplink(deeplink, DeeplinkResolvedCallback);
+            AdjustDeeplink adjustDeeplink = new AdjustDeeplink(deeplink);
+            Adjust.ProcessAndResolveDeeplink(adjustDeeplink, DeeplinkResolvedCallback);
         }
 
         private void AttributionGetter()
@@ -959,16 +966,6 @@ namespace AdjustSdk.Test
                 _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
-        }
-
-        private void EnableCoppaCompliance()
-        {
-            Adjust.EnableCoppaCompliance();
-        }
-
-        private void DisableCoppaCompliance()
-        {
-            Adjust.DisableCoppaCompliance();
         }
 
         private void EnablePlayStoreKidsApp()

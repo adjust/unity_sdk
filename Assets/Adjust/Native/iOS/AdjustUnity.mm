@@ -93,6 +93,7 @@ extern "C"
         int attConsentWaitingInterval,
         int eventDeduplicationIdsMaxSize,
         int shouldUseSubdomains,
+        int isCoppaComplianceEnabled,
         int isDataResidency,
         int isSendingInBackgroundEnabled,
         int isAdServicesEnabled,
@@ -120,10 +121,10 @@ extern "C"
         if (allowSuppressLogLevel != -1) {
             adjustConfig = [[ADJConfig alloc] initWithAppToken:strAppToken
                                                    environment:strEnvironment
-                                           andSuppressLogLevel:(BOOL)allowSuppressLogLevel];
+                                              suppressLogLevel:(BOOL)allowSuppressLogLevel];
         } else {
             adjustConfig = [[ADJConfig alloc] initWithAppToken:strAppToken
-                                                andEnvironment:strEnvironment];
+                                                   environment:strEnvironment];
         }
 
         // set SDK prefix
@@ -151,6 +152,13 @@ extern "C"
         // log level
         if (logLevel != -1) {
             [adjustConfig setLogLevel:(ADJLogLevel)logLevel];
+        }
+
+        // COPPA compliance.
+        if (isCoppaComplianceEnabled != -1) {
+            if ((BOOL)isCoppaComplianceEnabled == YES) {
+                [adjustConfig enableCoppaCompliance];
+            }
         }
 
         // Send in background.
@@ -227,8 +235,8 @@ extern "C"
             NSArray *urlStrategyDomains = convertArrayParameters(jsonUrlStrategyDomains);
             if (urlStrategyDomains != nil) {
                 [adjustConfig setUrlStrategy:urlStrategyDomains
-                              withSubdomains:(BOOL)shouldUseSubdomains
-                            andDataResidency:(BOOL)isDataResidency];
+                               useSubdomains:(BOOL)shouldUseSubdomains
+                             isDataResidency:(BOOL)isDataResidency];
             }
         }
 
@@ -239,7 +247,6 @@ extern "C"
     void _AdjustTrackEvent(const char* eventToken,
                            double revenue,
                            const char* currency,
-                           const char* receipt,
                            const char* productId,
                            const char* transactionId,
                            const char* callbackId,
@@ -289,13 +296,6 @@ extern "C"
             [event setProductId:strProductId];
         }
 
-        // receipt (base64 encoded string)
-        if (receipt != NULL) {
-            NSString *strReceipt = [NSString stringWithUTF8String:receipt];
-            NSData *dataReceipt = [[NSData alloc] initWithBase64EncodedString:strReceipt options:0];
-            [event setReceipt:dataReceipt];
-        }
-
         // callback ID
         if (callbackId != NULL) {
             NSString *strCallbackId = [NSString stringWithUTF8String:callbackId];
@@ -328,14 +328,6 @@ extern "C"
         [Adjust disable];
     }
 
-    void _AdjustEnableCoppaCompliance() {
-        [Adjust enableCoppaCompliance];
-    }
-
-    void _AdjustDisableCoppaCompliance() {
-        [Adjust disableCoppaCompliance];
-    }
-
     void _AdjustSwitchToOfflineMode() {
         [Adjust switchToOfflineMode];
     }
@@ -364,13 +356,13 @@ extern "C"
             }
 #pragma clang diagnostic pop
 
-            [Adjust processDeeplink:urlDeeplink];
+            ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
+            [Adjust processDeeplink:deeplink];
         }
     }
 
     void _AdjustIsEnabled(AdjustDelegateIsEnabledGetter callback) {
         [Adjust isEnabledWithCompletionHandler:^(BOOL isEnabled) {
-            NSString *strIsEnabled = isEnabled ? @"true" : @"false";
             callback(isEnabled);
         }];
     }
@@ -549,7 +541,6 @@ extern "C"
     void _AdjustTrackAppStoreSubscription(const char* price,
                                           const char* currency,
                                           const char* transactionId,
-                                          const char* receipt,
                                           const char* transactionDate,
                                           const char* salesRegion,
                                           const char* jsonCallbackParameters,
@@ -558,7 +549,6 @@ extern "C"
         NSDecimalNumber *mPrice;
         NSString *mCurrency;
         NSString *mTransactionId;
-        NSData *mReceipt;
 
         // price
         if (price != NULL) {
@@ -575,17 +565,10 @@ extern "C"
             mTransactionId = [NSString stringWithUTF8String:transactionId];
         }
 
-        // TODO: check if this is equivalent to event receipt logic
-        // receipt
-        if (receipt != NULL) {
-            mReceipt = [[NSString stringWithUTF8String:receipt] dataUsingEncoding:NSUTF8StringEncoding];
-        }
-
         ADJAppStoreSubscription *subscription =
         [[ADJAppStoreSubscription alloc] initWithPrice:mPrice
                                               currency:mCurrency
-                                         transactionId:mTransactionId
-                                            andReceipt:mReceipt];
+                                         transactionId:mTransactionId];
 
         // optional fields below
 
@@ -695,11 +678,9 @@ extern "C"
 
     void _AdjustVerifyAppStorePurchase(const char* transactionId,
                                        const char* productId,
-                                       const char* receipt,
                                        AdjustDelegatePurchaseVerificationCallback callback) {
         NSString *strTransactionId;
         NSString *strProductId;
-        NSData *dataReceipt;
 
         // transaction ID
         if (transactionId != NULL) {
@@ -711,18 +692,10 @@ extern "C"
             strProductId = [NSString stringWithUTF8String:productId];
         }
 
-        // receipt (base64 encoded string)
-        if (receipt != NULL) {
-            NSString *strReceipt = [NSString stringWithUTF8String:receipt];
-            dataReceipt = [[NSData alloc] initWithBase64EncodedString:strReceipt options:0];
-        }
-
-
         // verify the purchase
         ADJAppStorePurchase *purchase =
         [[ADJAppStorePurchase alloc] initWithTransactionId:strTransactionId
-                                                 productId:strProductId
-                                                andReceipt:dataReceipt];
+                                                 productId:strProductId];
 
         [Adjust verifyAppStorePurchase:purchase
                  withCompletionHandler:^(ADJPurchaseVerificationResult * _Nonnull verificationResult) {
@@ -756,7 +729,8 @@ extern "C"
             }
 #pragma clang diagnostic pop
 
-            [Adjust processAndResolveDeeplink:urlDeeplink withCompletionHandler:^(NSString * _Nullable resolvedLink) {
+            ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
+            [Adjust processAndResolveDeeplink:deeplink withCompletionHandler:^(NSString * _Nullable resolvedLink) {
                 // TODO: nil checks
                 const char* resolvedLinkCString = [resolvedLink UTF8String];
                 callback(resolvedLinkCString);
@@ -768,7 +742,6 @@ extern "C"
         const char* eventToken,
         double revenue,
         const char* currency,
-        const char* receipt,
         const char* productId,
         const char* transactionId,
         const char* callbackId,
@@ -817,13 +790,6 @@ extern "C"
         if (productId != NULL) {
             NSString *strProductId = [NSString stringWithUTF8String:productId];
             [event setProductId:strProductId];
-        }
-
-        // receipt (base64 encoded string)
-        if (receipt != NULL) {
-            NSString *strReceipt = [NSString stringWithUTF8String:receipt];
-            NSData *dataReceipt = [[NSData alloc] initWithBase64EncodedString:strReceipt options:0];
-            [event setReceipt:dataReceipt];
         }
 
         // callback ID
