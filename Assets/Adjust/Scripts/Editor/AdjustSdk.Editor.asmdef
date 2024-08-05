@@ -3,6 +3,8 @@
     "references": [
         "AdjustSdk.Scripts"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": []
 }
