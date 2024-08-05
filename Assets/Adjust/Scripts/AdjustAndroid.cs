@@ -592,6 +592,7 @@ namespace AdjustSdk
 
         public static void ProcessAndResolveDeeplink(AdjustDeeplink deeplink, Action<string> resolvedLinkCallback)
         {
+            onDeeplinkResolvedListener = new DeeplinkResolutionListener(resolvedLinkCallback);
             AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
             AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
             AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri);
@@ -772,7 +773,7 @@ namespace AdjustSdk
             }
 
             // method must be lowercase to match Android method signature
-            public void onFinishedEventTrackingSucceeded(AndroidJavaObject eventSuccessData)
+            public void onEventTrackingSucceeded(AndroidJavaObject eventSuccessData)
             {
                 if (callback == null)
                 {
@@ -822,7 +823,7 @@ namespace AdjustSdk
             }
 
             // method must be lowercase to match Android method signature
-            public void onFinishedEventTrackingFailed(AndroidJavaObject eventFailureData)
+            public void onEventTrackingFailed(AndroidJavaObject eventFailureData)
             {
                 if (callback == null)
                 {
@@ -873,7 +874,7 @@ namespace AdjustSdk
             }
 
             // method must be lowercase to match Android method signature
-            public void onFinishedSessionTrackingSucceeded(AndroidJavaObject sessionSuccessData)
+            public void onSessionTrackingSucceeded(AndroidJavaObject sessionSuccessData)
             {
                 if (callback == null)
                 {
@@ -919,7 +920,7 @@ namespace AdjustSdk
             }
 
             // method must be lowercase to match Android method signature
-            public void onFinishedSessionTrackingFailed(AndroidJavaObject sessionFailureData)
+            public void onSessionTrackingFailed(AndroidJavaObject sessionFailureData)
             {
                 if (callback == null)
                 {
