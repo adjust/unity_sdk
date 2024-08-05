@@ -76,6 +76,13 @@ namespace AdjustSdk
                     else
                     {
                         // plugin located in Packages folder
+                        string adjustResourcesPath = Path.Combine("Assets", "Adjust/Resources");
+                        Debug.Log("ADJUST RESOURCES DIR = " + adjustResourcesPath);
+                        if (!Directory.Exists(adjustResourcesPath))
+                        {
+                            Debug.Log("CREATING ADJUST RESOURCES DIR = " + adjustResourcesPath);
+                            Directory.CreateDirectory(adjustResourcesPath);
+                        }
                         assetPath = Path.Combine("Assets", AdjustSettingsExportPath);
                         Debug.Log("FINAL ASSET PATH = " + assetPath);
                     }
