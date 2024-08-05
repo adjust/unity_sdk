@@ -11,11 +11,11 @@ public class TestApp : MonoBehaviour
 #if UNITY_ANDROID
     private const string PORT = ":8443";
     private const string PROTOCOL = "https://";
-    private const string IP = "192.168.0.27";
+    private const string IP = "192.168.1.102";
 #elif UNITY_IOS
     private const string PORT = ":8080";
     private const string PROTOCOL = "http://";
-    private const string IP = "192.168.0.27";
+    private const string IP = "192.168.1.102";
     private TestLibraryiOS _testLibraryiOS;
 #else
     private const string PORT = ":8080";

@@ -62,8 +62,6 @@ namespace AdjustSdk.Test
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
-                    case "enablePlayStoreKidsApp" : EnablePlayStoreKidsApp(); break;
-                    case "disablePlayStoreKidsApp" : DisablePlayStoreKidsApp(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -297,6 +295,13 @@ namespace AdjustSdk.Test
                 var coppaCompliantS = _command.GetFirstParameterValue("coppaCompliant");
                 var coppaCompliant = coppaCompliantS.ToLower() == "true";
                 adjustConfig.IsCoppaComplianceEnabled = coppaCompliant;
+            }
+
+            if (_command.ContainsParameter("playStoreKids"))
+            {
+                var playStoreKidsS = _command.GetFirstParameterValue("playStoreKids");
+                var playStoreKids = playStoreKidsS.ToLower() == "true";
+                adjustConfig.IsPlayStoreKidsComplianceEnabled = playStoreKids;
             }
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
@@ -993,18 +998,14 @@ namespace AdjustSdk.Test
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
 #elif UNITY_ANDROID
-
+            Adjust.VerifyAndTrackPlayStorePurchase(adjustEvent, (verificationResult) =>
+            {
+                _testLibrary.AddInfoToSend("verification_status", verificationResult.VerificationStatus);
+                _testLibrary.AddInfoToSend("code", verificationResult.Code.ToString());
+                _testLibrary.AddInfoToSend("message", verificationResult.Message);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
 #endif
-        }
-
-        private void EnablePlayStoreKidsApp()
-        {
-            Adjust.EnablePlayStoreKidsApp();
-        }
-
-        private void DisablePlayStoreKidsApp()
-        {
-            Adjust.DisablePlayStoreKidsApp();
         }
 
         // helper methods

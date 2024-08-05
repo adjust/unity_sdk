@@ -36,6 +36,7 @@ namespace AdjustSdk
         public int? AttConsentWaitingInterval { get; set; }
 
         // Android specific
+        public bool? IsPlayStoreKidsComplianceEnabled { get; set; }
         public bool? IsPreinstallTrackingEnabled { get; set; }
         public string PreinstallFilePath { get; set; }
         public string FbAppId { get; set; }

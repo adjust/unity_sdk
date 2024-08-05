@@ -82,6 +82,24 @@ namespace AdjustSdk
                 }
             }
 
+            // check if COPPA compliance is enabled
+            if (adjustConfig.IsCoppaComplianceEnabled != null)
+            {
+                if (adjustConfig.IsCoppaComplianceEnabled == true)
+                {
+                    ajoAdjustConfig.Call("enableCoppaCompliance");
+                }
+            }
+
+            // check if Play Store Kids compliance is enabled
+            if (adjustConfig.IsPlayStoreKidsComplianceEnabled != null)
+            {
+                if (adjustConfig.IsPlayStoreKidsComplianceEnabled == true)
+                {
+                    ajoAdjustConfig.Call("enablePlayStoreKidsCompliance");
+                }
+            }
+
             // check if user enabled sening in the background
             if (adjustConfig.IsSendingInBackgroundEnabled != null)
             {
@@ -366,10 +384,10 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("removeGlobalCallbackParameters");
         }
 
-        public static void ProcessDeeplink(string url) 
+        public static void ProcessDeeplink(AdjustDeeplink deeplink) 
         {
             AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
-            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
+            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
             ajcAdjust.CallStatic("processDeeplink", ajoUri, ajoCurrentActivity);
         }
 
@@ -571,11 +589,11 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("verifyPlayStorePurchase", ajoPurchase, onVerificationResultListener);
         }
 
-        public static void ProcessAndResolveDeeplink(string url, Action<string> resolvedLinkCallback)
+        public static void ProcessAndResolveDeeplink(AdjustDeeplink deeplink, Action<string> resolvedLinkCallback)
         {
             onDeeplinkResolvedListener = new DeeplinkResolutionListener(resolvedLinkCallback);
             AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
-            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
+            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
             ajcAdjust.CallStatic("processAndResolveDeeplink", ajoUri, ajoCurrentActivity, onDeeplinkResolvedListener);
         }
 

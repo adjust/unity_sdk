@@ -62,11 +62,14 @@ namespace AdjustSdk
 
             // TODO: double-check the state of Unity on deep linking nowadays
 #if UNITY_ANDROID && UNITY_2019_2_OR_NEWER
-            Application.deepLinkActivated += Adjust.ProcessDeeplink;
+            Application.deepLinkActivated += (deeplink) =>
+            {
+                Adjust.ProcessDeeplink(new AdjustDeeplink(deeplink));
+            };
             if (!string.IsNullOrEmpty(Application.absoluteURL))
             {
                 // cold start and Application.absoluteURL not null so process deep link
-                Adjust.ProcessDeeplink(Application.absoluteURL);
+                Adjust.ProcessDeeplink(new AdjustDeeplink(Application.absoluteURL));
             }
 #endif
 
