@@ -6,7 +6,7 @@
 //  Copyright © 2012-Present Adjust GmbH. All rights reserved.
 //
 
-#import <AdjustSdk/Adjust.h>
+#import <AdjustSdk/AdjustSdk.h>
 #import "AdjustUnity.h"
 
 /**

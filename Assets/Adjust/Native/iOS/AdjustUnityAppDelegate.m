@@ -6,7 +6,7 @@
 //
 
 #import <objc/runtime.h>
-#import <AdjustSdk/Adjust.h>
+#import <AdjustSdk/AdjustSdk.h>
 #import "AdjustUnityAppDelegate.h"
 
 typedef BOOL (*openURL_t)(id, SEL, UIApplication *, NSURL *, NSDictionary *);
