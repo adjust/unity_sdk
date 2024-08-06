@@ -541,12 +541,6 @@ namespace AdjustSdk.Test
                 adjustEvent.ProductId = productId;
             }
 
-            if (_command.ContainsParameter("receipt"))
-            {
-                var receipt = _command.GetFirstParameterValue("receipt");
-                adjustEvent.Receipt = receipt;
-            }
-
             if (_command.ContainsParameter("purchaseToken"))
             {
                 var purchaseToken = _command.GetFirstParameterValue("purchaseToken");
@@ -731,15 +725,13 @@ namespace AdjustSdk.Test
             string price = _command.GetFirstParameterValue("revenue");
             string currency = _command.GetFirstParameterValue("currency");
             string transactionId = _command.GetFirstParameterValue("transactionId");
-            string receipt = _command.GetFirstParameterValue("receipt");
             string transactionDate = _command.GetFirstParameterValue("transactionDate");
             string salesRegion = _command.GetFirstParameterValue("salesRegion");
 
             AdjustAppStoreSubscription subscription = new AdjustAppStoreSubscription(
                 price,
                 currency,
-                transactionId,
-                receipt);
+                transactionId);
             subscription.TransactionDate = transactionDate;
             subscription.SalesRegion = salesRegion;
 
@@ -928,12 +920,10 @@ namespace AdjustSdk.Test
 #if UNITY_IOS
             string transactionId = _command.GetFirstParameterValue("transactionId");
             string productId = _command.GetFirstParameterValue("productId");
-            string receipt = _command.GetFirstParameterValue("receipt");
 
             AdjustAppStorePurchase purchase = new AdjustAppStorePurchase(
                 transactionId,
-                productId,
-                receipt);
+                productId);
 
             Adjust.VerifyAppStorePurchase(purchase, VerificationResultCallback);
 #elif UNITY_ANDROID
