@@ -1,3 +1,19 @@
+### Version 5.0.0 (12th August 2024)
+
+We're excited to release our major new SDK version (v5). Among many internal improvements, our spoofing protection solution is now included out of the box, reinforcing our commitment to accurate, actionable, and fraud-free data.
+
+To try out SDK v5 in your app, you can follow our new v4 to v5 [migration guide](https://dev.adjust.com/en/sdk/unity/migration/v4-to-v5).
+
+If you are a current Adjust client and have questions about SDK v5, please email [sdk-v5@adjust.com](mailto:sdk-v5@adjust.com).
+
+In case you were using beta version of the SDK v5, please switch to the official v5 release.
+
+#### Native SDKs
+- [iOS@v5.0.0][ios_sdk_v5.0.0]
+- [Android@v5.0.0][android_sdk_v5.0.0]
+
+---
+
 ### Version 4.38.1 (30th April 2024)
 #### Added
 - Added sending of the additional iOS SDK observability parameters for debugging purposes.
@@ -1259,6 +1275,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.37.2]: https://github.com/adjust/ios_sdk/tree/v4.37.2
 [ios_sdk_v4.38.0]: https://github.com/adjust/ios_sdk/tree/v4.38.0
 [ios_sdk_v4.38.2]: https://github.com/adjust/ios_sdk/tree/v4.38.2
+[ios_sdk_v5.0.0]: https://github.com/adjust/ios_sdk/tree/v5.0.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1311,6 +1328,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.38.1]: https://github.com/adjust/android_sdk/tree/v4.38.1
 [android_sdk_v4.38.2]: https://github.com/adjust/android_sdk/tree/v4.38.2
 [android_sdk_v4.38.3]: https://github.com/adjust/android_sdk/tree/v4.38.3
+[android_sdk_v5.0.0]: https://github.com/adjust/android_sdk/tree/v5.0.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
