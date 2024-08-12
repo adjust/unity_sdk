@@ -6,7 +6,3 @@
 	path = ext/ios/sdk
 	url = git@github.com:adjust/ios_sdk.git
 	branch = master
-[submodule "ext/windows/sdk"]
-	path = ext/windows/sdk
-	url = git@github.com:adjust/windows_sdk.git
-	branch = master
