@@ -154,7 +154,7 @@ namespace AdjustSdk
             // check if user has set max number of event deduplication IDs
             if (adjustConfig.EventDeduplicationIdsMaxSize != null)
             {
-                AndroidJavaObject ajoEventDeduplicationIdsMaxSize = new AndroidJavaObject("java.lang.Integer", adjustConfig.EventDeduplicationIdsMaxSize);
+                using AndroidJavaObject ajoEventDeduplicationIdsMaxSize = new AndroidJavaObject("java.lang.Integer", adjustConfig.EventDeduplicationIdsMaxSize);
                 ajoAdjustConfig.Call("setEventDeduplicationIdsMaxSize", ajoEventDeduplicationIdsMaxSize);
             }
 
@@ -163,7 +163,7 @@ namespace AdjustSdk
                 adjustConfig.ShouldUseSubdomains != null &&
                 adjustConfig.IsDataResidency != null)
             {
-                var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList");
+                using var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList");
                 foreach (string domain in adjustConfig.UrlStrategyDomains)
                 {
                     ajoUrlStrategyDomains.Call("add", domain);
@@ -222,8 +222,8 @@ namespace AdjustSdk
 
         public static void TrackEvent(AdjustEvent adjustEvent)
         {
-            AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken);
-
+            using AndroidJavaObject ajoAdjustEvent =
+                new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken);
             // check if user has set revenue for the event
             if (adjustEvent.Revenue != null)
             {
@@ -386,16 +386,16 @@ namespace AdjustSdk
 
         public static void ProcessDeeplink(AdjustDeeplink deeplink) 
         {
-            AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
-            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
-            AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri);
+            using AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
+            using AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
+            using AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri);
             ajcAdjust.CallStatic("processDeeplink", ajoAdjustDeeplink, ajoCurrentActivity);
         }
 
         public static void TrackAdRevenue(AdjustAdRevenue adRevenue)
         {
-            AndroidJavaObject ajoAdjustAdRevenue = new AndroidJavaObject("com.adjust.sdk.AdjustAdRevenue", adRevenue.Source);
-
+            using AndroidJavaObject ajoAdjustAdRevenue =
+                new AndroidJavaObject("com.adjust.sdk.AdjustAdRevenue", adRevenue.Source);
             // check if user has set revenue
             if (adRevenue.Revenue != null)
             {
@@ -406,7 +406,8 @@ namespace AdjustSdk
             // check if user has set ad impressions count
             if (adRevenue.AdImpressionsCount != null)
             {
-                AndroidJavaObject ajoAdImpressionsCount = new AndroidJavaObject("java.lang.Integer", adRevenue.AdImpressionsCount);
+                AndroidJavaObject ajoAdImpressionsCount =
+                    new AndroidJavaObject("java.lang.Integer", adRevenue.AdImpressionsCount);
                 ajoAdjustAdRevenue.Call("setAdImpressionsCount", ajoAdImpressionsCount);
             }
 
@@ -456,7 +457,8 @@ namespace AdjustSdk
 
         public static void TrackPlayStoreSubscription(AdjustPlayStoreSubscription subscription)
         {
-            AndroidJavaObject ajoSubscription = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStoreSubscription",
+            using AndroidJavaObject ajoSubscription = new AndroidJavaObject(
+                "com.adjust.sdk.AdjustPlayStoreSubscription",
                 Convert.ToInt64(subscription.Price),
                 subscription.Currency,
                 subscription.ProductId,
@@ -582,7 +584,7 @@ namespace AdjustSdk
             AdjustPlayStorePurchase purchase,
             Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
         {
-            AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStorePurchase",
+            using AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStorePurchase",
                 purchase.ProductId,
                 purchase.PurchaseToken);
             onVerificationResultListener = new VerificationResultListener(verificationInfoCallback);
@@ -593,18 +595,19 @@ namespace AdjustSdk
         public static void ProcessAndResolveDeeplink(AdjustDeeplink deeplink, Action<string> resolvedLinkCallback)
         {
             onDeeplinkResolvedListener = new DeeplinkResolutionListener(resolvedLinkCallback);
-            AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
-            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
-            AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri);
-            ajcAdjust.CallStatic("processAndResolveDeeplink", ajoAdjustDeeplink, ajoCurrentActivity, onDeeplinkResolvedListener);
+            using AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
+            using AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
+            using AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri);
+            ajcAdjust.CallStatic("processAndResolveDeeplink", ajoAdjustDeeplink, ajoCurrentActivity,
+                onDeeplinkResolvedListener);
         }
 
         public static void VerifyAndTrackPlayStorePurchase(
             AdjustEvent adjustEvent,
             Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
         {
-            AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken);
-
+            using AndroidJavaObject ajoAdjustEvent =
+                new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken);
             // check if user has set revenue for the event
             if (adjustEvent.Revenue != null)
             {
