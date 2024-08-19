@@ -2,6 +2,9 @@
 #### Fixed
 - Fixed handling of deferred deep links on iOS platform.
 
+#### Changed
+- Added attribution and deferred deep link callbacks to example app.
+
 #### Native SDKs
 - [iOS@v5.0.0][ios_sdk_v5.0.0]
 - [Android@v5.0.0][android_sdk_v5.0.0]
