@@ -59,8 +59,8 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                         withSelector:@selector(adjustSessionTrackingFailedWannabe:)];
         }
         if (deferredDeeplinkCallback != nil) {
-            [defaultInstance swizzleOriginalSelector:@selector(adjustDeeplinkResponse:)
-                                        withSelector:@selector(adjustDeeplinkResponseWannabe:)];
+            [defaultInstance swizzleOriginalSelector:@selector(adjustDeferredDeeplinkReceived:)
+                                        withSelector:@selector(adjustDeferredDeeplinkReceivedWannabe:)];
         }
         if (skanUpdatedCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustSkanUpdatedWithConversionData:)
@@ -270,7 +270,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
     _sessionFailureCallback(charArraySessionFailure);
 }
 
-- (BOOL)adjustDeeplinkResponseWannabe:(NSURL *)deeplink {
+- (BOOL)adjustDeferredDeeplinkReceivedWannabe:(NSURL *)deeplink {
     if (_deferredDeeplinkCallback != nil) {
         NSString *stringDeeplink = [deeplink absoluteString];
         const char* charDeeplink = [stringDeeplink UTF8String];
