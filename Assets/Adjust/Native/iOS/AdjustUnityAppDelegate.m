@@ -56,7 +56,8 @@ static continueUserActivity_t original_continueUserActivity = NULL;
 - (BOOL)adjust_application:(UIApplication *)application
                    openURL:(NSURL *)url
                    options:(NSDictionary *)options {
-    [Adjust processDeeplink:url];
+    ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:url];
+    [Adjust processDeeplink:deeplink];
     return original_openURL ? original_openURL(self, _cmd, application, url, options) : YES;
 }
 
@@ -65,7 +66,8 @@ static continueUserActivity_t original_continueUserActivity = NULL;
         restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler {
     if ([[userActivity activityType] isEqualToString:NSUserActivityTypeBrowsingWeb]) {
         NSURL *url = [userActivity webpageURL];
-        [Adjust processDeeplink:url];
+        ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:url];
+        [Adjust processDeeplink:deeplink];
     }
     return original_continueUserActivity ? original_continueUserActivity(self, _cmd, application, userActivity, restorationHandler) : YES;
 }
