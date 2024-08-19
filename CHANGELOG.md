@@ -1,3 +1,16 @@
+### Version 5.0.1 (19th August 2024)
+#### Fixed
+- Fixed handling of deferred deep links on iOS platform.
+
+#### Changed
+- Added attribution and deferred deep link callbacks to example app.
+
+#### Native SDKs
+- [iOS@v5.0.0][ios_sdk_v5.0.0]
+- [Android@v5.0.0][android_sdk_v5.0.0]
+
+---
+
 ### Version 5.0.0 (12th August 2024)
 
 We're excited to release our major new SDK version (v5). Among many internal improvements, our spoofing protection solution is now included out of the box, reinforcing our commitment to accurate, actionable, and fraud-free data.
