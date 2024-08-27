@@ -573,7 +573,6 @@ namespace AdjustSdk
             AdjustiOS.GetIdfa(callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFA is not available on Android platform.");
-            return;
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -590,7 +589,6 @@ namespace AdjustSdk
             AdjustiOS.GetIdfv(callback);
 #elif UNITY_ANDROID
             Debug.Log("[Adjust]: Error! IDFV is not available on Android platform.");
-            return;
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -607,7 +605,6 @@ namespace AdjustSdk
             Debug.Log("[Adjust]: Error! Google Advertising ID is not available on iOS platform.");
 #elif UNITY_ANDROID
             AdjustAndroid.GetGoogleAdId(callback);
-            return;
 #else
             Debug.Log(errorMsgPlatform);
 #endif
@@ -624,7 +621,6 @@ namespace AdjustSdk
             Debug.Log("[Adjust]: Error! Amazon Fire Advertising ID is not available on iOS platform.");
 #elif UNITY_ANDROID
             AdjustAndroid.GetAmazonAdId(callback);
-            return;
 #else
             Debug.Log(errorMsgPlatform);
 #endif
