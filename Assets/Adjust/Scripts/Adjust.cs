@@ -596,6 +596,40 @@ namespace AdjustSdk
 #endif
         }
 
+        public static void GetGoogleAdId(Action<string> callback) 
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Error! Google Advertising ID is not available on iOS platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.GetGoogleAdId(callback);
+            return;
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void GetAmazonAdId(Action<string> callback) 
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Error! Amazon Fire Advertising ID is not available on iOS platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.GetAmazonAdId(callback);
+            return;
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static void GetSdkVersion(Action<string> callback)
         {
             if (IsEditor())
