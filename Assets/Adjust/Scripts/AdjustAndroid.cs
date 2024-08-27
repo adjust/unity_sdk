@@ -578,6 +578,12 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("getSdkVersion", onSdkVersionReadProxy);
         }
 
+        public static void GetLastDeeplink(Action<string> onLastDeeplinkRead) 
+        {
+            LastDeeplinkListener onLastDeeplinkReadProxy = new LastDeeplinkListener(onLastDeeplinkRead);
+            ajcAdjust.CallStatic("getLastDeeplink", ajoCurrentActivity, onLastDeeplinkReadProxy);
+        }
+
         public static void VerifyPlayStorePurchase(
             AdjustPlayStorePurchase purchase,
             Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
@@ -1202,6 +1208,35 @@ namespace AdjustSdk
                 }
 
                 this.callback(isEnabled);
+            }
+        }
+
+        private class LastDeeplinkListener : AndroidJavaProxy
+        {
+            private Action<string> callback;
+
+            public LastDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnLastDeeplinkReadListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onLastDeeplinkRead(Uri deeplink);
+            public void onLastDeeplinkRead(AndroidJavaObject ajoLastDeeplink)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (ajoLastDeeplink == null)
+                {
+                    this.callback(null);
+                }
+                else
+                {
+                    this.callback(ajoLastDeeplink.Call<string>("toString"));
+                }
             }
         }
     }

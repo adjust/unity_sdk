@@ -656,8 +656,7 @@ namespace AdjustSdk
 #if UNITY_IOS
             AdjustiOS.GetLastDeeplink(callback);
 #elif UNITY_ANDROID
-            Debug.Log("[Adjust]: Error! Last deeplink getter is not available on Android platform.");
-            return;
+            AdjustAndroid.GetLastDeeplink(callback);
 #else
             Debug.Log(errorMsgPlatform);
 #endif
