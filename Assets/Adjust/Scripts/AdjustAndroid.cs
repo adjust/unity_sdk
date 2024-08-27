@@ -1185,7 +1185,7 @@ namespace AdjustSdk
                     return;
                 }
 
-                this.callback(sdkVersion);
+                this.callback(this.sdkPrefix + "@" + sdkVersion);
             }
         }
 
