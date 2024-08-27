@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity5.0.1";
+        private const string sdkPrefix = "unity5.0.2";
         private static bool isDeferredDeeplinkOpeningEnabled = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -562,7 +562,7 @@ namespace AdjustSdk
         // android specific methods
         public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 
         {
-            DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
+            GoogleAdIdReadListener onDeviceIdsReadProxy = new GoogleAdIdReadListener(onDeviceIdsRead);
             ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
         }
 
@@ -576,6 +576,12 @@ namespace AdjustSdk
         {
             SdkVersionReadListener onSdkVersionReadProxy = new SdkVersionReadListener(onSdkVersionRead, sdkPrefix);
             ajcAdjust.CallStatic("getSdkVersion", onSdkVersionReadProxy);
+        }
+
+        public static void GetLastDeeplink(Action<string> onLastDeeplinkRead) 
+        {
+            LastDeeplinkListener onLastDeeplinkReadProxy = new LastDeeplinkListener(onLastDeeplinkRead);
+            ajcAdjust.CallStatic("getLastDeeplink", ajoCurrentActivity, onLastDeeplinkReadProxy);
         }
 
         public static void VerifyPlayStorePurchase(
@@ -686,7 +692,6 @@ namespace AdjustSdk
         }
 
         // private & helper classes
-        // TODO: add AndroidJavaObject null instance handling to each proxy
         private class AttributionChangedListener : AndroidJavaProxy
         {
             private Action<AdjustAttribution> callback;
@@ -696,399 +701,18 @@ namespace AdjustSdk
                 this.callback = pCallback;
             }
 
-            // method must be lowercase to match Android method signature
-            public void onAttributionChanged(AndroidJavaObject attribution)
+            // native method:
+            // void onAttributionChanged(AdjustAttribution attribution);
+            public void onAttributionChanged(AndroidJavaObject ajoAttribution)
             {
-                if (callback == null)
-                {
-                    return;
-                }
-
-                AdjustAttribution adjustAttribution = new AdjustAttribution();
-                adjustAttribution.TrackerName = attribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.TrackerToken = attribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.Network = attribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.Campaign = attribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.Adgroup = attribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.Creative = attribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.ClickLabel = attribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.CostType = attribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyCostType);
-                AndroidJavaObject ajoCostAmount = attribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
-                    null : attribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount);
-                if (ajoCostAmount == null)
-                {
-                    adjustAttribution.CostAmount = null;
-                }
-                else
-                {
-                    double costAmount = ajoCostAmount.Call<double>("doubleValue");
-                    adjustAttribution.CostAmount = costAmount;
-                }
-                adjustAttribution.CostCurrency = attribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyCostCurrency);
-                adjustAttribution.FbInstallReferrer = attribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
-                    null : attribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
-                callback(adjustAttribution);
-            }
-        }
-
-        private class DeferredDeeplinkListener : AndroidJavaProxy
-        {
-            private Action<string> callback;
-
-            public DeferredDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeferredDeeplinkResponseListener")
-            {
-                this.callback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public bool launchReceivedDeeplink(AndroidJavaObject deeplink)
-            {
-                if (callback == null)
-                {
-                    return isDeferredDeeplinkOpeningEnabled;
-                }
-
-                string deeplinkURL = deeplink.Call<string>("toString");
-                callback(deeplinkURL);
-                return isDeferredDeeplinkOpeningEnabled;
-            }
-        }
-
-        private class EventTrackingSucceededListener : AndroidJavaProxy
-        {
-            private Action<AdjustEventSuccess> callback;
-
-            public EventTrackingSucceededListener(Action<AdjustEventSuccess> pCallback) : base("com.adjust.sdk.OnEventTrackingSucceededListener")
-            {
-                this.callback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public void onEventTrackingSucceeded(AndroidJavaObject eventSuccessData)
-            {
-                if (callback == null)
-                {
-                    return;
-                }
-                if (eventSuccessData == null)
-                {
-                    return;
-                }
-
-                AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess();
-                adjustEventSuccess.Adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
-
-                try
-                {
-                    AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustEventSuccess.BuildJsonResponseFromString(jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
-
-                callback(adjustEventSuccess);
-            }
-        }
-
-        private class EventTrackingFailedListener : AndroidJavaProxy
-        {
-            private Action<AdjustEventFailure> callback;
-
-            public EventTrackingFailedListener(Action<AdjustEventFailure> pCallback) : base("com.adjust.sdk.OnEventTrackingFailedListener")
-            {
-                this.callback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public void onEventTrackingFailed(AndroidJavaObject eventFailureData)
-            {
-                if (callback == null)
-                {
-                    return;
-                }
-                if (eventFailureData == null)
-                {
-                    return;
-                }
-
-                AdjustEventFailure adjustEventFailure = new AdjustEventFailure();
-                adjustEventFailure.Adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventFailure.Message = eventFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyMessage);
-                adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
-
-                try
-                {
-                    AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustEventFailure.BuildJsonResponseFromString(jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
-                
-                callback(adjustEventFailure);
-            }
-        }
-
-        private class SessionTrackingSucceededListener : AndroidJavaProxy
-        {
-            private Action<AdjustSessionSuccess> callback;
-
-            public SessionTrackingSucceededListener(Action<AdjustSessionSuccess> pCallback) : base("com.adjust.sdk.OnSessionTrackingSucceededListener")
-            {
-                this.callback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public void onSessionTrackingSucceeded(AndroidJavaObject sessionSuccessData)
-            {
-                if (callback == null)
-                {
-                    return;
-                }
-                if (sessionSuccessData == null)
-                {
-                    return;
-                }
-
-                AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess();
-                adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-
-                try
-                {
-                    AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustSessionSuccess.BuildJsonResponseFromString(jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
-
-                callback(adjustSessionSuccess);
-            }
-        }
-
-        private class SessionTrackingFailedListener : AndroidJavaProxy
-        {
-            private Action<AdjustSessionFailure> callback;
-
-            public SessionTrackingFailedListener(Action<AdjustSessionFailure> pCallback) : base("com.adjust.sdk.OnSessionTrackingFailedListener")
-            {
-                this.callback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public void onSessionTrackingFailed(AndroidJavaObject sessionFailureData)
-            {
-                if (callback == null)
-                {
-                    return;
-                }
-                if (sessionFailureData == null)
-                {
-                    return;
-                }
-
-                AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure();
-                adjustSessionFailure.Adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
-                adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-
-                try
-                {
-                    AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustSessionFailure.BuildJsonResponseFromString(jsonResponseString);
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
-
-                callback(adjustSessionFailure);
-            }
-        }
-
-        private class DeviceIdsReadListener : AndroidJavaProxy
-        {
-            private Action<string> onPlayAdIdReadCallback;
-
-            public DeviceIdsReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeviceIdsRead")
-            {
-                this.onPlayAdIdReadCallback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public void onGoogleAdIdRead(string playAdId)
-            {
-                if (onPlayAdIdReadCallback == null)
-                {
-                    return;
-                }
-
-                this.onPlayAdIdReadCallback(playAdId);
-            }
-
-            // handling of null object
-            public void onGoogleAdIdRead(AndroidJavaObject ajoAdId)
-            {
-                if (ajoAdId == null)
-                {
-                    string adId = null;
-                    this.onGoogleAdIdRead(adId);
-                    return;
-                }
-
-                this.onGoogleAdIdRead(ajoAdId.Call<string>("toString"));
-            }
-        }
-
-        private class VerificationResultListener : AndroidJavaProxy
-        {
-            private Action<AdjustPurchaseVerificationResult> callback;
-
-            public VerificationResultListener(Action<AdjustPurchaseVerificationResult> pCallback) : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
-            {
-                this.callback = pCallback;
-            }
-
-            public void onVerificationFinished(AndroidJavaObject verificationInfo)
-            {
-                AdjustPurchaseVerificationResult purchaseVerificationResult = new AdjustPurchaseVerificationResult();
-                // verification status
-                purchaseVerificationResult.VerificationStatus = verificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus);
-                // status code
-                purchaseVerificationResult.Code = verificationInfo.Get<int>(AdjustUtils.KeyCode);
-                // message
-                purchaseVerificationResult.Message = verificationInfo.Get<string>(AdjustUtils.KeyMessage);
-
-                if (callback != null)
-                {
-                    callback(purchaseVerificationResult);
-                }
-            }
-        }
-
-        private class DeeplinkResolutionListener : AndroidJavaProxy
-        {
-            private Action<string> callback;
-
-            public DeeplinkResolutionListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeeplinkResolvedListener")
-            {
-                this.callback = pCallback;
-            }
-
-            public void onDeeplinkResolved(string resolvedLink)
-            {
-                if (callback != null)
-                {
-                    callback(resolvedLink);
-                }
-            }
-        }
-
-        private class AdidReadListener : AndroidJavaProxy
-        {
-            private Action<string> onAdidReadCallback;
-
-            public AdidReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnAdidReadListener")
-            {
-                this.onAdidReadCallback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public void onAdidRead(string adid)
-            {
-                if (onAdidReadCallback == null)
-                {
-                    return;
-                }
-
-                this.onAdidReadCallback(adid);
-            }
-
-            // handling of null object
-            public void onAdidRead(AndroidJavaObject ajoAdid)
-            {
-                if (ajoAdid == null)
-                {
-                    string adid = null;
-                    this.onAdidRead(adid);
-                    return;
-                }
-
-                this.onAdidRead(ajoAdid.Call<string>("toString"));
-            }
-        }
-
-        private class AttributionReadListener : AndroidJavaProxy
-        {
-            private Action<AdjustAttribution> onAttributionReadCallback;
-
-            public AttributionReadListener(Action<AdjustAttribution> pCallback) : base("com.adjust.sdk.OnAttributionReadListener")
-            {
-                this.onAttributionReadCallback = pCallback;
-            }
-
-            // method must be lowercase to match Android method signature
-            public void onAttributionRead(AndroidJavaObject ajoAttribution)
-            {
-                if (this.onAttributionReadCallback == null)
+                if (this.callback == null)
                 {
                     return;
                 }
 
                 if (ajoAttribution == null)
                 {
-                    this.onAttributionReadCallback(null);
+                    this.callback(null);
                     return;
                 }
 
@@ -1125,101 +749,495 @@ namespace AdjustSdk
                 adjustAttribution.FbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
                     null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
 
-                this.onAttributionReadCallback(adjustAttribution);
+                this.callback(adjustAttribution);
+            }
+        }
+
+        private class DeferredDeeplinkListener : AndroidJavaProxy
+        {
+            private Action<string> callback;
+
+            public DeferredDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeferredDeeplinkResponseListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // boolean launchReceivedDeeplink(Uri deeplink);
+            public bool launchReceivedDeeplink(AndroidJavaObject deeplink)
+            {
+                if (this.callback == null)
+                {
+                    return isDeferredDeeplinkOpeningEnabled;
+                }
+
+                string strDeeplink = deeplink.Call<string>("toString");
+                callback(strDeeplink);
+                return isDeferredDeeplinkOpeningEnabled;
+            }
+        }
+
+        private class EventTrackingSucceededListener : AndroidJavaProxy
+        {
+            private Action<AdjustEventSuccess> callback;
+
+            public EventTrackingSucceededListener(Action<AdjustEventSuccess> pCallback) : base("com.adjust.sdk.OnEventTrackingSucceededListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onEventTrackingSucceeded(AdjustEventSuccess eventSuccessResponseData);
+            public void onEventTrackingSucceeded(AndroidJavaObject eventSuccessData)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (eventSuccessData == null)
+                {
+                    this.callback(null);
+                    return;
+                }
+
+                AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess();
+                adjustEventSuccess.Adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
+                    null : eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
+
+                try
+                {
+                    AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                    adjustEventSuccess.BuildJsonResponseFromString(jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                }
+
+                this.callback(adjustEventSuccess);
+            }
+        }
+
+        private class EventTrackingFailedListener : AndroidJavaProxy
+        {
+            private Action<AdjustEventFailure> callback;
+
+            public EventTrackingFailedListener(Action<AdjustEventFailure> pCallback) : base("com.adjust.sdk.OnEventTrackingFailedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onEventTrackingFailed(AdjustEventFailure eventFailureResponseData);
+            public void onEventTrackingFailed(AndroidJavaObject eventFailureData)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (eventFailureData == null)
+                {
+                    this.callback(null);
+                    return;
+                }
+
+                AdjustEventFailure adjustEventFailure = new AdjustEventFailure();
+                adjustEventFailure.Adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventFailure.Message = eventFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
+                adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
+                    null : eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
+
+                try
+                {
+                    AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                    adjustEventFailure.BuildJsonResponseFromString(jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                }
+                
+                this.callback(adjustEventFailure);
+            }
+        }
+
+        private class SessionTrackingSucceededListener : AndroidJavaProxy
+        {
+            private Action<AdjustSessionSuccess> callback;
+
+            public SessionTrackingSucceededListener(Action<AdjustSessionSuccess> pCallback) : base("com.adjust.sdk.OnSessionTrackingSucceededListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onSessionTrackingSucceeded(AdjustSessionSuccess sessionSuccessResponseData);
+            public void onSessionTrackingSucceeded(AndroidJavaObject sessionSuccessData)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (sessionSuccessData == null)
+                {
+                    this.callback(null);
+                    return;
+                }
+
+                AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess();
+                adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+
+                try
+                {
+                    AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                    adjustSessionSuccess.BuildJsonResponseFromString(jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                }
+
+                this.callback(adjustSessionSuccess);
+            }
+        }
+
+        private class SessionTrackingFailedListener : AndroidJavaProxy
+        {
+            private Action<AdjustSessionFailure> callback;
+
+            public SessionTrackingFailedListener(Action<AdjustSessionFailure> pCallback) : base("com.adjust.sdk.OnSessionTrackingFailedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onSessionTrackingFailed(AdjustSessionFailure failureResponseData);
+            public void onSessionTrackingFailed(AndroidJavaObject sessionFailureData)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (sessionFailureData == null)
+                {
+                    this.callback(null);
+                    return;
+                }
+
+                AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure();
+                adjustSessionFailure.Adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
+                    null : sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
+                    null : sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
+                adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
+                    null : sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+
+                try
+                {
+                    AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
+                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                    adjustSessionFailure.BuildJsonResponseFromString(jsonResponseString);
+                }
+                catch (Exception)
+                {
+                    // JSON response reading failed.
+                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                }
+
+                this.callback(adjustSessionFailure);
+            }
+        }
+
+        private class GoogleAdIdReadListener : AndroidJavaProxy
+        {
+            private Action<string> callback;
+
+            public GoogleAdIdReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnGoogleAdIdReadListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onGoogleAdIdRead(String googleAdId);
+            public void onGoogleAdIdRead(string adid)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                this.callback(adid);
+            }
+        }
+
+        private class VerificationResultListener : AndroidJavaProxy
+        {
+            private Action<AdjustPurchaseVerificationResult> callback;
+
+            public VerificationResultListener(Action<AdjustPurchaseVerificationResult> pCallback) : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onVerificationFinished(AdjustPurchaseVerificationResult result);
+            public void onVerificationFinished(AndroidJavaObject ajoVerificationInfo)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (ajoVerificationInfo == null)
+                {
+                    this.callback(null);
+                    return;
+                }
+
+                AdjustPurchaseVerificationResult purchaseVerificationResult = new AdjustPurchaseVerificationResult();
+                purchaseVerificationResult.VerificationStatus = ajoVerificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus);
+                purchaseVerificationResult.Code = ajoVerificationInfo.Get<int>(AdjustUtils.KeyCode);
+                purchaseVerificationResult.Message = ajoVerificationInfo.Get<string>(AdjustUtils.KeyMessage);
+
+                this.callback(purchaseVerificationResult);
+            }
+        }
+
+        private class DeeplinkResolutionListener : AndroidJavaProxy
+        {
+            private Action<string> callback;
+
+            public DeeplinkResolutionListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeeplinkResolvedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onDeeplinkResolved(String resolvedLink);
+            public void onDeeplinkResolved(string resolvedLink)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                this.callback(resolvedLink);
+            }
+        }
+
+        private class AdidReadListener : AndroidJavaProxy
+        {
+            private Action<string> callback;
+
+            public AdidReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnAdidReadListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onAdidRead(String adid);
+            public void onAdidRead(string adid)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                this.callback(adid);
+            }
+        }
+
+        private class AttributionReadListener : AndroidJavaProxy
+        {
+            private Action<AdjustAttribution> callback;
+
+            public AttributionReadListener(Action<AdjustAttribution> pCallback) : base("com.adjust.sdk.OnAttributionReadListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onAttributionRead(AdjustAttribution attribution);
+            public void onAttributionRead(AndroidJavaObject ajoAttribution)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (ajoAttribution == null)
+                {
+                    this.callback(null);
+                    return;
+                }
+
+                AdjustAttribution adjustAttribution = new AdjustAttribution();
+                adjustAttribution.TrackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.TrackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.Network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.Campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.Adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.Creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.ClickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.CostType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
+                AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
+                    null : ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount);
+                if (ajoCostAmount == null)
+                {
+                    adjustAttribution.CostAmount = null;
+                }
+                else
+                {
+                    double costAmount = ajoCostAmount.Call<double>("doubleValue");
+                    adjustAttribution.CostAmount = costAmount;
+                }
+                adjustAttribution.CostCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
+                adjustAttribution.FbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
+                    null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+
+                this.callback(adjustAttribution);
             }
         }
 
         private class AmazonAdIdReadListener : AndroidJavaProxy
         {
-            private Action<string> onAmazonAdIdReadCallback;
+            private Action<string> callback;
 
             public AmazonAdIdReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnAmazonAdIdReadListener")
             {
-                this.onAmazonAdIdReadCallback = pCallback;
+                this.callback = pCallback;
             }
 
-            // method must be lowercase to match Android method signature
+            // native method:
+            // void onAmazonAdIdRead(String amazonAdId);
             public void onAmazonAdIdRead(string amazonAdId)
             {
-                if (this.onAmazonAdIdReadCallback == null)
+                if (this.callback == null)
                 {
                     return;
                 }
 
-                this.onAmazonAdIdReadCallback(amazonAdId);
-            }
-
-            // handling of null object
-            public void onAmazonAdIdRead(AndroidJavaObject ajoAmazonAdId)
-            {
-                if (ajoAmazonAdId == null)
-                {
-                    string amazonAdId = null;
-                    this.onAmazonAdIdRead(amazonAdId);
-                    return;
-                }
-
-                this.onAmazonAdIdRead(ajoAmazonAdId.Call<string>("toString"));
+                this.callback(amazonAdId);
             }
         }
 
         private class SdkVersionReadListener : AndroidJavaProxy
         {
-            private Action<string> onSdkVersionReadCallback;
+            private Action<string> callback;
             private string sdkPrefix;
 
             public SdkVersionReadListener(Action<string> pCallback, string sdkPrefix) : base("com.adjust.sdk.OnSdkVersionReadListener")
             {
-                this.onSdkVersionReadCallback = pCallback;
+                this.callback = pCallback;
                 this.sdkPrefix = sdkPrefix;
             }
 
-            // method must be lowercase to match Android method signature
+            // native method:
+            // void onSdkVersionRead(String sdkVersion);
             public void onSdkVersionRead(string sdkVersion)
             {
-                if (this.onSdkVersionReadCallback == null)
+                if (this.callback == null)
                 {
                     return;
                 }
 
-                this.onSdkVersionReadCallback(this.sdkPrefix + "@" + sdkVersion);
-            }
-
-            // handling of null object
-            public void onSdkVersionRead(AndroidJavaObject ajoSdkVersion)
-            {
-                if (ajoSdkVersion == null)
-                {
-                    string sdkVersion = null;
-                    this.onSdkVersionRead(sdkVersion);
-                    return;
-                }
-
-                this.onSdkVersionRead(ajoSdkVersion.Call<string>("toString"));
+                this.callback(this.sdkPrefix + "@" + sdkVersion);
             }
         }
 
         private class IsEnabledListener : AndroidJavaProxy
         {
-            private Action<bool> onIsEnabledCallback;
+            private Action<bool> callback;
 
             public IsEnabledListener(Action<bool> pCallback) : base("com.adjust.sdk.OnIsEnabledListener")
             {
-                this.onIsEnabledCallback = pCallback;
+                this.callback = pCallback;
             }
 
-            // method must be lowercase to match Android method signature
+            // native method:
+            // void onIsEnabledRead(boolean isEnabled);
             public void onIsEnabledRead(bool isEnabled)
             {
-                if (this.onIsEnabledCallback == null)
+                if (this.callback == null)
                 {
                     return;
                 }
 
-                this.onIsEnabledCallback(isEnabled);
+                this.callback(isEnabled);
+            }
+        }
+
+        private class LastDeeplinkListener : AndroidJavaProxy
+        {
+            private Action<string> callback;
+
+            public LastDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnLastDeeplinkReadListener")
+            {
+                this.callback = pCallback;
             }
 
-            // not handling null for primitive data type
+            // native method:
+            // void onLastDeeplinkRead(Uri deeplink);
+            public void onLastDeeplinkRead(AndroidJavaObject ajoLastDeeplink)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                if (ajoLastDeeplink == null)
+                {
+                    this.callback(null);
+                }
+                else
+                {
+                    this.callback(ajoLastDeeplink.Call<string>("toString"));
+                }
+            }
         }
     }
 #endif
