@@ -1,3 +1,17 @@
+### Version 5.0.2 (27th August 2024)
+#### Added
+- Enabled obtaining of the last opened deep link (`Adjust.GetLastDeeplink`) on Android platform.
+
+#### Fixed
+- Fixed method for getting Google Play Advertising ID (https://github.com/adjust/unity_sdk/issues/305).
+- Fixed ambiguous overloads errors occurring when invoking some of the asynchronous getter methods on Android platform (https://github.com/adjust/unity_sdk/issues/288).
+
+#### Native SDKs
+- [iOS@v5.0.0][ios_sdk_v5.0.0]
+- [Android@v5.0.0][android_sdk_v5.0.0]
+
+---
+
 ### Version 5.0.1 (19th August 2024)
 #### Fixed
 - Fixed handling of deferred deep links on iOS platform.
