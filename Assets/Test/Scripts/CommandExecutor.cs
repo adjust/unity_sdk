@@ -910,9 +910,7 @@ namespace AdjustSdk.Test
 
         private void GetLastDeeplink()
         {
-#if UNITY_IOS
             Adjust.GetLastDeeplink(LastDeeplinkCallback);
-#endif
         }
 
         private void VerifyPurchase()
