@@ -1,8 +1,6 @@
-[submodule "ext/android/sdk"]
-	path = ext/android/sdk
-	url = https://github.com/adjust/android_sdk.git
-	branch = master
 [submodule "ext/ios/sdk"]
 	path = ext/ios/sdk
 	url = https://github.com/adjust/ios_sdk.git
-	branch = master
+[submodule "ext/android/sdk"]
+	path = ext/android/sdk
+	url = https://github.com/adjust/android_sdk.git
