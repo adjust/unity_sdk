@@ -166,7 +166,7 @@ namespace AdjustSdk
                 var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList");
                 foreach (string domain in adjustConfig.UrlStrategyDomains)
                 {
-                    ajoUrlStrategyDomains.Call("add", domain);
+                    ajoUrlStrategyDomains.Call<bool>("add", domain);
                 }
                 ajoAdjustConfig.Call("setUrlStrategy",
                     ajoUrlStrategyDomains,
