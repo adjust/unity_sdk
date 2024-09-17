@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity5.0.2";
+        private const string sdkPrefix = "unity5.0.3";
         private static bool isDeferredDeeplinkOpeningEnabled = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -166,7 +166,7 @@ namespace AdjustSdk
                 var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList");
                 foreach (string domain in adjustConfig.UrlStrategyDomains)
                 {
-                    ajoUrlStrategyDomains.Call("add", domain);
+                    ajoUrlStrategyDomains.Call<bool>("add", domain);
                 }
                 ajoAdjustConfig.Call("setUrlStrategy",
                     ajoUrlStrategyDomains,

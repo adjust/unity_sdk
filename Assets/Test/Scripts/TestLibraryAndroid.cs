@@ -16,6 +16,7 @@ namespace AdjustSdk.Test
                 "com.adjust.test.TestLibrary",
                 overwriteUrl,
                 controlUrl,
+                new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"),
                 onCommandReceivedListener);
         }
 
