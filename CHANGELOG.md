@@ -1,3 +1,14 @@
+### Version 5.0.3 (17th September 2024)
+#### Fixed
+- Fixed not functional URL strategy feature for Android platform.
+- Updated to native [iOS SDK v5.0.1](https://github.com/adjust/ios_sdk/releases/tag/v5.0.1) which fixes `Adjust.modulemap not found` error in certain cases of importing of the native iOS SDK via CocoaPods.
+
+#### Native SDKs
+- [iOS@v5.0.1][ios_sdk_v5.0.1]
+- [Android@v5.0.0][android_sdk_v5.0.0]
+
+---
+
 ### Version 5.0.2 (27th August 2024)
 #### Added
 - Enabled obtaining of the last opened deep link (`Adjust.GetLastDeeplink`) on Android platform.
@@ -1303,6 +1314,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.38.0]: https://github.com/adjust/ios_sdk/tree/v4.38.0
 [ios_sdk_v4.38.2]: https://github.com/adjust/ios_sdk/tree/v4.38.2
 [ios_sdk_v5.0.0]: https://github.com/adjust/ios_sdk/tree/v5.0.0
+[ios_sdk_v5.0.1]: https://github.com/adjust/ios_sdk/tree/v5.0.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
