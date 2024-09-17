@@ -11,33 +11,33 @@ def build(root_dir, android_submodule_dir, with_test_lib):
 
     # ------------------------------------------------------------------
     # Building Android SDK JAR in release mode.
-    debug_green('Building Android SDK JAR in release mode ...')
+    # debug_green('Building Android SDK JAR in release mode ...')
     change_dir(src_dir)
-    gradle_make_sdk_jar_release()
+    # gradle_make_sdk_jar_release()
 
     # ------------------------------------------------------------------
     # Copy Android SDK JAR to destination.
-    debug_green('Copying generated Android SDK JAR to destination ...')
-    copy_file('{0}/adjust-sdk-release.jar'.format(jar_in_dir), '{0}/adjust-android.jar'.format(jar_out_dir))
+    # debug_green('Copying generated Android SDK JAR to destination ...')
+    # copy_file('{0}/adjust-sdk-release.jar'.format(jar_in_dir), '{0}/adjust-android.jar'.format(jar_out_dir))
 
     # ------------------------------------------------------------------
     # Building Android SDK JAR in release mode.
-    debug_green('Building Android OAID plugin JAR in release mode ...')
-    gradle_make_oaid_jar_release()
+    # debug_green('Building Android OAID plugin JAR in release mode ...')
+    # gradle_make_oaid_jar_release()
 
     # ------------------------------------------------------------------
     # Copy Android OAID plugin JAR to destination.
-    debug_green('Copying generated Android OAID plugin JAR to destination ...')
-    copy_file('{0}/sdk-plugin-oaid.jar'.format(jar_in_dir_oaid), '{0}/adjust-android-oaid.jar'.format(jar_out_dir_oaid))
+    # debug_green('Copying generated Android OAID plugin JAR to destination ...')
+    # copy_file('{0}/sdk-plugin-oaid.jar'.format(jar_in_dir_oaid), '{0}/adjust-android-oaid.jar'.format(jar_out_dir_oaid))
 
     if with_test_lib:
         # ------------------------------------------------------------------
         # Paths.
         set_log_tag('ANDROID-TEST-LIB-BUILD')
         debug_green('Building Test Library started ...')
-        test_library_in_dir  = '{0}/test-library/build/outputs/aar'.format(src_dir)
-        test_options_in_dir  = '{0}/test-options/build/outputs/aar'.format(src_dir)
-        test_unity_out_dir = '{0}/Assets/Adjust/Android/Test'.format(root_dir)
+        test_library_in_dir  = '{0}/tests/test-library/build/outputs/aar'.format(src_dir)
+        test_options_in_dir  = '{0}/tests/test-options/build/outputs/aar'.format(src_dir)
+        test_unity_out_dir = '{0}/Assets/Test/Native/Android'.format(root_dir)
 
         # ------------------------------------------------------------------
         # Building Android test library AAR in debug mode.
