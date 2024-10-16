@@ -10,11 +10,20 @@ using UnityEditor.Callbacks;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
 #endif
+#if UNITY_2019_3_OR_NEWER
+using UnityEditor.iOS.Xcode.Extensions;
+#endif
 
 namespace AdjustSdk
 {
     public class AdjustEditor : AssetPostprocessor
     {
+        private const int AdjustEditorPostProcesssBuildPriority = 90;
+        private const string TargetUnityIphonePodfileLine = "target 'Unity-iPhone' do";
+        private const string UseFrameworksPodfileLine = "use_frameworks!";
+        private const string UseFrameworksDynamicPodfileLine = "use_frameworks! :linkage => :dynamic";
+        private const string UseFrameworksStaticPodfileLine = "use_frameworks! :linkage => :static";
+
         [MenuItem("Assets/Adjust/Export Unity Package")]
         public static void ExportAdjustUnityPackage()
         {
@@ -78,7 +87,7 @@ namespace AdjustSdk
                 ExportPackageOptions.IncludeDependencies | ExportPackageOptions.Interactive);
         }
         
-        [PostProcessBuild]
+        [PostProcessBuild(AdjustEditorPostProcesssBuildPriority)]
         public static void OnPostprocessBuild(BuildTarget target, string projectPath)
         {
             RunPostBuildScript(target: target, projectPath: projectPath);
@@ -169,17 +178,9 @@ namespace AdjustSdk
                     Debug.Log("[Adjust]: Obj-C exceptions enabled successfully.");
                 }
 
-                if (xcodeProject.ContainsFileByProjectPath("Libraries/Adjust/Native/iOS/AdjustSigSdk.a"))
-                {
-                    if (!string.IsNullOrEmpty(xcodeTargetUnityFramework))
-                    {
-                        xcodeProject.AddBuildProperty(xcodeTargetUnityFramework, "OTHER_LDFLAGS", "-force_load $(PROJECT_DIR)/Libraries/Adjust/Native/iOS/AdjustSigSdk.a");
-                    }
-                    else
-                    {
-                        xcodeProject.AddBuildProperty(xcodeTarget, "OTHER_LDFLAGS", "-force_load $(PROJECT_DIR)/Libraries/Adjust/Native/iOS/AdjustSigSdk.a");
-                    }
-                }
+                // potential AdjustSigSdk.xcframework embedding
+                Debug.Log("[Adjust]: Checking whether AdjustSigSdk.xcframework needs to be embedded or not...");
+                EmbedAdjustSignatureIfNeeded(projectPath, xcodeProject, xcodeTarget);
 
                 // Save the changes to Xcode project file.
                 xcodeProject.WriteToFile(xcodeProjectPath);
@@ -188,6 +189,94 @@ namespace AdjustSdk
         }
 
     #if UNITY_IOS
+        // dynamic xcframework embedding logic adjusted and taken from:
+        // https://github.com/AppLovin/AppLovin-MAX-Unity-Plugin/blob/master/DemoApp/Assets/MaxSdk/Scripts/IntegrationManager/Editor/AppLovinPostProcessiOS.cs
+        private static void EmbedAdjustSignatureIfNeeded(string buildPath, PBXProject project, string targetGuid)
+        {
+            var podsDirectory = Path.Combine(buildPath, "Pods");
+
+            if (!Directory.Exists(podsDirectory) || !ShouldEmbedDynamicLibraries(buildPath))
+            {
+                Debug.Log("[Adjust]: No need to embed AdjustSigSdk.xcframework.");
+                return;
+            }
+
+            var dynamicLibraryPathToEmbed = GetAdjustSignaturePathToEmbed(podsDirectory, buildPath);
+            if (dynamicLibraryPathToEmbed == null) {
+                return;
+            }
+
+            Debug.Log("[Adjust]: It needs to be embedded. Starting the embedding process...");
+#if UNITY_2019_3_OR_NEWER
+            var fileGuid = project.AddFile(dynamicLibraryPathToEmbed, dynamicLibraryPathToEmbed);
+            project.AddFileToEmbedFrameworks(targetGuid, fileGuid);
+#else
+            string runpathSearchPaths;
+            runpathSearchPaths = project.GetBuildPropertyForAnyConfig(targetGuid, "LD_RUNPATH_SEARCH_PATHS");
+            runpathSearchPaths += string.IsNullOrEmpty(runpathSearchPaths) ? "" : " ";
+
+            // check if runtime search paths already contains the required search paths for dynamic libraries
+            if (runpathSearchPaths.Contains("@executable_path/Frameworks")) {
+                return;
+            }
+
+            runpathSearchPaths += "@executable_path/Frameworks";
+            project.SetBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", runpathSearchPaths);
+#endif
+            Debug.Log("[Adjust]: Embedding process completed.");
+        }
+
+        private static bool ShouldEmbedDynamicLibraries(string buildPath)
+        {
+            var podfilePath = Path.Combine(buildPath, "Podfile");
+            if (!File.Exists(podfilePath)) {
+                return false;
+            }
+
+            // if the Podfile doesn't have a `Unity-iPhone` target, we should embed the dynamic libraries
+            var lines = File.ReadAllLines(podfilePath);
+            var containsUnityIphoneTarget = lines.Any(line => line.Contains(TargetUnityIphonePodfileLine));
+            if (!containsUnityIphoneTarget) {
+                return true;
+            }
+
+            // if the Podfile does not have a `use_frameworks! :linkage => static` line, we should not embed the dynamic libraries
+            var useFrameworksStaticLineIndex = Array.FindIndex(lines, line => line.Contains(UseFrameworksStaticPodfileLine));
+            if (useFrameworksStaticLineIndex == -1) {
+                return false;
+            }
+
+            // if more than one of the `use_frameworks!` lines are present, CocoaPods will use the last one
+            var useFrameworksLineIndex = Array.FindIndex(lines, line => line.Trim() == UseFrameworksPodfileLine); // check for exact line to avoid matching `use_frameworks! :linkage => static/dynamic`
+            var useFrameworksDynamicLineIndex = Array.FindIndex(lines, line => line.Contains(UseFrameworksDynamicPodfileLine));
+
+            // check if `use_frameworks! :linkage => :static` is the last line of the three
+            // if it is, we should embed the dynamic libraries
+            return useFrameworksLineIndex < useFrameworksStaticLineIndex && useFrameworksDynamicLineIndex < useFrameworksStaticLineIndex;
+        }
+
+        private static string GetAdjustSignaturePathToEmbed(string podsDirectory, string buildPath)
+        {
+            var podfilePath = Path.Combine(buildPath, "Podfile");
+            var adjustSignatureFrameworkToEmbed = "AdjustSigSdk.xcframework";
+
+            // both .framework and .xcframework are directories, not files
+            var directories = Directory.GetDirectories(podsDirectory, adjustSignatureFrameworkToEmbed, SearchOption.AllDirectories);
+            if (directories.Length <= 0) {
+                return null;
+            }
+
+            var dynamicLibraryAbsolutePath = directories[0];
+            var relativePath = GetDynamicLibraryRelativePath(dynamicLibraryAbsolutePath);
+            return relativePath;
+        }
+
+        private static string GetDynamicLibraryRelativePath(string dynamicLibraryAbsolutePath)
+        {
+            var index = dynamicLibraryAbsolutePath.LastIndexOf("Pods", StringComparison.Ordinal);
+            return dynamicLibraryAbsolutePath.Substring(index);
+        }
+
         private static void HandlePlistIosChanges(string projectPath)
         {
             const string UserTrackingUsageDescriptionKey = "NSUserTrackingUsageDescription";
