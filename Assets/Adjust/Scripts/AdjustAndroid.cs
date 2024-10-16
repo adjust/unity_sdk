@@ -742,24 +742,23 @@ namespace AdjustSdk
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-                adjustAttribution.TrackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.TrackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.Network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.Campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.Adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.Creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.ClickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.CostType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
-                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
-                    null : ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
+                string trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.TrackerName = trackerName == "" ? null : trackerName;
+                string trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.TrackerToken = trackerToken == "" ? null : trackerToken;
+                string network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.Network = network == "" ? null : network;
+                string campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.Campaign = campaign == "" ? null : campaign;
+                string adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.Adgroup = adgroup == "" ? null : adgroup;
+                string creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.Creative = creative == "" ? null : creative;
+                string clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.ClickLabel = clickLabel == "" ? null : clickLabel;
+                string costType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
+                adjustAttribution.CostType = costType == "" ? null : costType;
+                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
                 {
                     if (ajoCostAmount == null)
                     {
@@ -771,10 +770,10 @@ namespace AdjustSdk
                         adjustAttribution.CostAmount = costAmount;
                     }
                 }
-                adjustAttribution.CostCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
-                adjustAttribution.FbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                string costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
+                adjustAttribution.CostCurrency = costCurrency == "" ? null : costCurrency;
+                string fbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                adjustAttribution.FbInstallReferrer = fbInstallReferrer == "" ? null : fbInstallReferrer;
 
                 this.callback(adjustAttribution);
             }
@@ -829,17 +828,14 @@ namespace AdjustSdk
                 }
 
                 AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess();
-                adjustEventSuccess.Adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
-
+                string adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventSuccess.Adid = adid == "" ? null : adid;
+                string message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventSuccess.Message = message == "" ? null : message;
+                string timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventSuccess.Timestamp = timestamp == "" ? null : timestamp;
+                string eventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventSuccess.EventToken = eventToken == "" ? null : eventToken;
                 try
                 {
                     using (AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
@@ -884,18 +880,17 @@ namespace AdjustSdk
                 }
 
                 AdjustEventFailure adjustEventFailure = new AdjustEventFailure();
-                adjustEventFailure.Adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventFailure.Message = eventFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyMessage);
+                string adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventFailure.Adid = adid == "" ? null : adid;
+                string message = eventFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventFailure.Message = message == "" ? null : message;
                 adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
-
+                string timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventFailure.Timestamp =  timestamp == "" ? null : timestamp;
+                string eventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventFailure.EventToken =  eventToken == "" ? null : eventToken;
+                string callbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
+                adjustEventFailure.CallbackId = callbackId == "" ? null : callbackId;
                 try
                 {
                     using (AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
@@ -940,13 +935,12 @@ namespace AdjustSdk
                 }
 
                 AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess();
-                adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-
+                string adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionSuccess.Adid = adid == "" ? null : adid;
+                string message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionSuccess.Message = message == "" ? null : message;
+                string timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustSessionSuccess.Timestamp = timestamp == "" ? null : timestamp;
                 try
                 {
                     using (AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
@@ -991,14 +985,13 @@ namespace AdjustSdk
                 }
 
                 AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure();
-                adjustSessionFailure.Adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
+                string adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionFailure.Adid = adid == "" ? null : adid;
+                string message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionFailure.Message = message == "" ? null : message;
                 adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-
+                string timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustSessionFailure.Timestamp = timestamp == "" ? null : timestamp;
                 try
                 {
                     using (AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
@@ -1142,24 +1135,23 @@ namespace AdjustSdk
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-                adjustAttribution.TrackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.TrackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.Network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.Campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.Adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.Creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.ClickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.CostType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
-                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
-                    null : ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
+                string trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.TrackerName = trackerName == "" ? null : trackerName;
+                string trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.TrackerToken = trackerToken == "" ? null : trackerToken;
+                string network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.Network = network == "" ? null : network;
+                string campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.Campaign = campaign == "" ? null : campaign;
+                string adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.Adgroup = adgroup == "" ? null : adgroup;
+                string creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.Creative = creative == "" ? null : creative;
+                string clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.ClickLabel = clickLabel == "" ? null : clickLabel;
+                string costType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
+                adjustAttribution.CostType = costType == "" ? null : costType;
+                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
                 {
                     if (ajoCostAmount == null)
                     {
@@ -1171,10 +1163,10 @@ namespace AdjustSdk
                         adjustAttribution.CostAmount = costAmount;
                     }
                 }
-                adjustAttribution.CostCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
-                adjustAttribution.FbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                string costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
+                adjustAttribution.CostCurrency = costCurrency == "" ? null : costCurrency;
+                string fbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                adjustAttribution.FbInstallReferrer = fbInstallReferrer == "" ? null : fbInstallReferrer;
 
                 this.callback(adjustAttribution);
             }
