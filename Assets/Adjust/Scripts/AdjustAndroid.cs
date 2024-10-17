@@ -836,6 +836,8 @@ namespace AdjustSdk
                 adjustEventSuccess.Timestamp = timestamp == "" ? null : timestamp;
                 string eventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
                 adjustEventSuccess.EventToken = eventToken == "" ? null : eventToken;
+                string callbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
+                adjustEventSuccess.CallbackId = callbackId == "" ? null : callbackId;
                 try
                 {
                     using (AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
