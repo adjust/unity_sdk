@@ -1,7 +1,7 @@
-### Version 5.0.4 (17th October 2024)
+### Version 5.0.4 (18th October 2024)
 #### Changed
 - Updated minimal supported Unity version to `2018.2`.
-- Improved support for properly linking Adjust SDK dependencies regardless of the EDM4U iOS resolver settings. With this, there is no longer need to uncheck the `Link frameworks statically` option from EDM4U iOS resolver settings. This should address issues like https://github.com/adjust/unity_sdk/issues/308#issuecomment-2417099823.
+- Improved support for properly linking Adjust SDK dependencies regardless of the EDM4U iOS Resolver settings. With this change, there is no longer need to uncheck the `Link frameworks statically` option from EDM4U iOS Resolver settings. This should address issues like https://github.com/adjust/unity_sdk/issues/308#issuecomment-2417099823.
 - Improved handling and disposal of `AndroidJavaObject` instances (https://github.com/adjust/unity_sdk/pull/303).
 - Removed `Example` directory from `.unitypackage`. Example scene is now part of the repository only. This should address this issue: https://github.com/adjust/unity_sdk/issues/311.
 - Removed the `Assets` menu item logic from `AdjustEditor` script which was generating SDK's `.unitypackage`.
