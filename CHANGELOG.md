@@ -1,3 +1,17 @@
+### Version 5.0.4 (18th October 2024)
+#### Changed
+- Updated minimal supported Unity version to `2018.2`.
+- Improved support for properly linking Adjust SDK dependencies regardless of the EDM4U iOS Resolver settings. With this change, there is no longer need to uncheck the `Link frameworks statically` option from EDM4U iOS Resolver settings. This should address issues like https://github.com/adjust/unity_sdk/issues/308#issuecomment-2417099823.
+- Improved handling and disposal of `AndroidJavaObject` instances (https://github.com/adjust/unity_sdk/pull/303).
+- Removed `Example` directory from `.unitypackage`. Example scene is now part of the repository only. This should address this issue: https://github.com/adjust/unity_sdk/issues/311.
+- Removed the `Assets` menu item logic from `AdjustEditor` script which was generating SDK's `.unitypackage`.
+
+#### Native SDKs
+- [iOS@v5.0.1][ios_sdk_v5.0.1]
+- [Android@v5.0.1][android_sdk_v5.0.1]
+
+---
+
 ### Version 5.0.3 (17th September 2024)
 #### Fixed
 - Fixed not functional URL strategy feature for Android platform.
@@ -1368,6 +1382,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.38.2]: https://github.com/adjust/android_sdk/tree/v4.38.2
 [android_sdk_v4.38.3]: https://github.com/adjust/android_sdk/tree/v4.38.3
 [android_sdk_v5.0.0]: https://github.com/adjust/android_sdk/tree/v5.0.0
+[android_sdk_v5.0.1]: https://github.com/adjust/android_sdk/tree/v5.0.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

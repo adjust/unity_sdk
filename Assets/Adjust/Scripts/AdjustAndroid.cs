@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity5.0.3";
+        private const string sdkPrefix = "unity5.0.4";
         private static bool isDeferredDeeplinkOpeningEnabled = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -154,8 +154,10 @@ namespace AdjustSdk
             // check if user has set max number of event deduplication IDs
             if (adjustConfig.EventDeduplicationIdsMaxSize != null)
             {
-                AndroidJavaObject ajoEventDeduplicationIdsMaxSize = new AndroidJavaObject("java.lang.Integer", adjustConfig.EventDeduplicationIdsMaxSize);
-                ajoAdjustConfig.Call("setEventDeduplicationIdsMaxSize", ajoEventDeduplicationIdsMaxSize);
+                using (AndroidJavaObject ajoEventDeduplicationIdsMaxSize = new AndroidJavaObject("java.lang.Integer", adjustConfig.EventDeduplicationIdsMaxSize))
+                {
+                    ajoAdjustConfig.Call("setEventDeduplicationIdsMaxSize", ajoEventDeduplicationIdsMaxSize);
+                }
             }
 
             // check if user has set custom URL strategy
@@ -163,15 +165,17 @@ namespace AdjustSdk
                 adjustConfig.ShouldUseSubdomains != null &&
                 adjustConfig.IsDataResidency != null)
             {
-                var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList");
-                foreach (string domain in adjustConfig.UrlStrategyDomains)
+                using (var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList"))
                 {
-                    ajoUrlStrategyDomains.Call<bool>("add", domain);
-                }
-                ajoAdjustConfig.Call("setUrlStrategy",
-                    ajoUrlStrategyDomains,
-                    adjustConfig.ShouldUseSubdomains,
-                    adjustConfig.IsDataResidency);
+                    foreach (string domain in adjustConfig.UrlStrategyDomains)
+                    {
+                        ajoUrlStrategyDomains.Call<bool>("add", domain);
+                    }
+                    ajoAdjustConfig.Call("setUrlStrategy",
+                        ajoUrlStrategyDomains,
+                        adjustConfig.ShouldUseSubdomains,
+                        adjustConfig.IsDataResidency);
+                    }
             }
 
             // check attribution changed delagate
@@ -222,62 +226,64 @@ namespace AdjustSdk
 
         public static void TrackEvent(AdjustEvent adjustEvent)
         {
-            AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken);
-
-            // check if user has set revenue for the event
-            if (adjustEvent.Revenue != null)
+            using (AndroidJavaObject ajoAdjustEvent =
+                new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken))
             {
-                ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.Revenue, adjustEvent.Currency);
-            }
-
-            // check if user has added any callback parameters to the event
-            if (adjustEvent.CallbackParameters != null)
-            {
-                for (int i = 0; i < adjustEvent.CallbackParameters.Count; i += 2)
+                // check if user has set revenue for the event
+                if (adjustEvent.Revenue != null)
                 {
-                    string key = adjustEvent.CallbackParameters[i];
-                    string value = adjustEvent.CallbackParameters[i + 1];
-                    ajoAdjustEvent.Call("addCallbackParameter", key, value);
+                    ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.Revenue, adjustEvent.Currency);
                 }
-            }
 
-            // check if user has added any partner parameters to the event
-            if (adjustEvent.PartnerParameters != null)
-            {
-                for (int i = 0; i < adjustEvent.PartnerParameters.Count; i += 2)
+                // check if user has added any callback parameters to the event
+                if (adjustEvent.CallbackParameters != null)
                 {
-                    string key = adjustEvent.PartnerParameters[i];
-                    string value = adjustEvent.PartnerParameters[i + 1];
-                    ajoAdjustEvent.Call("addPartnerParameter", key, value);
+                    for (int i = 0; i < adjustEvent.CallbackParameters.Count; i += 2)
+                    {
+                        string key = adjustEvent.CallbackParameters[i];
+                        string value = adjustEvent.CallbackParameters[i + 1];
+                        ajoAdjustEvent.Call("addCallbackParameter", key, value);
+                    }
                 }
-            }
 
-            // check if user has set deduplication ID for the event
-            if (adjustEvent.DeduplicationId != null)
-            {
-                ajoAdjustEvent.Call("setDeduplicationId", adjustEvent.DeduplicationId);
-            }
+                // check if user has added any partner parameters to the event
+                if (adjustEvent.PartnerParameters != null)
+                {
+                    for (int i = 0; i < adjustEvent.PartnerParameters.Count; i += 2)
+                    {
+                        string key = adjustEvent.PartnerParameters[i];
+                        string value = adjustEvent.PartnerParameters[i + 1];
+                        ajoAdjustEvent.Call("addPartnerParameter", key, value);
+                    }
+                }
 
-            // check if user has added callback ID to the event
-            if (adjustEvent.CallbackId != null)
-            {
-                ajoAdjustEvent.Call("setCallbackId", adjustEvent.CallbackId);
-            }
+                // check if user has set deduplication ID for the event
+                if (adjustEvent.DeduplicationId != null)
+                {
+                    ajoAdjustEvent.Call("setDeduplicationId", adjustEvent.DeduplicationId);
+                }
 
-            // check if user has added product ID to the event
-            if (adjustEvent.ProductId != null)
-            {
-                ajoAdjustEvent.Call("setProductId", adjustEvent.ProductId);
-            }
+                // check if user has added callback ID to the event
+                if (adjustEvent.CallbackId != null)
+                {
+                    ajoAdjustEvent.Call("setCallbackId", adjustEvent.CallbackId);
+                }
 
-            // check if user has added purchase token to the event
-            if (adjustEvent.PurchaseToken != null)
-            {
-                ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.PurchaseToken);
-            }
+                // check if user has added product ID to the event
+                if (adjustEvent.ProductId != null)
+                {
+                    ajoAdjustEvent.Call("setProductId", adjustEvent.ProductId);
+                }
 
-            // Track the event.
-            ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
+                // check if user has added purchase token to the event
+                if (adjustEvent.PurchaseToken != null)
+                {
+                    ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.PurchaseToken);
+                }
+
+                // track the event
+                ajcAdjust.CallStatic("trackEvent", ajoAdjustEvent);
+            }
         }
 
         public static void Enable()
@@ -386,114 +392,125 @@ namespace AdjustSdk
 
         public static void ProcessDeeplink(AdjustDeeplink deeplink) 
         {
-            AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
-            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
-            AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri);
-            ajcAdjust.CallStatic("processDeeplink", ajoAdjustDeeplink, ajoCurrentActivity);
+            using (AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri"))
+            using (AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink))
+            using (AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri))
+            {
+                ajcAdjust.CallStatic("processDeeplink", ajoAdjustDeeplink, ajoCurrentActivity);
+            }
         }
 
         public static void TrackAdRevenue(AdjustAdRevenue adRevenue)
         {
-            AndroidJavaObject ajoAdjustAdRevenue = new AndroidJavaObject("com.adjust.sdk.AdjustAdRevenue", adRevenue.Source);
-
-            // check if user has set revenue
-            if (adRevenue.Revenue != null)
+            using (AndroidJavaObject ajoAdjustAdRevenue =
+                new AndroidJavaObject("com.adjust.sdk.AdjustAdRevenue", adRevenue.Source))
             {
-                AndroidJavaObject ajoRevenue = new AndroidJavaObject("java.lang.Double", adRevenue.Revenue);
-                ajoAdjustAdRevenue.Call("setRevenue", ajoRevenue, adRevenue.Currency);
-            }
-
-            // check if user has set ad impressions count
-            if (adRevenue.AdImpressionsCount != null)
-            {
-                AndroidJavaObject ajoAdImpressionsCount = new AndroidJavaObject("java.lang.Integer", adRevenue.AdImpressionsCount);
-                ajoAdjustAdRevenue.Call("setAdImpressionsCount", ajoAdImpressionsCount);
-            }
-
-            // check if user has set ad revenue network
-            if (adRevenue.AdRevenueNetwork != null)
-            {
-                ajoAdjustAdRevenue.Call("setAdRevenueNetwork", adRevenue.AdRevenueNetwork);
-            }
-
-            // check if user has set ad revenue unit
-            if (adRevenue.AdRevenueUnit != null)
-            {
-                ajoAdjustAdRevenue.Call("setAdRevenueUnit", adRevenue.AdRevenueUnit);
-            }
-
-            // check if user has set ad revenue placement
-            if (adRevenue.AdRevenuePlacement != null)
-            {
-                ajoAdjustAdRevenue.Call("setAdRevenuePlacement", adRevenue.AdRevenuePlacement);
-            }
-
-            // check if user has added any callback parameters
-            if (adRevenue.CallbackParameters != null)
-            {
-                for (int i = 0; i < adRevenue.CallbackParameters.Count; i += 2)
+                // check if user has set revenue
+                if (adRevenue.Revenue != null)
                 {
-                    string key = adRevenue.CallbackParameters[i];
-                    string value = adRevenue.CallbackParameters[i + 1];
-                    ajoAdjustAdRevenue.Call("addCallbackParameter", key, value);
+                    using (AndroidJavaObject ajoRevenue = new AndroidJavaObject("java.lang.Double", adRevenue.Revenue))
+                    {
+                        ajoAdjustAdRevenue.Call("setRevenue", ajoRevenue, adRevenue.Currency);
+                    }
                 }
-            }
 
-            // check if user has added any partner parameters
-            if (adRevenue.PartnerParameters != null)
-            {
-                for (int i = 0; i < adRevenue.PartnerParameters.Count; i += 2)
+                // check if user has set ad impressions count
+                if (adRevenue.AdImpressionsCount != null)
                 {
-                    string key = adRevenue.PartnerParameters[i];
-                    string value = adRevenue.PartnerParameters[i + 1];
-                    ajoAdjustAdRevenue.Call("addPartnerParameter", key, value);
+                    using (AndroidJavaObject ajoAdImpressionsCount =
+                        new AndroidJavaObject("java.lang.Integer", adRevenue.AdImpressionsCount))
+                    {
+                        ajoAdjustAdRevenue.Call("setAdImpressionsCount", ajoAdImpressionsCount);
+                    }
                 }
-            }
 
-            // track ad revenue.
-            ajcAdjust.CallStatic("trackAdRevenue", ajoAdjustAdRevenue);
+                // check if user has set ad revenue network
+                if (adRevenue.AdRevenueNetwork != null)
+                {
+                    ajoAdjustAdRevenue.Call("setAdRevenueNetwork", adRevenue.AdRevenueNetwork);
+                }
+
+                // check if user has set ad revenue unit
+                if (adRevenue.AdRevenueUnit != null)
+                {
+                    ajoAdjustAdRevenue.Call("setAdRevenueUnit", adRevenue.AdRevenueUnit);
+                }
+
+                // check if user has set ad revenue placement
+                if (adRevenue.AdRevenuePlacement != null)
+                {
+                    ajoAdjustAdRevenue.Call("setAdRevenuePlacement", adRevenue.AdRevenuePlacement);
+                }
+
+                // check if user has added any callback parameters
+                if (adRevenue.CallbackParameters != null)
+                {
+                    for (int i = 0; i < adRevenue.CallbackParameters.Count; i += 2)
+                    {
+                        string key = adRevenue.CallbackParameters[i];
+                        string value = adRevenue.CallbackParameters[i + 1];
+                        ajoAdjustAdRevenue.Call("addCallbackParameter", key, value);
+                    }
+                }
+
+                // check if user has added any partner parameters
+                if (adRevenue.PartnerParameters != null)
+                {
+                    for (int i = 0; i < adRevenue.PartnerParameters.Count; i += 2)
+                    {
+                        string key = adRevenue.PartnerParameters[i];
+                        string value = adRevenue.PartnerParameters[i + 1];
+                        ajoAdjustAdRevenue.Call("addPartnerParameter", key, value);
+                    }
+                }
+
+                // track ad revenue
+                ajcAdjust.CallStatic("trackAdRevenue", ajoAdjustAdRevenue);
+            }
         }
 
         public static void TrackPlayStoreSubscription(AdjustPlayStoreSubscription subscription)
         {
-            AndroidJavaObject ajoSubscription = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStoreSubscription",
+            using (AndroidJavaObject ajoSubscription = new AndroidJavaObject(
+                "com.adjust.sdk.AdjustPlayStoreSubscription",
                 Convert.ToInt64(subscription.Price),
                 subscription.Currency,
                 subscription.ProductId,
                 subscription.OrderId,
                 subscription.Signature,
-                subscription.PurchaseToken);
-
-            // check if user has set purchase time for subscription
-            if (subscription.PurchaseTime != null)
+                subscription.PurchaseToken))
             {
-                ajoSubscription.Call("setPurchaseTime", Convert.ToInt64(subscription.PurchaseTime));
-            }
-
-            // check if user has added any callback parameters to the subscription
-            if (subscription.CallbackParameters != null)
-            {
-                for (int i = 0; i < subscription.CallbackParameters.Count; i += 2)
+                // check if user has set purchase time for subscription
+                if (subscription.PurchaseTime != null)
                 {
-                    string key = subscription.CallbackParameters[i];
-                    string value = subscription.CallbackParameters[i + 1];
-                    ajoSubscription.Call("addCallbackParameter", key, value);
+                    ajoSubscription.Call("setPurchaseTime", Convert.ToInt64(subscription.PurchaseTime));
                 }
-            }
 
-            // check if user has added any partner parameters to the subscription
-            if (subscription.PartnerParameters != null)
-            {
-                for (int i = 0; i < subscription.PartnerParameters.Count; i += 2)
+                // check if user has added any callback parameters to the subscription
+                if (subscription.CallbackParameters != null)
                 {
-                    string key = subscription.PartnerParameters[i];
-                    string value = subscription.PartnerParameters[i + 1];
-                    ajoSubscription.Call("addPartnerParameter", key, value);
+                    for (int i = 0; i < subscription.CallbackParameters.Count; i += 2)
+                    {
+                        string key = subscription.CallbackParameters[i];
+                        string value = subscription.CallbackParameters[i + 1];
+                        ajoSubscription.Call("addCallbackParameter", key, value);
+                    }
                 }
-            }
 
-            // track the subscription
-            ajcAdjust.CallStatic("trackPlayStoreSubscription", ajoSubscription);
+                // check if user has added any partner parameters to the subscription
+                if (subscription.PartnerParameters != null)
+                {
+                    for (int i = 0; i < subscription.PartnerParameters.Count; i += 2)
+                    {
+                        string key = subscription.PartnerParameters[i];
+                        string value = subscription.PartnerParameters[i + 1];
+                        ajoSubscription.Call("addPartnerParameter", key, value);
+                    }
+                }
+
+                // track the subscription
+                ajcAdjust.CallStatic("trackPlayStoreSubscription", ajoSubscription);
+            }
         }
 
         public static void TrackThirdPartySharing(AdjustThirdPartySharing thirdPartySharing)
@@ -588,84 +605,92 @@ namespace AdjustSdk
             AdjustPlayStorePurchase purchase,
             Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
         {
-            AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStorePurchase",
-                purchase.ProductId,
-                purchase.PurchaseToken);
             onVerificationResultListener = new VerificationResultListener(verificationInfoCallback);
-
-            ajcAdjust.CallStatic("verifyPlayStorePurchase", ajoPurchase, onVerificationResultListener);
+            using (AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStorePurchase",
+                purchase.ProductId,
+                purchase.PurchaseToken))
+            {
+                ajcAdjust.CallStatic("verifyPlayStorePurchase", ajoPurchase, onVerificationResultListener);
+            }
         }
 
         public static void ProcessAndResolveDeeplink(AdjustDeeplink deeplink, Action<string> resolvedLinkCallback)
         {
             onDeeplinkResolvedListener = new DeeplinkResolutionListener(resolvedLinkCallback);
-            AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
-            AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink);
-            AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri);
-            ajcAdjust.CallStatic("processAndResolveDeeplink", ajoAdjustDeeplink, ajoCurrentActivity, onDeeplinkResolvedListener);
+            using (AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri"))
+            using (AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink))
+            using (AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri))
+            {
+                ajcAdjust.CallStatic(
+                    "processAndResolveDeeplink",
+                    ajoAdjustDeeplink,
+                    ajoCurrentActivity,
+                    onDeeplinkResolvedListener);
+            }
         }
 
         public static void VerifyAndTrackPlayStorePurchase(
             AdjustEvent adjustEvent,
             Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
         {
-            AndroidJavaObject ajoAdjustEvent = new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken);
-
-            // check if user has set revenue for the event
-            if (adjustEvent.Revenue != null)
-            {
-                ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.Revenue, adjustEvent.Currency);
-            }
-
-            // check if user has added any callback parameters to the event
-            if (adjustEvent.CallbackParameters != null)
-            {
-                for (int i = 0; i < adjustEvent.CallbackParameters.Count; i += 2)
-                {
-                    string key = adjustEvent.CallbackParameters[i];
-                    string value = adjustEvent.CallbackParameters[i + 1];
-                    ajoAdjustEvent.Call("addCallbackParameter", key, value);
-                }
-            }
-
-            // check if user has added any partner parameters to the event
-            if (adjustEvent.PartnerParameters != null)
-            {
-                for (int i = 0; i < adjustEvent.PartnerParameters.Count; i += 2)
-                {
-                    string key = adjustEvent.PartnerParameters[i];
-                    string value = adjustEvent.PartnerParameters[i + 1];
-                    ajoAdjustEvent.Call("addPartnerParameter", key, value);
-                }
-            }
-
-            // check if user has set deduplication ID for the event
-            if (adjustEvent.DeduplicationId != null)
-            {
-                ajoAdjustEvent.Call("setDeduplicationId", adjustEvent.DeduplicationId);
-            }
-
-            // check if user has added callback ID to the event
-            if (adjustEvent.CallbackId != null)
-            {
-                ajoAdjustEvent.Call("setCallbackId", adjustEvent.CallbackId);
-            }
-
-            // check if user has added product ID to the event
-            if (adjustEvent.ProductId != null)
-            {
-                ajoAdjustEvent.Call("setProductId", adjustEvent.ProductId);
-            }
-
-            // check if user has added purchase token to the event
-            if (adjustEvent.PurchaseToken != null)
-            {
-                ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.PurchaseToken);
-            }
-
             onVerifyAndTrackListener = new VerificationResultListener(verificationInfoCallback);
+            using (AndroidJavaObject ajoAdjustEvent =
+                new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken))
+            {
+                // check if user has set revenue for the event
+                if (adjustEvent.Revenue != null)
+                {
+                    ajoAdjustEvent.Call("setRevenue", (double)adjustEvent.Revenue, adjustEvent.Currency);
+                }
 
-            ajcAdjust.CallStatic("verifyAndTrackPlayStorePurchase", ajoAdjustEvent, onVerifyAndTrackListener);
+                // check if user has added any callback parameters to the event
+                if (adjustEvent.CallbackParameters != null)
+                {
+                    for (int i = 0; i < adjustEvent.CallbackParameters.Count; i += 2)
+                    {
+                        string key = adjustEvent.CallbackParameters[i];
+                        string value = adjustEvent.CallbackParameters[i + 1];
+                        ajoAdjustEvent.Call("addCallbackParameter", key, value);
+                    }
+                }
+
+                // check if user has added any partner parameters to the event
+                if (adjustEvent.PartnerParameters != null)
+                {
+                    for (int i = 0; i < adjustEvent.PartnerParameters.Count; i += 2)
+                    {
+                        string key = adjustEvent.PartnerParameters[i];
+                        string value = adjustEvent.PartnerParameters[i + 1];
+                        ajoAdjustEvent.Call("addPartnerParameter", key, value);
+                    }
+                }
+
+                // check if user has set deduplication ID for the event
+                if (adjustEvent.DeduplicationId != null)
+                {
+                    ajoAdjustEvent.Call("setDeduplicationId", adjustEvent.DeduplicationId);
+                }
+
+                // check if user has added callback ID to the event
+                if (adjustEvent.CallbackId != null)
+                {
+                    ajoAdjustEvent.Call("setCallbackId", adjustEvent.CallbackId);
+                }
+
+                // check if user has added product ID to the event
+                if (adjustEvent.ProductId != null)
+                {
+                    ajoAdjustEvent.Call("setProductId", adjustEvent.ProductId);
+                }
+
+                // check if user has added purchase token to the event
+                if (adjustEvent.PurchaseToken != null)
+                {
+                    ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.PurchaseToken);
+                }
+
+                ajcAdjust.CallStatic("verifyAndTrackPlayStorePurchase", ajoAdjustEvent, onVerifyAndTrackListener);
+            }
         }
 
         // used for testing only
@@ -717,37 +742,38 @@ namespace AdjustSdk
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-                adjustAttribution.TrackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.TrackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.Network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.Campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.Adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.Creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.ClickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.CostType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
-                AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
-                    null : ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount);
-                if (ajoCostAmount == null)
+                string trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.TrackerName = trackerName == "" ? null : trackerName;
+                string trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.TrackerToken = trackerToken == "" ? null : trackerToken;
+                string network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.Network = network == "" ? null : network;
+                string campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.Campaign = campaign == "" ? null : campaign;
+                string adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.Adgroup = adgroup == "" ? null : adgroup;
+                string creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.Creative = creative == "" ? null : creative;
+                string clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.ClickLabel = clickLabel == "" ? null : clickLabel;
+                string costType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
+                adjustAttribution.CostType = costType == "" ? null : costType;
+                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
                 {
-                    adjustAttribution.CostAmount = null;
+                    if (ajoCostAmount == null)
+                    {
+                        adjustAttribution.CostAmount = null;
+                    }
+                    else
+                    {
+                        double costAmount = ajoCostAmount.Call<double>("doubleValue");
+                        adjustAttribution.CostAmount = costAmount;
+                    }
                 }
-                else
-                {
-                    double costAmount = ajoCostAmount.Call<double>("doubleValue");
-                    adjustAttribution.CostAmount = costAmount;
-                }
-                adjustAttribution.CostCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
-                adjustAttribution.FbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                string costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
+                adjustAttribution.CostCurrency = costCurrency == "" ? null : costCurrency;
+                string fbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                adjustAttribution.FbInstallReferrer = fbInstallReferrer == "" ? null : fbInstallReferrer;
 
                 this.callback(adjustAttribution);
             }
@@ -802,22 +828,23 @@ namespace AdjustSdk
                 }
 
                 AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess();
-                adjustEventSuccess.Adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventSuccess.Message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustEventSuccess.Timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventSuccess.EventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventSuccess.CallbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
-                    null : eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
-
+                string adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventSuccess.Adid = adid == "" ? null : adid;
+                string message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventSuccess.Message = message == "" ? null : message;
+                string timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventSuccess.Timestamp = timestamp == "" ? null : timestamp;
+                string eventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventSuccess.EventToken = eventToken == "" ? null : eventToken;
+                string callbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
+                adjustEventSuccess.CallbackId = callbackId == "" ? null : callbackId;
                 try
                 {
-                    AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustEventSuccess.BuildJsonResponseFromString(jsonResponseString);
+                    using (AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    {
+                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                        adjustEventSuccess.BuildJsonResponseFromString(jsonResponseString);
+                    }
                 }
                 catch (Exception)
                 {
@@ -855,23 +882,24 @@ namespace AdjustSdk
                 }
 
                 AdjustEventFailure adjustEventFailure = new AdjustEventFailure();
-                adjustEventFailure.Adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventFailure.Message = eventFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyMessage);
+                string adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustEventFailure.Adid = adid == "" ? null : adid;
+                string message = eventFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustEventFailure.Message = message == "" ? null : message;
                 adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustEventFailure.Timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventFailure.EventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventFailure.CallbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId) == "" ?
-                    null : eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
-
+                string timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustEventFailure.Timestamp =  timestamp == "" ? null : timestamp;
+                string eventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
+                adjustEventFailure.EventToken =  eventToken == "" ? null : eventToken;
+                string callbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
+                adjustEventFailure.CallbackId = callbackId == "" ? null : callbackId;
                 try
                 {
-                    AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustEventFailure.BuildJsonResponseFromString(jsonResponseString);
+                    using (AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    {
+                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                        adjustEventFailure.BuildJsonResponseFromString(jsonResponseString);
+                    }
                 }
                 catch (Exception)
                 {
@@ -879,7 +907,7 @@ namespace AdjustSdk
                     // Native Android SDK should send empty JSON object if none available as of v4.12.5.
                     // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
                 }
-                
+
                 this.callback(adjustEventFailure);
             }
         }
@@ -909,18 +937,19 @@ namespace AdjustSdk
                 }
 
                 AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess();
-                adjustSessionSuccess.Adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionSuccess.Message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustSessionSuccess.Timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-
+                string adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionSuccess.Adid = adid == "" ? null : adid;
+                string message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionSuccess.Message = message == "" ? null : message;
+                string timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustSessionSuccess.Timestamp = timestamp == "" ? null : timestamp;
                 try
                 {
-                    AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustSessionSuccess.BuildJsonResponseFromString(jsonResponseString);
+                    using (AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    {
+                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                        adjustSessionSuccess.BuildJsonResponseFromString(jsonResponseString);
+                    }
                 }
                 catch (Exception)
                 {
@@ -958,19 +987,20 @@ namespace AdjustSdk
                 }
 
                 AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure();
-                adjustSessionFailure.Adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionFailure.Message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
+                string adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
+                adjustSessionFailure.Adid = adid == "" ? null : adid;
+                string message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
+                adjustSessionFailure.Message = message == "" ? null : message;
                 adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                adjustSessionFailure.Timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp) == "" ?
-                    null : sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-
+                string timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
+                adjustSessionFailure.Timestamp = timestamp == "" ? null : timestamp;
                 try
                 {
-                    AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse);
-                    string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                    adjustSessionFailure.BuildJsonResponseFromString(jsonResponseString);
+                    using (AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    {
+                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                        adjustSessionFailure.BuildJsonResponseFromString(jsonResponseString);
+                    }
                 }
                 catch (Exception)
                 {
@@ -1107,37 +1137,38 @@ namespace AdjustSdk
                 }
 
                 AdjustAttribution adjustAttribution = new AdjustAttribution();
-                adjustAttribution.TrackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.TrackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.Network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.Campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.Adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.Creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.ClickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.CostType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
-                AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount) == null ?
-                    null : ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount);
-                if (ajoCostAmount == null)
+                string trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
+                adjustAttribution.TrackerName = trackerName == "" ? null : trackerName;
+                string trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
+                adjustAttribution.TrackerToken = trackerToken == "" ? null : trackerToken;
+                string network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
+                adjustAttribution.Network = network == "" ? null : network;
+                string campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
+                adjustAttribution.Campaign = campaign == "" ? null : campaign;
+                string adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
+                adjustAttribution.Adgroup = adgroup == "" ? null : adgroup;
+                string creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
+                adjustAttribution.Creative = creative == "" ? null : creative;
+                string clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
+                adjustAttribution.ClickLabel = clickLabel == "" ? null : clickLabel;
+                string costType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
+                adjustAttribution.CostType = costType == "" ? null : costType;
+                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
                 {
-                    adjustAttribution.CostAmount = null;
+                    if (ajoCostAmount == null)
+                    {
+                        adjustAttribution.CostAmount = null;
+                    }
+                    else
+                    {
+                        double costAmount = ajoCostAmount.Call<double>("doubleValue");
+                        adjustAttribution.CostAmount = costAmount;
+                    }
                 }
-                else
-                {
-                    double costAmount = ajoCostAmount.Call<double>("doubleValue");
-                    adjustAttribution.CostAmount = costAmount;
-                }
-                adjustAttribution.CostCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
-                adjustAttribution.FbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer) == "" ?
-                    null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                string costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
+                adjustAttribution.CostCurrency = costCurrency == "" ? null : costCurrency;
+                string fbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
+                adjustAttribution.FbInstallReferrer = fbInstallReferrer == "" ? null : fbInstallReferrer;
 
                 this.callback(adjustAttribution);
             }
