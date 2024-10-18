@@ -194,7 +194,6 @@ namespace AdjustSdk
 
         private static string GetAdjustSignaturePathToEmbed(string podsDirectory, string buildPath)
         {
-            var podfilePath = Path.Combine(buildPath, "Podfile");
             var adjustSignatureFrameworkToEmbed = "AdjustSigSdk.xcframework";
 
             // both .framework and .xcframework are directories, not files
