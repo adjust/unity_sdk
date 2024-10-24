@@ -57,7 +57,7 @@ namespace AdjustSdk
                 AndroidJavaObject ajoLogLevel;
                 if (adjustConfig.LogLevel.Value.ToUppercaseString().Equals("SUPPRESS"))
                 {
-                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>("SUPRESS");
+                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>("SUPPRESS");
                 }
                 else
                 {
