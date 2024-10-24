@@ -9,9 +9,9 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
-#endif
 #if UNITY_2019_3_OR_NEWER
 using UnityEditor.iOS.Xcode.Extensions;
+#endif
 #endif
 
 namespace AdjustSdk
