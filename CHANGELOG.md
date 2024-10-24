@@ -1,7 +1,8 @@
 ### Version 5.0.5 (24th October 2024)
 #### Fixed
-- Fixed issue introduced with Unity SDK v5.0.4 where the old name of native Android log level enum was being referenced (https://github.com/adjust/unity_sdk/issues/316).
 - Tagged the version which is now having submodules pointing to public repositories allowing OpenUPM to properly clone this repository (https://github.com/adjust/unity_sdk/issues/314).
+- Fixed issue introduced with Unity SDK v5.0.4 where the old name of native Android log level enum was being referenced (https://github.com/adjust/unity_sdk/issues/316).
+- Fixed error being thrown because of Adjust editor script in cases where iOS Build Support Unity module was not installed (https://github.com/adjust/unity_sdk/issues/317).
 
 #### Native SDKs
 - [iOS@v5.0.1][ios_sdk_v5.0.1]
