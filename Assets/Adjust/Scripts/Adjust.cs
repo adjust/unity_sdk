@@ -171,38 +171,6 @@ namespace AdjustSdk
 #endif
         }
 
-        public static void EnablePlayStoreKidsApp()
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-#if UNITY_IOS
-            Debug.Log("[Adjust]: Marking apps as Play Store kids app is only supported for Android platform.");
-#elif UNITY_ANDROID
-            AdjustAndroid.EnablePlayStoreKidsApp();
-#else
-            Debug.Log(errorMsgPlatform);
-#endif
-        }
-
-        public static void DisablePlayStoreKidsApp()
-        {
-            if (IsEditor())
-            {
-                return;
-            }
-
-#if UNITY_IOS
-            Debug.Log("[Adjust]: Marking apps as Play Store kids app is only supported for Android platform.");
-#elif UNITY_ANDROID
-            AdjustAndroid.DisablePlayStoreKidsApp();
-#else
-            Debug.Log(errorMsgPlatform);
-#endif
-        }
-
         public static void IsEnabled(Action<bool> callback)
         {
             if (IsEditor())

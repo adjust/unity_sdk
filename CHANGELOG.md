@@ -1,3 +1,16 @@
+### Version 5.0.6 (5th December 2024)
+#### Fixed
+- Cleaned up unused methods from the API.
+
+#### Changed
+- Switched to native Android SDK version that depends on a specific version of the signature library.
+
+#### Native SDKs
+- [iOS@v5.0.1][ios_sdk_v5.0.1]
+- [Android@v5.0.2][android_sdk_v5.0.2]
+
+---
+
 ### Version 5.0.5 (24th October 2024)
 #### Fixed
 - Tagged the version which is now having submodules pointing to public repositories allowing OpenUPM to properly clone this repository (https://github.com/adjust/unity_sdk/issues/314).
@@ -1395,6 +1408,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v4.38.3]: https://github.com/adjust/android_sdk/tree/v4.38.3
 [android_sdk_v5.0.0]: https://github.com/adjust/android_sdk/tree/v5.0.0
 [android_sdk_v5.0.1]: https://github.com/adjust/android_sdk/tree/v5.0.1
+[android_sdk_v5.0.2]: https://github.com/adjust/android_sdk/tree/v5.0.2
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
