@@ -1,3 +1,17 @@
+### Version 5.0.7 (4th February 2025)
+#### Added
+- Added sending of the additional parameter to improve troubleshooting of `SKAdNetwork` related issues.
+
+#### Fixed
+- Fixed occasional occurrences in which ATT waiting interval timer was not being started.
+- Fixed occasional NPE occurrences when app was entering background (https://github.com/adjust/android_sdk/issues/630).
+
+#### Native SDKs
+- [iOS@v5.1.0][ios_sdk_v5.1.0]
+- [Android@v5.1.0][android_sdk_v5.1.0]
+
+---
+
 ### Version 5.0.6 (5th December 2024)
 #### Fixed
 - Cleaned up unused methods from the API.
@@ -1354,6 +1368,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v4.38.2]: https://github.com/adjust/ios_sdk/tree/v4.38.2
 [ios_sdk_v5.0.0]: https://github.com/adjust/ios_sdk/tree/v5.0.0
 [ios_sdk_v5.0.1]: https://github.com/adjust/ios_sdk/tree/v5.0.1
+[ios_sdk_v5.1.0]: https://github.com/adjust/ios_sdk/tree/v5.1.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1409,6 +1424,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.0.0]: https://github.com/adjust/android_sdk/tree/v5.0.0
 [android_sdk_v5.0.1]: https://github.com/adjust/android_sdk/tree/v5.0.1
 [android_sdk_v5.0.2]: https://github.com/adjust/android_sdk/tree/v5.0.2
+[android_sdk_v5.1.0]: https://github.com/adjust/android_sdk/tree/v5.1.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
