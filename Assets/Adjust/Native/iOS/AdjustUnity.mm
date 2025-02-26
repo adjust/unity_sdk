@@ -346,16 +346,7 @@ extern "C"
     void _AdjustProcessDeeplink(const char* deeplink) {
         if (deeplink != NULL) {
             NSString *strDeeplink = [NSString stringWithUTF8String:deeplink];
-            NSURL *urlDeeplink;
-            if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
-                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
-            } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            }
-#pragma clang diagnostic pop
-
+            NSURL *urlDeeplink = [NSURL URLWithString:strDeeplink];
             ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
             [Adjust processDeeplink:deeplink];
         }
@@ -381,6 +372,13 @@ extern "C"
             addValueOrEmpty(dictionary, @"costType", attribution.costType);
             addValueOrEmpty(dictionary, @"costAmount", attribution.costAmount);
             addValueOrEmpty(dictionary, @"costCurrency", attribution.costCurrency);
+
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:attribution.jsonResponse 
+                                                               options:0
+                                                                 error:nil];
+            NSString *strJsonResponse = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            addValueOrEmpty(dictionary, @"jsonResponse", strJsonResponse);
+
             NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary
                                                                       options:0
                                                                         error:nil];
@@ -719,16 +717,7 @@ extern "C"
     void _AdjustProcessAndResolveDeeplink(const char* deeplink, AdjustDelegateResolvedDeeplinkCallback callback) {
         if (deeplink != NULL) {
             NSString *strDeeplink = [NSString stringWithUTF8String:deeplink];
-            NSURL *urlDeeplink;
-            if ([NSString instancesRespondToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
-                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
-            } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                urlDeeplink = [NSURL URLWithString:[strDeeplink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            }
-#pragma clang diagnostic pop
-
+            NSURL *urlDeeplink = [NSURL URLWithString:strDeeplink];
             ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
             [Adjust processAndResolveDeeplink:deeplink withCompletionHandler:^(NSString * _Nullable resolvedLink) {
                 // TODO: nil checks

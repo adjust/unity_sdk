@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace AdjustSdk.Test
 {
@@ -368,6 +369,15 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("cost_amount", attribution.CostAmount.ToString());
                     _testLibrary.AddInfoToSend("cost_currency", attribution.CostCurrency);
                     _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
+                    var updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
+#if UNITY_IOS
+                    updatedJsonResponse.Remove("fb_install_referrer");
+                    if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                    {
+                        updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                    }
+#endif
+                    _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
@@ -959,6 +969,15 @@ namespace AdjustSdk.Test
                 _testLibrary.AddInfoToSend("cost_amount", attribution.CostAmount.ToString());
                 _testLibrary.AddInfoToSend("cost_currency", attribution.CostCurrency);
                 _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
+                var updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
+#if UNITY_IOS
+                updatedJsonResponse.Remove("fb_install_referrer");
+                if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                {
+                    updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                }
+#endif
+                _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
         }
