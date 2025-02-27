@@ -117,7 +117,15 @@ namespace AdjustSdk
             }
             Debug.Log("[Adjust]: Start addition of URI schemes");
 
-            var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='com.unity3d.player.UnityPlayerActivity']", GetNamespaceManager(manifest));
+            // Check if user has defined a custom Android activity name.
+            string androidActivityName = "com.unity3d.player.UnityPlayerActivity";
+            if (AdjustSettings.AndroidCustomActivityName.Length != 0)
+            {
+                androidActivityName = AdjustSettings.AndroidCustomActivityName;
+            }
+
+            var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='"
+                + androidActivityName + "']", GetNamespaceManager(manifest));
             var usedIntentFiltersChanged = false;
             foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
             {

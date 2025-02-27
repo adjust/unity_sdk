@@ -20,6 +20,7 @@ namespace AdjustSdk
         SerializedProperty iOSUrlSchemes;
         SerializedProperty iOSUniversalLinksDomains;
         SerializedProperty androidUriSchemes;
+        SerializedProperty androidCustomActivityName;
 
         void OnEnable()
         {
@@ -36,6 +37,7 @@ namespace AdjustSdk
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
             androidUriSchemes = serializedObject.FindProperty("androidUriSchemes");
+            androidCustomActivityName = serializedObject.FindProperty("_androidCustomActivityName");
         }
         public override void OnInspectorGUI()
         {
@@ -89,6 +91,15 @@ namespace AdjustSdk
                 new GUIContent("User Tracking Description",
                     "String you would like to display to your users describing the reason " +
                     "behind asking for tracking permission."),
+                true);
+            EditorGUI.indentLevel -= 1;
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("ANDROID ACTIVITY NAME:", darkerCyanTextFieldStyles);
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(androidCustomActivityName,
+                new GUIContent("Custom Android Activity Name",
+                    "In case you are using custom activity instead of the default Unity activity " +
+                    "(com.unity3d.player.UnityPlayerActivity), please specify it's full name."),
                 true);
             EditorGUI.indentLevel -= 1;
             EditorGUILayout.Space();
