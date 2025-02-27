@@ -721,7 +721,8 @@ namespace AdjustSdk
         {
             private Action<AdjustAttribution> callback;
 
-            public AttributionChangedListener(Action<AdjustAttribution> pCallback) : base("com.adjust.sdk.OnAttributionChangedListener")
+            public AttributionChangedListener(Action<AdjustAttribution> pCallback) 
+                : base("com.adjust.sdk.OnAttributionChangedListener")
             {
                 this.callback = pCallback;
             }
@@ -735,54 +736,50 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (ajoAttribution == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                    return;
-                }
-
-                AdjustAttribution adjustAttribution = new AdjustAttribution();
-                string trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.TrackerName = trackerName == "" ? null : trackerName;
-                string trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.TrackerToken = trackerToken == "" ? null : trackerToken;
-                string network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.Network = network == "" ? null : network;
-                string campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.Campaign = campaign == "" ? null : campaign;
-                string adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.Adgroup = adgroup == "" ? null : adgroup;
-                string creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.Creative = creative == "" ? null : creative;
-                string clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.ClickLabel = clickLabel == "" ? null : clickLabel;
-                string costType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
-                adjustAttribution.CostType = costType == "" ? null : costType;
-                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
-                {
-                    if (ajoCostAmount == null)
+                    try
                     {
-                        adjustAttribution.CostAmount = null;
-                    }
-                    else
-                    {
-                        double costAmount = ajoCostAmount.Call<double>("doubleValue");
-                        adjustAttribution.CostAmount = costAmount;
-                    }
-                }
-                string costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
-                adjustAttribution.CostCurrency = costCurrency == "" ? null : costCurrency;
-                string fbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
-                adjustAttribution.FbInstallReferrer = fbInstallReferrer == "" ? null : fbInstallReferrer;
-                string jsonResponse = ajoAttribution.Get<string>(AdjustUtils.KeyJsonResponse);
-                var jsonResponseNode = JSON.Parse(jsonResponse);
-                if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
-                {
-                    adjustAttribution.JsonResponse = new Dictionary<string, object>();
-                    AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
-                }
+                        if (ajoAttribution == null)
+                        {
+                            callback?.Invoke(null);
+                            return;
+                        }
 
-                this.callback(adjustAttribution);
+                        AdjustAttribution adjustAttribution = new AdjustAttribution
+                        {
+                            TrackerName = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName)),
+                            TrackerToken = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken)),
+                            Network = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyNetwork)),
+                            Campaign = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCampaign)),
+                            Adgroup = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup)),
+                            Creative = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCreative)),
+                            ClickLabel = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel)),
+                            CostType = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCostType)),
+                            CostCurrency = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency)),
+                            FbInstallReferrer = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer))
+                        };
+
+                        using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
+                        {
+                            adjustAttribution.CostAmount = ajoCostAmount != null ? ajoCostAmount.Call<double>("doubleValue") : (double?)null;
+                        }
+
+                        string jsonResponse = ajoAttribution.Get<string>(AdjustUtils.KeyJsonResponse);
+                        var jsonResponseNode = JSON.Parse(jsonResponse);
+                        if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+                        {
+                            adjustAttribution.JsonResponse = new Dictionary<string, object>();
+                            AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
+                        }
+
+                        callback?.Invoke(adjustAttribution);
+                    }
+                    catch (Exception)
+                    {
+                        // JSON response reading failed.
+                    }
+                });
             }
         }
 
@@ -790,7 +787,8 @@ namespace AdjustSdk
         {
             private Action<string> callback;
 
-            public DeferredDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeferredDeeplinkResponseListener")
+            public DeferredDeeplinkListener(Action<string> pCallback) 
+                : base("com.adjust.sdk.OnDeferredDeeplinkResponseListener")
             {
                 this.callback = pCallback;
             }
@@ -804,8 +802,12 @@ namespace AdjustSdk
                     return isDeferredDeeplinkOpeningEnabled;
                 }
 
-                string strDeeplink = deeplink.Call<string>("toString");
-                callback(strDeeplink);
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    string strDeeplink = deeplink != null ? deeplink.Call<string>("toString") : null;
+                    callback?.Invoke(strDeeplink);
+                });
+
                 return isDeferredDeeplinkOpeningEnabled;
             }
         }
@@ -828,39 +830,37 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (eventSuccessData == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                    return;
-                }
-
-                AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess();
-                string adid = eventSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventSuccess.Adid = adid == "" ? null : adid;
-                string message = eventSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustEventSuccess.Message = message == "" ? null : message;
-                string timestamp = eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventSuccess.Timestamp = timestamp == "" ? null : timestamp;
-                string eventToken = eventSuccessData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventSuccess.EventToken = eventToken == "" ? null : eventToken;
-                string callbackId = eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId);
-                adjustEventSuccess.CallbackId = callbackId == "" ? null : callbackId;
-                try
-                {
-                    using (AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    try
                     {
-                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                        adjustEventSuccess.BuildJsonResponseFromString(jsonResponseString);
-                    }
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
+                        AdjustEventSuccess adjustEventSuccess = new AdjustEventSuccess
+                        {
+                            Adid = AdjustUtils.GetValueOrEmptyToNull(eventSuccessData.Get<string>(AdjustUtils.KeyAdid)),
+                            Message = AdjustUtils.GetValueOrEmptyToNull(eventSuccessData.Get<string>(AdjustUtils.KeyMessage)),
+                            Timestamp = AdjustUtils.GetValueOrEmptyToNull(eventSuccessData.Get<string>(AdjustUtils.KeyTimestamp)),
+                            EventToken = AdjustUtils.GetValueOrEmptyToNull(eventSuccessData.Get<string>(AdjustUtils.KeyEventToken)),
+                            CallbackId = AdjustUtils.GetValueOrEmptyToNull(eventSuccessData.Get<string>(AdjustUtils.KeyCallbackId))
+                        };
 
-                this.callback(adjustEventSuccess);
+                        using (AndroidJavaObject ajoJsonResponse = eventSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                        {
+                            if (ajoJsonResponse != null)
+                            {
+                                string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                                adjustEventSuccess.BuildJsonResponseFromString(jsonResponseString);
+                            }
+                        }
+
+                        callback?.Invoke(adjustEventSuccess);
+                    }
+                    catch (Exception)
+                    {
+                        // JSON response reading failed.
+                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                    }
+                });
             }
         }
 
@@ -882,40 +882,38 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (eventFailureData == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                    return;
-                }
-
-                AdjustEventFailure adjustEventFailure = new AdjustEventFailure();
-                string adid = eventFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustEventFailure.Adid = adid == "" ? null : adid;
-                string message = eventFailureData.Get<string>(AdjustUtils.KeyMessage);
-                adjustEventFailure.Message = message == "" ? null : message;
-                adjustEventFailure.WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                string timestamp = eventFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustEventFailure.Timestamp =  timestamp == "" ? null : timestamp;
-                string eventToken = eventFailureData.Get<string>(AdjustUtils.KeyEventToken);
-                adjustEventFailure.EventToken =  eventToken == "" ? null : eventToken;
-                string callbackId = eventFailureData.Get<string>(AdjustUtils.KeyCallbackId);
-                adjustEventFailure.CallbackId = callbackId == "" ? null : callbackId;
-                try
-                {
-                    using (AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    try
                     {
-                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                        adjustEventFailure.BuildJsonResponseFromString(jsonResponseString);
-                    }
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
+                        AdjustEventFailure adjustEventFailure = new AdjustEventFailure
+                        {
+                            Adid = AdjustUtils.GetValueOrEmptyToNull(eventFailureData.Get<string>(AdjustUtils.KeyAdid)),
+                            Message = AdjustUtils.GetValueOrEmptyToNull(eventFailureData.Get<string>(AdjustUtils.KeyMessage)),
+                            Timestamp = AdjustUtils.GetValueOrEmptyToNull(eventFailureData.Get<string>(AdjustUtils.KeyTimestamp)),
+                            EventToken = AdjustUtils.GetValueOrEmptyToNull(eventFailureData.Get<string>(AdjustUtils.KeyEventToken)),
+                            CallbackId = AdjustUtils.GetValueOrEmptyToNull(eventFailureData.Get<string>(AdjustUtils.KeyCallbackId)),
+                            WillRetry = eventFailureData.Get<bool>(AdjustUtils.KeyWillRetry)
+                        };
 
-                this.callback(adjustEventFailure);
+                        using (AndroidJavaObject ajoJsonResponse = eventFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                        {
+                            if (ajoJsonResponse != null)
+                            {
+                                string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                                adjustEventFailure.BuildJsonResponseFromString(jsonResponseString);
+                            }
+                        }
+
+                        callback?.Invoke(adjustEventFailure);
+                    }
+                    catch (Exception)
+                    {
+                        // JSON response reading failed.
+                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                    }
+                });
             }
         }
 
@@ -923,7 +921,8 @@ namespace AdjustSdk
         {
             private Action<AdjustSessionSuccess> callback;
 
-            public SessionTrackingSucceededListener(Action<AdjustSessionSuccess> pCallback) : base("com.adjust.sdk.OnSessionTrackingSucceededListener")
+            public SessionTrackingSucceededListener(Action<AdjustSessionSuccess> pCallback) 
+                : base("com.adjust.sdk.OnSessionTrackingSucceededListener")
             {
                 this.callback = pCallback;
             }
@@ -937,35 +936,35 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (sessionSuccessData == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                    return;
-                }
-
-                AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess();
-                string adid = sessionSuccessData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionSuccess.Adid = adid == "" ? null : adid;
-                string message = sessionSuccessData.Get<string>(AdjustUtils.KeyMessage);
-                adjustSessionSuccess.Message = message == "" ? null : message;
-                string timestamp = sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustSessionSuccess.Timestamp = timestamp == "" ? null : timestamp;
-                try
-                {
-                    using (AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    try
                     {
-                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                        adjustSessionSuccess.BuildJsonResponseFromString(jsonResponseString);
-                    }
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
+                        AdjustSessionSuccess adjustSessionSuccess = new AdjustSessionSuccess
+                        {
+                            Adid = AdjustUtils.GetValueOrEmptyToNull(sessionSuccessData.Get<string>(AdjustUtils.KeyAdid)),
+                            Message = AdjustUtils.GetValueOrEmptyToNull(sessionSuccessData.Get<string>(AdjustUtils.KeyMessage)),
+                            Timestamp = AdjustUtils.GetValueOrEmptyToNull(sessionSuccessData.Get<string>(AdjustUtils.KeyTimestamp))
+                        };
 
-                this.callback(adjustSessionSuccess);
+                        using (AndroidJavaObject ajoJsonResponse = sessionSuccessData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                        {
+                            if (ajoJsonResponse != null)
+                            {
+                                string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                                adjustSessionSuccess.BuildJsonResponseFromString(jsonResponseString);
+                            }
+                        }
+
+                        callback?.Invoke(adjustSessionSuccess);
+                    }
+                    catch (Exception)
+                    {
+                        // JSON response reading failed.
+                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                    }
+                });
             }
         }
 
@@ -973,7 +972,8 @@ namespace AdjustSdk
         {
             private Action<AdjustSessionFailure> callback;
 
-            public SessionTrackingFailedListener(Action<AdjustSessionFailure> pCallback) : base("com.adjust.sdk.OnSessionTrackingFailedListener")
+            public SessionTrackingFailedListener(Action<AdjustSessionFailure> pCallback) 
+                : base("com.adjust.sdk.OnSessionTrackingFailedListener")
             {
                 this.callback = pCallback;
             }
@@ -987,36 +987,36 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (sessionFailureData == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                    return;
-                }
-
-                AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure();
-                string adid = sessionFailureData.Get<string>(AdjustUtils.KeyAdid);
-                adjustSessionFailure.Adid = adid == "" ? null : adid;
-                string message = sessionFailureData.Get<string>(AdjustUtils.KeyMessage);
-                adjustSessionFailure.Message = message == "" ? null : message;
-                adjustSessionFailure.WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry);
-                string timestamp = sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp);
-                adjustSessionFailure.Timestamp = timestamp == "" ? null : timestamp;
-                try
-                {
-                    using (AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                    try
                     {
-                        string jsonResponseString = ajoJsonResponse.Call<string>("toString");
-                        adjustSessionFailure.BuildJsonResponseFromString(jsonResponseString);
-                    }
-                }
-                catch (Exception)
-                {
-                    // JSON response reading failed.
-                    // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                    // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
-                }
+                        AdjustSessionFailure adjustSessionFailure = new AdjustSessionFailure
+                        {
+                            Adid = AdjustUtils.GetValueOrEmptyToNull(sessionFailureData.Get<string>(AdjustUtils.KeyAdid)),
+                            Message = AdjustUtils.GetValueOrEmptyToNull(sessionFailureData.Get<string>(AdjustUtils.KeyMessage)),
+                            Timestamp = AdjustUtils.GetValueOrEmptyToNull(sessionFailureData.Get<string>(AdjustUtils.KeyTimestamp)),
+                            WillRetry = sessionFailureData.Get<bool>(AdjustUtils.KeyWillRetry)
+                        };
 
-                this.callback(adjustSessionFailure);
+                        using (AndroidJavaObject ajoJsonResponse = sessionFailureData.Get<AndroidJavaObject>(AdjustUtils.KeyJsonResponse))
+                        {
+                            if (ajoJsonResponse != null)
+                            {
+                                string jsonResponseString = ajoJsonResponse.Call<string>("toString");
+                                adjustSessionFailure.BuildJsonResponseFromString(jsonResponseString);
+                            }
+                        }
+
+                        callback?.Invoke(adjustSessionFailure);
+                    }
+                    catch (Exception)
+                    {
+                        // JSON response reading failed.
+                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
+                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                    }
+                });
             }
         }
 
@@ -1024,7 +1024,8 @@ namespace AdjustSdk
         {
             private Action<string> callback;
 
-            public GoogleAdIdReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnGoogleAdIdReadListener")
+            public GoogleAdIdReadListener(Action<string> pCallback) 
+                : base("com.adjust.sdk.OnGoogleAdIdReadListener")
             {
                 this.callback = pCallback;
             }
@@ -1038,7 +1039,10 @@ namespace AdjustSdk
                     return;
                 }
 
-                this.callback(adid);
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    callback?.Invoke(adid);
+                });
             }
         }
 
@@ -1046,7 +1050,8 @@ namespace AdjustSdk
         {
             private Action<AdjustPurchaseVerificationResult> callback;
 
-            public VerificationResultListener(Action<AdjustPurchaseVerificationResult> pCallback) : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
+            public VerificationResultListener(Action<AdjustPurchaseVerificationResult> pCallback) 
+                : base("com.adjust.sdk.OnPurchaseVerificationFinishedListener")
             {
                 this.callback = pCallback;
             }
@@ -1060,18 +1065,30 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (ajoVerificationInfo == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                    return;
-                }
+                    try
+                    {
+                        if (ajoVerificationInfo == null)
+                        {
+                            callback?.Invoke(null);
+                            return;
+                        }
 
-                AdjustPurchaseVerificationResult purchaseVerificationResult = new AdjustPurchaseVerificationResult();
-                purchaseVerificationResult.VerificationStatus = ajoVerificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus);
-                purchaseVerificationResult.Code = ajoVerificationInfo.Get<int>(AdjustUtils.KeyCode);
-                purchaseVerificationResult.Message = ajoVerificationInfo.Get<string>(AdjustUtils.KeyMessage);
+                        AdjustPurchaseVerificationResult purchaseVerificationResult = new AdjustPurchaseVerificationResult
+                        {
+                            VerificationStatus = ajoVerificationInfo.Get<string>(AdjustUtils.KeyVerificationStatus),
+                            Code = ajoVerificationInfo.Get<int>(AdjustUtils.KeyCode),
+                            Message = AdjustUtils.GetValueOrEmptyToNull(ajoVerificationInfo.Get<string>(AdjustUtils.KeyMessage))
+                        };
 
-                this.callback(purchaseVerificationResult);
+                        callback?.Invoke(purchaseVerificationResult);
+                    }
+                    catch (Exception)
+                    {
+                        // Handle potential errors during the verification process
+                    }
+                });
             }
         }
 
@@ -1079,7 +1096,8 @@ namespace AdjustSdk
         {
             private Action<string> callback;
 
-            public DeeplinkResolutionListener(Action<string> pCallback) : base("com.adjust.sdk.OnDeeplinkResolvedListener")
+            public DeeplinkResolutionListener(Action<string> pCallback) 
+                : base("com.adjust.sdk.OnDeeplinkResolvedListener")
             {
                 this.callback = pCallback;
             }
@@ -1093,7 +1111,10 @@ namespace AdjustSdk
                     return;
                 }
 
-                this.callback(resolvedLink);
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    callback?.Invoke(resolvedLink);
+                });
             }
         }
 
@@ -1101,7 +1122,8 @@ namespace AdjustSdk
         {
             private Action<string> callback;
 
-            public AdidReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnAdidReadListener")
+            public AdidReadListener(Action<string> pCallback) 
+                : base("com.adjust.sdk.OnAdidReadListener")
             {
                 this.callback = pCallback;
             }
@@ -1115,7 +1137,10 @@ namespace AdjustSdk
                     return;
                 }
 
-                this.callback(adid);
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    callback?.Invoke(adid);
+                });
             }
         }
 
@@ -1123,7 +1148,8 @@ namespace AdjustSdk
         {
             private Action<AdjustAttribution> callback;
 
-            public AttributionReadListener(Action<AdjustAttribution> pCallback) : base("com.adjust.sdk.OnAttributionReadListener")
+            public AttributionReadListener(Action<AdjustAttribution> pCallback) 
+                : base("com.adjust.sdk.OnAttributionReadListener")
             {
                 this.callback = pCallback;
             }
@@ -1137,54 +1163,50 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (ajoAttribution == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                    return;
-                }
-
-                AdjustAttribution adjustAttribution = new AdjustAttribution();
-                string trackerName = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName);
-                adjustAttribution.TrackerName = trackerName == "" ? null : trackerName;
-                string trackerToken = ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken);
-                adjustAttribution.TrackerToken = trackerToken == "" ? null : trackerToken;
-                string network = ajoAttribution.Get<string>(AdjustUtils.KeyNetwork);
-                adjustAttribution.Network = network == "" ? null : network;
-                string campaign = ajoAttribution.Get<string>(AdjustUtils.KeyCampaign);
-                adjustAttribution.Campaign = campaign == "" ? null : campaign;
-                string adgroup = ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup);
-                adjustAttribution.Adgroup = adgroup == "" ? null : adgroup;
-                string creative = ajoAttribution.Get<string>(AdjustUtils.KeyCreative);
-                adjustAttribution.Creative = creative == "" ? null : creative;
-                string clickLabel = ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel);
-                adjustAttribution.ClickLabel = clickLabel == "" ? null : clickLabel;
-                string costType = ajoAttribution.Get<string>(AdjustUtils.KeyCostType);
-                adjustAttribution.CostType = costType == "" ? null : costType;
-                using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
-                {
-                    if (ajoCostAmount == null)
+                    try
                     {
-                        adjustAttribution.CostAmount = null;
-                    }
-                    else
-                    {
-                        double costAmount = ajoCostAmount.Call<double>("doubleValue");
-                        adjustAttribution.CostAmount = costAmount;
-                    }
-                }
-                string costCurrency = ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency);
-                adjustAttribution.CostCurrency = costCurrency == "" ? null : costCurrency;
-                string fbInstallReferrer = ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
-                adjustAttribution.FbInstallReferrer = fbInstallReferrer == "" ? null : fbInstallReferrer;
-                string jsonResponse = ajoAttribution.Get<string>(AdjustUtils.KeyJsonResponse);
-                var jsonResponseNode = JSON.Parse(jsonResponse);
-                if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
-                {
-                    adjustAttribution.JsonResponse = new Dictionary<string, object>();
-                    AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
-                }
+                        if (ajoAttribution == null)
+                        {
+                            callback?.Invoke(null);
+                            return;
+                        }
 
-                this.callback(adjustAttribution);
+                        AdjustAttribution adjustAttribution = new AdjustAttribution
+                        {
+                            TrackerName = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyTrackerName)),
+                            TrackerToken = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyTrackerToken)),
+                            Network = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyNetwork)),
+                            Campaign = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCampaign)),
+                            Adgroup = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyAdgroup)),
+                            Creative = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCreative)),
+                            ClickLabel = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyClickLabel)),
+                            CostType = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCostType)),
+                            CostCurrency = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyCostCurrency)),
+                            FbInstallReferrer = AdjustUtils.GetValueOrEmptyToNull(ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer))
+                        };
+
+                        using (AndroidJavaObject ajoCostAmount = ajoAttribution.Get<AndroidJavaObject>(AdjustUtils.KeyCostAmount))
+                        {
+                            adjustAttribution.CostAmount = ajoCostAmount != null ? ajoCostAmount.Call<double>("doubleValue") : (double?)null;
+                        }
+
+                        string jsonResponse = ajoAttribution.Get<string>(AdjustUtils.KeyJsonResponse);
+                        var jsonResponseNode = JSON.Parse(jsonResponse);
+                        if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+                        {
+                            adjustAttribution.JsonResponse = new Dictionary<string, object>();
+                            AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
+                        }
+
+                        callback?.Invoke(adjustAttribution);
+                    }
+                    catch (Exception)
+                    {
+                        // JSON response reading failed.
+                    }
+                });
             }
         }
 
@@ -1192,7 +1214,8 @@ namespace AdjustSdk
         {
             private Action<string> callback;
 
-            public AmazonAdIdReadListener(Action<string> pCallback) : base("com.adjust.sdk.OnAmazonAdIdReadListener")
+            public AmazonAdIdReadListener(Action<string> pCallback) 
+                : base("com.adjust.sdk.OnAmazonAdIdReadListener")
             {
                 this.callback = pCallback;
             }
@@ -1206,7 +1229,10 @@ namespace AdjustSdk
                     return;
                 }
 
-                this.callback(amazonAdId);
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    callback?.Invoke(amazonAdId);
+                });
             }
         }
 
@@ -1215,7 +1241,8 @@ namespace AdjustSdk
             private Action<string> callback;
             private string sdkPrefix;
 
-            public SdkVersionReadListener(Action<string> pCallback, string sdkPrefix) : base("com.adjust.sdk.OnSdkVersionReadListener")
+            public SdkVersionReadListener(Action<string> pCallback, string sdkPrefix) 
+                : base("com.adjust.sdk.OnSdkVersionReadListener")
             {
                 this.callback = pCallback;
                 this.sdkPrefix = sdkPrefix;
@@ -1230,7 +1257,10 @@ namespace AdjustSdk
                     return;
                 }
 
-                this.callback(this.sdkPrefix + "@" + sdkVersion);
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    callback?.Invoke(this.sdkPrefix + "@" + sdkVersion);
+                });
             }
         }
 
@@ -1238,7 +1268,8 @@ namespace AdjustSdk
         {
             private Action<bool> callback;
 
-            public IsEnabledListener(Action<bool> pCallback) : base("com.adjust.sdk.OnIsEnabledListener")
+            public IsEnabledListener(Action<bool> pCallback) 
+                : base("com.adjust.sdk.OnIsEnabledListener")
             {
                 this.callback = pCallback;
             }
@@ -1252,7 +1283,10 @@ namespace AdjustSdk
                     return;
                 }
 
-                this.callback(isEnabled);
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    callback?.Invoke(isEnabled);
+                });
             }
         }
 
@@ -1260,7 +1294,8 @@ namespace AdjustSdk
         {
             private Action<string> callback;
 
-            public LastDeeplinkListener(Action<string> pCallback) : base("com.adjust.sdk.OnLastDeeplinkReadListener")
+            public LastDeeplinkListener(Action<string> pCallback) 
+                : base("com.adjust.sdk.OnLastDeeplinkReadListener")
             {
                 this.callback = pCallback;
             }
@@ -1274,14 +1309,11 @@ namespace AdjustSdk
                     return;
                 }
 
-                if (ajoLastDeeplink == null)
+                AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    this.callback(null);
-                }
-                else
-                {
-                    this.callback(ajoLastDeeplink.Call<string>("toString"));
-                }
+                    string deeplink = ajoLastDeeplink != null ? ajoLastDeeplink.Call<string>("toString") : null;
+                    callback?.Invoke(deeplink);
+                });
             }
         }
     }
