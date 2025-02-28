@@ -705,7 +705,10 @@ namespace AdjustSdk
             {
                 foreach (Action<bool> callback in appIsEnabledGetterCallbacks)
                 {
-                    callback?.Invoke(isEnabled);
+                    if (callback != null)
+                    {
+                        callback.Invoke(isEnabled);
+                    }
                 }
                 appIsEnabledGetterCallbacks.Clear();
             });
@@ -723,7 +726,10 @@ namespace AdjustSdk
             {
                 foreach (Action<AdjustAttribution> callback in appAttributionGetterCallbacks)
                 {
-                    callback?.Invoke(new AdjustAttribution(attribution));
+                    if (callback != null)
+                    {
+                        callback.Invoke(new AdjustAttribution(attribution));
+                    }
                 }
                 appAttributionGetterCallbacks.Clear();
             });
@@ -741,7 +747,10 @@ namespace AdjustSdk
             {
                 foreach (Action<string> callback in appAdidGetterCallbacks)
                 {
-                    callback?.Invoke(adid);
+                    if (callback != null)
+                    {
+                        callback.Invoke(adid);
+                    }
                 }
                 appAdidGetterCallbacks.Clear();
             });
@@ -759,7 +768,10 @@ namespace AdjustSdk
             {
                 foreach (Action<string> callback in appIdfaGetterCallbacks)
                 {
-                    callback?.Invoke(idfa);
+                    if (callback != null)
+                    {
+                        callback.Invoke(idfa);
+                    }
                 }
                 appIdfaGetterCallbacks.Clear();
             });
@@ -777,7 +789,10 @@ namespace AdjustSdk
             {
                 foreach (Action<string> callback in appIdfvGetterCallbacks)
                 {
-                    callback?.Invoke(idfv);
+                    if (callback != null)
+                    {
+                        callback.Invoke(idfv);
+                    }
                 }
                 appIdfvGetterCallbacks.Clear();
             });
@@ -795,7 +810,10 @@ namespace AdjustSdk
             {
                 foreach (Action<string> callback in appLastDeeplinkGetterCallbacks)
                 {
-                    callback?.Invoke(lastDeeplink);
+                    if (callback != null)
+                    {
+                        callback.Invoke(lastDeeplink);
+                    }
                 }
                 appLastDeeplinkGetterCallbacks.Clear();
             });
@@ -813,7 +831,10 @@ namespace AdjustSdk
             {
                 foreach (Action<string> callback in appSdkVersionGetterCallbacks)
                 {
-                    callback?.Invoke(sdkPrefix + "@" + sdkVersion);
+                    if (callback != null)
+                    {
+                        callback.Invoke(sdkPrefix + "@" + sdkVersion);
+                    }
                 }
                 appSdkVersionGetterCallbacks.Clear();
             });
@@ -831,7 +852,10 @@ namespace AdjustSdk
             {
                 foreach (Action<int> callback in appAttCallbacks)
                 {
-                    callback?.Invoke(status);
+                    if (callback != null)
+                    {
+                        callback.Invoke(status);
+                    }
                 }
                 appAttCallbacks.Clear();
             });
@@ -847,8 +871,11 @@ namespace AdjustSdk
 
             AdjustThreadDispatcher.RunOnMainThread(() =>
             {
-                appPurchaseVerificationCallback?.Invoke(new AdjustPurchaseVerificationResult(verificationResult));
-                appPurchaseVerificationCallback = null;
+                if (appPurchaseVerificationCallback != null)
+                {
+                    appPurchaseVerificationCallback.Invoke(new AdjustPurchaseVerificationResult(verificationResult));
+                    appPurchaseVerificationCallback = null;
+                }
             });
         }
 
@@ -862,8 +889,11 @@ namespace AdjustSdk
 
             AdjustThreadDispatcher.RunOnMainThread(() =>
             {
-                appVerifyAndTrackCallback?.Invoke(new AdjustPurchaseVerificationResult(verificationResult));
-                appVerifyAndTrackCallback = null;
+                if (appVerifyAndTrackCallback != null)
+                {
+                    appVerifyAndTrackCallback.Invoke(new AdjustPurchaseVerificationResult(verificationResult));
+                    appVerifyAndTrackCallback = null;
+                }
             });
         }
 
@@ -877,8 +907,11 @@ namespace AdjustSdk
 
             AdjustThreadDispatcher.RunOnMainThread(() =>
             {
-                appResolvedDeeplinkCallback?.Invoke(deeplink);
-                appResolvedDeeplinkCallback = null;
+                if (appResolvedDeeplinkCallback != null)
+                {
+                    appResolvedDeeplinkCallback.Invoke(deeplink);
+                    appResolvedDeeplinkCallback = null;
+                }
             });
         }
 
@@ -892,8 +925,11 @@ namespace AdjustSdk
 
             AdjustThreadDispatcher.RunOnMainThread(() =>
             {
-                appSkanErrorCallback?.Invoke(error);
-                appSkanErrorCallback = null;
+                if (appSkanErrorCallback != null)
+                {
+                    appSkanErrorCallback.Invoke(error);
+                    appSkanErrorCallback = null;
+                }
             });
         }
 
@@ -992,7 +1028,10 @@ namespace AdjustSdk
 
             AdjustThreadDispatcher.RunOnMainThread(() =>
             {
-                appSkanUpdatedCallback?.Invoke(AdjustUtils.GetSkanUpdateDataDictionary(skanData));
+                if (appSkanUpdatedCallback != null)
+                {
+                    appSkanUpdatedCallback.Invoke(AdjustUtils.GetSkanUpdateDataDictionary(skanData));
+                }
             });
         }
     }

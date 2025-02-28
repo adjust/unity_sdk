@@ -742,7 +742,10 @@ namespace AdjustSdk
                     {
                         if (ajoAttribution == null)
                         {
-                            callback?.Invoke(null);
+                            if (callback != null)
+                            {
+                                callback.Invoke(null);
+                            }
                             return;
                         }
 
@@ -773,7 +776,10 @@ namespace AdjustSdk
                             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
                         }
 
-                        callback?.Invoke(adjustAttribution);
+                        if (callback != null)
+                        {
+                            callback.Invoke(adjustAttribution);
+                        }
                     }
                     catch (Exception)
                     {
@@ -805,7 +811,10 @@ namespace AdjustSdk
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
                     string strDeeplink = deeplink != null ? deeplink.Call<string>("toString") : null;
-                    callback?.Invoke(strDeeplink);
+                    if (callback != null)
+                    {
+                        callback.Invoke(strDeeplink);
+                    }
                 });
 
                 return isDeferredDeeplinkOpeningEnabled;
@@ -852,7 +861,10 @@ namespace AdjustSdk
                             }
                         }
 
-                        callback?.Invoke(adjustEventSuccess);
+                        if (callback != null)
+                        {
+                            callback.Invoke(adjustEventSuccess);
+                        }
                     }
                     catch (Exception)
                     {
@@ -905,7 +917,10 @@ namespace AdjustSdk
                             }
                         }
 
-                        callback?.Invoke(adjustEventFailure);
+                        if (callback != null)
+                        {
+                            callback.Invoke(adjustEventFailure);
+                        }
                     }
                     catch (Exception)
                     {
@@ -956,7 +971,10 @@ namespace AdjustSdk
                             }
                         }
 
-                        callback?.Invoke(adjustSessionSuccess);
+                        if (callback != null)
+                        {
+                            callback.Invoke(adjustSessionSuccess);
+                        }
                     }
                     catch (Exception)
                     {
@@ -1008,7 +1026,10 @@ namespace AdjustSdk
                             }
                         }
 
-                        callback?.Invoke(adjustSessionFailure);
+                        if (callback != null)
+                        {
+                            callback.Invoke(adjustSessionFailure);
+                        }
                     }
                     catch (Exception)
                     {
@@ -1041,7 +1062,10 @@ namespace AdjustSdk
 
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    callback?.Invoke(adid);
+                    if (callback != null)
+                    {
+                        callback.Invoke(adid);
+                    }
                 });
             }
         }
@@ -1071,7 +1095,10 @@ namespace AdjustSdk
                     {
                         if (ajoVerificationInfo == null)
                         {
-                            callback?.Invoke(null);
+                            if (callback != null)
+                            {
+                                callback.Invoke(null);
+                            }
                             return;
                         }
 
@@ -1082,7 +1109,10 @@ namespace AdjustSdk
                             Message = AdjustUtils.GetValueOrEmptyToNull(ajoVerificationInfo.Get<string>(AdjustUtils.KeyMessage))
                         };
 
-                        callback?.Invoke(purchaseVerificationResult);
+                        if (callback != null)
+                        {
+                            callback.Invoke(purchaseVerificationResult);
+                        }
                     }
                     catch (Exception)
                     {
@@ -1113,7 +1143,10 @@ namespace AdjustSdk
 
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    callback?.Invoke(resolvedLink);
+                    if (callback != null)
+                    {
+                        callback.Invoke(resolvedLink);
+                    }
                 });
             }
         }
@@ -1139,7 +1172,10 @@ namespace AdjustSdk
 
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    callback?.Invoke(adid);
+                    if (callback != null)
+                    {
+                        callback.Invoke(adid);
+                    }
                 });
             }
         }
@@ -1169,7 +1205,10 @@ namespace AdjustSdk
                     {
                         if (ajoAttribution == null)
                         {
-                            callback?.Invoke(null);
+                            if (callback != null)
+                            {
+                                callback.Invoke(null);
+                            }
                             return;
                         }
 
@@ -1200,7 +1239,10 @@ namespace AdjustSdk
                             AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
                         }
 
-                        callback?.Invoke(adjustAttribution);
+                        if (callback != null)
+                        {
+                            callback.Invoke(adjustAttribution);
+                        }
                     }
                     catch (Exception)
                     {
@@ -1231,7 +1273,10 @@ namespace AdjustSdk
 
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    callback?.Invoke(amazonAdId);
+                    if (callback != null)
+                    {
+                        callback.Invoke(amazonAdId);
+                    }
                 });
             }
         }
@@ -1259,7 +1304,10 @@ namespace AdjustSdk
 
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    callback?.Invoke(this.sdkPrefix + "@" + sdkVersion);
+                    if (callback != null)
+                    {
+                        callback.Invoke(this.sdkPrefix + "@" + sdkVersion);
+                    }
                 });
             }
         }
@@ -1285,7 +1333,10 @@ namespace AdjustSdk
 
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
-                    callback?.Invoke(isEnabled);
+                    if (callback != null)
+                    {
+                        callback.Invoke(isEnabled);
+                    }
                 });
             }
         }
@@ -1312,7 +1363,10 @@ namespace AdjustSdk
                 AdjustThreadDispatcher.RunOnMainThread(() =>
                 {
                     string deeplink = ajoLastDeeplink != null ? ajoLastDeeplink.Call<string>("toString") : null;
-                    callback?.Invoke(deeplink);
+                    if (callback != null)
+                    {
+                        callback.Invoke(deeplink);
+                    }
                 });
             }
         }

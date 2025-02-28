@@ -29,7 +29,10 @@ public class AdjustThreadDispatcher : MonoBehaviour
             {
                 action = executionQueue.Dequeue();
             }
-            action?.Invoke();
+            if (action != null)
+            {
+                action.Invoke();
+            }
         }
     }
 
