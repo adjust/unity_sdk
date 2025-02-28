@@ -15,6 +15,7 @@ namespace AdjustSdk
         public string CostType { get; set; }
         public double? CostAmount { get; set; }
         public string CostCurrency { get; set; }
+        public Dictionary<string, object> JsonResponse { get; set; }
         // Android only
         public string FbInstallReferrer { get; set; }
 
@@ -49,6 +50,14 @@ namespace AdjustSdk
             }
             this.CostCurrency = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostCurrency);
             this.FbInstallReferrer = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyFbInstallReferrer);
+
+            string jsonResponseString = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyJsonResponse);
+            var jsonResponseNode = JSON.Parse(jsonResponseString);
+            if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+            {
+                this.JsonResponse = new Dictionary<string, object>();
+                AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, this.JsonResponse);
+            }
         }
 
         public AdjustAttribution(Dictionary<string, string> dicAttributionData)

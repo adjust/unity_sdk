@@ -1,3 +1,18 @@
+### Version 5.1.0 (28th February 2025)
+#### Added
+- Added `JsonResponse` to `AdjustAttribution` where every key-value pair sent by the backend as part of the attribution response can be found.
+- Added the ability to specify the name of custom Android activity which you might be using instead of the default `com.unity3d.player.UnityPlayerActivity` (https://github.com/adjust/unity_sdk/issues/273).
+
+#### Changed
+- Switched to adding `<intent-filter>` per specified Android URI scheme instead of adding them all as `<data>` entries to the same intent filter (https://github.com/adjust/unity_sdk/issues/266).
+- Moved execution of all the C# callbacks into the main Unity thread (https://github.com/adjust/unity_sdk/issues/277, https://github.com/adjust/unity_sdk/issues/310).
+
+#### Native SDKs
+- [iOS@v5.1.1][ios_sdk_v5.1.1]
+- [Android@v5.1.0][android_sdk_v5.1.0]
+
+---
+
 ### Version 5.0.7 (4th February 2025)
 #### Added
 - Added sending of the additional parameter to improve troubleshooting of `SKAdNetwork` related issues.
@@ -1369,6 +1384,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.0.0]: https://github.com/adjust/ios_sdk/tree/v5.0.0
 [ios_sdk_v5.0.1]: https://github.com/adjust/ios_sdk/tree/v5.0.1
 [ios_sdk_v5.1.0]: https://github.com/adjust/ios_sdk/tree/v5.1.0
+[ios_sdk_v5.1.1]: https://github.com/adjust/ios_sdk/tree/v5.1.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0

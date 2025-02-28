@@ -124,6 +124,14 @@ static AdjustUnityDelegate *defaultInstance = nil;
                    forKey:@"costCurrency"
              toDictionary:dictionary];
 
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:attribution.jsonResponse 
+                                                       options:0
+                                                         error:nil];
+    NSString *strJsonResponse = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    [self addValueOrEmpty:strJsonResponse
+                   forKey:@"jsonResponse"
+             toDictionary:dictionary];
+
     NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary
                                                               options:0
                                                                 error:nil];

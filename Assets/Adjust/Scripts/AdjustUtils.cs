@@ -350,6 +350,11 @@ namespace AdjustSdk
             return skanUpdateDataDictionary;
         }
 
+        public static string GetValueOrEmptyToNull(string value)
+        {
+            return string.IsNullOrEmpty(value) ? null : value;
+        }
+
 #if UNITY_ANDROID
         public static AndroidJavaObject TestOptionsMap2AndroidJavaObject(Dictionary<string, string> testOptionsMap, AndroidJavaObject ajoCurrentActivity)
         {
