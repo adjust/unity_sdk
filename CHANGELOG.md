@@ -1,3 +1,13 @@
+### Version 5.1.1 (March 5th 2025)
+#### Fixed
+- Added missing null checks for native `jsonResponse` fields (https://github.com/adjust/flutter_sdk/pull/160).
+
+#### Native SDKs
+- [iOS@v5.1.1][ios_sdk_v5.1.1]
+- [Android@v5.1.0][android_sdk_v5.1.0]
+
+---
+
 ### Version 5.1.0 (28th February 2025)
 #### Added
 - Added `JsonResponse` to `AdjustAttribution` where every key-value pair sent by the backend as part of the attribution response can be found.
