@@ -372,12 +372,13 @@ extern "C"
             addValueOrEmpty(dictionary, @"costType", attribution.costType);
             addValueOrEmpty(dictionary, @"costAmount", attribution.costAmount);
             addValueOrEmpty(dictionary, @"costCurrency", attribution.costCurrency);
-
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:attribution.jsonResponse 
-                                                               options:0
-                                                                 error:nil];
-            NSString *strJsonResponse = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            addValueOrEmpty(dictionary, @"jsonResponse", strJsonResponse);
+            if (attribution.jsonResponse != nil) {
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:attribution.jsonResponse 
+                                                                   options:0
+                                                                     error:nil];
+                NSString *strJsonResponse = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                addValueOrEmpty(dictionary, @"jsonResponse", strJsonResponse);
+            }
 
             NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary
                                                                       options:0
