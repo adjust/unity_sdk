@@ -310,7 +310,11 @@ namespace AdjustSdk
 
         private static void AddUniversalLinkDomains(PBXProject project, string xCodeProjectPath, string xCodeTarget)
         {
-            string entitlementsFileName = "Unity-iPhone.entitlements";
+            string entitlementsFileName = project.GetBuildPropertyForAnyConfig(xCodeTarget, "CODE_SIGN_ENTITLEMENTS");
+            if (entitlementsFileName == null)
+            {
+                entitlementsFileName = "Unity-iPhone.entitlements";
+            }
 
             Debug.Log("[Adjust]: Adding associated domains to entitlements file.");
     #if UNITY_2019_3_OR_NEWER
