@@ -376,8 +376,13 @@ namespace AdjustSdk.Test
                     {
                         updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
                     }
-#endif
                     _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
+#else
+                    if (attribution.JsonResponse != null)
+                    {
+                        _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
+                    }
+#endif
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
@@ -976,8 +981,13 @@ namespace AdjustSdk.Test
                 {
                     updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
                 }
-#endif
                 _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
+#else
+                if (attribution.JsonResponse != null)
+                {
+                    _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
+                }
+#endif
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
         }
