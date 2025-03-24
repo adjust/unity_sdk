@@ -769,11 +769,13 @@ namespace AdjustSdk
                         }
 
                         string jsonResponse = ajoAttribution.Get<string>(AdjustUtils.KeyJsonResponse);
-                        var jsonResponseNode = JSON.Parse(jsonResponse);
-                        if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
-                        {
-                            adjustAttribution.JsonResponse = new Dictionary<string, object>();
-                            AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
+                        if (jsonResponse != null) {
+                            var jsonResponseNode = JSON.Parse(jsonResponse);
+                            if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+                            {
+                                adjustAttribution.JsonResponse = new Dictionary<string, object>();
+                                AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
+                            }
                         }
 
                         if (callback != null)
@@ -1232,11 +1234,13 @@ namespace AdjustSdk
                         }
 
                         string jsonResponse = ajoAttribution.Get<string>(AdjustUtils.KeyJsonResponse);
-                        var jsonResponseNode = JSON.Parse(jsonResponse);
-                        if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
-                        {
-                            adjustAttribution.JsonResponse = new Dictionary<string, object>();
-                            AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
+                        if (jsonResponse != null) {
+                            var jsonResponseNode = JSON.Parse(jsonResponse);
+                            if (jsonResponseNode != null && jsonResponseNode.AsObject != null)
+                            {
+                                adjustAttribution.JsonResponse = new Dictionary<string, object>();
+                                AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, adjustAttribution.JsonResponse);
+                            }
                         }
 
                         if (callback != null)
