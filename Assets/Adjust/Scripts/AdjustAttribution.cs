@@ -51,18 +51,12 @@ namespace AdjustSdk
             this.CostCurrency = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyCostCurrency);
             this.FbInstallReferrer = AdjustUtils.GetJsonString(jsonNode, AdjustUtils.KeyFbInstallReferrer);
 
-            var jsonResponseNode = jsonNode[AdjustUtils.KeyJsonResponse];
-            if (jsonResponseNode == null)
+            var jsonResponseValue = jsonNode[AdjustUtils.KeyJsonResponse];
+            if (jsonResponseValue == null)
             {
                 return;
             }
-            if (jsonResponseNode.AsObject == null)
-            {
-                return;
-            }
-
-            this.JsonResponse = new Dictionary<string, object>();
-            AdjustUtils.WriteJsonResponseDictionary(jsonResponseNode.AsObject, this.JsonResponse);
+            this.JsonResponse = AdjustUtils.GetAttributionJsonResponse(jsonResponseValue);
         }
 
         public AdjustAttribution(Dictionary<string, string> dicAttributionData)
