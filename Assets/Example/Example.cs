@@ -158,6 +158,10 @@ public class Example : MonoBehaviour
         {
             Debug.Log("Click label: " + attributionData.ClickLabel);
         }
+        if (attributionData.JsonResponse != null)
+        {
+            Debug.Log("JsonResponse: " + attributionData.GetJsonResponseAsString());
+        }
     }
 
     public void EventSuccessCallback(AdjustEventSuccess eventSuccessData)
