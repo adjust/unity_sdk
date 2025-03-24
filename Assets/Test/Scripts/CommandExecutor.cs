@@ -369,15 +369,24 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("cost_amount", attribution.CostAmount.ToString());
                     _testLibrary.AddInfoToSend("cost_currency", attribution.CostCurrency);
                     _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
-                    var updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
 #if UNITY_IOS
-                    updatedJsonResponse.Remove("fb_install_referrer");
-                    if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                    var updatedJsonResponse = new Dictionary<string, object>();
+                    if (attribution.JsonResponse != null)
                     {
-                        updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                        updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
+                        updatedJsonResponse.Remove("fb_install_referrer");
+                        if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                        {
+                            updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                        }
+                    }
+                    _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
+#else
+                    if (attribution.JsonResponse != null)
+                    {
+                        _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                     }
 #endif
-                    _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
@@ -969,15 +978,24 @@ namespace AdjustSdk.Test
                 _testLibrary.AddInfoToSend("cost_amount", attribution.CostAmount.ToString());
                 _testLibrary.AddInfoToSend("cost_currency", attribution.CostCurrency);
                 _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
-                var updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
 #if UNITY_IOS
-                updatedJsonResponse.Remove("fb_install_referrer");
-                if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                var updatedJsonResponse = new Dictionary<string, object>();
+                if (attribution.JsonResponse != null)
                 {
-                    updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                    updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
+                    updatedJsonResponse.Remove("fb_install_referrer");
+                    if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                    {
+                        updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                    }
+                }
+                _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
+#else
+                if (attribution.JsonResponse != null)
+                {
+                    _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                 }
 #endif
-                _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
         }

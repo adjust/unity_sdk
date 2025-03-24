@@ -350,6 +350,22 @@ namespace AdjustSdk
             return skanUpdateDataDictionary;
         }
 
+        public static Dictionary<string, object> GetAttributionJsonResponse(string attributionJsonResponse)
+        {
+            Dictionary<string, object> attributionJsonResponseDictionary = new Dictionary<string, object>();
+            var attributionJsonResponseNode = JSON.Parse(attributionJsonResponse);
+            if (attributionJsonResponseNode != null && attributionJsonResponseNode.AsObject != null)
+            {
+                Dictionary<string, object> temp = new Dictionary<string, object>();
+                AdjustUtils.WriteJsonResponseDictionary(attributionJsonResponseNode.AsObject, temp);
+                foreach (KeyValuePair<string, object> entry in temp)
+                {
+                    attributionJsonResponseDictionary.Add(entry.Key, entry.Value);
+                }
+            }
+            return attributionJsonResponseDictionary;
+        }
+
         public static string GetValueOrEmptyToNull(string value)
         {
             return string.IsNullOrEmpty(value) ? null : value;

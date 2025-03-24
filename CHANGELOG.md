@@ -1,3 +1,13 @@
+### Version 5.1.3 (March 24th 2025)
+#### Fixed
+- Fixed null reference exceptions when migrating from pre 5.1.0 version (https://github.com/adjust/unity_sdk/issues/330).
+
+#### Native SDKs
+- [iOS@v5.1.1][ios_sdk_v5.1.1]
+- [Android@v5.1.0][android_sdk_v5.1.0]
+
+---
+
 ### Version 5.1.2 (March 6th 2025)
 #### Added
 - Added support for custom `CODE_SIGN_ENTITLEMENTS` file name (https://github.com/adjust/unity_sdk/pull/327).
