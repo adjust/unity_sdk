@@ -343,12 +343,18 @@ extern "C"
         }
     }
 
-    void _AdjustProcessDeeplink(const char* deeplink) {
+    void _AdjustProcessDeeplink(const char* deeplink, const char* referrer) {
         if (deeplink != NULL) {
             NSString *strDeeplink = [NSString stringWithUTF8String:deeplink];
             NSURL *urlDeeplink = [NSURL URLWithString:strDeeplink];
-            ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
-            [Adjust processDeeplink:deeplink];
+            ADJDeeplink *adjustDeeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
+
+            if (referrer != NULL) {
+                NSString *strReferrer = [NSString stringWithUTF8String:referrer];
+                NSURL *urlReferrer = [NSURL URLWithString:strReferrer];
+                [adjustDeeplink setReferrer:urlReferrer];
+            }
+            [Adjust processDeeplink:adjustDeeplink];
         }
     }
 

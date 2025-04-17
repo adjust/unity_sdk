@@ -734,7 +734,12 @@ namespace AdjustSdk.Test
         private void OpenDeepLink()
         {
             var deeplink = _command.GetFirstParameterValue("deeplink");
+            var referrer = _command.GetFirstParameterValue("referrer");
             AdjustDeeplink adjustDeeplink = new AdjustDeeplink(deeplink);
+            if (referrer != null)
+            {
+                adjustDeeplink.Referrer = referrer;
+            }
             Adjust.ProcessDeeplink(adjustDeeplink);
         }
 
@@ -958,7 +963,12 @@ namespace AdjustSdk.Test
         private void ProcessAndResolveDeeplink()
         {
             var deeplink = _command.GetFirstParameterValue("deeplink");
+            var referrer = _command.GetFirstParameterValue("referrer");
             AdjustDeeplink adjustDeeplink = new AdjustDeeplink(deeplink);
+            if (referrer != null)
+            {
+                adjustDeeplink.Referrer = referrer;
+            }
             Adjust.ProcessAndResolveDeeplink(adjustDeeplink, DeeplinkResolvedCallback);
         }
 

@@ -100,7 +100,7 @@ namespace AdjustSdk
         private static extern void _AdjustSetPushToken(string pushToken);
 
         [DllImport("__Internal")]
-        private static extern void _AdjustProcessDeeplink(string deeplink);
+        private static extern void _AdjustProcessDeeplink(string deeplink, string referrer);
 
         private delegate void AdjustDelegateResolvedDeeplinkCallback(string deeplink);
         [DllImport("__Internal")]
@@ -356,7 +356,7 @@ namespace AdjustSdk
 
         public static void ProcessDeeplink(AdjustDeeplink adjustDeeplink)
         {
-            _AdjustProcessDeeplink(adjustDeeplink.Deeplink);
+            _AdjustProcessDeeplink(adjustDeeplink.Deeplink, adjustDeeplink.Referrer);
         }
 
         public static void AddGlobalPartnerParameter(string key, string value)

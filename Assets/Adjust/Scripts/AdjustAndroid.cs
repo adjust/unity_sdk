@@ -396,6 +396,10 @@ namespace AdjustSdk
             using (AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink))
             using (AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri))
             {
+                using (AndroidJavaObject ajoReferrer = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Referrer))
+                {
+                    ajoAdjustDeeplink.Call("setReferrer", ajoReferrer);
+                }
                 ajcAdjust.CallStatic("processDeeplink", ajoAdjustDeeplink, ajoCurrentActivity);
             }
         }
