@@ -102,6 +102,8 @@ extern "C"
         int isLinkMeEnabled,
         int isCostDataInAttributionEnabled,
         int isDeviceIdsReadingOnceEnabled,
+        int isAppTrackingTransparencyUsageEnabled,
+        int isFirstSessionDelayEnabled,
         int isDeferredDeeplinkOpeningEnabled,
         AdjustDelegateAttributionCallback attributionCallback,
         AdjustDelegateEventSuccessCallback eventSuccessCallback,
@@ -199,6 +201,20 @@ extern "C"
         // ATT dialog delay
         if (attConsentWaitingInterval != -1) {
             [adjustConfig setAttConsentWaitingInterval:attConsentWaitingInterval];
+        }
+
+        // disable AppTrackingTransparency.framework interaction
+        if (isAppTrackingTransparencyUsageEnabled != -1) {
+            if ((BOOL)isAppTrackingTransparencyUsageEnabled == NO) {
+                [adjustConfig disableAppTrackingTransparencyUsage];
+            }
+        }
+
+        // first session delay
+        if (isFirstSessionDelayEnabled != -1) {
+            if ((BOOL)isFirstSessionDelayEnabled == YES) {
+                [adjustConfig enableFirstSessionDelay];
+            }
         }
 
         // deduplication IDs max number
@@ -343,12 +359,18 @@ extern "C"
         }
     }
 
-    void _AdjustProcessDeeplink(const char* deeplink) {
+    void _AdjustProcessDeeplink(const char* deeplink, const char* referrer) {
         if (deeplink != NULL) {
             NSString *strDeeplink = [NSString stringWithUTF8String:deeplink];
             NSURL *urlDeeplink = [NSURL URLWithString:strDeeplink];
-            ADJDeeplink *deeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
-            [Adjust processDeeplink:deeplink];
+            ADJDeeplink *adjustDeeplink = [[ADJDeeplink alloc] initWithDeeplink:urlDeeplink];
+
+            if (referrer != NULL) {
+                NSString *strReferrer = [NSString stringWithUTF8String:referrer];
+                NSURL *urlReferrer = [NSURL URLWithString:strReferrer];
+                [adjustDeeplink setReferrer:urlReferrer];
+            }
+            [Adjust processDeeplink:adjustDeeplink];
         }
     }
 
@@ -811,6 +833,25 @@ extern "C"
             const char* verificationInfoCString = [strVerificationInfo UTF8String];
             callback(verificationInfoCString);
         }];
+    }
+
+    void _AdjustEndFirstSessionDelay() {
+        [Adjust endFirstSessionDelay];
+    }
+
+    void _AdjustEnableCoppaComplianceInDelay() {
+        [Adjust enableCoppaComplianceInDelay];
+    }
+
+    void _AdjustDisableCoppaComplianceInDelay() {
+        [Adjust disableCoppaComplianceInDelay];
+    }
+
+    void _AdjustSetExternalDeviceIdInDelay(const char* externalDeviceId) {
+        if (externalDeviceId != NULL) {
+            NSString *strExternalDeviceId = [NSString stringWithUTF8String:externalDeviceId];
+            [Adjust setExternalDeviceIdInDelay:strExternalDeviceId];
+        }
     }
 
     void _AdjustSetTestOptions(const char* overwriteUrl,

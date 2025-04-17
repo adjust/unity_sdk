@@ -13,6 +13,8 @@ namespace AdjustSdk
         public bool? IsCostDataInAttributionEnabled { get; set; }
         public bool? IsDeviceIdsReadingOnceEnabled { get; set; }
         public bool? IsDeferredDeeplinkOpeningEnabled { get; set; }
+        public bool? IsAppTrackingTransparencyUsageEnabled { get; set; }
+        public bool? IsFirstSessionDelayEnabled { get; set; }
         public bool? AllowSuppressLogLevel { get; private set; }
         public bool? IsDataResidency { get; private set; }
         public bool? ShouldUseSubdomains { get; private set; }
