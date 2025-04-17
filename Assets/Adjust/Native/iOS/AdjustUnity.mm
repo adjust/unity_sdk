@@ -103,6 +103,7 @@ extern "C"
         int isCostDataInAttributionEnabled,
         int isDeviceIdsReadingOnceEnabled,
         int isAppTrackingTransparencyUsageEnabled,
+        int isFirstSessionDelayEnabled,
         int isDeferredDeeplinkOpeningEnabled,
         AdjustDelegateAttributionCallback attributionCallback,
         AdjustDelegateEventSuccessCallback eventSuccessCallback,
@@ -206,6 +207,13 @@ extern "C"
         if (isAppTrackingTransparencyUsageEnabled != -1) {
             if ((BOOL)isAppTrackingTransparencyUsageEnabled == NO) {
                 [adjustConfig disableAppTrackingTransparencyUsage];
+            }
+        }
+
+        // first session delay
+        if (isFirstSessionDelayEnabled != -1) {
+            if ((BOOL)isFirstSessionDelayEnabled == YES) {
+                [adjustConfig enableFirstSessionDelay];
             }
         }
 
@@ -825,6 +833,25 @@ extern "C"
             const char* verificationInfoCString = [strVerificationInfo UTF8String];
             callback(verificationInfoCString);
         }];
+    }
+
+    void _AdjustEndFirstSessionDelay() {
+        [Adjust endFirstSessionDelay];
+    }
+
+    void _AdjustEnableCoppaComplianceInDelay() {
+        [Adjust enableCoppaComplianceInDelay];
+    }
+
+    void _AdjustDisableCoppaComplianceInDelay() {
+        [Adjust disableCoppaComplianceInDelay];
+    }
+
+    void _AdjustSetExternalDeviceIdInDelay(const char* externalDeviceId) {
+        if (externalDeviceId != NULL) {
+            NSString *strExternalDeviceId = [NSString stringWithUTF8String:externalDeviceId];
+            [Adjust setExternalDeviceIdInDelay:strExternalDeviceId];
+        }
     }
 
     void _AdjustSetTestOptions(const char* overwriteUrl,

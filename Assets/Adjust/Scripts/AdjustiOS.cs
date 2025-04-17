@@ -64,6 +64,7 @@ namespace AdjustSdk
             int isCostDataInAttributionEnabled,
             int isDeviceIdsReadingOnceEnabled,
             int isAppTrackingTransparencyUsageEnabled,
+            int isFirstSessionDelayEnabled,
             int isDeferredDeeplinkOpeningEnabled,
             AdjustDelegateAttributionCallback attributionCallback,
             AdjustDelegateEventSuccessCallback eventSuccessCallback,
@@ -246,6 +247,18 @@ namespace AdjustSdk
             string jsonPartnerParameters,
             AdjustDelegatePurchaseVerificationCallback callback);
 
+        [DllImport("__Internal")]
+        private static extern void _AdjustEndFirstSessionDelay();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustEnableCoppaComplianceInDelay();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustDisableCoppaComplianceInDelay();
+
+        [DllImport("__Internal")]
+        private static extern void _AdjustSetExternalDeviceIdInDelay(string externalDeviceId);
+
         // public API
         public AdjustiOS() {}
 
@@ -271,6 +284,7 @@ namespace AdjustSdk
             int isCostDataInAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.IsCostDataInAttributionEnabled);
             int isDeviceIdsReadingOnceEnabled = AdjustUtils.ConvertBool(adjustConfig.IsDeviceIdsReadingOnceEnabled);
             int isAppTrackingTransparencyUsageEnabled = AdjustUtils.ConvertBool(adjustConfig.IsAppTrackingTransparencyUsageEnabled);
+            int isFirstSessionDelayEnabled = AdjustUtils.ConvertBool(adjustConfig.IsFirstSessionDelayEnabled);
             int shouldUseSubdomains = AdjustUtils.ConvertBool(adjustConfig.ShouldUseSubdomains);
             int isDataResidency = AdjustUtils.ConvertBool(adjustConfig.IsDataResidency);
             appAttributionCallback = adjustConfig.AttributionChangedDelegate;
@@ -303,6 +317,7 @@ namespace AdjustSdk
                 isCostDataInAttributionEnabled,
                 isDeviceIdsReadingOnceEnabled,
                 isAppTrackingTransparencyUsageEnabled,
+                isFirstSessionDelayEnabled,
                 isDeferredDeeplinkOpeningEnabled,
                 AttributionCallbackMonoPInvoke,
                 EventSuccessCallbackMonoPInvoke,
@@ -609,6 +624,26 @@ namespace AdjustSdk
                 stringJsonCallbackParameters,
                 stringJsonPartnerParameters,
                 VerifyAndTrackCallbackMonoPInvoke);
+        }
+
+        public static void EndFirstSessionDelay()
+        {
+            _AdjustEndFirstSessionDelay();
+        }
+
+        public static void EnableCoppaComplianceInDelay()
+        {
+            _AdjustEnableCoppaComplianceInDelay();
+        }
+
+        public static void DisableCoppaComplianceInDelay()
+        {
+            _AdjustDisableCoppaComplianceInDelay();
+        }
+
+        public static void SetExternalDeviceIdInDelay(string externalDeviceId)
+        {
+            _AdjustSetExternalDeviceIdInDelay(externalDeviceId);
         }
 
         // used for testing only (don't use this in your app)

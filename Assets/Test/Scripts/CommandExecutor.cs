@@ -63,6 +63,10 @@ namespace AdjustSdk.Test
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
+                    case "endFirstSessionDelay": EndFirstSessionDelay(); break;
+                    case "coppaComplianceInDelay": CoppaComplianceInDelay(); break;
+                    case "playStoreKidsComplianceInDelay": PlayStoreKidsComplianceInDelay(); break;
+                    case "externalDeviceIdInDelay": ExternalDeviceIdInDelay(); break;
                     default: CommandNotFound(_command.ClassName, _command.MethodName); break;
                 }
             }
@@ -331,6 +335,20 @@ namespace AdjustSdk.Test
                 var attConsentWaitingSecondsStr = _command.GetFirstParameterValue("attConsentWaitingSeconds");
                 var attConsentWaitingSeconds = int.Parse(attConsentWaitingSecondsStr, System.Globalization.CultureInfo.InvariantCulture);
                 adjustConfig.AttConsentWaitingInterval = attConsentWaitingSeconds;
+            }
+
+            if (_command.ContainsParameter("allowAttUsage"))
+            {
+                var allowAttUsageS = _command.GetFirstParameterValue("allowAttUsage");
+                var allowAttUsage = allowAttUsageS.ToLower() == "true";
+                adjustConfig.IsAppTrackingTransparencyUsageEnabled = allowAttUsage;
+            }
+
+            if (_command.ContainsParameter("firstSessionDelayEnabled"))
+            {
+                var firstSessionDelayEnabledS = _command.GetFirstParameterValue("firstSessionDelayEnabled");
+                var firstSessionDelayEnabled = firstSessionDelayEnabledS.ToLower() == "true";
+                adjustConfig.IsFirstSessionDelayEnabled = firstSessionDelayEnabled;
             }
 
             if (_command.ContainsParameter("eventDeduplicationIdsMaxSize"))
@@ -1041,6 +1059,45 @@ namespace AdjustSdk.Test
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
 #endif
+        }
+
+        private void EndFirstSessionDelay()
+        {
+            Adjust.EndFirstSessionDelay();
+        }
+
+        private void CoppaComplianceInDelay()
+        {
+            var isEnabledS = _command.GetFirstParameterValue("isEnabled");
+            var isEnabled = isEnabledS.ToLower() == "true";
+            if (isEnabled)
+            {
+                Adjust.EnableCoppaComplianceInDelay();
+            }
+            else
+            {
+                Adjust.DisableCoppaComplianceInDelay();
+            }
+        }
+
+        private void PlayStoreKidsComplianceInDelay()
+        {
+            var isEnabledS = _command.GetFirstParameterValue("isEnabled");
+            var isEnabled = isEnabledS.ToLower() == "true";
+            if (isEnabled)
+            {
+                Adjust.EnablePlayStoreKidsComplianceInDelay();
+            }
+            else
+            {
+                Adjust.DisablePlayStoreKidsComplianceInDelay();
+            }
+        }
+
+        private void ExternalDeviceIdInDelay()
+        {
+            var externalDeviceId = _command.GetFirstParameterValue("externalDeviceId");
+            Adjust.SetExternalDeviceIdInDelay(externalDeviceId);
         }
 
         // helper methods

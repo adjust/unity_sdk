@@ -127,6 +127,15 @@ namespace AdjustSdk
                 }
             }
 
+            // check if first session delay has been enabled
+            if (adjustConfig.IsFirstSessionDelayEnabled != null)
+            {
+                if (adjustConfig.IsFirstSessionDelayEnabled == true)
+                {
+                    ajoAdjustConfig.Call("enableFirstSessionDelay");
+                }
+            }
+
             // check if user has set custom preinstall file path
             if (adjustConfig.PreinstallFilePath != null)
             {
@@ -396,10 +405,14 @@ namespace AdjustSdk
             using (AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink))
             using (AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri))
             {
-                using (AndroidJavaObject ajoReferrer = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Referrer))
+                if (deeplink.Referrer != null)
                 {
-                    ajoAdjustDeeplink.Call("setReferrer", ajoReferrer);
+                    using (AndroidJavaObject ajoReferrer = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Referrer))
+                    {
+                        ajoAdjustDeeplink.Call("setReferrer", ajoReferrer);
+                    }
                 }
+
                 ajcAdjust.CallStatic("processDeeplink", ajoAdjustDeeplink, ajoCurrentActivity);
             }
         }
@@ -580,6 +593,38 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("getAttribution", onAttributionReadProxy);
         }
 
+        public static void GetSdkVersion(Action<string> onSdkVersionRead) 
+        {
+            SdkVersionReadListener onSdkVersionReadProxy = new SdkVersionReadListener(onSdkVersionRead, sdkPrefix);
+            ajcAdjust.CallStatic("getSdkVersion", onSdkVersionReadProxy);
+        }
+
+        public static void GetLastDeeplink(Action<string> onLastDeeplinkRead) 
+        {
+            LastDeeplinkListener onLastDeeplinkReadProxy = new LastDeeplinkListener(onLastDeeplinkRead);
+            ajcAdjust.CallStatic("getLastDeeplink", ajoCurrentActivity, onLastDeeplinkReadProxy);
+        }
+
+        public static void EndFirstSessionDelay()
+        {
+            ajcAdjust.CallStatic("endFirstSessionDelay");
+        }
+
+        public static void EnableCoppaComplianceInDelay()
+        {
+            ajcAdjust.CallStatic("enableCoppaComplianceInDelay");
+        }
+
+        public static void DisableCoppaComplianceInDelay()
+        {
+            ajcAdjust.CallStatic("disableCoppaComplianceInDelay");
+        }
+
+        public static void SetExternalDeviceIdInDelay(string externalDeviceId)
+        {
+            ajcAdjust.CallStatic("setExternalDeviceIdInDelay", externalDeviceId);
+        }
+
         // android specific methods
         public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 
         {
@@ -591,18 +636,6 @@ namespace AdjustSdk
         {
             AmazonAdIdReadListener onAmazonAdIdReadProxy = new AmazonAdIdReadListener(onAmazonAdIdRead);
             ajcAdjust.CallStatic("getAmazonAdId", ajoCurrentActivity, onAmazonAdIdReadProxy);
-        }
-
-        public static void GetSdkVersion(Action<string> onSdkVersionRead) 
-        {
-            SdkVersionReadListener onSdkVersionReadProxy = new SdkVersionReadListener(onSdkVersionRead, sdkPrefix);
-            ajcAdjust.CallStatic("getSdkVersion", onSdkVersionReadProxy);
-        }
-
-        public static void GetLastDeeplink(Action<string> onLastDeeplinkRead) 
-        {
-            LastDeeplinkListener onLastDeeplinkReadProxy = new LastDeeplinkListener(onLastDeeplinkRead);
-            ajcAdjust.CallStatic("getLastDeeplink", ajoCurrentActivity, onLastDeeplinkReadProxy);
         }
 
         public static void VerifyPlayStorePurchase(
@@ -625,6 +658,14 @@ namespace AdjustSdk
             using (AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Deeplink))
             using (AndroidJavaObject ajoAdjustDeeplink = new AndroidJavaObject("com.adjust.sdk.AdjustDeeplink", ajoUri))
             {
+                if (deeplink.Referrer != null)
+                {
+                    using (AndroidJavaObject ajoReferrer = ajcUri.CallStatic<AndroidJavaObject>("parse", deeplink.Referrer))
+                    {
+                        ajoAdjustDeeplink.Call("setReferrer", ajoReferrer);
+                    }
+                }
+
                 ajcAdjust.CallStatic(
                     "processAndResolveDeeplink",
                     ajoAdjustDeeplink,
@@ -695,6 +736,16 @@ namespace AdjustSdk
 
                 ajcAdjust.CallStatic("verifyAndTrackPlayStorePurchase", ajoAdjustEvent, onVerifyAndTrackListener);
             }
+        }
+
+        public static void EnablePlayStoreKidsComplianceInDelay()
+        {
+            ajcAdjust.CallStatic("enablePlayStoreKidsComplianceInDelay");
+        }
+
+        public static void DisablePlayStoreKidsComplianceInDelay()
+        {
+            ajcAdjust.CallStatic("disablePlayStoreKidsComplianceInDelay");
         }
 
         // used for testing only

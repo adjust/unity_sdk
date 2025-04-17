@@ -714,6 +714,102 @@ namespace AdjustSdk
 #endif
         }
 
+        public static void EndFirstSessionDelay()
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.EndFirstSessionDelay();
+#elif UNITY_ANDROID
+            AdjustAndroid.EndFirstSessionDelay();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void EnableCoppaComplianceInDelay()
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.EnableCoppaComplianceInDelay();
+#elif UNITY_ANDROID
+            AdjustAndroid.EnableCoppaComplianceInDelay();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void DisableCoppaComplianceInDelay()
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.DisableCoppaComplianceInDelay();
+#elif UNITY_ANDROID
+            AdjustAndroid.DisableCoppaComplianceInDelay();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void EnablePlayStoreKidsComplianceInDelay()
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Play Store kids feature is only supported for Android platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.EnablePlayStoreKidsComplianceInDelay();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void DisablePlayStoreKidsComplianceInDelay()
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            Debug.Log("[Adjust]: Play Store kids feature is only supported for Android platform.");
+#elif UNITY_ANDROID
+            AdjustAndroid.DisablePlayStoreKidsComplianceInDelay();
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
+        public static void SetExternalDeviceIdInDelay(string externalDeviceId)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.SetExternalDeviceIdInDelay(externalDeviceId);
+#elif UNITY_ANDROID
+            AdjustAndroid.SetExternalDeviceIdInDelay(externalDeviceId);
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         private static bool IsEditor()
         {
 #if UNITY_EDITOR
