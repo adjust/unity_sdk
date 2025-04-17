@@ -102,6 +102,7 @@ extern "C"
         int isLinkMeEnabled,
         int isCostDataInAttributionEnabled,
         int isDeviceIdsReadingOnceEnabled,
+        int isAppTrackingTransparencyUsageEnabled,
         int isDeferredDeeplinkOpeningEnabled,
         AdjustDelegateAttributionCallback attributionCallback,
         AdjustDelegateEventSuccessCallback eventSuccessCallback,
@@ -199,6 +200,13 @@ extern "C"
         // ATT dialog delay
         if (attConsentWaitingInterval != -1) {
             [adjustConfig setAttConsentWaitingInterval:attConsentWaitingInterval];
+        }
+
+        // disable AppTrackingTransparency.framework interaction
+        if (isAppTrackingTransparencyUsageEnabled != -1) {
+            if ((BOOL)isAppTrackingTransparencyUsageEnabled == NO) {
+                [adjustConfig disableAppTrackingTransparencyUsage];
+            }
         }
 
         // deduplication IDs max number

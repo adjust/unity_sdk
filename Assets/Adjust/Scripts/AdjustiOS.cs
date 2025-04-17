@@ -63,6 +63,7 @@ namespace AdjustSdk
             int isLinkMeEnabled,
             int isCostDataInAttributionEnabled,
             int isDeviceIdsReadingOnceEnabled,
+            int isAppTrackingTransparencyUsageEnabled,
             int isDeferredDeeplinkOpeningEnabled,
             AdjustDelegateAttributionCallback attributionCallback,
             AdjustDelegateEventSuccessCallback eventSuccessCallback,
@@ -269,6 +270,7 @@ namespace AdjustSdk
             int isLinkMeEnabled = AdjustUtils.ConvertBool(adjustConfig.IsLinkMeEnabled);
             int isCostDataInAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.IsCostDataInAttributionEnabled);
             int isDeviceIdsReadingOnceEnabled = AdjustUtils.ConvertBool(adjustConfig.IsDeviceIdsReadingOnceEnabled);
+            int isAppTrackingTransparencyUsageEnabled = AdjustUtils.ConvertBool(adjustConfig.IsAppTrackingTransparencyUsageEnabled);
             int shouldUseSubdomains = AdjustUtils.ConvertBool(adjustConfig.ShouldUseSubdomains);
             int isDataResidency = AdjustUtils.ConvertBool(adjustConfig.IsDataResidency);
             appAttributionCallback = adjustConfig.AttributionChangedDelegate;
@@ -300,6 +302,7 @@ namespace AdjustSdk
                 isLinkMeEnabled,
                 isCostDataInAttributionEnabled,
                 isDeviceIdsReadingOnceEnabled,
+                isAppTrackingTransparencyUsageEnabled,
                 isDeferredDeeplinkOpeningEnabled,
                 AttributionCallbackMonoPInvoke,
                 EventSuccessCallbackMonoPInvoke,
