@@ -358,6 +358,17 @@ namespace AdjustSdk.Test
                 adjustConfig.EventDeduplicationIdsMaxSize = eventDeduplicationIdsMaxSize;
             }
 
+            if (_command.ContainsParameter("storeName"))
+            {
+                var storeName = _command.GetFirstParameterValue("storeName");
+                AdjustStoreInfo storeInfo = new AdjustStoreInfo(storeName);
+                if (_command.ContainsParameter("storeAppId"))
+                {
+                    storeInfo.StoreAppId = _command.GetFirstParameterValue("storeAppId");
+                }
+                adjustConfig.StoreInfo = storeInfo;
+            }
+
             if (_command.ContainsParameter("deferredDeeplinkCallback"))
             {
                 bool launchDeferredDeeplink = _command.GetFirstParameterValue("deferredDeeplinkCallback") == "true";

@@ -22,6 +22,7 @@ namespace AdjustSdk
         public List<string> UrlStrategyDomains { get; private set; }
         public AdjustLogLevel? LogLevel { get; set; }
         public AdjustEnvironment Environment { get; private set; }
+        public AdjustStoreInfo StoreInfo { get; set; }
         public Action<AdjustAttribution> AttributionChangedDelegate { get; set; }
         public Action<AdjustEventSuccess> EventSuccessDelegate { get; set; }
         public Action<AdjustEventFailure> EventFailureDelegate { get; set; }

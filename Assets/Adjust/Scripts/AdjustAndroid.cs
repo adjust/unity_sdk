@@ -187,6 +187,23 @@ namespace AdjustSdk
                     }
             }
 
+            // check if custom store info has been set
+            if (adjustConfig.StoreInfo != null)
+            {
+                if (adjustConfig.StoreInfo.StoreName != null)
+                {
+                    using (AndroidJavaObject ajoAdjustStoreInfo = 
+                        new AndroidJavaObject("com.adjust.sdk.AdjustStoreInfo", adjustConfig.StoreInfo.StoreName))
+                    {
+                        if (adjustConfig.StoreInfo.StoreAppId != null)
+                        {
+                            ajoAdjustStoreInfo.Call("setStoreAppId", adjustConfig.StoreInfo.StoreAppId);
+                        }
+                        ajoAdjustConfig.Call("setStoreInfo", ajoAdjustStoreInfo);
+                    }
+                }
+            }
+
             // check attribution changed delagate
             if (adjustConfig.AttributionChangedDelegate != null)
             {

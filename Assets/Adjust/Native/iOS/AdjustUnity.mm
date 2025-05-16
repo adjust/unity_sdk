@@ -88,6 +88,8 @@ extern "C"
         const char* defaultTracker,
         const char* externalDeviceId,
         const char* jsonUrlStrategyDomains,
+        const char* storeName,
+        const char* storeAppId,
         int allowSuppressLogLevel,
         int logLevel,
         int attConsentWaitingInterval,
@@ -117,6 +119,8 @@ extern "C"
         NSString *strSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
         NSString *strDefaultTracker = isStringValid(defaultTracker) == true ? [NSString stringWithUTF8String:defaultTracker] : nil;
         NSString *strExternalDeviceId = isStringValid(externalDeviceId) == true ? [NSString stringWithUTF8String:externalDeviceId] : nil;
+        NSString *strStoreName = isStringValid(storeName) == true ? [NSString stringWithUTF8String:storeName] : nil;
+        NSString *strStoreAppId = isStringValid(storeAppId) == true ? [NSString stringWithUTF8String:storeAppId] : nil;
 
         ADJConfig *adjustConfig;
 
@@ -254,6 +258,15 @@ extern "C"
                                useSubdomains:(BOOL)shouldUseSubdomains
                              isDataResidency:(BOOL)isDataResidency];
             }
+        }
+
+        // custom store
+        if (strStoreName != nil) {
+            ADJStoreInfo *storeInfo = [[ADJStoreInfo alloc] initWithStoreName:strStoreName];
+            if (strStoreAppId != nil) {
+                [storeInfo setStoreAppId:strStoreAppId];
+            }
+            [adjustConfig setStoreInfo:storeInfo];
         }
 
         // initialize the SDK
