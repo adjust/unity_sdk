@@ -34,7 +34,7 @@ namespace AdjustSdk
             
             using (AndroidJavaObject ajoAdjustConfig = adjustConfig.AllowSuppressLogLevel != null ?
                 new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, environment, adjustConfig.AllowSuppressLogLevel) :
-                new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, ajoEnvironment))
+                new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, environment))
             {
                 // check if deferred deeplink should be launched by the SDK
                 if (adjustConfig.IsDeferredDeeplinkOpeningEnabled != null)
