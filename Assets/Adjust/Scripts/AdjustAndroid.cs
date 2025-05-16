@@ -30,7 +30,7 @@ namespace AdjustSdk
             //         new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_PRODUCTION");
 
             // get environment variable
-            string ajoEnvironment = adjustConfig.Environment == AdjustEnvironment.Production ? "production" : "sandbox";
+            string environment = adjustConfig.Environment == AdjustEnvironment.Production ? "production" : "sandbox";
             
             // create config object
             AndroidJavaObject ajoAdjustConfig;
@@ -38,11 +38,11 @@ namespace AdjustSdk
             // check if suppress log level is supported
             if (adjustConfig.AllowSuppressLogLevel != null)
             {
-                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, ajoEnvironment, adjustConfig.AllowSuppressLogLevel);
+                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, environment, adjustConfig.AllowSuppressLogLevel);
             }
             else
             {
-                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, ajoEnvironment);
+                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, environment);
             }
 
             // check if deferred deeplink should be launched by the SDK
