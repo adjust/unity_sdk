@@ -1,6 +1,6 @@
 ### Version 5.4.0 (May 19th 2025)
 #### Added
-- Added support for configuring store information via the `AdjustStoreInfo` object. You can now specify the store name and store app ID using `setStoreInfo` method on your `AdjustConfig` instance. This enables the SDK to record the intended app store source during initialization.
+- Added support for configuring store information via the `AdjustStoreInfo` object. You can now specify the store name and store app ID assigning `StoreInfo` property on your `AdjustConfig` instance. This enables the SDK to record the intended app store source during initialization.
 
 #### Native SDKs
 - [iOS@v5.4.0][ios_sdk_v5.4.0]
