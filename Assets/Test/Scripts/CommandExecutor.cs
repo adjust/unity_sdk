@@ -358,6 +358,17 @@ namespace AdjustSdk.Test
                 adjustConfig.EventDeduplicationIdsMaxSize = eventDeduplicationIdsMaxSize;
             }
 
+            if (_command.ContainsParameter("storeName"))
+            {
+                var storeName = _command.GetFirstParameterValue("storeName");
+                AdjustStoreInfo storeInfo = new AdjustStoreInfo(storeName);
+                if (_command.ContainsParameter("storeAppId"))
+                {
+                    storeInfo.StoreAppId = _command.GetFirstParameterValue("storeAppId");
+                }
+                adjustConfig.StoreInfo = storeInfo;
+            }
+
             if (_command.ContainsParameter("deferredDeeplinkCallback"))
             {
                 bool launchDeferredDeeplink = _command.GetFirstParameterValue("deferredDeeplinkCallback") == "true";
@@ -393,7 +404,8 @@ namespace AdjustSdk.Test
                     {
                         updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
                         updatedJsonResponse.Remove("fb_install_referrer");
-                        if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                        object costAmount;
+                        if (updatedJsonResponse.TryGetValue("cost_amount", out costAmount) && costAmount is IConvertible)
                         {
                             updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
                         }
@@ -1012,7 +1024,8 @@ namespace AdjustSdk.Test
                 {
                     updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
                     updatedJsonResponse.Remove("fb_install_referrer");
-                    if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                    object costAmount;
+                    if (updatedJsonResponse.TryGetValue("cost_amount", out costAmount) && costAmount is IConvertible)
                     {
                         updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
                     }

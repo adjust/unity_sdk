@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity5.3.0";
+        private const string sdkPrefix = "unity5.4.0";
         private static bool isDeferredDeeplinkOpeningEnabled = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -30,207 +30,216 @@ namespace AdjustSdk
             //         new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_PRODUCTION");
 
             // get environment variable
-            string ajoEnvironment = adjustConfig.Environment == AdjustEnvironment.Production ? "production" : "sandbox";
+            string environment = adjustConfig.Environment == AdjustEnvironment.Production ? "production" : "sandbox";
             
-            // create config object
-            AndroidJavaObject ajoAdjustConfig;
-
-            // check if suppress log level is supported
-            if (adjustConfig.AllowSuppressLogLevel != null)
+            using (AndroidJavaObject ajoAdjustConfig = adjustConfig.AllowSuppressLogLevel != null ?
+                new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, environment, adjustConfig.AllowSuppressLogLevel) :
+                new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, environment))
             {
-                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, ajoEnvironment, adjustConfig.AllowSuppressLogLevel);
-            }
-            else
-            {
-                ajoAdjustConfig = new AndroidJavaObject("com.adjust.sdk.AdjustConfig", ajoCurrentActivity, adjustConfig.AppToken, ajoEnvironment);
-            }
-
-            // check if deferred deeplink should be launched by the SDK
-            if (adjustConfig.IsDeferredDeeplinkOpeningEnabled != null)
-            {
-                isDeferredDeeplinkOpeningEnabled = (bool)adjustConfig.IsDeferredDeeplinkOpeningEnabled;
-            }
-
-            // check log level
-            if (adjustConfig.LogLevel != null)
-            {
-                AndroidJavaObject ajoLogLevel;
-                if (adjustConfig.LogLevel.Value.ToUppercaseString().Equals("SUPPRESS"))
+                // check if deferred deeplink should be launched by the SDK
+                if (adjustConfig.IsDeferredDeeplinkOpeningEnabled != null)
                 {
-                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>("SUPPRESS");
-                }
-                else
-                {
-                    ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>(adjustConfig.LogLevel.Value.ToUppercaseString());
+                    isDeferredDeeplinkOpeningEnabled = (bool)adjustConfig.IsDeferredDeeplinkOpeningEnabled;
                 }
 
-                if (ajoLogLevel != null)
+                // check log level
+                if (adjustConfig.LogLevel != null)
                 {
-                    ajoAdjustConfig.Call("setLogLevel", ajoLogLevel);
-                }
-            }
-
-            // set Unity SDK prefix
-            ajoAdjustConfig.Call("setSdkPrefix", sdkPrefix);
-
-            // check read device IDs only once
-            if (adjustConfig.IsDeviceIdsReadingOnceEnabled != null)
-            {
-                if (adjustConfig.IsDeviceIdsReadingOnceEnabled == true)
-                {
-                    ajoAdjustConfig.Call("enableDeviceIdsReadingOnce");
-                }
-            }
-
-            // check if COPPA compliance is enabled
-            if (adjustConfig.IsCoppaComplianceEnabled != null)
-            {
-                if (adjustConfig.IsCoppaComplianceEnabled == true)
-                {
-                    ajoAdjustConfig.Call("enableCoppaCompliance");
-                }
-            }
-
-            // check if Play Store Kids compliance is enabled
-            if (adjustConfig.IsPlayStoreKidsComplianceEnabled != null)
-            {
-                if (adjustConfig.IsPlayStoreKidsComplianceEnabled == true)
-                {
-                    ajoAdjustConfig.Call("enablePlayStoreKidsCompliance");
-                }
-            }
-
-            // check if user enabled sening in the background
-            if (adjustConfig.IsSendingInBackgroundEnabled != null)
-            {
-                if (adjustConfig.IsSendingInBackgroundEnabled == true)
-                {
-                    ajoAdjustConfig.Call("enableSendingInBackground");
-                }
-            }
-
-            // check if user wants to get cost data in attribution callback
-            if (adjustConfig.IsCostDataInAttributionEnabled != null)
-            {
-                if (adjustConfig.IsCostDataInAttributionEnabled == true)
-                {
-                    ajoAdjustConfig.Call("enableCostDataInAttribution");
-                }
-            }
-
-            // check if user wants to run preinstall campaigns
-            if (adjustConfig.IsPreinstallTrackingEnabled != null)
-            {
-                if (adjustConfig.IsPreinstallTrackingEnabled == true)
-                {
-                    ajoAdjustConfig.Call("enablePreinstallTracking");
-                }
-            }
-
-            // check if first session delay has been enabled
-            if (adjustConfig.IsFirstSessionDelayEnabled != null)
-            {
-                if (adjustConfig.IsFirstSessionDelayEnabled == true)
-                {
-                    ajoAdjustConfig.Call("enableFirstSessionDelay");
-                }
-            }
-
-            // check if user has set custom preinstall file path
-            if (adjustConfig.PreinstallFilePath != null)
-            {
-                ajoAdjustConfig.Call("setPreinstallFilePath", adjustConfig.PreinstallFilePath);
-            }
-
-            // check if FB app ID has been set
-            if (adjustConfig.FbAppId != null)
-            {
-                ajoAdjustConfig.Call("setFbAppId", adjustConfig.FbAppId);
-            }
-
-            // check if user has set default tracker token
-            if (adjustConfig.DefaultTracker != null)
-            {
-                ajoAdjustConfig.Call("setDefaultTracker", adjustConfig.DefaultTracker);
-            }
-
-            // check if user has set external device identifier
-            if (adjustConfig.ExternalDeviceId != null)
-            {
-                ajoAdjustConfig.Call("setExternalDeviceId", adjustConfig.ExternalDeviceId);
-            }
-
-            // check if user has set max number of event deduplication IDs
-            if (adjustConfig.EventDeduplicationIdsMaxSize != null)
-            {
-                using (AndroidJavaObject ajoEventDeduplicationIdsMaxSize = new AndroidJavaObject("java.lang.Integer", adjustConfig.EventDeduplicationIdsMaxSize))
-                {
-                    ajoAdjustConfig.Call("setEventDeduplicationIdsMaxSize", ajoEventDeduplicationIdsMaxSize);
-                }
-            }
-
-            // check if user has set custom URL strategy
-            if (adjustConfig.UrlStrategyDomains != null &&
-                adjustConfig.ShouldUseSubdomains != null &&
-                adjustConfig.IsDataResidency != null)
-            {
-                using (var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList"))
-                {
-                    foreach (string domain in adjustConfig.UrlStrategyDomains)
+                    AndroidJavaObject ajoLogLevel;
+                    if (adjustConfig.LogLevel.Value.ToUppercaseString().Equals("SUPPRESS"))
                     {
-                        ajoUrlStrategyDomains.Call<bool>("add", domain);
+                        ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>("SUPPRESS");
                     }
-                    ajoAdjustConfig.Call("setUrlStrategy",
-                        ajoUrlStrategyDomains,
-                        adjustConfig.ShouldUseSubdomains,
-                        adjustConfig.IsDataResidency);
+                    else
+                    {
+                        ajoLogLevel = new AndroidJavaClass("com.adjust.sdk.LogLevel").GetStatic<AndroidJavaObject>(adjustConfig.LogLevel.Value.ToUppercaseString());
                     }
-            }
 
-            // check attribution changed delagate
-            if (adjustConfig.AttributionChangedDelegate != null)
-            {
-                onAttributionChangedListener = new AttributionChangedListener(adjustConfig.AttributionChangedDelegate);
-                ajoAdjustConfig.Call("setOnAttributionChangedListener", onAttributionChangedListener);
-            }
+                    if (ajoLogLevel != null)
+                    {
+                        ajoAdjustConfig.Call("setLogLevel", ajoLogLevel);
+                    }
+                }
 
-            // check event success delegate
-            if (adjustConfig.EventSuccessDelegate != null)
-            {
-                onEventTrackingSucceededListener = new EventTrackingSucceededListener(adjustConfig.EventSuccessDelegate);
-                ajoAdjustConfig.Call("setOnEventTrackingSucceededListener", onEventTrackingSucceededListener);
-            }
+                // set Unity SDK prefix
+                ajoAdjustConfig.Call("setSdkPrefix", sdkPrefix);
 
-            // check event failure delagate
-            if (adjustConfig.EventFailureDelegate != null)
-            {
-                onEventTrackingFailedListener = new EventTrackingFailedListener(adjustConfig.EventFailureDelegate);
-                ajoAdjustConfig.Call("setOnEventTrackingFailedListener", onEventTrackingFailedListener);
-            }
+                // check read device IDs only once
+                if (adjustConfig.IsDeviceIdsReadingOnceEnabled != null)
+                {
+                    if (adjustConfig.IsDeviceIdsReadingOnceEnabled == true)
+                    {
+                        ajoAdjustConfig.Call("enableDeviceIdsReadingOnce");
+                    }
+                }
 
-            // check session success delegate
-            if (adjustConfig.SessionSuccessDelegate != null)
-            {
-                onSessionTrackingSucceededListener = new SessionTrackingSucceededListener(adjustConfig.SessionSuccessDelegate);
-                ajoAdjustConfig.Call("setOnSessionTrackingSucceededListener", onSessionTrackingSucceededListener);
-            }
+                // check if COPPA compliance is enabled
+                if (adjustConfig.IsCoppaComplianceEnabled != null)
+                {
+                    if (adjustConfig.IsCoppaComplianceEnabled == true)
+                    {
+                        ajoAdjustConfig.Call("enableCoppaCompliance");
+                    }
+                }
 
-            // check session failure delegate
-            if (adjustConfig.SessionFailureDelegate != null)
-            {
-                onSessionTrackingFailedListener = new SessionTrackingFailedListener(adjustConfig.SessionFailureDelegate);
-                ajoAdjustConfig.Call("setOnSessionTrackingFailedListener", onSessionTrackingFailedListener);
-            }
+                // check if Play Store Kids compliance is enabled
+                if (adjustConfig.IsPlayStoreKidsComplianceEnabled != null)
+                {
+                    if (adjustConfig.IsPlayStoreKidsComplianceEnabled == true)
+                    {
+                        ajoAdjustConfig.Call("enablePlayStoreKidsCompliance");
+                    }
+                }
 
-            // check deferred deeplink delegate
-            if (adjustConfig.DeferredDeeplinkDelegate != null)
-            {
-                onDeferredDeeplinkListener = new DeferredDeeplinkListener(adjustConfig.DeferredDeeplinkDelegate);
-                ajoAdjustConfig.Call("setOnDeferredDeeplinkResponseListener", onDeferredDeeplinkListener);
-            }
+                // check if user enabled sening in the background
+                if (adjustConfig.IsSendingInBackgroundEnabled != null)
+                {
+                    if (adjustConfig.IsSendingInBackgroundEnabled == true)
+                    {
+                        ajoAdjustConfig.Call("enableSendingInBackground");
+                    }
+                }
 
-            // initialise and start the SDK
-            ajcAdjust.CallStatic("initSdk", ajoAdjustConfig);
+                // check if user wants to get cost data in attribution callback
+                if (adjustConfig.IsCostDataInAttributionEnabled != null)
+                {
+                    if (adjustConfig.IsCostDataInAttributionEnabled == true)
+                    {
+                        ajoAdjustConfig.Call("enableCostDataInAttribution");
+                    }
+                }
+
+                // check if user wants to run preinstall campaigns
+                if (adjustConfig.IsPreinstallTrackingEnabled != null)
+                {
+                    if (adjustConfig.IsPreinstallTrackingEnabled == true)
+                    {
+                        ajoAdjustConfig.Call("enablePreinstallTracking");
+                    }
+                }
+
+                // check if first session delay has been enabled
+                if (adjustConfig.IsFirstSessionDelayEnabled != null)
+                {
+                    if (adjustConfig.IsFirstSessionDelayEnabled == true)
+                    {
+                        ajoAdjustConfig.Call("enableFirstSessionDelay");
+                    }
+                }
+
+                // check if user has set custom preinstall file path
+                if (adjustConfig.PreinstallFilePath != null)
+                {
+                    ajoAdjustConfig.Call("setPreinstallFilePath", adjustConfig.PreinstallFilePath);
+                }
+
+                // check if FB app ID has been set
+                if (adjustConfig.FbAppId != null)
+                {
+                    ajoAdjustConfig.Call("setFbAppId", adjustConfig.FbAppId);
+                }
+
+                // check if user has set default tracker token
+                if (adjustConfig.DefaultTracker != null)
+                {
+                    ajoAdjustConfig.Call("setDefaultTracker", adjustConfig.DefaultTracker);
+                }
+
+                // check if user has set external device identifier
+                if (adjustConfig.ExternalDeviceId != null)
+                {
+                    ajoAdjustConfig.Call("setExternalDeviceId", adjustConfig.ExternalDeviceId);
+                }
+
+                // check if user has set max number of event deduplication IDs
+                if (adjustConfig.EventDeduplicationIdsMaxSize != null)
+                {
+                    using (AndroidJavaObject ajoEventDeduplicationIdsMaxSize = new AndroidJavaObject("java.lang.Integer", adjustConfig.EventDeduplicationIdsMaxSize))
+                    {
+                        ajoAdjustConfig.Call("setEventDeduplicationIdsMaxSize", ajoEventDeduplicationIdsMaxSize);
+                    }
+                }
+
+                // check if user has set custom URL strategy
+                if (adjustConfig.UrlStrategyDomains != null &&
+                    adjustConfig.ShouldUseSubdomains != null &&
+                    adjustConfig.IsDataResidency != null)
+                {
+                    using (var ajoUrlStrategyDomains = new AndroidJavaObject("java.util.ArrayList"))
+                    {
+                        foreach (string domain in adjustConfig.UrlStrategyDomains)
+                        {
+                            ajoUrlStrategyDomains.Call<bool>("add", domain);
+                        }
+                        ajoAdjustConfig.Call("setUrlStrategy",
+                            ajoUrlStrategyDomains,
+                            adjustConfig.ShouldUseSubdomains,
+                            adjustConfig.IsDataResidency);
+                        }
+                }
+
+                // check if custom store info has been set
+                if (adjustConfig.StoreInfo != null)
+                {
+                    if (adjustConfig.StoreInfo.StoreName != null)
+                    {
+                        using (AndroidJavaObject ajoAdjustStoreInfo = 
+                            new AndroidJavaObject("com.adjust.sdk.AdjustStoreInfo", adjustConfig.StoreInfo.StoreName))
+                        {
+                            if (adjustConfig.StoreInfo.StoreAppId != null)
+                            {
+                                ajoAdjustStoreInfo.Call("setStoreAppId", adjustConfig.StoreInfo.StoreAppId);
+                            }
+                            ajoAdjustConfig.Call("setStoreInfo", ajoAdjustStoreInfo);
+                        }
+                    }
+                }
+
+                // check attribution changed delagate
+                if (adjustConfig.AttributionChangedDelegate != null)
+                {
+                    onAttributionChangedListener = new AttributionChangedListener(adjustConfig.AttributionChangedDelegate);
+                    ajoAdjustConfig.Call("setOnAttributionChangedListener", onAttributionChangedListener);
+                }
+
+                // check event success delegate
+                if (adjustConfig.EventSuccessDelegate != null)
+                {
+                    onEventTrackingSucceededListener = new EventTrackingSucceededListener(adjustConfig.EventSuccessDelegate);
+                    ajoAdjustConfig.Call("setOnEventTrackingSucceededListener", onEventTrackingSucceededListener);
+                }
+
+                // check event failure delagate
+                if (adjustConfig.EventFailureDelegate != null)
+                {
+                    onEventTrackingFailedListener = new EventTrackingFailedListener(adjustConfig.EventFailureDelegate);
+                    ajoAdjustConfig.Call("setOnEventTrackingFailedListener", onEventTrackingFailedListener);
+                }
+
+                // check session success delegate
+                if (adjustConfig.SessionSuccessDelegate != null)
+                {
+                    onSessionTrackingSucceededListener = new SessionTrackingSucceededListener(adjustConfig.SessionSuccessDelegate);
+                    ajoAdjustConfig.Call("setOnSessionTrackingSucceededListener", onSessionTrackingSucceededListener);
+                }
+
+                // check session failure delegate
+                if (adjustConfig.SessionFailureDelegate != null)
+                {
+                    onSessionTrackingFailedListener = new SessionTrackingFailedListener(adjustConfig.SessionFailureDelegate);
+                    ajoAdjustConfig.Call("setOnSessionTrackingFailedListener", onSessionTrackingFailedListener);
+                }
+
+                // check deferred deeplink delegate
+                if (adjustConfig.DeferredDeeplinkDelegate != null)
+                {
+                    onDeferredDeeplinkListener = new DeferredDeeplinkListener(adjustConfig.DeferredDeeplinkDelegate);
+                    ajoAdjustConfig.Call("setOnDeferredDeeplinkResponseListener", onDeferredDeeplinkListener);
+                }
+
+                // initialise and start the SDK
+                ajcAdjust.CallStatic("initSdk", ajoAdjustConfig);
+            }
         }
 
         public static void TrackEvent(AdjustEvent adjustEvent)
@@ -532,42 +541,36 @@ namespace AdjustSdk
 
         public static void TrackThirdPartySharing(AdjustThirdPartySharing thirdPartySharing)
         {
-            AndroidJavaObject ajoIsEnabled;
-            AndroidJavaObject ajoAdjustThirdPartySharing;
-            if (thirdPartySharing.IsEnabled != null)
+            using (var ajoAdjustThirdPartySharing = 
+                thirdPartySharing.IsEnabled != null
+                    ? new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", 
+                        new AndroidJavaObject("java.lang.Boolean", thirdPartySharing.IsEnabled.Value))
+                    : new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", (object)null))
             {
-                ajoIsEnabled = new AndroidJavaObject("java.lang.Boolean", thirdPartySharing.IsEnabled.Value);
-                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", ajoIsEnabled);
-            }
-            else
-            {
-                string[] parameters = null;
-                ajoAdjustThirdPartySharing = new AndroidJavaObject("com.adjust.sdk.AdjustThirdPartySharing", parameters);
-            }
-
-            if (thirdPartySharing.GranularOptions != null)
-            {
-                for (int i = 0; i < thirdPartySharing.GranularOptions.Count;)
+                if (thirdPartySharing.GranularOptions != null)
                 {
-                    string partnerName = thirdPartySharing.GranularOptions[i++];
-                    string key = thirdPartySharing.GranularOptions[i++];
-                    string value = thirdPartySharing.GranularOptions[i++];
-                    ajoAdjustThirdPartySharing.Call("addGranularOption", partnerName, key, value);
+                    for (int i = 0; i < thirdPartySharing.GranularOptions.Count;)
+                    {
+                        string partnerName = thirdPartySharing.GranularOptions[i++];
+                        string key = thirdPartySharing.GranularOptions[i++];
+                        string value = thirdPartySharing.GranularOptions[i++];
+                        ajoAdjustThirdPartySharing.Call("addGranularOption", partnerName, key, value);
+                    }
                 }
-            }
 
-            if (thirdPartySharing.PartnerSharingSettings != null)
-            {
-                for (int i = 0; i < thirdPartySharing.PartnerSharingSettings.Count;)
+                if (thirdPartySharing.PartnerSharingSettings != null)
                 {
-                    string partnerName = thirdPartySharing.PartnerSharingSettings[i++];
-                    string key = thirdPartySharing.PartnerSharingSettings[i++];
-                    string value = thirdPartySharing.PartnerSharingSettings[i++];
-                    ajoAdjustThirdPartySharing.Call("addPartnerSharingSetting", partnerName, key, bool.Parse(value));
+                    for (int i = 0; i < thirdPartySharing.PartnerSharingSettings.Count;)
+                    {
+                        string partnerName = thirdPartySharing.PartnerSharingSettings[i++];
+                        string key = thirdPartySharing.PartnerSharingSettings[i++];
+                        string value = thirdPartySharing.PartnerSharingSettings[i++];
+                        ajoAdjustThirdPartySharing.Call("addPartnerSharingSetting", partnerName, key, bool.Parse(value));
+                    }
                 }
-            }
 
-            ajcAdjust.CallStatic("trackThirdPartySharing", ajoAdjustThirdPartySharing);
+                ajcAdjust.CallStatic("trackThirdPartySharing", ajoAdjustThirdPartySharing);
+            }
         }
 
         public static void TrackMeasurementConsent(bool measurementConsent)
@@ -751,8 +754,10 @@ namespace AdjustSdk
         // used for testing only
         public static void SetTestOptions(Dictionary<string, string> testOptions)
         {
-            AndroidJavaObject ajoTestOptions = AdjustUtils.TestOptionsMap2AndroidJavaObject(testOptions, ajoCurrentActivity);
-            ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
+            using (AndroidJavaObject ajoTestOptions = AdjustUtils.TestOptionsMap2AndroidJavaObject(testOptions, ajoCurrentActivity))
+            {
+                ajcAdjust.CallStatic("setTestOptions", ajoTestOptions);
+            }
         }
 
         public static void OnResume(string testingArgument = null)

@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity5.3.0";
+        private const string sdkPrefix = "unity5.4.0";
 
         // app callbacks as method parameters
         private static List<Action<bool>> appIsEnabledGetterCallbacks;
@@ -49,6 +49,8 @@ namespace AdjustSdk
             string defaultTracker,
             string externalDeviceId,
             string jsonUrlStrategyDomains,
+            string storeName,
+            string storeAppId,
             int allowSuppressLogLevel,
             int logLevel,
             int attConsentWaitingInterval,
@@ -270,6 +272,13 @@ namespace AdjustSdk
             string externalDeviceId = adjustConfig.ExternalDeviceId != null ? adjustConfig.ExternalDeviceId : "ADJ_INVALID";
             string stringJsonUrlStrategyDomains = AdjustUtils.ConvertReadOnlyCollectionToJson(
                 adjustConfig.UrlStrategyDomains != null ? adjustConfig.UrlStrategyDomains.AsReadOnly() : null);
+            string storeName = "ADJ_INVALID";
+            string storeAppId = "ADJ_INVALID";
+            if (adjustConfig.StoreInfo != null)
+            {
+                storeName = adjustConfig.StoreInfo.StoreName != null ? adjustConfig.StoreInfo.StoreName : "ADJ_INVALID";
+                storeAppId = adjustConfig.StoreInfo.StoreAppId != null ? adjustConfig.StoreInfo.StoreAppId : "ADJ_INVALID";
+            }
             int attConsentWaitingInterval = AdjustUtils.ConvertInt(adjustConfig.AttConsentWaitingInterval);
             int eventDeduplicationIdsMaxSize = AdjustUtils.ConvertInt(adjustConfig.EventDeduplicationIdsMaxSize);
             int logLevel = AdjustUtils.ConvertLogLevel(adjustConfig.LogLevel);
@@ -302,6 +311,8 @@ namespace AdjustSdk
                 defaultTracker,
                 externalDeviceId,
                 stringJsonUrlStrategyDomains,
+                storeName,
+                storeAppId,
                 allowSuppressLogLevel,
                 logLevel,
                 attConsentWaitingInterval,
