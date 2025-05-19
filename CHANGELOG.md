@@ -1,3 +1,13 @@
+### Version 5.4.0 (May 19th 2025)
+#### Added
+- Added support for configuring store information via the `AdjustStoreInfo` object. You can now specify the store name and store app ID using `setStoreInfo` method on your `AdjustConfig` instance. This enables the SDK to record the intended app store source during initialization.
+
+#### Native SDKs
+- [iOS@v5.4.0][ios_sdk_v5.4.0]
+- [Android@v5.4.0][android_sdk_v5.4.0]
+
+---
+
 ### Version 5.3.0 (April 17th 2025)
 #### Added
 - Added ability to initialize the SDK for the first session in delayed mode. You can start the SDK in the delayed mode by setting the `IsFirstSessionDelayEnabled` property on your `AdjustConfig` instance to `true`. To end the delay, make sure to call `EndFirstSessionDelay` method of `Adjust` instance. For more details about this feature, refer to the [official documentation](https://dev.adjust.com/en/sdk/unity/features/first-session-delay).
@@ -1428,6 +1438,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.1.0]: https://github.com/adjust/ios_sdk/tree/v5.1.0
 [ios_sdk_v5.1.1]: https://github.com/adjust/ios_sdk/tree/v5.1.1
 [ios_sdk_v5.3.0]: https://github.com/adjust/ios_sdk/tree/v5.3.0
+[ios_sdk_v5.4.0]: https://github.com/adjust/ios_sdk/tree/v5.4.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1485,6 +1496,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.0.2]: https://github.com/adjust/android_sdk/tree/v5.0.2
 [android_sdk_v5.1.0]: https://github.com/adjust/android_sdk/tree/v5.1.0
 [android_sdk_v5.3.0]: https://github.com/adjust/android_sdk/tree/v5.3.0
+[android_sdk_v5.4.0]: https://github.com/adjust/android_sdk/tree/v5.4.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
