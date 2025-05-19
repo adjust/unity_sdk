@@ -404,7 +404,8 @@ namespace AdjustSdk.Test
                     {
                         updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
                         updatedJsonResponse.Remove("fb_install_referrer");
-                        if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                        object costAmount;
+                        if (updatedJsonResponse.TryGetValue("cost_amount", out costAmount) && costAmount is IConvertible)
                         {
                             updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
                         }
@@ -1023,7 +1024,8 @@ namespace AdjustSdk.Test
                 {
                     updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
                     updatedJsonResponse.Remove("fb_install_referrer");
-                    if (updatedJsonResponse.TryGetValue("cost_amount", out var costAmount) && costAmount is IConvertible)
+                    object costAmount;
+                    if (updatedJsonResponse.TryGetValue("cost_amount", out costAmount) && costAmount is IConvertible)
                     {
                         updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
                     }
