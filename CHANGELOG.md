@@ -1,4 +1,4 @@
-### Version 5.4.1 (24th June 2025)
+### Version 5.4.1 (26th June 2025)
 #### Added
 - Added support for Google On-Device-Measurement. For more details about this feature, refer to the [official documentation](https://dev.adjust.com/en/sdk/unity/plugins/google-odm).
 - Optimized the logic behind the `ProcessAndResolveDeeplink` method to immediately return links that have already been resolved.
