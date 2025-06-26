@@ -1,3 +1,17 @@
+### Version 5.4.1 (26th June 2025)
+#### Added
+- Added support for Google On-Device-Measurement. For more details about this feature, refer to the [official documentation](https://dev.adjust.com/en/sdk/unity/plugins/google-odm).
+- Optimized the logic behind the `ProcessAndResolveDeeplink` method to immediately return links that have already been resolved.
+
+#### Changed
+- Updated the Adjust Signature library version to 3.47.0.
+
+#### Native SDKs
+- [iOS@v5.4.1][ios_sdk_v5.4.1]
+- [Android@v5.4.1][android_sdk_v5.4.1]
+
+---
+
 ### Version 5.4.0 (May 19th 2025)
 #### Added
 - Added support for configuring store information via the `AdjustStoreInfo` object. You can now specify the store name and store app ID assigning `StoreInfo` property on your `AdjustConfig` instance. This enables the SDK to record the intended app store source during initialization.
@@ -1439,6 +1453,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.1.1]: https://github.com/adjust/ios_sdk/tree/v5.1.1
 [ios_sdk_v5.3.0]: https://github.com/adjust/ios_sdk/tree/v5.3.0
 [ios_sdk_v5.4.0]: https://github.com/adjust/ios_sdk/tree/v5.4.0
+[ios_sdk_v5.4.1]: https://github.com/adjust/ios_sdk/tree/v5.4.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1497,6 +1512,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.1.0]: https://github.com/adjust/android_sdk/tree/v5.1.0
 [android_sdk_v5.3.0]: https://github.com/adjust/android_sdk/tree/v5.3.0
 [android_sdk_v5.4.0]: https://github.com/adjust/android_sdk/tree/v5.4.0
+[android_sdk_v5.4.1]: https://github.com/adjust/android_sdk/tree/v5.4.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
