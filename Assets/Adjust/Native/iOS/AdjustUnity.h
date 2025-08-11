@@ -20,8 +20,8 @@ typedef void (*AdjustDelegateIdfvGetter)(const char* idfv);
 typedef void (*AdjustDelegateLastDeeplinkGetter)(const char* lastDeeplink);
 typedef void (*AdjustDelegateSdkVersionGetter)(const char* sdkVersion);
 typedef void (*AdjustDelegateAttCallback)(int status);
-typedef void (*AdjustDelegatePurchaseVerificationCallback)(const char* verificationResult);
-typedef void (*AdjustDelegateVerifyAndTrackCallback)(const char* verificationResult);
+typedef void (*AdjustDelegatePurchaseVerificationCallback)(const char* verificationResult, int callbackId);
+typedef void (*AdjustDelegateVerifyAndTrackCallback)(const char* verificationResult, int callbackId);
 typedef void (*AdjustDelegateResolvedDeeplinkCallback)(const char* deeplink);
 typedef void (*AdjustDelegateSkanErrorCallback)(const char* error);
 
