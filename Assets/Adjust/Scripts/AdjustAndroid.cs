@@ -18,8 +18,7 @@ namespace AdjustSdk
         private static EventTrackingSucceededListener onEventTrackingSucceededListener;
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
-        private static VerificationResultListener onVerificationResultListener;
-        private static VerificationResultListener onVerifyAndTrackListener;
+
         private static DeeplinkResolutionListener onDeeplinkResolvedListener;
 
         public static void InitSdk(AdjustConfig adjustConfig)
@@ -645,12 +644,12 @@ namespace AdjustSdk
             AdjustPlayStorePurchase purchase,
             Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
         {
-            onVerificationResultListener = new VerificationResultListener(verificationInfoCallback);
+            VerificationResultListener verificationResultListener = new VerificationResultListener(verificationInfoCallback);
             using (AndroidJavaObject ajoPurchase = new AndroidJavaObject("com.adjust.sdk.AdjustPlayStorePurchase",
                 purchase.ProductId,
                 purchase.PurchaseToken))
             {
-                ajcAdjust.CallStatic("verifyPlayStorePurchase", ajoPurchase, onVerificationResultListener);
+                ajcAdjust.CallStatic("verifyPlayStorePurchase", ajoPurchase, verificationResultListener);
             }
         }
 
@@ -681,7 +680,7 @@ namespace AdjustSdk
             AdjustEvent adjustEvent,
             Action<AdjustPurchaseVerificationResult> verificationInfoCallback)
         {
-            onVerifyAndTrackListener = new VerificationResultListener(verificationInfoCallback);
+            VerificationResultListener verifyAndTrackListener = new VerificationResultListener(verificationInfoCallback);
             using (AndroidJavaObject ajoAdjustEvent =
                 new AndroidJavaObject("com.adjust.sdk.AdjustEvent", adjustEvent.EventToken))
             {
@@ -737,7 +736,7 @@ namespace AdjustSdk
                     ajoAdjustEvent.Call("setPurchaseToken", adjustEvent.PurchaseToken);
                 }
 
-                ajcAdjust.CallStatic("verifyAndTrackPlayStorePurchase", ajoAdjustEvent, onVerifyAndTrackListener);
+                ajcAdjust.CallStatic("verifyAndTrackPlayStorePurchase", ajoAdjustEvent, verifyAndTrackListener);
             }
         }
 
