@@ -712,6 +712,7 @@ extern "C"
 
     void _AdjustVerifyAppStorePurchase(const char* transactionId,
                                        const char* productId,
+                                       int callbackId,
                                        AdjustDelegatePurchaseVerificationCallback callback) {
         NSString *strTransactionId;
         NSString *strProductId;
@@ -746,7 +747,7 @@ extern "C"
                                                                      length:[dataVerificationInfo length]
                                                                    encoding:NSUTF8StringEncoding];
             const char* verificationInfoCString = [strVerificationInfo UTF8String];
-            callback(verificationInfoCString);
+            callback(verificationInfoCString, callbackId);
         }];
     }
 
@@ -773,6 +774,7 @@ extern "C"
         const char* deduplicationId,
         const char* jsonCallbackParameters,
         const char* jsonPartnerParameters,
+        int verificationCallbackId,
         AdjustDelegateVerifyAndTrackCallback callback) {
         NSString *strEventToken = isStringValid(eventToken) == true ? [NSString stringWithUTF8String:eventToken] : nil;
         ADJEvent *event = [[ADJEvent alloc] initWithEventToken:strEventToken];
@@ -844,7 +846,7 @@ extern "C"
                                                                      length:[dataVerificationInfo length]
                                                                    encoding:NSUTF8StringEncoding];
             const char* verificationInfoCString = [strVerificationInfo UTF8String];
-            callback(verificationInfoCString);
+            callback(verificationInfoCString, verificationCallbackId);
         }];
     }
 
