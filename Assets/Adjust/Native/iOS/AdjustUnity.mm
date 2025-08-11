@@ -100,6 +100,7 @@ extern "C"
         int isSendingInBackgroundEnabled,
         int isAdServicesEnabled,
         int isIdfaReadingEnabled,
+        int isIdfvReadingEnabled,
         int isSkanAttributionEnabled,
         int isLinkMeEnabled,
         int isCostDataInAttributionEnabled,
@@ -192,6 +193,13 @@ extern "C"
         if (isIdfaReadingEnabled != -1) {
             if ((BOOL)isIdfaReadingEnabled == NO) {
                 [adjustConfig disableIdfaReading];
+            }
+        }
+
+        // IDFV reading
+        if (isIdfvReadingEnabled != -1) {
+            if ((BOOL)isIdfvReadingEnabled == NO) {
+                [adjustConfig disableIdfvReading];
             }
         }
 

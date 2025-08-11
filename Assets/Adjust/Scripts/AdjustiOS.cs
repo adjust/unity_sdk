@@ -63,6 +63,7 @@ namespace AdjustSdk
             int isSendingInBackgroundEnabled,
             int isAdServicesEnabled,
             int isIdfaReadingEnabled,
+            int isIdfvReadingEnabled,
             int isSkanAttributionEnabled,
             int isLinkMeEnabled,
             int isCostDataInAttributionEnabled,
@@ -290,6 +291,7 @@ namespace AdjustSdk
             int isSendingInBackgroundEnabled = AdjustUtils.ConvertBool(adjustConfig.IsSendingInBackgroundEnabled);
             int isAdServicesEnabled = AdjustUtils.ConvertBool(adjustConfig.IsAdServicesEnabled);
             int isIdfaReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.IsIdfaReadingEnabled);
+            int isIdfvReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.IsIdfvReadingEnabled);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.AllowSuppressLogLevel);
             int isDeferredDeeplinkOpeningEnabled = AdjustUtils.ConvertBool(adjustConfig.IsDeferredDeeplinkOpeningEnabled);
             int isSkanAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.IsSkanAttributionEnabled);
@@ -327,6 +329,7 @@ namespace AdjustSdk
                 isSendingInBackgroundEnabled,
                 isAdServicesEnabled,
                 isIdfaReadingEnabled,
+                isIdfvReadingEnabled,
                 isSkanAttributionEnabled,
                 isLinkMeEnabled,
                 isCostDataInAttributionEnabled,
