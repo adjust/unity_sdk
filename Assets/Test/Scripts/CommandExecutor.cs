@@ -1072,6 +1072,8 @@ namespace AdjustSdk.Test
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
 #endif
+
+            _savedEvents.Remove(0);
         }
 
         private void EndFirstSessionDelay()
