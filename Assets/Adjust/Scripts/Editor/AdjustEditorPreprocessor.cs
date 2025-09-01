@@ -111,7 +111,7 @@ namespace AdjustSdk
 
         private static bool AddURISchemes(XmlDocument manifest)
         {
-            if (AdjustSettings.AndroidUriSchemes.Length == 0)
+            if (AdjustSettings.AndroidUriSchemes == null || AdjustSettings.AndroidUriSchemes.Length == 0)
             {
                 return false;
             }
@@ -119,7 +119,7 @@ namespace AdjustSdk
 
             // Check if user has defined a custom Android activity name.
             string androidActivityName = "com.unity3d.player.UnityPlayerActivity";
-            if (AdjustSettings.AndroidCustomActivityName.Length != 0)
+            if (!string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
             {
                 androidActivityName = AdjustSettings.AndroidCustomActivityName;
             }
