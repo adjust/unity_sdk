@@ -1,3 +1,14 @@
+### Version 5.4.3 (18th September 2025)
+#### Added
+- Added support for processing deferred deep links in session responses.
+- Added support for Google License Verification (LVL). For more details about this feature, refer to the [official documentation](https://dev.adjust.com/en/sdk/unity/plugins/google-lvl-plugin).
+
+#### Native SDKs
+- [iOS@v5.4.4][ios_sdk_v5.4.4]
+- [Android@v5.4.4][android_sdk_v5.4.4]
+
+---
+
 ### Version 5.4.2 (11th August 2025)
 #### Fixed
 - Added missing ability to disable IDFV reading. You can do this by setting `IsIdfvReadingEnabled` property of your `AdjustConfig` instance to `false`.
@@ -1469,6 +1480,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.4.0]: https://github.com/adjust/ios_sdk/tree/v5.4.0
 [ios_sdk_v5.4.1]: https://github.com/adjust/ios_sdk/tree/v5.4.1
 [ios_sdk_v5.4.3]: https://github.com/adjust/ios_sdk/tree/v5.4.3
+[ios_sdk_v5.4.4]: https://github.com/adjust/ios_sdk/tree/v5.4.4
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1529,6 +1541,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.4.0]: https://github.com/adjust/android_sdk/tree/v5.4.0
 [android_sdk_v5.4.1]: https://github.com/adjust/android_sdk/tree/v5.4.1
 [android_sdk_v5.4.2]: https://github.com/adjust/android_sdk/tree/v5.4.2
+[android_sdk_v5.4.4]: https://github.com/adjust/android_sdk/tree/v5.4.4
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
