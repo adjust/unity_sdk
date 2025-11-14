@@ -20,6 +20,7 @@ namespace AdjustSdk
         SerializedProperty iOSUrlSchemes;
         SerializedProperty iOSUniversalLinksDomains;
         SerializedProperty androidUriSchemes;
+        SerializedProperty androidAppLinksDomains;
         SerializedProperty androidCustomActivityName;
 
         void OnEnable()
@@ -37,6 +38,7 @@ namespace AdjustSdk
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
             androidUriSchemes = serializedObject.FindProperty("androidUriSchemes");
+            androidAppLinksDomains = serializedObject.FindProperty("_androidAppLinksDomains");
             androidCustomActivityName = serializedObject.FindProperty("_androidCustomActivityName");
         }
         public override void OnInspectorGUI()
@@ -124,8 +126,15 @@ namespace AdjustSdk
                     "URI schemes handled by your app. " +
                     "Make sure to enter just the scheme name with :// part at the end."),
                 true);
+            EditorGUILayout.PropertyField(androidAppLinksDomains,
+                new GUIContent("Android App Links Domains",
+                    "App Links domains handled by your app. " +
+                    "Enter the domain (e.g., example.com or example.go.link). " +
+                    "If you need to specify a path, use format: domain/path (e.g., adj.st/blah). " +
+                    "The SDK will automatically add android:autoVerify=\"true\" and parse host/pathPrefix correctly."),
+                true);
             EditorGUILayout.HelpBox(
-                "Please note that Adjust SDK doesn't remove existing URI Schemes, " +
+                "Please note that Adjust SDK doesn't remove existing URI Schemes or App Links, " +
                 "so if you need to clean previously added entries, " +
                 "you need to do it manually from \"Assets/Plugins/Android/AndroidManifest.xml\"",
                 MessageType.Info,
