@@ -41,6 +41,8 @@ namespace AdjustSdk
         public bool preinstallTracking = false;
         [HideInInspector]
         public string preinstallFilePath;
+        [HideInInspector]
+        public string fbAppId;
 
         // [Header("iOS SPECIFIC FEATURES:")]
         // [Space(5)]
@@ -88,6 +90,7 @@ namespace AdjustSdk
                 adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
+                adjustConfig.FbAppId = this.fbAppId;
                 adjustConfig.IsAdServicesEnabled = this.adServices;
                 adjustConfig.IsIdfaReadingEnabled = this.idfaReading;
                 adjustConfig.IsLinkMeEnabled = this.linkMe;

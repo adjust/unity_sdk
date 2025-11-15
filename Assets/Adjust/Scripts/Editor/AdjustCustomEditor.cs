@@ -46,6 +46,7 @@ namespace AdjustSdk
                 EditorGUI.indentLevel += 1;
                 adjust.preinstallTracking = EditorGUILayout.Toggle("Preinstall Tracking", adjust.preinstallTracking);
                 adjust.preinstallFilePath = EditorGUILayout.TextField("Preinstall File Path", adjust.preinstallFilePath);
+                adjust.fbAppId = EditorGUILayout.TextField("Facebook App ID", adjust.fbAppId);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
