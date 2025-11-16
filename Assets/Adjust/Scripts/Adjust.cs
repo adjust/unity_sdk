@@ -33,6 +33,8 @@ namespace AdjustSdk
         [HideInInspector]
         public bool linkMe = false;
         [HideInInspector]
+        public bool deviceIdsReadingOnce = false;
+        [HideInInspector]
         public string defaultTracker;
 
         // [Header("ANDROID SPECIFIC FEATURES:")]
@@ -94,6 +96,7 @@ namespace AdjustSdk
                 // TODO: URL strategy
                 adjustConfig.IsCoppaComplianceEnabled = this.coppaCompliance;
                 adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
+                adjustConfig.IsDeviceIdsReadingOnceEnabled = this.deviceIdsReadingOnce;
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
                 adjustConfig.FbAppId = this.fbAppId;

@@ -39,6 +39,7 @@ namespace AdjustSdk
                 adjust.launchDeferredDeeplink = EditorGUILayout.Toggle("Launch Deferred Deep Link", adjust.launchDeferredDeeplink);
                 adjust.costDataInAttribution = EditorGUILayout.Toggle("Cost Data In Attribution Callback", adjust.costDataInAttribution);
                 adjust.linkMe = EditorGUILayout.Toggle("LinkMe", adjust.linkMe);
+                adjust.deviceIdsReadingOnce = EditorGUILayout.Toggle("Device IDs Reading Once", adjust.deviceIdsReadingOnce);
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();
