@@ -41,6 +41,7 @@ namespace AdjustSdk
                 adjust.linkMe = EditorGUILayout.Toggle("LinkMe", adjust.linkMe);
                 adjust.deviceIdsReadingOnce = EditorGUILayout.Toggle("Device IDs Reading Once", adjust.deviceIdsReadingOnce);
                 adjust.eventDeduplicationIdsMaxSize = EditorGUILayout.IntField("Event Deduplication IDs Max Size", adjust.eventDeduplicationIdsMaxSize);
+                adjust.firstSessionDelay = EditorGUILayout.Toggle("First Session Delay", adjust.firstSessionDelay);
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();

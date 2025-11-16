@@ -37,6 +37,8 @@ namespace AdjustSdk
         [HideInInspector]
         public int eventDeduplicationIdsMaxSize = 0;
         [HideInInspector]
+        public bool firstSessionDelay = false;
+        [HideInInspector]
         public string defaultTracker;
 
         // [Header("ANDROID SPECIFIC FEATURES:")]
@@ -103,6 +105,7 @@ namespace AdjustSdk
                 {
                     adjustConfig.EventDeduplicationIdsMaxSize = this.eventDeduplicationIdsMaxSize;
                 }
+                adjustConfig.IsFirstSessionDelayEnabled = this.firstSessionDelay;
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
                 adjustConfig.FbAppId = this.fbAppId;
