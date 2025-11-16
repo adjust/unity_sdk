@@ -42,6 +42,7 @@ namespace AdjustSdk
                 adjust.deviceIdsReadingOnce = EditorGUILayout.Toggle("Device IDs Reading Once", adjust.deviceIdsReadingOnce);
                 adjust.eventDeduplicationIdsMaxSize = EditorGUILayout.IntField("Event Deduplication IDs Max Size", adjust.eventDeduplicationIdsMaxSize);
                 adjust.firstSessionDelay = EditorGUILayout.Toggle("First Session Delay", adjust.firstSessionDelay);
+                adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
                 
                 // Store Info section - visually grouped
                 EditorGUILayout.Space(2);
@@ -51,7 +52,50 @@ namespace AdjustSdk
                 adjust.storeAppId = EditorGUILayout.TextField("Store App ID", adjust.storeAppId);
                 EditorGUI.indentLevel -= 1;
                 
-                adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
+                // URL Strategy and Data Residency section - visually grouped
+                EditorGUILayout.Space(2);
+                EditorGUILayout.LabelField("URL Strategy and Data Residency:", EditorStyles.boldLabel);
+                EditorGUI.indentLevel += 1;
+                
+                // URL Strategy Domains list
+                if (adjust.urlStrategyDomains == null)
+                {
+                    adjust.urlStrategyDomains = new System.Collections.Generic.List<string>();
+                }
+                
+                EditorGUILayout.LabelField("URL Strategy Domains", EditorStyles.label);
+                EditorGUI.indentLevel += 1;
+                int domainCount = adjust.urlStrategyDomains.Count;
+                int newDomainCount = EditorGUILayout.IntField("Size", domainCount);
+                if (newDomainCount != domainCount)
+                {
+                    while (adjust.urlStrategyDomains.Count < newDomainCount)
+                    {
+                        adjust.urlStrategyDomains.Add("");
+                    }
+                    while (adjust.urlStrategyDomains.Count > newDomainCount)
+                    {
+                        adjust.urlStrategyDomains.RemoveAt(adjust.urlStrategyDomains.Count - 1);
+                    }
+                }
+                
+                for (int i = 0; i < adjust.urlStrategyDomains.Count; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    adjust.urlStrategyDomains[i] = EditorGUILayout.TextField("Element " + i, adjust.urlStrategyDomains[i]);
+                    if (GUILayout.Button("Remove", GUILayout.Width(60)))
+                    {
+                        adjust.urlStrategyDomains.RemoveAt(i);
+                        break;
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+                EditorGUI.indentLevel -= 1;
+                
+                adjust.shouldUseSubdomains = EditorGUILayout.Toggle("Should Use Subdomains", adjust.shouldUseSubdomains);
+                adjust.isDataResidency = EditorGUILayout.Toggle("Is Data Residency", adjust.isDataResidency);
+                EditorGUI.indentLevel -= 1;
+                
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AdjustSdk
@@ -39,11 +40,17 @@ namespace AdjustSdk
         [HideInInspector]
         public bool firstSessionDelay = false;
         [HideInInspector]
+        public string defaultTracker;
+        [HideInInspector]
         public string storeName;
         [HideInInspector]
         public string storeAppId;
         [HideInInspector]
-        public string defaultTracker;
+        public List<string> urlStrategyDomains = new List<string>();
+        [HideInInspector]
+        public bool shouldUseSubdomains = false;
+        [HideInInspector]
+        public bool isDataResidency = false;
 
         // [Header("ANDROID SPECIFIC FEATURES:")]
         // [Space(5)]
@@ -118,6 +125,15 @@ namespace AdjustSdk
                         storeInfo.StoreAppId = this.storeAppId;
                     }
                     adjustConfig.StoreInfo = storeInfo;
+                }
+                if (this.urlStrategyDomains != null && this.urlStrategyDomains.Count > 0)
+                {
+                    // Filter out empty strings
+                    List<string> validDomains = this.urlStrategyDomains.Where(domain => !string.IsNullOrEmpty(domain)).ToList();
+                    if (validDomains.Count > 0)
+                    {
+                        adjustConfig.SetUrlStrategy(validDomains, this.shouldUseSubdomains, this.isDataResidency);
+                    }
                 }
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
