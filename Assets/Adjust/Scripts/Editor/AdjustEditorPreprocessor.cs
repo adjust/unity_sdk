@@ -86,8 +86,19 @@ namespace AdjustSdk
                 // Add needed permissions if they are missing.
                 manifestHasChanged |= AddPermissions(manifestFile);
 
-                // Add intent filter to main activity if it is missing.
-                manifestHasChanged |= AddBroadcastReceiver(manifestFile);
+                // Add intent filter to main activity if it is missing and user wants to use Adjust broadcast receiver.
+                if (AdjustSettings.AndroidUseAdjustBroadcastReceiver)
+                {
+                    manifestHasChanged |= AddBroadcastReceiver(manifestFile);
+                }
+            }
+            else
+            {
+                // Adjust manifest is used - check if we need to remove the broadcast receiver
+                if (!AdjustSettings.AndroidUseAdjustBroadcastReceiver)
+                {
+                    manifestHasChanged |= RemoveBroadcastReceiver(manifestFile);
+                }
             }
 
             // Add intent filter to URL schemes for deeplinking
@@ -494,6 +505,33 @@ namespace AdjustSdk
         {
             var xpath = "/manifest/application/receiver[intent-filter/action[@android:name='com.android.vending.INSTALL_REFERRER']]";
             return new List<XmlNode>(manifest.DocumentElement.SelectNodes(xpath, GetNamespaceManager(manifest)).OfType<XmlNode>());
+        }
+
+        private static bool RemoveBroadcastReceiver(XmlDocument manifest)
+        {
+            Debug.Log("[Adjust]: Removing AdjustBroadcastReceiver from AndroidManifest.xml as per user settings.");
+
+            // Find the application node
+            var applicationNodeXpath = "/manifest/application";
+            var applicationNode = manifest.DocumentElement.SelectSingleNode(applicationNodeXpath);
+
+            if (applicationNode == null)
+            {
+                return false;
+            }
+
+            // Find and remove Adjust broadcast receiver
+            var xpath = "/manifest/application/receiver[@android:name='com.adjust.sdk.AdjustReferrerReceiver']";
+            var receiverNode = manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest));
+
+            if (receiverNode != null)
+            {
+                applicationNode.RemoveChild(receiverNode);
+                Debug.Log("[Adjust]: AdjustBroadcastReceiver successfully removed from AndroidManifest.xml.");
+                return true;
+            }
+
+            return false;
         }
 
         private static void AddAndroidNamespaceAttribute(XmlDocument manifest, string key, string value, XmlElement node)

@@ -42,6 +42,8 @@ namespace AdjustSdk
         private string[] _androidAppLinksDomains = new string[0];
         [SerializeField]
         private string _androidCustomActivityName;
+        [SerializeField]
+        private bool _androidUseAdjustBroadcastReceiver = true;
 
         public static AdjustSettings Instance
         {
@@ -197,6 +199,12 @@ namespace AdjustSdk
         {
             get { return Instance._androidCustomActivityName; }
             set { Instance._androidCustomActivityName = value; }
+        }
+
+        public static bool AndroidUseAdjustBroadcastReceiver
+        {
+            get { return Instance._androidUseAdjustBroadcastReceiver; }
+            set { Instance._androidUseAdjustBroadcastReceiver = value; }
         }
     }
 }

@@ -22,6 +22,7 @@ namespace AdjustSdk
         SerializedProperty androidUriSchemes;
         SerializedProperty androidAppLinksDomains;
         SerializedProperty androidCustomActivityName;
+        SerializedProperty androidUseAdjustBroadcastReceiver;
 
         void OnEnable()
         {
@@ -40,6 +41,7 @@ namespace AdjustSdk
             androidUriSchemes = serializedObject.FindProperty("androidUriSchemes");
             androidAppLinksDomains = serializedObject.FindProperty("_androidAppLinksDomains");
             androidCustomActivityName = serializedObject.FindProperty("_androidCustomActivityName");
+            androidUseAdjustBroadcastReceiver = serializedObject.FindProperty("_androidUseAdjustBroadcastReceiver");
         }
         public override void OnInspectorGUI()
         {
@@ -96,12 +98,18 @@ namespace AdjustSdk
                 true);
             EditorGUI.indentLevel -= 1;
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("ANDROID ACTIVITY NAME:", darkerCyanTextFieldStyles);
+            EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(androidCustomActivityName,
                 new GUIContent("Custom Android Activity Name",
                     "In case you are using custom activity instead of the default Unity activity " +
                     "(com.unity3d.player.UnityPlayerActivity), please specify it's full name."),
+                true);
+            EditorGUILayout.PropertyField(androidUseAdjustBroadcastReceiver,
+                new GUIContent("Use Adjust Broadcast Receiver",
+                    "When enabled, AdjustBroadcastReceiver will be added as a listener to INSTALL_REFERRER intent. " +
+                    "If you have no use case for AdjustBroadcastReceiver in your app, you can disable this option. " +
+                    "Note: SDK 5.x uses the modern Install Referrer Library, so this receiver may not be needed."),
                 true);
             EditorGUI.indentLevel -= 1;
             EditorGUILayout.Space();
