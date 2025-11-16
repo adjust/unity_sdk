@@ -39,6 +39,10 @@ namespace AdjustSdk
         [HideInInspector]
         public bool firstSessionDelay = false;
         [HideInInspector]
+        public string storeName;
+        [HideInInspector]
+        public string storeAppId;
+        [HideInInspector]
         public string defaultTracker;
 
         // [Header("ANDROID SPECIFIC FEATURES:")]
@@ -106,6 +110,15 @@ namespace AdjustSdk
                     adjustConfig.EventDeduplicationIdsMaxSize = this.eventDeduplicationIdsMaxSize;
                 }
                 adjustConfig.IsFirstSessionDelayEnabled = this.firstSessionDelay;
+                if (!string.IsNullOrEmpty(this.storeName))
+                {
+                    AdjustStoreInfo storeInfo = new AdjustStoreInfo(this.storeName);
+                    if (!string.IsNullOrEmpty(this.storeAppId))
+                    {
+                        storeInfo.StoreAppId = this.storeAppId;
+                    }
+                    adjustConfig.StoreInfo = storeInfo;
+                }
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
                 adjustConfig.FbAppId = this.fbAppId;

@@ -42,6 +42,15 @@ namespace AdjustSdk
                 adjust.deviceIdsReadingOnce = EditorGUILayout.Toggle("Device IDs Reading Once", adjust.deviceIdsReadingOnce);
                 adjust.eventDeduplicationIdsMaxSize = EditorGUILayout.IntField("Event Deduplication IDs Max Size", adjust.eventDeduplicationIdsMaxSize);
                 adjust.firstSessionDelay = EditorGUILayout.Toggle("First Session Delay", adjust.firstSessionDelay);
+                
+                // Store Info section - visually grouped
+                EditorGUILayout.Space(2);
+                EditorGUILayout.LabelField("Store Info:", EditorStyles.boldLabel);
+                EditorGUI.indentLevel += 1;
+                adjust.storeName = EditorGUILayout.TextField("Store Name", adjust.storeName);
+                adjust.storeAppId = EditorGUILayout.TextField("Store App ID", adjust.storeAppId);
+                EditorGUI.indentLevel -= 1;
+                
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.Space();
