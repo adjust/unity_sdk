@@ -54,6 +54,8 @@ namespace AdjustSdk
         public bool skanAttribution = true;
         [HideInInspector]
         public bool appTrackingTransparencyUsage = true;
+        [HideInInspector]
+        public int attConsentWaitingInterval = 0;
 
         void Awake()
         {
@@ -98,6 +100,10 @@ namespace AdjustSdk
                 adjustConfig.IsLinkMeEnabled = this.linkMe;
                 adjustConfig.IsSkanAttributionEnabled = this.skanAttribution;
                 adjustConfig.IsAppTrackingTransparencyUsageEnabled = this.appTrackingTransparencyUsage;
+                if (this.attConsentWaitingInterval > 0)
+                {
+                    adjustConfig.AttConsentWaitingInterval = this.attConsentWaitingInterval;
+                }
                 Adjust.InitSdk(adjustConfig);
             }
         }
