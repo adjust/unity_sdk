@@ -53,6 +53,7 @@ namespace AdjustSdk
                 EditorGUI.indentLevel += 1;
                 adjust.adServices = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServices);
                 adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
+                adjust.idfvReading = EditorGUILayout.Toggle("IDFV Info Reading", adjust.idfvReading);
                 adjust.skanAttribution = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skanAttribution);
                 adjust.appTrackingTransparencyUsage = EditorGUILayout.Toggle("App Tracking Transparency Usage", adjust.appTrackingTransparencyUsage);
                 adjust.attConsentWaitingInterval = EditorGUILayout.IntField("ATT Consent Waiting Interval (seconds)", adjust.attConsentWaitingInterval);

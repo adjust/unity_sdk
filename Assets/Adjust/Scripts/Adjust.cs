@@ -51,6 +51,8 @@ namespace AdjustSdk
         [HideInInspector]
         public bool idfaReading = true;
         [HideInInspector]
+        public bool idfvReading = true;
+        [HideInInspector]
         public bool skanAttribution = true;
         [HideInInspector]
         public bool appTrackingTransparencyUsage = true;
@@ -97,6 +99,7 @@ namespace AdjustSdk
                 adjustConfig.FbAppId = this.fbAppId;
                 adjustConfig.IsAdServicesEnabled = this.adServices;
                 adjustConfig.IsIdfaReadingEnabled = this.idfaReading;
+                adjustConfig.IsIdfvReadingEnabled = this.idfvReading;
                 adjustConfig.IsLinkMeEnabled = this.linkMe;
                 adjustConfig.IsSkanAttributionEnabled = this.skanAttribution;
                 adjustConfig.IsAppTrackingTransparencyUsageEnabled = this.appTrackingTransparencyUsage;
