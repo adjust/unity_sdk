@@ -52,6 +52,8 @@ namespace AdjustSdk
         public bool idfaReading = true;
         [HideInInspector]
         public bool skanAttribution = true;
+        [HideInInspector]
+        public bool appTrackingTransparencyUsage = true;
 
         void Awake()
         {
@@ -95,6 +97,7 @@ namespace AdjustSdk
                 adjustConfig.IsIdfaReadingEnabled = this.idfaReading;
                 adjustConfig.IsLinkMeEnabled = this.linkMe;
                 adjustConfig.IsSkanAttributionEnabled = this.skanAttribution;
+                adjustConfig.IsAppTrackingTransparencyUsageEnabled = this.appTrackingTransparencyUsage;
                 Adjust.InitSdk(adjustConfig);
             }
         }

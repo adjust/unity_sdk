@@ -54,6 +54,7 @@ namespace AdjustSdk
                 adjust.adServices = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServices);
                 adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
                 adjust.skanAttribution = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skanAttribution);
+                adjust.appTrackingTransparencyUsage = EditorGUILayout.Toggle("App Tracking Transparency Usage", adjust.appTrackingTransparencyUsage);
                 EditorGUI.indentLevel -= 1;
             }
 
