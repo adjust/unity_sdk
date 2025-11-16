@@ -35,6 +35,8 @@ namespace AdjustSdk
         [HideInInspector]
         public bool deviceIdsReadingOnce = false;
         [HideInInspector]
+        public int eventDeduplicationIdsMaxSize = 0;
+        [HideInInspector]
         public string defaultTracker;
 
         // [Header("ANDROID SPECIFIC FEATURES:")]
@@ -97,6 +99,10 @@ namespace AdjustSdk
                 adjustConfig.IsCoppaComplianceEnabled = this.coppaCompliance;
                 adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
                 adjustConfig.IsDeviceIdsReadingOnceEnabled = this.deviceIdsReadingOnce;
+                if (this.eventDeduplicationIdsMaxSize > 0)
+                {
+                    adjustConfig.EventDeduplicationIdsMaxSize = this.eventDeduplicationIdsMaxSize;
+                }
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
                 adjustConfig.FbAppId = this.fbAppId;
