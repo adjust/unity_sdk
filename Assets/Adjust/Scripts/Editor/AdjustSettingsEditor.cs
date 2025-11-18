@@ -48,8 +48,52 @@ namespace AdjustSdk
             GUIStyle darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
             darkerCyanTextFieldStyles.normal.textColor = new Color(0f/255f, 190f/255f, 190f/255f);
 
+            var adjust = FindObjectOfType<Adjust>();
+            bool isStartManually = adjust != null && adjust.startManually;
+            
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("LINK IOS FRAMEWORKS:", darkerCyanTextFieldStyles);
+            EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
+            EditorGUI.indentLevel += 1;
+            
+            // Fields that should be disabled when startManually is checked
+            using (new EditorGUI.DisabledScope(isStartManually))
+            {
+                if (adjust != null)
+                {
+                    EditorGUI.BeginChangeCheck();
+                    adjust.linkMe = EditorGUILayout.Toggle("LinkMe", adjust.linkMe);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        EditorUtility.SetDirty(adjust);
+                    }
+                }
+                
+                if (adjust != null)
+                {
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.Space(2);
+                    adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
+                    adjust.idfvReading = EditorGUILayout.Toggle("IDFV Info Reading", adjust.idfvReading);
+                    adjust.adServices = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServices);
+                    adjust.skanAttribution = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skanAttribution);
+                    adjust.appTrackingTransparencyUsage = EditorGUILayout.Toggle("App Tracking Transparency Usage", adjust.appTrackingTransparencyUsage);
+                    adjust.attConsentWaitingInterval = EditorGUILayout.IntField("ATT Consent Waiting Interval", adjust.attConsentWaitingInterval);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        EditorUtility.SetDirty(adjust);
+                    }
+                }
+                
+                EditorGUILayout.PropertyField(iOSUserTrackingUsageDescription,
+                    new GUIContent("User Tracking Description",
+                        "String you would like to display to your users describing the reason " +
+                        "behind asking for tracking permission."),
+                    true);
+            }
+            
+            // Link iOS Frameworks - NOT disabled
+            EditorGUILayout.Space(2);
+            EditorGUILayout.LabelField("Link iOS Frameworks", EditorStyles.boldLabel);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(iOSFrameworkAdSupport,
                 new GUIContent("AdSupport.framework",
@@ -68,8 +112,67 @@ namespace AdjustSdk
                     "iOS framework needed to use SKAdNetwork capabilities"),
                 true);
             EditorGUI.indentLevel -= 1;
+            
+            // Deep linking - NOT disabled, moved to end
+            EditorGUILayout.Space(2);
+            EditorGUILayout.LabelField("Deep linking", EditorStyles.boldLabel);
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(iOSUrlIdentifier,
+                new GUIContent("iOS URL Identifier",
+                    "Value of CFBundleURLName property of the root CFBundleURLTypes element. " +
+                    "If not needed otherwise, value should be your bundle ID."),
+                true);
+            EditorGUILayout.PropertyField(iOSUrlSchemes,
+                new GUIContent("iOS URL Schemes",
+                    "URL schemes handled by your app. " +
+                    "Make sure to enter just the scheme name without :// part at the end."),
+                true);
+            EditorGUILayout.PropertyField(iOSUniversalLinksDomains,
+                new GUIContent("iOS Universal Links Domains",
+                    "Associated domains handled by your app. State just the domain part without applinks: part in front."),
+                true);
+            EditorGUI.indentLevel -= 1;
+            
+            EditorGUI.indentLevel -= 1;
+            
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("ADD ANDROID PERMISSIONS:", darkerCyanTextFieldStyles);
+            EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
+            EditorGUI.indentLevel += 1;
+            
+            // Preinstall Tracking, Preinstall File Path, Facebook App ID - at top, disabled when startManually
+            using (new EditorGUI.DisabledScope(isStartManually))
+            {
+                if (adjust != null)
+                {
+                    EditorGUI.BeginChangeCheck();
+                    adjust.preinstallTracking = EditorGUILayout.Toggle("Preinstall Tracking", adjust.preinstallTracking);
+                    adjust.preinstallFilePath = EditorGUILayout.TextField("Preinstall File Path", adjust.preinstallFilePath);
+                    adjust.fbAppId = EditorGUILayout.TextField("Facebook App ID", adjust.fbAppId);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        EditorUtility.SetDirty(adjust);
+                    }
+                }
+            }
+            
+            // Custom Android Activity Name - NOT disabled
+            EditorGUILayout.PropertyField(androidCustomActivityName,
+                new GUIContent("Custom Android Activity Name",
+                    "In case you are using custom activity instead of the default Unity activity " +
+                    "(com.unity3d.player.UnityPlayerActivity), please specify it's full name."),
+                true);
+            
+            // Use Adjust Broadcast Receiver - NOT disabled
+            EditorGUILayout.PropertyField(androidUseAdjustBroadcastReceiver,
+                new GUIContent("Use Adjust Broadcast Receiver",
+                    "When enabled, AdjustBroadcastReceiver will be added as a listener to INSTALL_REFERRER intent. " +
+                    "If you have no use case for AdjustBroadcastReceiver in your app, you can disable this option. " +
+                    "Note: SDK 5.x uses the modern Install Referrer Library, so this receiver may not be needed."),
+                true);
+            
+            // Add Android Permissions - NOT disabled
+            EditorGUILayout.Space(2);
+            EditorGUILayout.LabelField("Add Android Permissions", EditorStyles.boldLabel);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(androidPermissionInternet,
                 new GUIContent("android.permission.INTERNET",
@@ -88,47 +191,11 @@ namespace AdjustSdk
                     "Android permission needed to determine type of network device is connected to"),
                 true);
             EditorGUI.indentLevel -= 1;
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("IOS PRIVACY:", darkerCyanTextFieldStyles);
+            
+            // Deep linking - NOT disabled
+            EditorGUILayout.Space(2);
+            EditorGUILayout.LabelField("Deep linking", EditorStyles.boldLabel);
             EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(iOSUserTrackingUsageDescription,
-                new GUIContent("User Tracking Description",
-                    "String you would like to display to your users describing the reason " +
-                    "behind asking for tracking permission."),
-                true);
-            EditorGUI.indentLevel -= 1;
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
-            EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(androidCustomActivityName,
-                new GUIContent("Custom Android Activity Name",
-                    "In case you are using custom activity instead of the default Unity activity " +
-                    "(com.unity3d.player.UnityPlayerActivity), please specify it's full name."),
-                true);
-            EditorGUILayout.PropertyField(androidUseAdjustBroadcastReceiver,
-                new GUIContent("Use Adjust Broadcast Receiver",
-                    "When enabled, AdjustBroadcastReceiver will be added as a listener to INSTALL_REFERRER intent. " +
-                    "If you have no use case for AdjustBroadcastReceiver in your app, you can disable this option. " +
-                    "Note: SDK 5.x uses the modern Install Referrer Library, so this receiver may not be needed."),
-                true);
-            EditorGUI.indentLevel -= 1;
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("DEEP LINKING:", darkerCyanTextFieldStyles);
-            EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(iOSUrlIdentifier,
-                new GUIContent("iOS URL Identifier",
-                    "Value of CFBundleURLName property of the root CFBundleURLTypes element. " +
-                    "If not needed otherwise, value should be your bundle ID."),
-                true);
-            EditorGUILayout.PropertyField(iOSUrlSchemes,
-                new GUIContent("iOS URL Schemes",
-                    "URL schemes handled by your app. " +
-                    "Make sure to enter just the scheme name without :// part at the end."),
-                true);
-            EditorGUILayout.PropertyField(iOSUniversalLinksDomains,
-                new GUIContent("iOS Universal Links Domains",
-                    "Associated domains handled by your app. State just the domain part without applinks: part in front."),
-                true);
             EditorGUILayout.PropertyField(androidUriSchemes,
                 new GUIContent("Android URI Schemes",
                     "URI schemes handled by your app. " +
@@ -148,6 +215,9 @@ namespace AdjustSdk
                 MessageType.Info,
                 true);
             EditorGUI.indentLevel -= 1;
+            
+            EditorGUI.indentLevel -= 1;
+            
             serializedObject.ApplyModifiedProperties();
         }
     }

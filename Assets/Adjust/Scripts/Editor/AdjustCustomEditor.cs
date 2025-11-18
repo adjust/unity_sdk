@@ -34,14 +34,12 @@ namespace AdjustSdk
                 adjust.appToken = EditorGUILayout.TextField("App Token", adjust.appToken);
                 adjust.environment = (AdjustEnvironment)EditorGUILayout.EnumPopup("Environment", adjust.environment);
                 adjust.logLevel = (AdjustLogLevel)EditorGUILayout.EnumPopup("Log Level", adjust.logLevel);
-                // TODO: URL strategy missing
+                adjust.firstSessionDelay = EditorGUILayout.Toggle("First Session Delay", adjust.firstSessionDelay);
                 adjust.sendInBackground = EditorGUILayout.Toggle("Send In Background", adjust.sendInBackground);
                 adjust.launchDeferredDeeplink = EditorGUILayout.Toggle("Launch Deferred Deep Link", adjust.launchDeferredDeeplink);
                 adjust.costDataInAttribution = EditorGUILayout.Toggle("Cost Data In Attribution Callback", adjust.costDataInAttribution);
-                adjust.linkMe = EditorGUILayout.Toggle("LinkMe", adjust.linkMe);
                 adjust.deviceIdsReadingOnce = EditorGUILayout.Toggle("Device IDs Reading Once", adjust.deviceIdsReadingOnce);
-                adjust.eventDeduplicationIdsMaxSize = EditorGUILayout.IntField("Event Deduplication IDs Max Size", adjust.eventDeduplicationIdsMaxSize);
-                adjust.firstSessionDelay = EditorGUILayout.Toggle("First Session Delay", adjust.firstSessionDelay);
+                adjust.eventDeduplicationIdsMaxSize = EditorGUILayout.IntField("Event Deduplication IDs Count", adjust.eventDeduplicationIdsMaxSize);
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
                 
                 // Store Info section - visually grouped
@@ -54,7 +52,7 @@ namespace AdjustSdk
                 
                 // URL Strategy and Data Residency section - visually grouped
                 EditorGUILayout.Space(2);
-                EditorGUILayout.LabelField("URL Strategy and Data Residency:", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("URL Strategy And Data Residency:", EditorStyles.boldLabel);
                 EditorGUI.indentLevel += 1;
                 
                 // URL Strategy Domains list
@@ -95,24 +93,6 @@ namespace AdjustSdk
                 adjust.shouldUseSubdomains = EditorGUILayout.Toggle("Should Use Subdomains", adjust.shouldUseSubdomains);
                 adjust.isDataResidency = EditorGUILayout.Toggle("Is Data Residency", adjust.isDataResidency);
                 EditorGUI.indentLevel -= 1;
-                
-                EditorGUI.indentLevel -= 1;
-                EditorGUILayout.Space();
-                EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
-                EditorGUI.indentLevel += 1;
-                adjust.preinstallTracking = EditorGUILayout.Toggle("Preinstall Tracking", adjust.preinstallTracking);
-                adjust.preinstallFilePath = EditorGUILayout.TextField("Preinstall File Path", adjust.preinstallFilePath);
-                adjust.fbAppId = EditorGUILayout.TextField("Facebook App ID", adjust.fbAppId);
-                EditorGUI.indentLevel -= 1;
-                EditorGUILayout.Space();
-                EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
-                EditorGUI.indentLevel += 1;
-                adjust.adServices = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServices);
-                adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
-                adjust.idfvReading = EditorGUILayout.Toggle("IDFV Info Reading", adjust.idfvReading);
-                adjust.skanAttribution = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skanAttribution);
-                adjust.appTrackingTransparencyUsage = EditorGUILayout.Toggle("App Tracking Transparency Usage", adjust.appTrackingTransparencyUsage);
-                adjust.attConsentWaitingInterval = EditorGUILayout.IntField("ATT Consent Waiting Interval (seconds)", adjust.attConsentWaitingInterval);
                 EditorGUI.indentLevel -= 1;
             }
 
