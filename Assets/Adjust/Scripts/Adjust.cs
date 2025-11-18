@@ -108,7 +108,6 @@ namespace AdjustSdk
                 adjustConfig.IsSendingInBackgroundEnabled = this.sendInBackground;
                 adjustConfig.IsDeferredDeeplinkOpeningEnabled = this.launchDeferredDeeplink;
                 adjustConfig.DefaultTracker = this.defaultTracker;
-                // TODO: URL strategy
                 adjustConfig.IsCoppaComplianceEnabled = this.coppaCompliance;
                 adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
                 adjustConfig.IsDeviceIdsReadingOnceEnabled = this.deviceIdsReadingOnce;
