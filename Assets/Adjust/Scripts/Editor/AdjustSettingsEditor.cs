@@ -54,6 +54,7 @@ namespace AdjustSdk
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
+            EditorGUILayout.Space(2);
             
             // Fields that should be disabled when startManually is checked
             using (new EditorGUI.DisabledScope(isStartManually))
@@ -138,6 +139,7 @@ namespace AdjustSdk
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
+            EditorGUILayout.Space(2);
             
             // Preinstall Tracking, Preinstall File Path, Facebook App ID - at top, disabled when startManually
             using (new EditorGUI.DisabledScope(isStartManually))
