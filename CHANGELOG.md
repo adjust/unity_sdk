@@ -1,8 +1,8 @@
-### Version 5.4.5 (18th November 2025)
+### Version 5.4.5 (19th November 2025)
 #### Added
 - Added support for declaring Android App Links through the Adjust prefab.
 - Added an option to prevent Adjust scripts from adding the broadcast receiver for the `INSTALL_REFERRER` intent on Android.
-- Added all missing `AdjustConfig` fields to the Adjust prefab that can be configured without initializing the SDK in code.
+- Added all missing `AdjustConfig` fields to the Adjust prefab that can be configured without initializing the SDK manually in code.
 
 #### Native SDKs
 - [iOS@v5.4.6][ios_sdk_v5.4.6]
