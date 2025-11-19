@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AdjustSdk
@@ -33,7 +34,23 @@ namespace AdjustSdk
         [HideInInspector]
         public bool linkMe = false;
         [HideInInspector]
+        public bool deviceIdsReadingOnce = false;
+        [HideInInspector]
+        public int eventDeduplicationIdsMaxSize = 0;
+        [HideInInspector]
+        public bool firstSessionDelay = false;
+        [HideInInspector]
         public string defaultTracker;
+        [HideInInspector]
+        public string storeName;
+        [HideInInspector]
+        public string storeAppId;
+        [HideInInspector]
+        public List<string> urlStrategyDomains = new List<string>();
+        [HideInInspector]
+        public bool shouldUseSubdomains = false;
+        [HideInInspector]
+        public bool isDataResidency = false;
 
         // [Header("ANDROID SPECIFIC FEATURES:")]
         // [Space(5)]
@@ -41,6 +58,8 @@ namespace AdjustSdk
         public bool preinstallTracking = false;
         [HideInInspector]
         public string preinstallFilePath;
+        [HideInInspector]
+        public string fbAppId;
 
         // [Header("iOS SPECIFIC FEATURES:")]
         // [Space(5)]
@@ -49,7 +68,13 @@ namespace AdjustSdk
         [HideInInspector]
         public bool idfaReading = true;
         [HideInInspector]
+        public bool idfvReading = true;
+        [HideInInspector]
         public bool skanAttribution = true;
+        [HideInInspector]
+        public bool appTrackingTransparencyUsage = true;
+        [HideInInspector]
+        public int attConsentWaitingInterval = 0;
 
         void Awake()
         {
@@ -83,15 +108,45 @@ namespace AdjustSdk
                 adjustConfig.IsSendingInBackgroundEnabled = this.sendInBackground;
                 adjustConfig.IsDeferredDeeplinkOpeningEnabled = this.launchDeferredDeeplink;
                 adjustConfig.DefaultTracker = this.defaultTracker;
-                // TODO: URL strategy
                 adjustConfig.IsCoppaComplianceEnabled = this.coppaCompliance;
                 adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
+                adjustConfig.IsDeviceIdsReadingOnceEnabled = this.deviceIdsReadingOnce;
+                if (this.eventDeduplicationIdsMaxSize > 0)
+                {
+                    adjustConfig.EventDeduplicationIdsMaxSize = this.eventDeduplicationIdsMaxSize;
+                }
+                adjustConfig.IsFirstSessionDelayEnabled = this.firstSessionDelay;
+                if (!string.IsNullOrEmpty(this.storeName))
+                {
+                    AdjustStoreInfo storeInfo = new AdjustStoreInfo(this.storeName);
+                    if (!string.IsNullOrEmpty(this.storeAppId))
+                    {
+                        storeInfo.StoreAppId = this.storeAppId;
+                    }
+                    adjustConfig.StoreInfo = storeInfo;
+                }
+                if (this.urlStrategyDomains != null && this.urlStrategyDomains.Count > 0)
+                {
+                    // Filter out empty strings
+                    List<string> validDomains = this.urlStrategyDomains.Where(domain => !string.IsNullOrEmpty(domain)).ToList();
+                    if (validDomains.Count > 0)
+                    {
+                        adjustConfig.SetUrlStrategy(validDomains, this.shouldUseSubdomains, this.isDataResidency);
+                    }
+                }
                 adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
                 adjustConfig.PreinstallFilePath = this.preinstallFilePath;
+                adjustConfig.FbAppId = this.fbAppId;
                 adjustConfig.IsAdServicesEnabled = this.adServices;
                 adjustConfig.IsIdfaReadingEnabled = this.idfaReading;
+                adjustConfig.IsIdfvReadingEnabled = this.idfvReading;
                 adjustConfig.IsLinkMeEnabled = this.linkMe;
                 adjustConfig.IsSkanAttributionEnabled = this.skanAttribution;
+                adjustConfig.IsAppTrackingTransparencyUsageEnabled = this.appTrackingTransparencyUsage;
+                if (this.attConsentWaitingInterval > 0)
+                {
+                    adjustConfig.AttConsentWaitingInterval = this.attConsentWaitingInterval;
+                }
                 Adjust.InitSdk(adjustConfig);
             }
         }

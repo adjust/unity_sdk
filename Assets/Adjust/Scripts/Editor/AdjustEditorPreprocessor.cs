@@ -86,12 +86,26 @@ namespace AdjustSdk
                 // Add needed permissions if they are missing.
                 manifestHasChanged |= AddPermissions(manifestFile);
 
-                // Add intent filter to main activity if it is missing.
-                manifestHasChanged |= AddBroadcastReceiver(manifestFile);
+                // Add intent filter to main activity if it is missing and user wants to use Adjust broadcast receiver.
+                if (AdjustSettings.AndroidUseAdjustBroadcastReceiver)
+                {
+                    manifestHasChanged |= AddBroadcastReceiver(manifestFile);
+                }
+            }
+            else
+            {
+                // Adjust manifest is used - check if we need to remove the broadcast receiver
+                if (!AdjustSettings.AndroidUseAdjustBroadcastReceiver)
+                {
+                    manifestHasChanged |= RemoveBroadcastReceiver(manifestFile);
+                }
             }
 
             // Add intent filter to URL schemes for deeplinking
             manifestHasChanged |= AddURISchemes(manifestFile);
+
+            // Add intent filter to App Links for deeplinking
+            manifestHasChanged |= AddAppLinks(manifestFile);
 
             if (manifestHasChanged)
             {
@@ -163,6 +177,150 @@ namespace AdjustSdk
             }
 
             return usedIntentFiltersChanged;
+        }
+
+        private static bool AddAppLinks(XmlDocument manifest)
+        {
+            if (AdjustSettings.AndroidAppLinksDomains.Length == 0)
+            {
+                return false;
+            }
+            Debug.Log("[Adjust]: Start addition of Android App Links");
+
+            // Check if user has defined a custom Android activity name.
+            string androidActivityName = "com.unity3d.player.UnityPlayerActivity";
+            if (AdjustSettings.AndroidCustomActivityName.Length != 0)
+            {
+                androidActivityName = AdjustSettings.AndroidCustomActivityName;
+            }
+
+            var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='"
+                + androidActivityName + "']", GetNamespaceManager(manifest));
+            if (intentRoot == null)
+            {
+                Debug.LogError("[Adjust]: Could not find activity with name: " + androidActivityName);
+                Debug.LogError("[Adjust]: Unable to add Android App Links to AndroidManifest.xml.");
+                return false;
+            }
+
+            var usedIntentFiltersChanged = false;
+            foreach (var domain in AdjustSettings.AndroidAppLinksDomains)
+            {
+                // Remove any leading/trailing whitespace
+                var trimmedDomain = domain.Trim();
+                if (string.IsNullOrEmpty(trimmedDomain))
+                {
+                    continue;
+                }
+
+                // Remove https:// or http:// prefix if present
+                if (trimmedDomain.StartsWith("https://"))
+                {
+                    trimmedDomain = trimmedDomain.Substring(8);
+                }
+                else if (trimmedDomain.StartsWith("http://"))
+                {
+                    trimmedDomain = trimmedDomain.Substring(7);
+                }
+
+                // Remove leading slash if present
+                if (trimmedDomain.StartsWith("/"))
+                {
+                    trimmedDomain = trimmedDomain.Substring(1);
+                }
+
+                if (string.IsNullOrEmpty(trimmedDomain))
+                {
+                    Debug.LogError(string.Format("[Adjust]: Android App Link domain \"{0}\" is invalid and will be ignored.", domain));
+                    continue;
+                }
+
+                // Parse host and path from the domain
+                // e.g., "adj.st/blah" -> host="adj.st", path="/blah"
+                // e.g., "adj.st" -> host="adj.st", path=null
+                string host;
+                string pathPrefix = null;
+                
+                int firstSlashIndex = trimmedDomain.IndexOf('/');
+                if (firstSlashIndex >= 0)
+                {
+                    host = trimmedDomain.Substring(0, firstSlashIndex);
+                    pathPrefix = trimmedDomain.Substring(firstSlashIndex);
+                    // Ensure pathPrefix starts with /
+                    if (!pathPrefix.StartsWith("/"))
+                    {
+                        pathPrefix = "/" + pathPrefix;
+                    }
+                }
+                else
+                {
+                    host = trimmedDomain;
+                }
+
+                if (string.IsNullOrEmpty(host))
+                {
+                    Debug.LogError(string.Format("[Adjust]: Android App Link domain \"{0}\" has invalid host and will be ignored.", domain));
+                    continue;
+                }
+
+                if (!DoesAppLinkAlreadyExist(manifest, host, pathPrefix))
+                {
+                    Debug.Log(string.Format("[Adjust]: Adding new Android App Link with host: {0}, pathPrefix: {1}", host, pathPrefix ?? "(none)"));
+                    var newIntentFilter = GetNewAppLinkIntentFilter(manifest);
+                    var androidDataNode = manifest.CreateElement("data");
+                    AddAndroidNamespaceAttribute(manifest, "scheme", "https", androidDataNode);
+                    AddAndroidNamespaceAttribute(manifest, "host", host, androidDataNode);
+                    if (pathPrefix != null)
+                    {
+                        AddAndroidNamespaceAttribute(manifest, "pathPrefix", pathPrefix, androidDataNode);
+                    }
+                    newIntentFilter.AppendChild(androidDataNode);
+                    intentRoot.AppendChild(newIntentFilter);
+                    Debug.Log(string.Format("[Adjust]: Android App Link domain \"{0}\" successfully added to your app's AndroidManifest.xml file.", domain));
+                    usedIntentFiltersChanged = true;
+                }
+            }
+
+            return usedIntentFiltersChanged;
+        }
+
+        private static XmlElement GetNewAppLinkIntentFilter(XmlDocument manifest)
+        {
+            const string androidName = "name";
+            const string category = "category";
+
+            var intentFilter = manifest.CreateElement("intent-filter");
+            // Add android:autoVerify="true" attribute for App Links verification
+            AddAndroidNamespaceAttribute(manifest, "autoVerify", "true", intentFilter);
+
+            var actionElement = manifest.CreateElement("action");
+            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
+            intentFilter.AppendChild(actionElement);
+
+            var defaultCategory = manifest.CreateElement(category);
+            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
+            intentFilter.AppendChild(defaultCategory);
+
+            var browsableCategory = manifest.CreateElement(category);
+            AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
+            intentFilter.AppendChild(browsableCategory);
+
+            return intentFilter;
+        }
+
+        private static bool DoesAppLinkAlreadyExist(XmlDocument manifest, string host, string pathPrefix)
+        {
+            // Build XPath query to check if an App Link with the same host and pathPrefix already exists
+            string xpath;
+            if (pathPrefix != null)
+            {
+                xpath = string.Format("/manifest/application/activity/intent-filter[@android:autoVerify='true']/data[@android:scheme='https' and @android:host='{0}' and @android:pathPrefix='{1}']", host, pathPrefix);
+            }
+            else
+            {
+                xpath = string.Format("/manifest/application/activity/intent-filter[@android:autoVerify='true']/data[@android:scheme='https' and @android:host='{0}' and not(@android:pathPrefix)]", host);
+            }
+            return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
         }
 
         private static XmlElement GetNewIntentFilter(XmlDocument manifest)
@@ -347,6 +505,33 @@ namespace AdjustSdk
         {
             var xpath = "/manifest/application/receiver[intent-filter/action[@android:name='com.android.vending.INSTALL_REFERRER']]";
             return new List<XmlNode>(manifest.DocumentElement.SelectNodes(xpath, GetNamespaceManager(manifest)).OfType<XmlNode>());
+        }
+
+        private static bool RemoveBroadcastReceiver(XmlDocument manifest)
+        {
+            Debug.Log("[Adjust]: Removing AdjustBroadcastReceiver from AndroidManifest.xml as per user settings.");
+
+            // Find the application node
+            var applicationNodeXpath = "/manifest/application";
+            var applicationNode = manifest.DocumentElement.SelectSingleNode(applicationNodeXpath);
+
+            if (applicationNode == null)
+            {
+                return false;
+            }
+
+            // Find and remove Adjust broadcast receiver
+            var xpath = "/manifest/application/receiver[@android:name='com.adjust.sdk.AdjustReferrerReceiver']";
+            var receiverNode = manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest));
+
+            if (receiverNode != null)
+            {
+                applicationNode.RemoveChild(receiverNode);
+                Debug.Log("[Adjust]: AdjustBroadcastReceiver successfully removed from AndroidManifest.xml.");
+                return true;
+            }
+
+            return false;
         }
 
         private static void AddAndroidNamespaceAttribute(XmlDocument manifest, string key, string value, XmlElement node)

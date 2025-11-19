@@ -1,3 +1,15 @@
+### Version 5.4.5 (19th November 2025)
+#### Added
+- Added support for declaring Android App Links through the Adjust prefab.
+- Added an option to prevent Adjust scripts from adding the broadcast receiver for the `INSTALL_REFERRER` intent on Android.
+- Added all missing `AdjustConfig` fields to the Adjust prefab that can be configured without initializing the SDK manually in code.
+
+#### Native SDKs
+- [iOS@v5.4.6][ios_sdk_v5.4.6]
+- [Android@v5.4.6][android_sdk_v5.4.6]
+
+---
+
 ### Version 5.4.4 (23th October 2025)
 #### Changed
 - Updated the Adjust Signature library version to 3.61.0.
@@ -1554,6 +1566,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.4.2]: https://github.com/adjust/android_sdk/tree/v5.4.2
 [android_sdk_v5.4.4]: https://github.com/adjust/android_sdk/tree/v5.4.4
 [android_sdk_v5.4.5]: https://github.com/adjust/android_sdk/tree/v5.4.5
+[android_sdk_v5.4.6]: https://github.com/adjust/android_sdk/tree/v5.4.6
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

@@ -31,28 +31,69 @@ namespace AdjustSdk
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("MULTIPLATFORM SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
+                EditorGUILayout.Space();
                 adjust.appToken = EditorGUILayout.TextField("App Token", adjust.appToken);
                 adjust.environment = (AdjustEnvironment)EditorGUILayout.EnumPopup("Environment", adjust.environment);
                 adjust.logLevel = (AdjustLogLevel)EditorGUILayout.EnumPopup("Log Level", adjust.logLevel);
-                // TODO: URL strategy missing
+                adjust.firstSessionDelay = EditorGUILayout.Toggle("First Session Delay", adjust.firstSessionDelay);
                 adjust.sendInBackground = EditorGUILayout.Toggle("Send In Background", adjust.sendInBackground);
                 adjust.launchDeferredDeeplink = EditorGUILayout.Toggle("Launch Deferred Deep Link", adjust.launchDeferredDeeplink);
                 adjust.costDataInAttribution = EditorGUILayout.Toggle("Cost Data In Attribution Callback", adjust.costDataInAttribution);
-                adjust.linkMe = EditorGUILayout.Toggle("LinkMe", adjust.linkMe);
+                adjust.deviceIdsReadingOnce = EditorGUILayout.Toggle("Device IDs Reading Once", adjust.deviceIdsReadingOnce);
+                adjust.eventDeduplicationIdsMaxSize = EditorGUILayout.IntField("Event Deduplication IDs Count", adjust.eventDeduplicationIdsMaxSize);
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
-                EditorGUI.indentLevel -= 1;
+                
+                // Store Info section - visually grouped
                 EditorGUILayout.Space();
-                EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
+                EditorGUILayout.LabelField("Store Info:", EditorStyles.boldLabel);
                 EditorGUI.indentLevel += 1;
-                adjust.preinstallTracking = EditorGUILayout.Toggle("Preinstall Tracking", adjust.preinstallTracking);
-                adjust.preinstallFilePath = EditorGUILayout.TextField("Preinstall File Path", adjust.preinstallFilePath);
+                adjust.storeName = EditorGUILayout.TextField("Store Name", adjust.storeName);
+                adjust.storeAppId = EditorGUILayout.TextField("Store App ID", adjust.storeAppId);
                 EditorGUI.indentLevel -= 1;
+                
+                // URL Strategy and Data Residency section - visually grouped
                 EditorGUILayout.Space();
-                EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
+                EditorGUILayout.LabelField("URL Strategy And Data Residency:", EditorStyles.boldLabel);
                 EditorGUI.indentLevel += 1;
-                adjust.adServices = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServices);
-                adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
-                adjust.skanAttribution = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skanAttribution);
+                
+                // URL Strategy Domains list
+                if (adjust.urlStrategyDomains == null)
+                {
+                    adjust.urlStrategyDomains = new System.Collections.Generic.List<string>();
+                }
+                
+                EditorGUILayout.LabelField("URL Strategy Domains", EditorStyles.label);
+                EditorGUI.indentLevel += 1;
+                int domainCount = adjust.urlStrategyDomains.Count;
+                int newDomainCount = EditorGUILayout.IntField("Size", domainCount);
+                if (newDomainCount != domainCount)
+                {
+                    while (adjust.urlStrategyDomains.Count < newDomainCount)
+                    {
+                        adjust.urlStrategyDomains.Add("");
+                    }
+                    while (adjust.urlStrategyDomains.Count > newDomainCount)
+                    {
+                        adjust.urlStrategyDomains.RemoveAt(adjust.urlStrategyDomains.Count - 1);
+                    }
+                }
+                
+                for (int i = 0; i < adjust.urlStrategyDomains.Count; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    adjust.urlStrategyDomains[i] = EditorGUILayout.TextField("Element " + i, adjust.urlStrategyDomains[i]);
+                    if (GUILayout.Button("Remove", GUILayout.Width(60)))
+                    {
+                        adjust.urlStrategyDomains.RemoveAt(i);
+                        break;
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+                EditorGUI.indentLevel -= 1;
+                
+                adjust.shouldUseSubdomains = EditorGUILayout.Toggle("Should Use Subdomains", adjust.shouldUseSubdomains);
+                adjust.isDataResidency = EditorGUILayout.Toggle("Is Data Residency", adjust.isDataResidency);
+                EditorGUI.indentLevel -= 1;
                 EditorGUI.indentLevel -= 1;
             }
 
