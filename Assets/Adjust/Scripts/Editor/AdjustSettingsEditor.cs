@@ -54,7 +54,7 @@ namespace AdjustSdk
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("IOS SETTINGS:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
-            EditorGUILayout.Space(2);
+            EditorGUILayout.Space();
             
             // Fields that should be disabled when startManually is checked
             using (new EditorGUI.DisabledScope(isStartManually))
@@ -72,7 +72,6 @@ namespace AdjustSdk
                 if (adjust != null)
                 {
                     EditorGUI.BeginChangeCheck();
-                    EditorGUILayout.Space(2);
                     adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
                     adjust.idfvReading = EditorGUILayout.Toggle("IDFV Info Reading", adjust.idfvReading);
                     adjust.adServices = EditorGUILayout.Toggle("AdServices Info Reading", adjust.adServices);
@@ -93,7 +92,7 @@ namespace AdjustSdk
             }
             
             // Link iOS Frameworks - NOT disabled
-            EditorGUILayout.Space(2);
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("Link iOS Frameworks", EditorStyles.boldLabel);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(iOSFrameworkAdSupport,
@@ -115,7 +114,7 @@ namespace AdjustSdk
             EditorGUI.indentLevel -= 1;
             
             // Deep linking - NOT disabled, moved to end
-            EditorGUILayout.Space(2);
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("Deep linking", EditorStyles.boldLabel);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(iOSUrlIdentifier,
@@ -139,7 +138,7 @@ namespace AdjustSdk
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("ANDROID SETTINGS:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
-            EditorGUILayout.Space(2);
+            EditorGUILayout.Space();
             
             // Preinstall Tracking, Preinstall File Path, Facebook App ID - at top, disabled when startManually
             using (new EditorGUI.DisabledScope(isStartManually))
@@ -173,7 +172,7 @@ namespace AdjustSdk
                 true);
             
             // Add Android Permissions - NOT disabled
-            EditorGUILayout.Space(2);
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("Add Android Permissions", EditorStyles.boldLabel);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(androidPermissionInternet,
@@ -195,7 +194,7 @@ namespace AdjustSdk
             EditorGUI.indentLevel -= 1;
             
             // Deep linking - NOT disabled
-            EditorGUILayout.Space(2);
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("Deep linking", EditorStyles.boldLabel);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(androidUriSchemes,

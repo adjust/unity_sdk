@@ -31,6 +31,7 @@ namespace AdjustSdk
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("MULTIPLATFORM SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
+                EditorGUILayout.Space();
                 adjust.appToken = EditorGUILayout.TextField("App Token", adjust.appToken);
                 adjust.environment = (AdjustEnvironment)EditorGUILayout.EnumPopup("Environment", adjust.environment);
                 adjust.logLevel = (AdjustLogLevel)EditorGUILayout.EnumPopup("Log Level", adjust.logLevel);
@@ -43,7 +44,7 @@ namespace AdjustSdk
                 adjust.defaultTracker = EditorGUILayout.TextField("Default Tracker", adjust.defaultTracker);
                 
                 // Store Info section - visually grouped
-                EditorGUILayout.Space(2);
+                EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Store Info:", EditorStyles.boldLabel);
                 EditorGUI.indentLevel += 1;
                 adjust.storeName = EditorGUILayout.TextField("Store Name", adjust.storeName);
@@ -51,7 +52,7 @@ namespace AdjustSdk
                 EditorGUI.indentLevel -= 1;
                 
                 // URL Strategy and Data Residency section - visually grouped
-                EditorGUILayout.Space(2);
+                EditorGUILayout.Space();
                 EditorGUILayout.LabelField("URL Strategy And Data Residency:", EditorStyles.boldLabel);
                 EditorGUI.indentLevel += 1;
                 
