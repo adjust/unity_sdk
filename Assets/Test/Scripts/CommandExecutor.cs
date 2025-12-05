@@ -62,6 +62,7 @@ namespace AdjustSdk.Test
                     case "verifyPurchase": VerifyPurchase(); break;
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
+                    case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
                     case "endFirstSessionDelay": EndFirstSessionDelay(); break;
                     case "coppaComplianceInDelay": CoppaComplianceInDelay(); break;
@@ -1046,6 +1047,32 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                 }
 #endif
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void AdidGetterWithTimeout()
+        {
+            var timeoutStr = _command.GetFirstParameterValue("timeout");
+            var timeout = int.Parse(timeoutStr, System.Globalization.CultureInfo.InvariantCulture);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetAdidWithTimeout(timeout, (adid) =>
+            {
+                if (adid != null)
+                {
+                    _testLibrary.AddInfoToSend("adid", adid);
+                }
+                else
+                {
+#if UNITY_IOS
+                    _testLibrary.AddInfoToSend("adid", "nil");
+#elif UNITY_ANDROID
+                    _testLibrary.AddInfoToSend("adid", "null");
+#endif
+                }
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
         }

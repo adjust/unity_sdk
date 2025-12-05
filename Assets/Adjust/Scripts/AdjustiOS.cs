@@ -127,6 +127,9 @@ namespace AdjustSdk
         [DllImport("__Internal")]
         private static extern void _AdjustGetAdid(AdjustDelegateAdidGetter callback);
 
+        [DllImport("__Internal")]
+        private static extern void _AdjustGetAdidWithTimeout(int timeoutInMilliseconds, AdjustDelegateAdidGetter callback);
+
         private delegate void AdjustDelegateIdfaGetter(string idfa);
         [DllImport("__Internal")]
         private static extern void _AdjustGetIdfa(AdjustDelegateIdfaGetter callback);
@@ -549,6 +552,16 @@ namespace AdjustSdk
             }
             appAdidGetterCallbacks.Add(callback);
             _AdjustGetAdid(AdidGetterMonoPInvoke);
+        }
+
+        public static void GetAdidWithTimeout(int timeoutInMilliseconds, Action<string> callback)
+        {
+            if (appAdidGetterCallbacks == null)
+            {
+                appAdidGetterCallbacks = new List<Action<string>>();
+            }
+            appAdidGetterCallbacks.Add(callback);
+            _AdjustGetAdidWithTimeout(timeoutInMilliseconds, AdidGetterMonoPInvoke);
         }
 
         public static void GetIdfa(Action<string> callback)

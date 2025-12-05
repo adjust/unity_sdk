@@ -441,6 +441,16 @@ extern "C"
         }];
     }
 
+    void _AdjustGetAdidWithTimeout(int timeoutInMilliseconds, AdjustDelegateAdidGetter callback) {
+        [Adjust adidWithTimeout:timeoutInMilliseconds completionHandler:^(NSString * _Nullable adid) {
+            if (adid != nil) {
+                callback([adid UTF8String]);
+            } else {
+                callback(NULL);
+            }
+        }];
+    }
+
     void _AdjustGetIdfa(AdjustDelegateIdfaGetter callback) {
         [Adjust idfaWithCompletionHandler:^(NSString * _Nullable idfa) {
             // TODO: nil checks

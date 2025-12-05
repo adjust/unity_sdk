@@ -598,6 +598,12 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("getAdid", onAdidReadProxy);
         }
 
+        public static void GetAdidWithTimeout(int timeoutInMilliseconds, Action<string> onAdidRead) 
+        {
+            AdidReadListener onAdidReadProxy = new AdidReadListener(onAdidRead);
+            ajcAdjust.CallStatic("getAdidWithTimeout", ajoCurrentActivity, (long)timeoutInMilliseconds, onAdidReadProxy);
+        }
+
         public static void GetAttribution(Action<AdjustAttribution> onAttributionRead) 
         {
             AttributionReadListener onAttributionReadProxy = new AttributionReadListener(onAttributionRead);
