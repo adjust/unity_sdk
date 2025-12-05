@@ -1027,7 +1027,9 @@ namespace AdjustSdk.Test
 
         private void AttributionGetter()
         {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
             string localExtraPath = ExtraPath;
+
             Adjust.GetAttribution((attribution) =>
             {
                 _testLibrary.AddInfoToSend("tracker_token", attribution.TrackerToken);
@@ -1060,6 +1062,7 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                 }
 #endif
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
         }
