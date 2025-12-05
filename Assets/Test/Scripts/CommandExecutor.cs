@@ -64,6 +64,7 @@ namespace AdjustSdk.Test
                     case "attributionGetter": AttributionGetter(); break;
                     case "adidGetter": AdidGetter(); break;
                     case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
+                    case "sdkVersionGetter": SdkVersionGetter(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
                     case "endFirstSessionDelay": EndFirstSessionDelay(); break;
                     case "coppaComplianceInDelay": CoppaComplianceInDelay(); break;
@@ -1086,6 +1087,19 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("adid", "null");
 #endif
                 }
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void SdkVersionGetter()
+        {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetSdkVersion((sdkVersion) =>
+            {
+                _testLibrary.AddInfoToSend("sdk_version", sdkVersion);
                 _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
