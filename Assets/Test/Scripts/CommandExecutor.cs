@@ -65,6 +65,7 @@ namespace AdjustSdk.Test
                     case "adidGetter": AdidGetter(); break;
                     case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
                     case "sdkVersionGetter": SdkVersionGetter(); break;
+                    case "googleAdIdGetter": GoogleAdIdGetter(); break;
                     case "amazonAdIdGetter": AmazonAdIdGetter(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
                     case "endFirstSessionDelay": EndFirstSessionDelay(); break;
@@ -1104,6 +1105,23 @@ namespace AdjustSdk.Test
                 _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
+        }
+
+        private void GoogleAdIdGetter()
+        {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+#if UNITY_ANDROID
+            Adjust.GetGoogleAdId((googleAdId) =>
+            {
+                _testLibrary.AddInfoToSend("gps_adid", googleAdId);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#else
+            TestApp.Log("[Adjust]: Error! Google Advertising ID is not available on this platform.");
+#endif
         }
 
         private void AmazonAdIdGetter()
