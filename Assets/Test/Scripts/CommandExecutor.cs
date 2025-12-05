@@ -978,7 +978,15 @@ namespace AdjustSdk.Test
 
         private void GetLastDeeplink()
         {
-            Adjust.GetLastDeeplink(LastDeeplinkCallback);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetLastDeeplink((lastDeeplink) =>
+            {
+                _testLibrary.AddInfoToSend("last_deeplink", lastDeeplink ?? "");
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
         }
 
         private void VerifyPurchase()
