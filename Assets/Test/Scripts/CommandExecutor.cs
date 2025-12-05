@@ -68,6 +68,8 @@ namespace AdjustSdk.Test
                     case "sdkVersionGetter": SdkVersionGetter(); break;
                     case "googleAdIdGetter": GoogleAdIdGetter(); break;
                     case "amazonAdIdGetter": AmazonAdIdGetter(); break;
+                    case "idfaGetter": IdfaGetter(); break;
+                    case "idfvGetter": IdfvGetter(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
                     case "endFirstSessionDelay": EndFirstSessionDelay(); break;
                     case "coppaComplianceInDelay": CoppaComplianceInDelay(); break;
@@ -1205,6 +1207,40 @@ namespace AdjustSdk.Test
             });
 #else
             TestApp.Log("[Adjust]: Error! Amazon Fire Advertising ID is not available on this platform.");
+#endif
+        }
+
+        private void IdfaGetter()
+        {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+#if UNITY_IOS
+            Adjust.GetIdfa((idfa) =>
+            {
+                _testLibrary.AddInfoToSend("idfa", idfa);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#else
+            TestApp.Log("[Adjust]: Error! IDFA is not available on this platform.");
+#endif
+        }
+
+        private void IdfvGetter()
+        {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+#if UNITY_IOS
+            Adjust.GetIdfv((idfv) =>
+            {
+                _testLibrary.AddInfoToSend("idfv", idfv);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#else
+            TestApp.Log("[Adjust]: Error! IDFV is not available on this platform.");
 #endif
         }
 
