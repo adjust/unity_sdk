@@ -62,6 +62,7 @@ namespace AdjustSdk.Test
                     case "verifyPurchase": VerifyPurchase(); break;
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
+                    case "attributionGetterWithTimeout": AttributionGetterWithTimeout(); break;
                     case "adidGetter": AdidGetter(); break;
                     case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
                     case "sdkVersionGetter": SdkVersionGetter(); break;
@@ -1059,6 +1060,61 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                 }
 #endif
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void AttributionGetterWithTimeout()
+        {
+            var timeoutStr = _command.GetFirstParameterValue("timeout");
+            var timeout = int.Parse(timeoutStr, System.Globalization.CultureInfo.InvariantCulture);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetAttributionWithTimeout(timeout, (attribution) =>
+            {
+                if (attribution != null)
+                {
+                    _testLibrary.AddInfoToSend("tracker_token", attribution.TrackerToken);
+                    _testLibrary.AddInfoToSend("tracker_name", attribution.TrackerName);
+                    _testLibrary.AddInfoToSend("network", attribution.Network);
+                    _testLibrary.AddInfoToSend("campaign", attribution.Campaign);
+                    _testLibrary.AddInfoToSend("adgroup", attribution.Adgroup);
+                    _testLibrary.AddInfoToSend("creative", attribution.Creative);
+                    _testLibrary.AddInfoToSend("click_label", attribution.ClickLabel);
+                    _testLibrary.AddInfoToSend("cost_type", attribution.CostType);
+                    _testLibrary.AddInfoToSend("cost_amount", attribution.CostAmount.ToString());
+                    _testLibrary.AddInfoToSend("cost_currency", attribution.CostCurrency);
+                    _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
+#if UNITY_IOS
+                    var updatedJsonResponse = new Dictionary<string, object>();
+                    if (attribution.JsonResponse != null)
+                    {
+                        updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
+                        updatedJsonResponse.Remove("fb_install_referrer");
+                        object costAmount;
+                        if (updatedJsonResponse.TryGetValue("cost_amount", out costAmount) && costAmount is IConvertible)
+                        {
+                            updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                        }
+                    }
+                    _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
+#else
+                    if (attribution.JsonResponse != null)
+                    {
+                        _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
+                    }
+#endif
+                }
+                else
+                {
+#if UNITY_IOS
+                    _testLibrary.AddInfoToSend("attribution", "nil");
+#elif UNITY_ANDROID
+                    _testLibrary.AddInfoToSend("attribution", "null");
+#endif
+                }
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
         }

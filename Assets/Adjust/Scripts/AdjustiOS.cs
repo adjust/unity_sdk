@@ -123,6 +123,9 @@ namespace AdjustSdk
         [DllImport("__Internal")]
         private static extern void _AdjustGetAttribution(AdjustDelegateAttributionGetter callback);
 
+        [DllImport("__Internal")]
+        private static extern void _AdjustGetAttributionWithTimeout(int timeoutInMilliseconds, AdjustDelegateAttributionGetter callback);
+
         private delegate void AdjustDelegateAdidGetter(string adid);
         [DllImport("__Internal")]
         private static extern void _AdjustGetAdid(AdjustDelegateAdidGetter callback);
@@ -542,6 +545,16 @@ namespace AdjustSdk
             }
             appAttributionGetterCallbacks.Add(callback);
             _AdjustGetAttribution(AttributionGetterMonoPInvoke);
+        }
+
+        public static void GetAttributionWithTimeout(int timeoutInMilliseconds, Action<AdjustAttribution> callback)
+        {
+            if (appAttributionGetterCallbacks == null)
+            {
+                appAttributionGetterCallbacks = new List<Action<AdjustAttribution>>();
+            }
+            appAttributionGetterCallbacks.Add(callback);
+            _AdjustGetAttributionWithTimeout(timeoutInMilliseconds, AttributionGetterMonoPInvoke);
         }
 
         public static void GetAdid(Action<string> callback)

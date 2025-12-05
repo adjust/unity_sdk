@@ -610,6 +610,12 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("getAttribution", onAttributionReadProxy);
         }
 
+        public static void GetAttributionWithTimeout(int timeoutInMilliseconds, Action<AdjustAttribution> onAttributionRead) 
+        {
+            AttributionReadListener onAttributionReadProxy = new AttributionReadListener(onAttributionRead);
+            ajcAdjust.CallStatic("getAttributionWithTimeout", ajoCurrentActivity, (long)timeoutInMilliseconds, onAttributionReadProxy);
+        }
+
         public static void GetSdkVersion(Action<string> onSdkVersionRead) 
         {
             SdkVersionReadListener onSdkVersionReadProxy = new SdkVersionReadListener(onSdkVersionRead, sdkPrefix);

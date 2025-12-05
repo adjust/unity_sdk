@@ -434,6 +434,47 @@ extern "C"
         }];
     }
 
+    void _AdjustGetAttributionWithTimeout(int timeoutInMilliseconds, AdjustDelegateAttributionGetter callback) {
+        [Adjust attributionWithTimeout:timeoutInMilliseconds completionHandler:^(ADJAttribution * _Nullable attribution) {
+            if (attribution != nil) {
+                NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+                addValueOrEmpty(dictionary, @"trackerToken", attribution.trackerToken);
+                addValueOrEmpty(dictionary, @"trackerName", attribution.trackerName);
+                addValueOrEmpty(dictionary, @"network", attribution.network);
+                addValueOrEmpty(dictionary, @"campaign", attribution.campaign);
+                addValueOrEmpty(dictionary, @"adgroup", attribution.adgroup);
+                addValueOrEmpty(dictionary, @"creative", attribution.creative);
+                addValueOrEmpty(dictionary, @"clickLabel", attribution.clickLabel);
+                addValueOrEmpty(dictionary, @"costType", attribution.costType);
+                addValueOrEmpty(dictionary, @"costCurrency", attribution.costCurrency);
+                addValueOrEmpty(dictionary, @"fbInstallReferrer", attribution.fbInstallReferrer);
+                
+                if (attribution.costAmount != nil) {
+                    dictionary[@"costAmount"] = attribution.costAmount;
+                }
+                
+                if (attribution.jsonResponse != nil) {
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:attribution.jsonResponse
+                                                                       options:0
+                                                                         error:nil];
+                    NSString *strJsonResponse = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                    addValueOrEmpty(dictionary, @"jsonResponse", strJsonResponse);
+                }
+
+                NSData *dataAttribution = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                                          options:0
+                                                                            error:nil];
+                NSString *stringAttribution = [[NSString alloc] initWithBytes:[dataAttribution bytes]
+                                                                       length:[dataAttribution length]
+                                                                     encoding:NSUTF8StringEncoding];
+                const char* attributionCString = [stringAttribution UTF8String];
+                callback(attributionCString);
+            } else {
+                callback(NULL);
+            }
+        }];
+    }
+
     void _AdjustGetAdid(AdjustDelegateAdidGetter callback) {
         [Adjust adidWithCompletionHandler:^(NSString * _Nullable adid) {
             // TODO: nil checks

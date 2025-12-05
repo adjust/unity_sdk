@@ -601,6 +601,22 @@ namespace AdjustSdk
 #endif
         }
 
+        public static void GetAttributionWithTimeout(int timeoutInMilliseconds, Action<AdjustAttribution> callback)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.GetAttributionWithTimeout(timeoutInMilliseconds, callback);
+#elif UNITY_ANDROID
+            AdjustAndroid.GetAttributionWithTimeout(timeoutInMilliseconds, callback);
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static void GetIdfa(Action<string> callback)
         {
             if (IsEditor())
