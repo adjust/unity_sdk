@@ -62,6 +62,7 @@ namespace AdjustSdk.Test
                     case "verifyPurchase": VerifyPurchase(); break;
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
+                    case "adidGetter": AdidGetter(); break;
                     case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
                     case "endFirstSessionDelay": EndFirstSessionDelay(); break;
@@ -1047,6 +1048,19 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                 }
 #endif
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void AdidGetter()
+        {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetAdid((adid) =>
+            {
+                _testLibrary.AddInfoToSend("adid", adid);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
         }
