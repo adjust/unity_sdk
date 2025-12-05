@@ -309,6 +309,15 @@ namespace AdjustSdk.Test
                 adjustConfig.IsPlayStoreKidsComplianceEnabled = playStoreKids;
             }
 
+#if UNITY_ANDROID
+            if (_command.ContainsParameter("appSetIdReadingEnabled"))
+            {
+                var appSetIdReadingEnabledS = _command.GetFirstParameterValue("appSetIdReadingEnabled");
+                var appSetIdReadingEnabled = appSetIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsAppSetIdReadingEnabled = appSetIdReadingEnabled;
+            }
+#endif
+
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
             {
                 var allowAdServicesInfoReadingS = _command.GetFirstParameterValue("allowAdServicesInfoReading");

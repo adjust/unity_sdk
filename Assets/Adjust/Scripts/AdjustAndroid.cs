@@ -138,6 +138,15 @@ namespace AdjustSdk
                     ajoAdjustConfig.Call("setFbAppId", adjustConfig.FbAppId);
                 }
 
+                // check if app set ID reading should be disabled
+                if (adjustConfig.IsAppSetIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsAppSetIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableAppSetIdReading");
+                    }
+                }
+
                 // check if user has set default tracker token
                 if (adjustConfig.DefaultTracker != null)
                 {
