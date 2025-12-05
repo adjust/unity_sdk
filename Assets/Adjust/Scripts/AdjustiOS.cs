@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity5.4.5";
+        private const string sdkPrefix = "unity5.5.0";
 
         // app callbacks as method parameters
         private static List<Action<bool>> appIsEnabledGetterCallbacks;
