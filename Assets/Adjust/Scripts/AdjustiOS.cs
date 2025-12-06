@@ -123,15 +123,17 @@ namespace AdjustSdk
         [DllImport("__Internal")]
         private static extern void _AdjustGetAttribution(AdjustDelegateAttributionGetter callback);
 
+        private delegate void AdjustDelegateAttributionGetterWithTimeout(string attribution);
         [DllImport("__Internal")]
-        private static extern void _AdjustGetAttributionWithTimeout(int timeoutInMilliseconds, AdjustDelegateAttributionGetter callback);
+        private static extern void _AdjustGetAttributionWithTimeout(int timeoutInMilliseconds, AdjustDelegateAttributionGetterWithTimeout callback);
 
         private delegate void AdjustDelegateAdidGetter(string adid);
         [DllImport("__Internal")]
         private static extern void _AdjustGetAdid(AdjustDelegateAdidGetter callback);
 
+        private delegate void AdjustDelegateAdidGetterWithTimeout(string adid);
         [DllImport("__Internal")]
-        private static extern void _AdjustGetAdidWithTimeout(int timeoutInMilliseconds, AdjustDelegateAdidGetter callback);
+        private static extern void _AdjustGetAdidWithTimeout(int timeoutInMilliseconds, AdjustDelegateAdidGetterWithTimeout callback);
 
         private delegate void AdjustDelegateIdfaGetter(string idfa);
         [DllImport("__Internal")]
@@ -554,7 +556,7 @@ namespace AdjustSdk
                 appAttributionGetterCallbacks = new List<Action<AdjustAttribution>>();
             }
             appAttributionGetterCallbacks.Add(callback);
-            _AdjustGetAttributionWithTimeout(timeoutInMilliseconds, AttributionGetterMonoPInvoke);
+            _AdjustGetAttributionWithTimeout(timeoutInMilliseconds, AttributionGetterWithTimeoutMonoPInvoke);
         }
 
         public static void GetAdid(Action<string> callback)
@@ -574,7 +576,7 @@ namespace AdjustSdk
                 appAdidGetterCallbacks = new List<Action<string>>();
             }
             appAdidGetterCallbacks.Add(callback);
-            _AdjustGetAdidWithTimeout(timeoutInMilliseconds, AdidGetterMonoPInvoke);
+            _AdjustGetAdidWithTimeout(timeoutInMilliseconds, AdidGetterWithTimeoutMonoPInvoke);
         }
 
         public static void GetIdfa(Action<string> callback)
@@ -826,7 +828,35 @@ namespace AdjustSdk
                 {
                     if (callback != null)
                     {
+                        // regular getter never returns null, so attribution should always be valid
                         callback.Invoke(new AdjustAttribution(attribution));
+                    }
+                }
+                appAttributionGetterCallbacks.Clear();
+            });
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateAttributionGetterWithTimeout))]
+        private static void AttributionGetterWithTimeoutMonoPInvoke(string attribution)
+        {
+            if (appAttributionGetterCallbacks == null)
+            {
+                return;
+            }
+
+            AdjustThreadDispatcher.RunOnMainThread(() =>
+            {
+                foreach (Action<AdjustAttribution> callback in appAttributionGetterCallbacks)
+                {
+                    if (callback != null)
+                    {
+                        // timeout version can return null, so handle it properly
+                        AdjustAttribution adjustAttribution = null;
+                        if (attribution != null)
+                        {
+                            adjustAttribution = new AdjustAttribution(attribution);
+                        }
+                        callback.Invoke(adjustAttribution);
                     }
                 }
                 appAttributionGetterCallbacks.Clear();
@@ -847,6 +877,28 @@ namespace AdjustSdk
                 {
                     if (callback != null)
                     {
+                        callback.Invoke(adid);
+                    }
+                }
+                appAdidGetterCallbacks.Clear();
+            });
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateAdidGetterWithTimeout))]
+        private static void AdidGetterWithTimeoutMonoPInvoke(string adid)
+        {
+            if (appAdidGetterCallbacks == null)
+            {
+                return;
+            }
+
+            AdjustThreadDispatcher.RunOnMainThread(() =>
+            {
+                foreach (Action<string> callback in appAdidGetterCallbacks)
+                {
+                    if (callback != null)
+                    {
+                        // timeout version can return null, so pass it through as-is
                         callback.Invoke(adid);
                     }
                 }

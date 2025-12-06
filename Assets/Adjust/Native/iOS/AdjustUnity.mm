@@ -442,19 +442,14 @@ extern "C"
                 addValueOrEmpty(dictionary, @"trackerName", attribution.trackerName);
                 addValueOrEmpty(dictionary, @"network", attribution.network);
                 addValueOrEmpty(dictionary, @"campaign", attribution.campaign);
-                addValueOrEmpty(dictionary, @"adgroup", attribution.adgroup);
                 addValueOrEmpty(dictionary, @"creative", attribution.creative);
+                addValueOrEmpty(dictionary, @"adgroup", attribution.adgroup);
                 addValueOrEmpty(dictionary, @"clickLabel", attribution.clickLabel);
                 addValueOrEmpty(dictionary, @"costType", attribution.costType);
+                addValueOrEmpty(dictionary, @"costAmount", attribution.costAmount);
                 addValueOrEmpty(dictionary, @"costCurrency", attribution.costCurrency);
-                addValueOrEmpty(dictionary, @"fbInstallReferrer", attribution.fbInstallReferrer);
-                
-                if (attribution.costAmount != nil) {
-                    dictionary[@"costAmount"] = attribution.costAmount;
-                }
-                
                 if (attribution.jsonResponse != nil) {
-                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:attribution.jsonResponse
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:attribution.jsonResponse 
                                                                        options:0
                                                                          error:nil];
                     NSString *strJsonResponse = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -470,6 +465,7 @@ extern "C"
                 const char* attributionCString = [stringAttribution UTF8String];
                 callback(attributionCString);
             } else {
+                // pass NULL when attribution is nil - C# callback will handle it
                 callback(NULL);
             }
         }];
