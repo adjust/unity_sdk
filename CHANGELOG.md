@@ -1,3 +1,17 @@
+### Version 5.5.0 (6th December 2025)
+#### Added
+- Added `GetAdidWithTimeout` method to the `Adjust` API to allow retrieving the ADID with a specified timeout. If the value is not obtained in time, nil is returned.
+- Added `GetAttributionWithTimeout` method to the `Adjust` API to allow retrieving the current attribution information with a specified timeout. If the value is not obtained in time, nil is returned.
+
+#### Changed
+- Updated the Adjust Signature library version to 3.62.0.
+
+#### Native SDKs
+- [iOS@v5.5.0][ios_sdk_v5.5.0]
+- [Android@v5.5.0][android_sdk_v5.5.0]
+
+---
+
 ### Version 5.4.5 (19th November 2025)
 #### Added
 - Added support for declaring Android App Links through the Adjust prefab.
@@ -1504,6 +1518,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.4.3]: https://github.com/adjust/ios_sdk/tree/v5.4.3
 [ios_sdk_v5.4.4]: https://github.com/adjust/ios_sdk/tree/v5.4.4
 [ios_sdk_v5.4.6]: https://github.com/adjust/ios_sdk/tree/v5.4.6
+[ios_sdk_v5.5.0]: https://github.com/adjust/ios_sdk/tree/v5.5.0
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1567,6 +1582,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.4.4]: https://github.com/adjust/android_sdk/tree/v5.4.4
 [android_sdk_v5.4.5]: https://github.com/adjust/android_sdk/tree/v5.4.5
 [android_sdk_v5.4.6]: https://github.com/adjust/android_sdk/tree/v5.4.6
+[android_sdk_v5.5.0]: https://github.com/adjust/android_sdk/tree/v5.5.0
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

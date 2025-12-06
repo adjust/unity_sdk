@@ -44,6 +44,7 @@ namespace AdjustSdk
         public bool? IsPreinstallTrackingEnabled { get; set; }
         public string PreinstallFilePath { get; set; }
         public string FbAppId { get; set; }
+        public bool? IsAppSetIdReadingEnabled { get; set; }
 
         public AdjustConfig(string appToken, AdjustEnvironment environment)
         {

@@ -62,6 +62,14 @@ namespace AdjustSdk.Test
                     case "verifyPurchase": VerifyPurchase(); break;
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
+                    case "attributionGetterWithTimeout": AttributionGetterWithTimeout(); break;
+                    case "adidGetter": AdidGetter(); break;
+                    case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
+                    case "sdkVersionGetter": SdkVersionGetter(); break;
+                    case "googleAdIdGetter": GoogleAdIdGetter(); break;
+                    case "amazonAdIdGetter": AmazonAdIdGetter(); break;
+                    case "idfaGetter": IdfaGetter(); break;
+                    case "idfvGetter": IdfvGetter(); break;
                     case "verifyTrack": VerifyAndTrack(); break;
                     case "endFirstSessionDelay": EndFirstSessionDelay(); break;
                     case "coppaComplianceInDelay": CoppaComplianceInDelay(); break;
@@ -308,6 +316,15 @@ namespace AdjustSdk.Test
                 var playStoreKids = playStoreKidsS.ToLower() == "true";
                 adjustConfig.IsPlayStoreKidsComplianceEnabled = playStoreKids;
             }
+
+#if UNITY_ANDROID
+            if (_command.ContainsParameter("appSetIdReadingEnabled"))
+            {
+                var appSetIdReadingEnabledS = _command.GetFirstParameterValue("appSetIdReadingEnabled");
+                var appSetIdReadingEnabled = appSetIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsAppSetIdReadingEnabled = appSetIdReadingEnabled;
+            }
+#endif
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
             {
@@ -964,7 +981,15 @@ namespace AdjustSdk.Test
 
         private void GetLastDeeplink()
         {
-            Adjust.GetLastDeeplink(LastDeeplinkCallback);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetLastDeeplink((lastDeeplink) =>
+            {
+                _testLibrary.AddInfoToSend("last_deeplink", lastDeeplink ?? "");
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
         }
 
         private void VerifyPurchase()
@@ -1004,7 +1029,9 @@ namespace AdjustSdk.Test
 
         private void AttributionGetter()
         {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
             string localExtraPath = ExtraPath;
+
             Adjust.GetAttribution((attribution) =>
             {
                 _testLibrary.AddInfoToSend("tracker_token", attribution.TrackerToken);
@@ -1037,8 +1064,184 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                 }
 #endif
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
                 _testLibrary.SendInfoToServer(localExtraPath);
             });
+        }
+
+        private void AttributionGetterWithTimeout()
+        {
+            var timeoutStr = _command.GetFirstParameterValue("timeout");
+            var timeout = int.Parse(timeoutStr, System.Globalization.CultureInfo.InvariantCulture);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetAttributionWithTimeout(timeout, (attribution) =>
+            {
+                if (attribution != null)
+                {
+                    _testLibrary.AddInfoToSend("tracker_token", attribution.TrackerToken);
+                    _testLibrary.AddInfoToSend("tracker_name", attribution.TrackerName);
+                    _testLibrary.AddInfoToSend("network", attribution.Network);
+                    _testLibrary.AddInfoToSend("campaign", attribution.Campaign);
+                    _testLibrary.AddInfoToSend("adgroup", attribution.Adgroup);
+                    _testLibrary.AddInfoToSend("creative", attribution.Creative);
+                    _testLibrary.AddInfoToSend("click_label", attribution.ClickLabel);
+                    _testLibrary.AddInfoToSend("cost_type", attribution.CostType);
+                    _testLibrary.AddInfoToSend("cost_amount", attribution.CostAmount.ToString());
+                    _testLibrary.AddInfoToSend("cost_currency", attribution.CostCurrency);
+                    _testLibrary.AddInfoToSend("fb_install_referrer", attribution.FbInstallReferrer);
+#if UNITY_IOS
+                    var updatedJsonResponse = new Dictionary<string, object>();
+                    if (attribution.JsonResponse != null)
+                    {
+                        updatedJsonResponse = new Dictionary<string, object>(attribution.JsonResponse);
+                        updatedJsonResponse.Remove("fb_install_referrer");
+                        object costAmount;
+                        if (updatedJsonResponse.TryGetValue("cost_amount", out costAmount) && costAmount is IConvertible)
+                        {
+                            updatedJsonResponse["cost_amount"] = string.Format("{0:0.00}", System.Convert.ToDouble(costAmount));
+                        }
+                    }
+                    _testLibrary.AddInfoToSend("json_response", JsonConvert.SerializeObject(updatedJsonResponse));
+#else
+                    if (attribution.JsonResponse != null)
+                    {
+                        _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
+                    }
+#endif
+                }
+                else
+                {
+#if UNITY_IOS
+                    _testLibrary.AddInfoToSend("attribution", "nil");
+#elif UNITY_ANDROID
+                    _testLibrary.AddInfoToSend("attribution", "null");
+#endif
+                }
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void AdidGetter()
+        {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetAdid((adid) =>
+            {
+                _testLibrary.AddInfoToSend("adid", adid);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void AdidGetterWithTimeout()
+        {
+            var timeoutStr = _command.GetFirstParameterValue("timeout");
+            var timeout = int.Parse(timeoutStr, System.Globalization.CultureInfo.InvariantCulture);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetAdidWithTimeout(timeout, (adid) =>
+            {
+                if (adid != null)
+                {
+                    _testLibrary.AddInfoToSend("adid", adid);
+                }
+                else
+                {
+#if UNITY_IOS
+                    _testLibrary.AddInfoToSend("adid", "nil");
+#elif UNITY_ANDROID
+                    _testLibrary.AddInfoToSend("adid", "null");
+#endif
+                }
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void SdkVersionGetter()
+        {
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetSdkVersion((sdkVersion) =>
+            {
+                _testLibrary.AddInfoToSend("sdk_version", sdkVersion);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void GoogleAdIdGetter()
+        {
+#if UNITY_ANDROID
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetGoogleAdId((googleAdId) =>
+            {
+                _testLibrary.AddInfoToSend("gps_adid", googleAdId);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#else
+            TestApp.Log("[Adjust]: Error! Google Advertising ID is not available on this platform.");
+#endif
+        }
+
+        private void AmazonAdIdGetter()
+        {
+#if UNITY_ANDROID
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetAmazonAdId((amazonAdId) =>
+            {
+                _testLibrary.AddInfoToSend("fire_adid", amazonAdId);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#else
+            TestApp.Log("[Adjust]: Error! Amazon Fire Advertising ID is not available on this platform.");
+#endif
+        }
+
+        private void IdfaGetter()
+        {
+#if UNITY_IOS
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetIdfa((idfa) =>
+            {
+                _testLibrary.AddInfoToSend("idfa", idfa);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#else
+            TestApp.Log("[Adjust]: Error! IDFA is not available on this platform.");
+#endif
+        }
+
+        private void IdfvGetter()
+        {
+#if UNITY_IOS
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetIdfv((idfv) =>
+            {
+                _testLibrary.AddInfoToSend("idfv", idfv);
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+#else
+            TestApp.Log("[Adjust]: Error! IDFV is not available on this platform.");
+#endif
         }
 
         private void VerifyAndTrack()

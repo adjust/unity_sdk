@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity5.4.5";
+        private const string sdkPrefix = "unity5.5.0";
         private static bool isDeferredDeeplinkOpeningEnabled = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -136,6 +136,15 @@ namespace AdjustSdk
                 if (adjustConfig.FbAppId != null)
                 {
                     ajoAdjustConfig.Call("setFbAppId", adjustConfig.FbAppId);
+                }
+
+                // check if app set ID reading should be disabled
+                if (adjustConfig.IsAppSetIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsAppSetIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableAppSetIdReading");
+                    }
                 }
 
                 // check if user has set default tracker token
@@ -589,10 +598,22 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("getAdid", onAdidReadProxy);
         }
 
+        public static void GetAdidWithTimeout(int timeoutInMilliseconds, Action<string> onAdidRead) 
+        {
+            AdidReadListener onAdidReadProxy = new AdidReadListener(onAdidRead);
+            ajcAdjust.CallStatic("getAdidWithTimeout", ajoCurrentActivity, (long)timeoutInMilliseconds, onAdidReadProxy);
+        }
+
         public static void GetAttribution(Action<AdjustAttribution> onAttributionRead) 
         {
             AttributionReadListener onAttributionReadProxy = new AttributionReadListener(onAttributionRead);
             ajcAdjust.CallStatic("getAttribution", onAttributionReadProxy);
+        }
+
+        public static void GetAttributionWithTimeout(int timeoutInMilliseconds, Action<AdjustAttribution> onAttributionRead) 
+        {
+            AttributionReadListener onAttributionReadProxy = new AttributionReadListener(onAttributionRead);
+            ajcAdjust.CallStatic("getAttributionWithTimeout", ajoCurrentActivity, (long)timeoutInMilliseconds, onAttributionReadProxy);
         }
 
         public static void GetSdkVersion(Action<string> onSdkVersionRead) 
