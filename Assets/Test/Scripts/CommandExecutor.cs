@@ -1178,10 +1178,10 @@ namespace AdjustSdk.Test
 
         private void GoogleAdIdGetter()
         {
+#if UNITY_ANDROID
             var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
             string localExtraPath = ExtraPath;
 
-#if UNITY_ANDROID
             Adjust.GetGoogleAdId((googleAdId) =>
             {
                 _testLibrary.AddInfoToSend("gps_adid", googleAdId);
@@ -1195,10 +1195,10 @@ namespace AdjustSdk.Test
 
         private void AmazonAdIdGetter()
         {
+#if UNITY_ANDROID
             var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
             string localExtraPath = ExtraPath;
 
-#if UNITY_ANDROID
             Adjust.GetAmazonAdId((amazonAdId) =>
             {
                 _testLibrary.AddInfoToSend("fire_adid", amazonAdId);
@@ -1212,10 +1212,10 @@ namespace AdjustSdk.Test
 
         private void IdfaGetter()
         {
+#if UNITY_IOS
             var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
             string localExtraPath = ExtraPath;
 
-#if UNITY_IOS
             Adjust.GetIdfa((idfa) =>
             {
                 _testLibrary.AddInfoToSend("idfa", idfa);
@@ -1229,10 +1229,10 @@ namespace AdjustSdk.Test
 
         private void IdfvGetter()
         {
+#if UNITY_IOS
             var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
             string localExtraPath = ExtraPath;
 
-#if UNITY_IOS
             Adjust.GetIdfv((idfv) =>
             {
                 _testLibrary.AddInfoToSend("idfv", idfv);
