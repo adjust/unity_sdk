@@ -738,7 +738,9 @@ extern "C"
 
     void _AdjustRequestAppTrackingAuthorization(AdjustDelegateAttCallback callback) {
         [Adjust requestAppTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {
-            callback((int)status);
+            // NSUIntegerMax represents error in native world
+            int mappedStatus = (status == NSUIntegerMax) ? -1 : (int)status;
+            callback(mappedStatus);
         }];
     }
 
