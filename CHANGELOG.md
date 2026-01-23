@@ -1,3 +1,15 @@
+### Version 5.5.1 (23rd January 2026)
+#### Changed
+- Updated `RequestAppTrackingAuthorization` to return `-1` as an error indicator when the device doesn't support `AppTrackingTransparency.framework` or when the framework isn't linked.
+- Replaced `NSLog` with Unified Logging (`os_log`) for iOS SDK log output.
+- Improved iOS backoff strategy and Apple Ads flows.
+
+#### Native SDKs
+- [iOS@v5.5.2][ios_sdk_v5.5.2]
+- [Android@v5.5.0][android_sdk_v5.5.0]
+
+---
+
 ### Version 5.5.0 (6th December 2025)
 #### Added
 - Added `GetAdidWithTimeout` method to the `Adjust` API to allow retrieving the ADID with a specified timeout. If the value is not obtained in time, nil is returned.
@@ -1519,6 +1531,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.4.4]: https://github.com/adjust/ios_sdk/tree/v5.4.4
 [ios_sdk_v5.4.6]: https://github.com/adjust/ios_sdk/tree/v5.4.6
 [ios_sdk_v5.5.0]: https://github.com/adjust/ios_sdk/tree/v5.5.0
+[ios_sdk_v5.5.2]: https://github.com/adjust/ios_sdk/tree/v5.5.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
