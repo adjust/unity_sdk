@@ -7,6 +7,6 @@
         </androidPackage>
     </androidPackages>
     <iosPods>
-        <iosPod name="Adjust" version="5.5.0" minTargetSdk="12.0"/>
+        <iosPod name="Adjust" version="5.5.2" minTargetSdk="12.0"/>
     </iosPods>
 </dependencies>
