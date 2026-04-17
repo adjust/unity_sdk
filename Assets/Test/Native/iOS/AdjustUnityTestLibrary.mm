@@ -55,6 +55,38 @@ extern "C"
         }
     }
 
+    void _ATLSetInfoToSend(const char* infoJson) {
+        if (infoJson == NULL) {
+            [testLibrary setInfoToSend:@{}];
+            return;
+        }
+
+        NSString *sInfoJson = [NSString stringWithUTF8String:infoJson];
+        NSData *infoData = [sInfoJson dataUsingEncoding:NSUTF8StringEncoding];
+        if (infoData == nil) {
+            [testLibrary setInfoToSend:@{}];
+            return;
+        }
+
+        NSError *error = nil;
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:infoData options:0 error:&error];
+        if (error != nil || ![jsonObject isKindOfClass:[NSDictionary class]]) {
+            [testLibrary setInfoToSend:@{}];
+            return;
+        }
+
+        NSDictionary *jsonDictionary = (NSDictionary *)jsonObject;
+        NSMutableDictionary<NSString *, NSString *> *infoToSend = [NSMutableDictionary dictionary];
+        for (id key in jsonDictionary) {
+            id value = [jsonDictionary objectForKey:key];
+            if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
+                [infoToSend setObject:(NSString *)value forKey:(NSString *)key];
+            }
+        }
+
+        [testLibrary setInfoToSend:infoToSend];
+    }
+
     void _ATLSendInfoToServer(const char* basePath) {
         NSString *sBasePath = [NSString stringWithUTF8String:basePath];
         [testLibrary sendInfoToServer:sBasePath];

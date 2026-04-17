@@ -32,6 +32,7 @@ typedef void (*AdjustDelegateSessionFailureCallback)(const char* sessionFailure)
 typedef void (*AdjustDelegateEventSuccessCallback)(const char* eventSuccess);
 typedef void (*AdjustDelegateEventFailureCallback)(const char* eventFailure);
 typedef void (*AdjustDelegateDeferredDeeplinkCallback)(const char* deeplink);
+typedef void (*AdjustDelegateRemoteTriggerCallback)(const char* remoteTrigger);
 typedef void (*AdjustDelegateSkanUpdatedCallback)(const char* skanData);
 
 @end

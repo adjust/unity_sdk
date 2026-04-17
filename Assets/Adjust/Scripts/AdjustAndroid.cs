@@ -18,7 +18,7 @@ namespace AdjustSdk
         private static EventTrackingSucceededListener onEventTrackingSucceededListener;
         private static SessionTrackingFailedListener onSessionTrackingFailedListener;
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
-
+        private static RemoteTriggerListener onRemoteTriggerListener;
         private static DeeplinkResolutionListener onDeeplinkResolvedListener;
 
         public static void InitSdk(AdjustConfig adjustConfig)
@@ -243,6 +243,13 @@ namespace AdjustSdk
                 {
                     onDeferredDeeplinkListener = new DeferredDeeplinkListener(adjustConfig.DeferredDeeplinkDelegate);
                     ajoAdjustConfig.Call("setOnDeferredDeeplinkResponseListener", onDeferredDeeplinkListener);
+                }
+
+                // check remote trigger delegate
+                if (adjustConfig.RemoteTriggerDelegate != null)
+                {
+                    onRemoteTriggerListener = new RemoteTriggerListener(adjustConfig.RemoteTriggerDelegate);
+                    ajoAdjustConfig.Call("setOnRemoteTriggerListener", onRemoteTriggerListener);
                 }
 
                 // initialise and start the SDK
@@ -865,7 +872,7 @@ namespace AdjustSdk
                     }
                     catch (Exception)
                     {
-                        // JSON response reading failed.
+                        // JSON response reading failed
                     }
                 });
             }
@@ -950,9 +957,56 @@ namespace AdjustSdk
                     }
                     catch (Exception)
                     {
-                        // JSON response reading failed.
-                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                        // JSON response reading failed
+                        // native Android SDK should send empty JSON object if none available as of v4.12.5
+                        // native Android SDK added special logic to send Unity friendly values as of v4.15.0
+                    }
+                });
+            }
+        }
+
+        private class RemoteTriggerListener : AndroidJavaProxy
+        {
+            private Action<AdjustRemoteTrigger> callback;
+
+            public RemoteTriggerListener(Action<AdjustRemoteTrigger> pCallback)
+                : base("com.adjust.sdk.OnRemoteTriggerListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onRemoteTrigger(AdjustRemoteTrigger remoteTrigger);
+            public void onRemoteTrigger(AndroidJavaObject remoteTrigger)
+            {
+                if (this.callback == null || remoteTrigger == null)
+                {
+                    return;
+                }
+
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    try
+                    {
+                        string label = remoteTrigger.Call<string>("getLabel");
+                        string payload = "{}";
+
+                        using (AndroidJavaObject ajoPayload = remoteTrigger.Call<AndroidJavaObject>("getPayload"))
+                        {
+                            if (ajoPayload != null)
+                            {
+                                payload = ajoPayload.Call<string>("toString");
+                            }
+                        }
+
+                        if (callback != null)
+                        {
+                            callback.Invoke(new AdjustRemoteTrigger(label, payload));
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // remote trigger parsing failed
                     }
                 });
             }
@@ -1007,8 +1061,8 @@ namespace AdjustSdk
                     catch (Exception)
                     {
                         // JSON response reading failed.
-                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                        // native Android SDK should send empty JSON object if none available as of v4.12.5
+                        // native Android SDK added special logic to send Unity friendly values as of v4.15.0
                     }
                 });
             }
@@ -1060,9 +1114,9 @@ namespace AdjustSdk
                     }
                     catch (Exception)
                     {
-                        // JSON response reading failed.
-                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                        // JSON response reading failed
+                        // native Android SDK should send empty JSON object if none available as of v4.12.5
+                        // native Android SDK added special logic to send Unity friendly values as of v4.15.0
                     }
                 });
             }
@@ -1115,9 +1169,9 @@ namespace AdjustSdk
                     }
                     catch (Exception)
                     {
-                        // JSON response reading failed.
-                        // Native Android SDK should send empty JSON object if none available as of v4.12.5.
-                        // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
+                        // JSON response reading failed
+                        // native Android SDK should send empty JSON object if none available as of v4.12.5
+                        // native Android SDK added special logic to send Unity friendly values as of v4.15.0
                     }
                 });
             }
@@ -1198,7 +1252,7 @@ namespace AdjustSdk
                     }
                     catch (Exception)
                     {
-                        // Handle potential errors during the verification process
+                        // handle potential errors during the verification process
                     }
                 });
             }
@@ -1330,7 +1384,7 @@ namespace AdjustSdk
                     }
                     catch (Exception)
                     {
-                        // JSON response reading failed.
+                        // JSON response reading failed
                     }
                 });
             }
