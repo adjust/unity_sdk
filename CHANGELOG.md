@@ -1,6 +1,6 @@
 ### Version 5.6.0 (20th April 2026)
 #### Added
-- Added remote trigger callback support to the Unity SDK. Remote trigger payload is exposed as a JSON string.
+- Added support for remote trigger callbacks. You can now receive remote trigger updates by assigning the `RemoteTriggerDelegate` member of your `AdjustConfig` instance. Remote trigger payload is exposed as a JSON string.
 
 #### Changed
 - Updated the Adjust Signature library version to 3.67.0.
