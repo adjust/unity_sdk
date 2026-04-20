@@ -1,3 +1,16 @@
+### Version 5.6.0 (20th April 2026)
+#### Added
+- Added remote trigger callback support to the Unity SDK. Remote trigger payload is exposed as a JSON string.
+
+#### Changed
+- Updated the Adjust Signature library version to 3.67.0.
+
+#### Native SDKs
+- [iOS@v5.6.2][ios_sdk_v5.6.2]
+- [Android@v5.6.1][android_sdk_v5.6.1]
+
+---
+
 ### Version 5.5.1 (23rd January 2026)
 #### Changed
 - Updated `RequestAppTrackingAuthorization` to return `-1` as an error indicator when the device doesn't support `AppTrackingTransparency.framework` or when the framework isn't linked.
@@ -1532,6 +1545,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.4.6]: https://github.com/adjust/ios_sdk/tree/v5.4.6
 [ios_sdk_v5.5.0]: https://github.com/adjust/ios_sdk/tree/v5.5.0
 [ios_sdk_v5.5.2]: https://github.com/adjust/ios_sdk/tree/v5.5.2
+[ios_sdk_v5.6.2]: https://github.com/adjust/ios_sdk/tree/v5.6.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1596,6 +1610,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.4.5]: https://github.com/adjust/android_sdk/tree/v5.4.5
 [android_sdk_v5.4.6]: https://github.com/adjust/android_sdk/tree/v5.4.6
 [android_sdk_v5.5.0]: https://github.com/adjust/android_sdk/tree/v5.5.0
+[android_sdk_v5.6.1]: https://github.com/adjust/android_sdk/tree/v5.6.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0
