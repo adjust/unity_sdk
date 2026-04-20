@@ -19,7 +19,7 @@ def build(root_dir, ios_submodule_dir, with_test_lib):
     if with_test_lib:
         # ------------------------------------------------------------------
         # Paths.
-        test_static_framework = '{0}/sdk_distribution/test-static-framework/AdjustTestLibrary.framework'.format(src_dir)
+        test_static_framework = '{0}/sdk_distribution/test-static-framework-device/AdjustTestLibrary.framework'.format(src_dir)
 
         # ------------------------------------------------------------------
         # Build AdjustTestLibraryStatic framework target.

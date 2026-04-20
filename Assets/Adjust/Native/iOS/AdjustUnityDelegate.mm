@@ -32,6 +32,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
                   sessionSuccessCallback:(AdjustDelegateSessionSuccessCallback)sessionSuccessCallback
                   sessionFailureCallback:(AdjustDelegateSessionFailureCallback)sessionFailureCallback
                 deferredDeeplinkCallback:(AdjustDelegateDeferredDeeplinkCallback)deferredDeeplinkCallback
+                   remoteTriggerCallback:(AdjustDelegateRemoteTriggerCallback)remoteTriggerCallback
                      skanUpdatedCallback:(AdjustDelegateSkanUpdatedCallback)skanUpdatedCallback
             shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink {
     dispatch_once(&onceToken, ^{
@@ -62,6 +63,10 @@ static AdjustUnityDelegate *defaultInstance = nil;
             [defaultInstance swizzleOriginalSelector:@selector(adjustDeferredDeeplinkReceived:)
                                         withSelector:@selector(adjustDeferredDeeplinkReceivedWannabe:)];
         }
+        if (remoteTriggerCallback != nil) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustRemoteTriggerReceived:)
+                                        withSelector:@selector(adjustRemoteTriggerReceivedWannabe:)];
+        }
         if (skanUpdatedCallback != nil) {
             [defaultInstance swizzleOriginalSelector:@selector(adjustSkanUpdatedWithConversionData:)
                                         withSelector:@selector(adjustSkanUpdatedWithConversionDataWannabe:)];
@@ -73,6 +78,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
         [defaultInstance setSessionSuccessCallback:sessionSuccessCallback];
         [defaultInstance setSessionFailureCallback:sessionFailureCallback];
         [defaultInstance setDeferredDeeplinkCallback:deferredDeeplinkCallback];
+        [defaultInstance setRemoteTriggerCallback:remoteTriggerCallback];
         [defaultInstance setSkanUpdatedCallback:skanUpdatedCallback];
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
     });
@@ -302,6 +308,40 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                           encoding:NSUTF8StringEncoding];
     const char* charSkanUpdatedData = [strSkanUpdatedData UTF8String];
     _skanUpdatedCallback(charSkanUpdatedData);
+}
+
+- (void)adjustRemoteTriggerReceivedWannabe:(ADJRemoteTrigger *)remoteTrigger {
+    if (remoteTrigger == nil || _remoteTriggerCallback == nil) {
+        return;
+    }
+
+    NSString *payloadString = @"{}";
+    if (remoteTrigger.payload != nil) {
+        NSData *payloadData = [NSJSONSerialization dataWithJSONObject:remoteTrigger.payload
+                                                              options:0
+                                                                error:nil];
+        if (payloadData != nil) {
+            payloadString = [[NSString alloc] initWithData:payloadData
+                                                  encoding:NSUTF8StringEncoding];
+        }
+    }
+
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [self addValueOrEmpty:remoteTrigger.label
+                   forKey:@"label"
+             toDictionary:dictionary];
+    [self addValueOrEmpty:payloadString
+                   forKey:@"payload"
+             toDictionary:dictionary];
+
+    NSData *dataRemoteTrigger = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                                options:0
+                                                                  error:nil];
+    NSString *stringRemoteTrigger = [[NSString alloc] initWithBytes:[dataRemoteTrigger bytes]
+                                                             length:[dataRemoteTrigger length]
+                                                           encoding:NSUTF8StringEncoding];
+    const char* charArrayRemoteTrigger = [stringRemoteTrigger UTF8String];
+    _remoteTriggerCallback(charArrayRemoteTrigger);
 }
 
 - (void)swizzleOriginalSelector:(SEL)originalSelector

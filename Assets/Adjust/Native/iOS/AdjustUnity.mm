@@ -114,6 +114,7 @@ extern "C"
         AdjustDelegateSessionSuccessCallback sessionSuccessCallback,
         AdjustDelegateSessionFailureCallback sessionFailureCallback,
         AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback,
+        AdjustDelegateRemoteTriggerCallback remoteTriggerCallback,
         AdjustDelegateSkanUpdatedCallback skanUpdatedCallback) {
         NSString *strAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *strEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
@@ -144,6 +145,7 @@ extern "C"
             eventSuccessCallback != nil ||
             eventFailureCallback != nil ||
             deferredDeeplinkCallback != nil ||
+            remoteTriggerCallback != nil ||
             skanUpdatedCallback != nil) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithAttributionCallback:attributionCallback
@@ -152,6 +154,7 @@ extern "C"
                                                  sessionSuccessCallback:sessionSuccessCallback
                                                  sessionFailureCallback:sessionFailureCallback
                                                deferredDeeplinkCallback:deferredDeeplinkCallback
+                                                  remoteTriggerCallback:remoteTriggerCallback
                                                     skanUpdatedCallback:skanUpdatedCallback
                                            shouldLaunchDeferredDeeplink:isDeferredDeeplinkOpeningEnabled]];
         }

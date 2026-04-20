@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_IOS
     public class AdjustiOS
     {
-        private const string sdkPrefix = "unity5.5.1";
+        private const string sdkPrefix = "unity5.6.0";
 
         // app callbacks as method parameters
         private static List<Action<bool>> appIsEnabledGetterCallbacks;
@@ -33,6 +33,7 @@ namespace AdjustSdk
         private static Action<AdjustEventSuccess> appEventSuccessCallback;
         private static Action<AdjustEventFailure> appEventFailureCallback;
         private static Action<string> appDeferredDeeplinkCallback;
+        private static Action<AdjustRemoteTrigger> appRemoteTriggerCallback;
         private static Action<Dictionary<string, string>> appSkanUpdatedCallback;
 
         // extenral C methods
@@ -42,6 +43,7 @@ namespace AdjustSdk
         private delegate void AdjustDelegateEventSuccessCallback(string eventSuccess);
         private delegate void AdjustDelegateEventFailureCallback(string eventFailure);
         private delegate void AdjustDelegateDeferredDeeplinkCallback(string callback);
+        private delegate void AdjustDelegateRemoteTriggerCallback(string callback);
         private delegate void AdjustDelegateSkanUpdatedCallback(string callback);
         [DllImport("__Internal")]
         private static extern void _AdjustInitSdk(
@@ -77,6 +79,7 @@ namespace AdjustSdk
             AdjustDelegateSessionSuccessCallback sessionSuccessCallback,
             AdjustDelegateSessionFailureCallback sessionFailureCallback,
             AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback,
+            AdjustDelegateRemoteTriggerCallback remoteTriggerCallback,
             AdjustDelegateSkanUpdatedCallback skanUpdatedCallback);
 
         [DllImport("__Internal")]
@@ -316,6 +319,7 @@ namespace AdjustSdk
             appSessionSuccessCallback = adjustConfig.SessionSuccessDelegate;
             appSessionFailureCallback = adjustConfig.SessionFailureDelegate;
             appDeferredDeeplinkCallback = adjustConfig.DeferredDeeplinkDelegate;
+            appRemoteTriggerCallback = adjustConfig.RemoteTriggerDelegate;
             appSkanUpdatedCallback = adjustConfig.SkanUpdatedDelegate;
 
             _AdjustInitSdk(
@@ -351,6 +355,7 @@ namespace AdjustSdk
                 SessionSuccessCallbackMonoPInvoke,
                 SessionFailureCallbackMonoPInvoke,
                 DeferredDeeplinkCallbackMonoPInvoke,
+                RemoteTriggerCallbackMonoPInvoke,
                 SkanUpdatedCallbackMonoPInvoke);
         }
 
@@ -1175,6 +1180,23 @@ namespace AdjustSdk
             AdjustThreadDispatcher.RunOnMainThread(() =>
             {
                 appDeferredDeeplinkCallback(deeplink);
+            });
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateRemoteTriggerCallback))]
+        private static void RemoteTriggerCallbackMonoPInvoke(string remoteTrigger)
+        {
+            if (appRemoteTriggerCallback == null)
+            {
+                return;
+            }
+
+            AdjustThreadDispatcher.RunOnMainThread(() =>
+            {
+                if (appRemoteTriggerCallback != null)
+                {
+                    appRemoteTriggerCallback(new AdjustRemoteTrigger(remoteTrigger));
+                }
             });
         }
 

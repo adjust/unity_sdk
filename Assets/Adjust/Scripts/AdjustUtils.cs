@@ -17,6 +17,8 @@ namespace AdjustSdk
         public static string KeyCallbackId = "callbackId";
         public static string KeyEventToken = "eventToken";
         public static string KeyClickLabel = "clickLabel";
+        public static string KeyLabel = "label";
+        public static string KeyPayload = "payload";
         public static string KeyTrackerName = "trackerName";
         public static string KeyTrackerToken = "trackerToken";
         public static string KeyJsonResponse = "jsonResponse";

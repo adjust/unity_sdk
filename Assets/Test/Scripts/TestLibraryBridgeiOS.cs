@@ -16,6 +16,9 @@ namespace AdjustSdk.Test
         private static extern void _ATLAddInfoToSend(string key, string paramValue);
 
         [DllImport("__Internal")]
+        private static extern void _ATLSetInfoToSend(string infoJson);
+
+        [DllImport("__Internal")]
         private static extern void _ATLSendInfoToServer(string basePath);
 
         [DllImport("__Internal")]
@@ -37,6 +40,11 @@ namespace AdjustSdk.Test
         public static void AddInfoToSend(string key, string paramValue)
         {
             _ATLAddInfoToSend(key, paramValue);
+        }
+
+        public static void SetInfoToSend(string infoJson)
+        {
+            _ATLSetInfoToSend(infoJson);
         }
 
         public static void SendInfoToServer(string basePath)

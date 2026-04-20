@@ -29,6 +29,7 @@ namespace AdjustSdk
         public Action<AdjustSessionSuccess> SessionSuccessDelegate { get; set; }
         public Action<AdjustSessionFailure> SessionFailureDelegate { get; set; }
         public Action<string> DeferredDeeplinkDelegate { get; set; }
+        public Action<AdjustRemoteTrigger> RemoteTriggerDelegate { get; set; }
         public Action<Dictionary<string, string>> SkanUpdatedDelegate { get; set; }
 
         // iOS specific

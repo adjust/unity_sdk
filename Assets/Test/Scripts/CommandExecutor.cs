@@ -520,6 +520,30 @@ namespace AdjustSdk.Test
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
+
+            if (_command.ContainsParameter("remoteTriggerCallback"))
+            {
+                string localExtraPath = ExtraPath;
+                adjustConfig.RemoteTriggerDelegate = (remoteTrigger =>
+                {
+#if UNITY_IOS
+                    TestLibraryiOS testLibraryiOS = _testLibrary as TestLibraryiOS;
+                    if (testLibraryiOS != null)
+                    {
+                        testLibraryiOS.SetInfoToSend(new Dictionary<string, string>
+                        {
+                            { "label", remoteTrigger != null ? remoteTrigger.Label : null },
+                            { "payload", remoteTrigger != null ? remoteTrigger.Payload : "{}" },
+                        });
+                        testLibraryiOS.SendInfoToServer(localExtraPath);
+                        return;
+                    }
+#endif
+                    _testLibrary.AddInfoToSend("label", remoteTrigger != null ? remoteTrigger.Label : null);
+                    _testLibrary.AddInfoToSend("payload", remoteTrigger != null ? remoteTrigger.Payload : "{}");
+                    _testLibrary.SendInfoToServer(localExtraPath);
+                });
+            }
         }
 
         private void Start()
@@ -1261,6 +1285,19 @@ namespace AdjustSdk.Test
 #if UNITY_IOS
             Adjust.VerifyAndTrackAppStorePurchase(adjustEvent, (verificationResult) =>
             {
+                TestLibraryiOS testLibraryiOS = _testLibrary as TestLibraryiOS;
+                if (testLibraryiOS != null)
+                {
+                    testLibraryiOS.SetInfoToSend(new Dictionary<string, string>
+                    {
+                        { "verification_status", verificationResult.VerificationStatus },
+                        { "code", verificationResult.Code.ToString() },
+                        { "message", verificationResult.Message },
+                    });
+                    testLibraryiOS.SendInfoToServer(localExtraPath);
+                    return;
+                }
+
                 _testLibrary.AddInfoToSend("verification_status", verificationResult.VerificationStatus);
                 _testLibrary.AddInfoToSend("code", verificationResult.Code.ToString());
                 _testLibrary.AddInfoToSend("message", verificationResult.Message);
@@ -1322,6 +1359,20 @@ namespace AdjustSdk.Test
         private void VerificationResultCallback(AdjustPurchaseVerificationResult verificationResult)
         {
             string localExtraPath = ExtraPath;
+#if UNITY_IOS
+            TestLibraryiOS testLibraryiOS = _testLibrary as TestLibraryiOS;
+            if (testLibraryiOS != null)
+            {
+                testLibraryiOS.SetInfoToSend(new Dictionary<string, string>
+                {
+                    { "verification_status", verificationResult.VerificationStatus },
+                    { "code", verificationResult.Code.ToString() },
+                    { "message", verificationResult.Message },
+                });
+                testLibraryiOS.SendInfoToServer(localExtraPath);
+                return;
+            }
+#endif
             _testLibrary.AddInfoToSend("verification_status", verificationResult.VerificationStatus);
             _testLibrary.AddInfoToSend("code", verificationResult.Code.ToString());
             _testLibrary.AddInfoToSend("message", verificationResult.Message);

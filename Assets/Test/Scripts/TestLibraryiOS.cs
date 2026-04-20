@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace AdjustSdk.Test
@@ -27,6 +28,25 @@ namespace AdjustSdk.Test
             TestLibraryBridgeiOS.AddInfoToSend(key, paramValue);
         }
 
+        public void SetInfoToSend(Dictionary<string, string> info)
+        {
+            Dictionary<string, string> filteredInfo = new Dictionary<string, string>();
+            if (info != null)
+            {
+                foreach (KeyValuePair<string, string> entry in info)
+                {
+                    if (entry.Value == null)
+                    {
+                        continue;
+                    }
+
+                    filteredInfo[entry.Key] = entry.Value;
+                }
+            }
+
+            TestLibraryBridgeiOS.SetInfoToSend(JsonConvert.SerializeObject(filteredInfo));
+        }
+
         public void SendInfoToServer(string basePath) 
         {
             TestLibraryBridgeiOS.SendInfoToServer(basePath);
@@ -49,6 +69,11 @@ namespace AdjustSdk.Test
         }
 #else
         public void AddInfoToSend(string key, string paramValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetInfoToSend(Dictionary<string, string> info)
         {
             throw new NotImplementedException();
         }
