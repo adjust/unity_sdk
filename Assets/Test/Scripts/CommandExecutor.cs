@@ -325,7 +325,49 @@ namespace AdjustSdk.Test
                 var appSetIdReadingEnabled = appSetIdReadingEnabledS.ToLower() == "true";
                 adjustConfig.IsAppSetIdReadingEnabled = appSetIdReadingEnabled;
             }
+
+            if (_command.ContainsParameter("googleAdIdReadingEnabled"))
+            {
+                var googleAdIdReadingEnabledS = _command.GetFirstParameterValue("googleAdIdReadingEnabled");
+                var googleAdIdReadingEnabled = googleAdIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsGoogleAdIdReadingEnabled = googleAdIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("androidIdReadingEnabled"))
+            {
+                var androidIdReadingEnabledS = _command.GetFirstParameterValue("androidIdReadingEnabled");
+                var androidIdReadingEnabled = androidIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsAndroidIdReadingEnabled = androidIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("fireAdIdReadingEnabled"))
+            {
+                var fireAdIdReadingEnabledS = _command.GetFirstParameterValue("fireAdIdReadingEnabled");
+                var fireAdIdReadingEnabled = fireAdIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsFireAdIdReadingEnabled = fireAdIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("deviceIdsFromPluginsReadingEnabled"))
+            {
+                var deviceIdsFromPluginsReadingEnabledS = _command.GetFirstParameterValue("deviceIdsFromPluginsReadingEnabled");
+                var deviceIdsFromPluginsReadingEnabled = deviceIdsFromPluginsReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsDeviceIdsFromPluginsReadingEnabled = deviceIdsFromPluginsReadingEnabled;
+            }
 #endif
+
+            if (_command.ContainsParameter("fbIdReadingEnabled"))
+            {
+                var fbIdReadingEnabledS = _command.GetFirstParameterValue("fbIdReadingEnabled");
+                var fbIdReadingEnabled = fbIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsFbIdReadingEnabled = fbIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("deviceIdsReadingEnabled"))
+            {
+                var deviceIdsReadingEnabledS = _command.GetFirstParameterValue("deviceIdsReadingEnabled");
+                var deviceIdsReadingEnabled = deviceIdsReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsDeviceIdsReadingEnabled = deviceIdsReadingEnabled;
+            }
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
             {

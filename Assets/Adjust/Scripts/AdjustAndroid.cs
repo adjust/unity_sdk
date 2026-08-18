@@ -148,6 +148,60 @@ namespace AdjustSdk
                     }
                 }
 
+                // check if Google advertising ID reading should be disabled
+                if (adjustConfig.IsGoogleAdIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsGoogleAdIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableGoogleAdIdReading");
+                    }
+                }
+
+                // check if Android ID reading should be disabled
+                if (adjustConfig.IsAndroidIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsAndroidIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableAndroidIdReading");
+                    }
+                }
+
+                // check if FB ID reading should be disabled
+                if (adjustConfig.IsFbIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsFbIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableFbIdReading");
+                    }
+                }
+
+                // check if Fire advertising ID reading should be disabled
+                if (adjustConfig.IsFireAdIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsFireAdIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableFireAdIdReading");
+                    }
+                }
+
+                // check if reading of device IDs from plugins should be disabled
+                if (adjustConfig.IsDeviceIdsFromPluginsReadingEnabled != null)
+                {
+                    if (adjustConfig.IsDeviceIdsFromPluginsReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableDeviceIdsFromPluginsReading");
+                    }
+                }
+
+                // check if reading of all the device IDs should be disabled
+                if (adjustConfig.IsDeviceIdsReadingEnabled != null)
+                {
+                    if (adjustConfig.IsDeviceIdsReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableDeviceIdsReading");
+                    }
+                }
+
                 // check if user has set default tracker token
                 if (adjustConfig.DefaultTracker != null)
                 {

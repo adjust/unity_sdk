@@ -108,6 +108,8 @@ extern "C"
         int isAppTrackingTransparencyUsageEnabled,
         int isFirstSessionDelayEnabled,
         int isDeferredDeeplinkOpeningEnabled,
+        int isFbIdReadingEnabled,
+        int isDeviceIdsReadingEnabled,
         AdjustDelegateAttributionCallback attributionCallback,
         AdjustDelegateEventSuccessCallback eventSuccessCallback,
         AdjustDelegateEventFailureCallback eventFailureCallback,
@@ -206,6 +208,20 @@ extern "C"
         if (isIdfvReadingEnabled != -1) {
             if ((BOOL)isIdfvReadingEnabled == NO) {
                 [adjustConfig disableIdfvReading];
+            }
+        }
+
+        // FB ID reading
+        if (isFbIdReadingEnabled != -1) {
+            if ((BOOL)isFbIdReadingEnabled == NO) {
+                [adjustConfig disableFbIdReading];
+            }
+        }
+
+        // reading of all the device IDs
+        if (isDeviceIdsReadingEnabled != -1) {
+            if ((BOOL)isDeviceIdsReadingEnabled == NO) {
+                [adjustConfig disableDeviceIdsReading];
             }
         }
 

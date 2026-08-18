@@ -77,6 +77,8 @@ namespace AdjustSdk
             int isAppTrackingTransparencyUsageEnabled,
             int isFirstSessionDelayEnabled,
             int isDeferredDeeplinkOpeningEnabled,
+            int isFbIdReadingEnabled,
+            int isDeviceIdsReadingEnabled,
             AdjustDelegateAttributionCallback attributionCallback,
             AdjustDelegateEventSuccessCallback eventSuccessCallback,
             AdjustDelegateEventFailureCallback eventFailureCallback,
@@ -312,6 +314,8 @@ namespace AdjustSdk
             int isAdServicesEnabled = AdjustUtils.ConvertBool(adjustConfig.IsAdServicesEnabled);
             int isIdfaReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.IsIdfaReadingEnabled);
             int isIdfvReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.IsIdfvReadingEnabled);
+            int isFbIdReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.IsFbIdReadingEnabled);
+            int isDeviceIdsReadingEnabled = AdjustUtils.ConvertBool(adjustConfig.IsDeviceIdsReadingEnabled);
             int allowSuppressLogLevel = AdjustUtils.ConvertBool(adjustConfig.AllowSuppressLogLevel);
             int isDeferredDeeplinkOpeningEnabled = AdjustUtils.ConvertBool(adjustConfig.IsDeferredDeeplinkOpeningEnabled);
             int isSkanAttributionEnabled = AdjustUtils.ConvertBool(adjustConfig.IsSkanAttributionEnabled);
@@ -359,6 +363,8 @@ namespace AdjustSdk
                 isAppTrackingTransparencyUsageEnabled,
                 isFirstSessionDelayEnabled,
                 isDeferredDeeplinkOpeningEnabled,
+                isFbIdReadingEnabled,
+                isDeviceIdsReadingEnabled,
                 AttributionCallbackMonoPInvoke,
                 EventSuccessCallbackMonoPInvoke,
                 EventFailureCallbackMonoPInvoke,
