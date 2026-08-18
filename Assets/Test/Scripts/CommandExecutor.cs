@@ -63,6 +63,7 @@ namespace AdjustSdk.Test
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
                     case "attributionGetterWithTimeout": AttributionGetterWithTimeout(); break;
+                    case "tpsSettingsGetter": TpsSettingsGetter(); break;
                     case "adidGetter": AdidGetter(); break;
                     case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
                     case "sdkVersionGetter": SdkVersionGetter(); break;
@@ -324,7 +325,49 @@ namespace AdjustSdk.Test
                 var appSetIdReadingEnabled = appSetIdReadingEnabledS.ToLower() == "true";
                 adjustConfig.IsAppSetIdReadingEnabled = appSetIdReadingEnabled;
             }
+
+            if (_command.ContainsParameter("googleAdIdReadingEnabled"))
+            {
+                var googleAdIdReadingEnabledS = _command.GetFirstParameterValue("googleAdIdReadingEnabled");
+                var googleAdIdReadingEnabled = googleAdIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsGoogleAdIdReadingEnabled = googleAdIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("androidIdReadingEnabled"))
+            {
+                var androidIdReadingEnabledS = _command.GetFirstParameterValue("androidIdReadingEnabled");
+                var androidIdReadingEnabled = androidIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsAndroidIdReadingEnabled = androidIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("fireAdIdReadingEnabled"))
+            {
+                var fireAdIdReadingEnabledS = _command.GetFirstParameterValue("fireAdIdReadingEnabled");
+                var fireAdIdReadingEnabled = fireAdIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsFireAdIdReadingEnabled = fireAdIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("deviceIdsFromPluginsReadingEnabled"))
+            {
+                var deviceIdsFromPluginsReadingEnabledS = _command.GetFirstParameterValue("deviceIdsFromPluginsReadingEnabled");
+                var deviceIdsFromPluginsReadingEnabled = deviceIdsFromPluginsReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsDeviceIdsFromPluginsReadingEnabled = deviceIdsFromPluginsReadingEnabled;
+            }
 #endif
+
+            if (_command.ContainsParameter("fbIdReadingEnabled"))
+            {
+                var fbIdReadingEnabledS = _command.GetFirstParameterValue("fbIdReadingEnabled");
+                var fbIdReadingEnabled = fbIdReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsFbIdReadingEnabled = fbIdReadingEnabled;
+            }
+
+            if (_command.ContainsParameter("deviceIdsReadingEnabled"))
+            {
+                var deviceIdsReadingEnabledS = _command.GetFirstParameterValue("deviceIdsReadingEnabled");
+                var deviceIdsReadingEnabled = deviceIdsReadingEnabledS.ToLower() == "true";
+                adjustConfig.IsDeviceIdsReadingEnabled = deviceIdsReadingEnabled;
+            }
 
             if (_command.ContainsParameter("allowAdServicesInfoReading"))
             {
@@ -434,6 +477,19 @@ namespace AdjustSdk.Test
                         _testLibrary.AddInfoToSend("json_response", attribution.GetJsonResponseAsString());
                     }
 #endif
+                    _testLibrary.SendInfoToServer(localExtraPath);
+                });
+            }
+
+            if (_command.ContainsParameter("thirdPartySharingSettingsChangedCallbackSendAll"))
+            {
+                string localExtraPath = ExtraPath;
+                adjustConfig.ThirdPartySharingSettingsChangedDelegate = (thirdPartySharingResult =>
+                {
+                    if (thirdPartySharingResult != null && thirdPartySharingResult.ThirdPartySharingSettingsJson != null)
+                    {
+                        _testLibrary.AddInfoToSend("third_party_sharing_settings", thirdPartySharingResult.ThirdPartySharingSettingsJson);
+                    }
                     _testLibrary.SendInfoToServer(localExtraPath);
                 });
             }
@@ -1141,6 +1197,32 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("attribution", "nil");
 #elif UNITY_ANDROID
                     _testLibrary.AddInfoToSend("attribution", "null");
+#endif
+                }
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void TpsSettingsGetter()
+        {
+            var timeoutStr = _command.GetFirstParameterValue("timeout");
+            var timeout = int.Parse(timeoutStr, System.Globalization.CultureInfo.InvariantCulture);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetThirdPartySharingSettingsWithTimeout(timeout, (thirdPartySharingResult) =>
+            {
+                if (thirdPartySharingResult != null && thirdPartySharingResult.ThirdPartySharingSettingsJson != null)
+                {
+                    _testLibrary.AddInfoToSend("third_party_sharing", thirdPartySharingResult.ThirdPartySharingSettingsJson);
+                }
+                else
+                {
+#if UNITY_IOS
+                    _testLibrary.AddInfoToSend("third_party_sharing", "nil");
+#elif UNITY_ANDROID
+                    _testLibrary.AddInfoToSend("third_party_sharing", "null");
 #endif
                 }
                 _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);

@@ -713,6 +713,24 @@ namespace AdjustSdk
 #endif
         }
 
+        public static void GetThirdPartySharingSettingsWithTimeout(
+            int timeoutInMilliseconds,
+            Action<AdjustThirdPartySharingResult> callback)
+        {
+            if (IsEditor())
+            {
+                return;
+            }
+
+#if UNITY_IOS
+            AdjustiOS.GetThirdPartySharingSettingsWithTimeout(timeoutInMilliseconds, callback);
+#elif UNITY_ANDROID
+            AdjustAndroid.GetThirdPartySharingSettingsWithTimeout(timeoutInMilliseconds, callback);
+#else
+            Debug.Log(errorMsgPlatform);
+#endif
+        }
+
         public static void VerifyAppStorePurchase(
             AdjustAppStorePurchase purchase,
             Action<AdjustPurchaseVerificationResult> callback)

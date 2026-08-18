@@ -27,6 +27,7 @@
 @property (nonatomic) AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback;
 @property (nonatomic) AdjustDelegateRemoteTriggerCallback remoteTriggerCallback;
 @property (nonatomic) AdjustDelegateSkanUpdatedCallback skanUpdatedCallback;
+@property (nonatomic) AdjustDelegateThirdPartySharingSettingsChangedCallback thirdPartySharingSettingsChangedCallback;
 
 /**
  * @brief Get instance of the AdjustUnityDelegate with properly swizzled callback methods.
@@ -39,6 +40,7 @@
  * @param deferredDeeplinkCallback      Deferred deep link callback function pointer.
  * @param remoteTriggerCallback         Remote trigger callback function pointer.
  * @param skanUpdatedCallback           SKAdNetwork conversion value update callback function pointer.
+ * @param thirdPartySharingSettingsChangedCallback  Third party sharing settings changed callback function pointer.
  * @param shouldLaunchDeferredDeeplink  Indicator whether SDK should launch deferred deep link by default or not.
  *
  * @return AdjustUnityDelegate object instance with properly swizzled callback methods.
@@ -51,6 +53,7 @@
                 deferredDeeplinkCallback:(AdjustDelegateDeferredDeeplinkCallback)deferredDeeplinkCallback
                    remoteTriggerCallback:(AdjustDelegateRemoteTriggerCallback)remoteTriggerCallback
                      skanUpdatedCallback:(AdjustDelegateSkanUpdatedCallback)skanUpdatedCallback
+thirdPartySharingSettingsChangedCallback:(AdjustDelegateThirdPartySharingSettingsChangedCallback)thirdPartySharingSettingsChangedCallback
             shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink;
 
 /**
