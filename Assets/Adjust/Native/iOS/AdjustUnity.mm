@@ -108,6 +108,8 @@ extern "C"
         int isAppTrackingTransparencyUsageEnabled,
         int isFirstSessionDelayEnabled,
         int isDeferredDeeplinkOpeningEnabled,
+        int isFbIdReadingEnabled,
+        int isDeviceIdsReadingEnabled,
         AdjustDelegateAttributionCallback attributionCallback,
         AdjustDelegateEventSuccessCallback eventSuccessCallback,
         AdjustDelegateEventFailureCallback eventFailureCallback,
@@ -115,7 +117,8 @@ extern "C"
         AdjustDelegateSessionFailureCallback sessionFailureCallback,
         AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback,
         AdjustDelegateRemoteTriggerCallback remoteTriggerCallback,
-        AdjustDelegateSkanUpdatedCallback skanUpdatedCallback) {
+        AdjustDelegateSkanUpdatedCallback skanUpdatedCallback,
+        AdjustDelegateThirdPartySharingSettingsChangedCallback thirdPartySharingSettingsChangedCallback) {
         NSString *strAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *strEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
         NSString *strSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
@@ -146,7 +149,8 @@ extern "C"
             eventFailureCallback != nil ||
             deferredDeeplinkCallback != nil ||
             remoteTriggerCallback != nil ||
-            skanUpdatedCallback != nil) {
+            skanUpdatedCallback != nil ||
+            thirdPartySharingSettingsChangedCallback != nil) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithAttributionCallback:attributionCallback
                                                    eventSuccessCallback:eventSuccessCallback
@@ -156,6 +160,7 @@ extern "C"
                                                deferredDeeplinkCallback:deferredDeeplinkCallback
                                                   remoteTriggerCallback:remoteTriggerCallback
                                                     skanUpdatedCallback:skanUpdatedCallback
+                               thirdPartySharingSettingsChangedCallback:thirdPartySharingSettingsChangedCallback
                                            shouldLaunchDeferredDeeplink:isDeferredDeeplinkOpeningEnabled]];
         }
 
@@ -203,6 +208,20 @@ extern "C"
         if (isIdfvReadingEnabled != -1) {
             if ((BOOL)isIdfvReadingEnabled == NO) {
                 [adjustConfig disableIdfvReading];
+            }
+        }
+
+        // FB ID reading
+        if (isFbIdReadingEnabled != -1) {
+            if ((BOOL)isFbIdReadingEnabled == NO) {
+                [adjustConfig disableFbIdReading];
+            }
+        }
+
+        // reading of all the device IDs
+        if (isDeviceIdsReadingEnabled != -1) {
+            if ((BOOL)isDeviceIdsReadingEnabled == NO) {
+                [adjustConfig disableDeviceIdsReading];
             }
         }
 
@@ -517,6 +536,19 @@ extern "C"
         [Adjust sdkVersionWithCompletionHandler:^(NSString * _Nullable sdkVersion) {
             // TODO: nil checks
             callback([sdkVersion UTF8String]);
+        }];
+    }
+
+    void _AdjustGetThirdPartySharingSettingsWithTimeout(int timeoutInMilliseconds,
+                                                        AdjustDelegateThirdPartySharingGetter callback) {
+        [Adjust thirdPartySharingSettingsWithTimeout:timeoutInMilliseconds
+                                   completionHandler:^(ADJThirdPartySharingResult * _Nullable thirdPartySharingResult) {
+            if (thirdPartySharingResult != nil && thirdPartySharingResult.thirdPartySharingSettingsJson != nil) {
+                callback([thirdPartySharingResult.thirdPartySharingSettingsJson UTF8String]);
+            } else {
+                // pass NULL when third party sharing settings are not available - C# callback will handle it
+                callback(NULL);
+            }
         }];
     }
 

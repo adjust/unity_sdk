@@ -8,7 +8,7 @@ namespace AdjustSdk
 #if UNITY_ANDROID
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity5.6.0";
+        private const string sdkPrefix = "unity5.8.0";
         private static bool isDeferredDeeplinkOpeningEnabled = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
@@ -20,6 +20,7 @@ namespace AdjustSdk
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
         private static RemoteTriggerListener onRemoteTriggerListener;
         private static DeeplinkResolutionListener onDeeplinkResolvedListener;
+        private static ThirdPartySharingSettingsChangedListener onThirdPartySharingSettingsChangedListener;
 
         public static void InitSdk(AdjustConfig adjustConfig)
         {
@@ -147,6 +148,60 @@ namespace AdjustSdk
                     }
                 }
 
+                // check if Google advertising ID reading should be disabled
+                if (adjustConfig.IsGoogleAdIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsGoogleAdIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableGoogleAdIdReading");
+                    }
+                }
+
+                // check if Android ID reading should be disabled
+                if (adjustConfig.IsAndroidIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsAndroidIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableAndroidIdReading");
+                    }
+                }
+
+                // check if FB ID reading should be disabled
+                if (adjustConfig.IsFbIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsFbIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableFbIdReading");
+                    }
+                }
+
+                // check if Fire advertising ID reading should be disabled
+                if (adjustConfig.IsFireAdIdReadingEnabled != null)
+                {
+                    if (adjustConfig.IsFireAdIdReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableFireAdIdReading");
+                    }
+                }
+
+                // check if reading of device IDs from plugins should be disabled
+                if (adjustConfig.IsDeviceIdsFromPluginsReadingEnabled != null)
+                {
+                    if (adjustConfig.IsDeviceIdsFromPluginsReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableDeviceIdsFromPluginsReading");
+                    }
+                }
+
+                // check if reading of all the device IDs should be disabled
+                if (adjustConfig.IsDeviceIdsReadingEnabled != null)
+                {
+                    if (adjustConfig.IsDeviceIdsReadingEnabled == false)
+                    {
+                        ajoAdjustConfig.Call("disableDeviceIdsReading");
+                    }
+                }
+
                 // check if user has set default tracker token
                 if (adjustConfig.DefaultTracker != null)
                 {
@@ -250,6 +305,14 @@ namespace AdjustSdk
                 {
                     onRemoteTriggerListener = new RemoteTriggerListener(adjustConfig.RemoteTriggerDelegate);
                     ajoAdjustConfig.Call("setOnRemoteTriggerListener", onRemoteTriggerListener);
+                }
+
+                // check third party sharing settings changed delegate
+                if (adjustConfig.ThirdPartySharingSettingsChangedDelegate != null)
+                {
+                    onThirdPartySharingSettingsChangedListener =
+                        new ThirdPartySharingSettingsChangedListener(adjustConfig.ThirdPartySharingSettingsChangedDelegate);
+                    ajoAdjustConfig.Call("setOnThirdPartySharingSettingsChangedListener", onThirdPartySharingSettingsChangedListener);
                 }
 
                 // initialise and start the SDK
@@ -633,6 +696,15 @@ namespace AdjustSdk
         {
             LastDeeplinkListener onLastDeeplinkReadProxy = new LastDeeplinkListener(onLastDeeplinkRead);
             ajcAdjust.CallStatic("getLastDeeplink", ajoCurrentActivity, onLastDeeplinkReadProxy);
+        }
+
+        public static void GetThirdPartySharingSettingsWithTimeout(
+            int timeoutInMilliseconds,
+            Action<AdjustThirdPartySharingResult> onThirdPartySharingSettingsRead)
+        {
+            ThirdPartySharingSettingsReadListener onThirdPartySharingSettingsReadProxy =
+                new ThirdPartySharingSettingsReadListener(onThirdPartySharingSettingsRead);
+            ajcAdjust.CallStatic("getThirdPartySharingSettingsWithTimeout", ajoCurrentActivity, (long)timeoutInMilliseconds, onThirdPartySharingSettingsReadProxy);
         }
 
         public static void EndFirstSessionDelay()
@@ -1504,6 +1576,102 @@ namespace AdjustSdk
                     if (callback != null)
                     {
                         callback.Invoke(deeplink);
+                    }
+                });
+            }
+        }
+
+        private class ThirdPartySharingSettingsChangedListener : AndroidJavaProxy
+        {
+            private Action<AdjustThirdPartySharingResult> callback;
+
+            public ThirdPartySharingSettingsChangedListener(Action<AdjustThirdPartySharingResult> pCallback)
+                : base("com.adjust.sdk.OnThirdPartySharingSettingsChangedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onThirdPartySharingSettingsChanged(AdjustThirdPartySharingResult adjustThirdPartySharingResult);
+            public void onThirdPartySharingSettingsChanged(AndroidJavaObject ajoThirdPartySharingResult)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    try
+                    {
+                        if (ajoThirdPartySharingResult == null)
+                        {
+                            if (callback != null)
+                            {
+                                callback.Invoke(null);
+                            }
+                            return;
+                        }
+
+                        string thirdPartySharingSettingsJson =
+                            ajoThirdPartySharingResult.Call<string>("getThirdPartySharingSettingsJson");
+
+                        if (callback != null)
+                        {
+                            callback.Invoke(new AdjustThirdPartySharingResult(thirdPartySharingSettingsJson));
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // third party sharing settings reading failed
+                    }
+                });
+            }
+        }
+
+        private class ThirdPartySharingSettingsReadListener : AndroidJavaProxy
+        {
+            private Action<AdjustThirdPartySharingResult> callback;
+
+            public ThirdPartySharingSettingsReadListener(Action<AdjustThirdPartySharingResult> pCallback)
+                : base("com.adjust.sdk.OnThirdPartySharingSettingsReadListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onThirdPartySharingSettingsRead(AdjustThirdPartySharingResult adjustThirdPartySharingResult);
+            public void onThirdPartySharingSettingsRead(AndroidJavaObject ajoThirdPartySharingResult)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    try
+                    {
+                        if (ajoThirdPartySharingResult == null)
+                        {
+                            if (callback != null)
+                            {
+                                callback.Invoke(null);
+                            }
+                            return;
+                        }
+
+                        string thirdPartySharingSettingsJson =
+                            ajoThirdPartySharingResult.Call<string>("getThirdPartySharingSettingsJson");
+
+                        if (callback != null)
+                        {
+                            callback.Invoke(new AdjustThirdPartySharingResult(thirdPartySharingSettingsJson));
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // third party sharing settings reading failed
                     }
                 });
             }
