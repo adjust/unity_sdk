@@ -13,6 +13,7 @@ namespace AdjustSdk
         // app callbacks as method parameters
         private static List<Action<bool>> appIsEnabledGetterCallbacks;
         private static List<Action<AdjustAttribution>> appAttributionGetterCallbacks;
+        private static List<Action<AdjustThirdPartySharingResult>> appThirdPartySharingGetterCallbacks;
         private static List<Action<string>> appAdidGetterCallbacks;
         private static List<Action<string>> appIdfaGetterCallbacks;
         private static List<Action<string>> appIdfvGetterCallbacks;
@@ -153,6 +154,10 @@ namespace AdjustSdk
         private delegate void AdjustDelegateSdkVersionGetter(string sdkVersion);
         [DllImport("__Internal")]
         private static extern void _AdjustGetSdkVersion(AdjustDelegateSdkVersionGetter callback);
+
+        private delegate void AdjustDelegateThirdPartySharingGetter(string thirdPartySharingSettings);
+        [DllImport("__Internal")]
+        private static extern void _AdjustGetThirdPartySharingSettingsWithTimeout(int timeoutInMilliseconds, AdjustDelegateThirdPartySharingGetter callback);
 
         [DllImport("__Internal")]
         private static extern void _AdjustGdprForgetMe();
@@ -624,6 +629,18 @@ namespace AdjustSdk
             _AdjustGetSdkVersion(SdkVersionGetterMonoPInvoke);
         }
 
+        public static void GetThirdPartySharingSettingsWithTimeout(
+            int timeoutInMilliseconds,
+            Action<AdjustThirdPartySharingResult> callback)
+        {
+            if (appThirdPartySharingGetterCallbacks == null)
+            {
+                appThirdPartySharingGetterCallbacks = new List<Action<AdjustThirdPartySharingResult>>();
+            }
+            appThirdPartySharingGetterCallbacks.Add(callback);
+            _AdjustGetThirdPartySharingSettingsWithTimeout(timeoutInMilliseconds, ThirdPartySharingGetterMonoPInvoke);
+        }
+
         public static void GdprForgetMe()
         {
             _AdjustGdprForgetMe();
@@ -865,6 +882,33 @@ namespace AdjustSdk
                     }
                 }
                 appAttributionGetterCallbacks.Clear();
+            });
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateThirdPartySharingGetter))]
+        private static void ThirdPartySharingGetterMonoPInvoke(string thirdPartySharingSettings)
+        {
+            if (appThirdPartySharingGetterCallbacks == null)
+            {
+                return;
+            }
+
+            AdjustThreadDispatcher.RunOnMainThread(() =>
+            {
+                foreach (Action<AdjustThirdPartySharingResult> callback in appThirdPartySharingGetterCallbacks)
+                {
+                    if (callback != null)
+                    {
+                        // timeout version can return null, so handle it properly
+                        AdjustThirdPartySharingResult adjustThirdPartySharingResult = null;
+                        if (thirdPartySharingSettings != null)
+                        {
+                            adjustThirdPartySharingResult = new AdjustThirdPartySharingResult(thirdPartySharingSettings);
+                        }
+                        callback.Invoke(adjustThirdPartySharingResult);
+                    }
+                }
+                appThirdPartySharingGetterCallbacks.Clear();
             });
         }
 

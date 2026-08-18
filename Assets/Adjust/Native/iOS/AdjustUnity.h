@@ -24,6 +24,7 @@ typedef void (*AdjustDelegatePurchaseVerificationCallback)(const char* verificat
 typedef void (*AdjustDelegateVerifyAndTrackCallback)(const char* verificationResult, int callbackId);
 typedef void (*AdjustDelegateResolvedDeeplinkCallback)(const char* deeplink);
 typedef void (*AdjustDelegateSkanErrorCallback)(const char* error);
+typedef void (*AdjustDelegateThirdPartySharingGetter)(const char* thirdPartySharingSettings);
 
 // app callbacks as subscriptions
 typedef void (*AdjustDelegateAttributionCallback)(const char* attribution);

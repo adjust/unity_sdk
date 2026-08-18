@@ -520,6 +520,19 @@ extern "C"
         }];
     }
 
+    void _AdjustGetThirdPartySharingSettingsWithTimeout(int timeoutInMilliseconds,
+                                                        AdjustDelegateThirdPartySharingGetter callback) {
+        [Adjust thirdPartySharingSettingsWithTimeout:timeoutInMilliseconds
+                                   completionHandler:^(ADJThirdPartySharingResult * _Nullable thirdPartySharingResult) {
+            if (thirdPartySharingResult != nil && thirdPartySharingResult.thirdPartySharingSettingsJson != nil) {
+                callback([thirdPartySharingResult.thirdPartySharingSettingsJson UTF8String]);
+            } else {
+                // pass NULL when third party sharing settings are not available - C# callback will handle it
+                callback(NULL);
+            }
+        }];
+    }
+
     void _AdjustGdprForgetMe() {
         [Adjust gdprForgetMe];
     }

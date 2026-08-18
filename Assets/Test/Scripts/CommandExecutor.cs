@@ -63,6 +63,7 @@ namespace AdjustSdk.Test
                     case "processDeeplink": ProcessAndResolveDeeplink(); break;
                     case "attributionGetter": AttributionGetter(); break;
                     case "attributionGetterWithTimeout": AttributionGetterWithTimeout(); break;
+                    case "tpsSettingsGetter": TpsSettingsGetter(); break;
                     case "adidGetter": AdidGetter(); break;
                     case "adidGetterWithTimeout": AdidGetterWithTimeout(); break;
                     case "sdkVersionGetter": SdkVersionGetter(); break;
@@ -1141,6 +1142,32 @@ namespace AdjustSdk.Test
                     _testLibrary.AddInfoToSend("attribution", "nil");
 #elif UNITY_ANDROID
                     _testLibrary.AddInfoToSend("attribution", "null");
+#endif
+                }
+                _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);
+                _testLibrary.SendInfoToServer(localExtraPath);
+            });
+        }
+
+        private void TpsSettingsGetter()
+        {
+            var timeoutStr = _command.GetFirstParameterValue("timeout");
+            var timeout = int.Parse(timeoutStr, System.Globalization.CultureInfo.InvariantCulture);
+            var testCallbackId = _command.GetFirstParameterValue("testCallbackId");
+            string localExtraPath = ExtraPath;
+
+            Adjust.GetThirdPartySharingSettingsWithTimeout(timeout, (thirdPartySharingResult) =>
+            {
+                if (thirdPartySharingResult != null && thirdPartySharingResult.ThirdPartySharingSettingsJson != null)
+                {
+                    _testLibrary.AddInfoToSend("third_party_sharing", thirdPartySharingResult.ThirdPartySharingSettingsJson);
+                }
+                else
+                {
+#if UNITY_IOS
+                    _testLibrary.AddInfoToSend("third_party_sharing", "nil");
+#elif UNITY_ANDROID
+                    _testLibrary.AddInfoToSend("third_party_sharing", "null");
 #endif
                 }
                 _testLibrary.AddInfoToSend("test_callback_id", testCallbackId);

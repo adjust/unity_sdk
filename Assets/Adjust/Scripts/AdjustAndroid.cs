@@ -635,6 +635,15 @@ namespace AdjustSdk
             ajcAdjust.CallStatic("getLastDeeplink", ajoCurrentActivity, onLastDeeplinkReadProxy);
         }
 
+        public static void GetThirdPartySharingSettingsWithTimeout(
+            int timeoutInMilliseconds,
+            Action<AdjustThirdPartySharingResult> onThirdPartySharingSettingsRead)
+        {
+            ThirdPartySharingSettingsReadListener onThirdPartySharingSettingsReadProxy =
+                new ThirdPartySharingSettingsReadListener(onThirdPartySharingSettingsRead);
+            ajcAdjust.CallStatic("getThirdPartySharingSettingsWithTimeout", ajoCurrentActivity, (long)timeoutInMilliseconds, onThirdPartySharingSettingsReadProxy);
+        }
+
         public static void EndFirstSessionDelay()
         {
             ajcAdjust.CallStatic("endFirstSessionDelay");
@@ -1504,6 +1513,54 @@ namespace AdjustSdk
                     if (callback != null)
                     {
                         callback.Invoke(deeplink);
+                    }
+                });
+            }
+        }
+
+        private class ThirdPartySharingSettingsReadListener : AndroidJavaProxy
+        {
+            private Action<AdjustThirdPartySharingResult> callback;
+
+            public ThirdPartySharingSettingsReadListener(Action<AdjustThirdPartySharingResult> pCallback)
+                : base("com.adjust.sdk.OnThirdPartySharingSettingsReadListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onThirdPartySharingSettingsRead(AdjustThirdPartySharingResult adjustThirdPartySharingResult);
+            public void onThirdPartySharingSettingsRead(AndroidJavaObject ajoThirdPartySharingResult)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    try
+                    {
+                        if (ajoThirdPartySharingResult == null)
+                        {
+                            if (callback != null)
+                            {
+                                callback.Invoke(null);
+                            }
+                            return;
+                        }
+
+                        string thirdPartySharingSettingsJson =
+                            ajoThirdPartySharingResult.Call<string>("getThirdPartySharingSettingsJson");
+
+                        if (callback != null)
+                        {
+                            callback.Invoke(new AdjustThirdPartySharingResult(thirdPartySharingSettingsJson));
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // third party sharing settings reading failed
                     }
                 });
             }
