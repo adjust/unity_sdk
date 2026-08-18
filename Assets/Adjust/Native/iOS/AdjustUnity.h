@@ -35,5 +35,6 @@ typedef void (*AdjustDelegateEventFailureCallback)(const char* eventFailure);
 typedef void (*AdjustDelegateDeferredDeeplinkCallback)(const char* deeplink);
 typedef void (*AdjustDelegateRemoteTriggerCallback)(const char* remoteTrigger);
 typedef void (*AdjustDelegateSkanUpdatedCallback)(const char* skanData);
+typedef void (*AdjustDelegateThirdPartySharingSettingsChangedCallback)(const char* thirdPartySharingSettings);
 
 @end

@@ -115,7 +115,8 @@ extern "C"
         AdjustDelegateSessionFailureCallback sessionFailureCallback,
         AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback,
         AdjustDelegateRemoteTriggerCallback remoteTriggerCallback,
-        AdjustDelegateSkanUpdatedCallback skanUpdatedCallback) {
+        AdjustDelegateSkanUpdatedCallback skanUpdatedCallback,
+        AdjustDelegateThirdPartySharingSettingsChangedCallback thirdPartySharingSettingsChangedCallback) {
         NSString *strAppToken = isStringValid(appToken) == true ? [NSString stringWithUTF8String:appToken] : nil;
         NSString *strEnvironment = isStringValid(environment) == true ? [NSString stringWithUTF8String:environment] : nil;
         NSString *strSdkPrefix = isStringValid(sdkPrefix) == true ? [NSString stringWithUTF8String:sdkPrefix] : nil;
@@ -146,7 +147,8 @@ extern "C"
             eventFailureCallback != nil ||
             deferredDeeplinkCallback != nil ||
             remoteTriggerCallback != nil ||
-            skanUpdatedCallback != nil) {
+            skanUpdatedCallback != nil ||
+            thirdPartySharingSettingsChangedCallback != nil) {
             [adjustConfig setDelegate:
                 [AdjustUnityDelegate getInstanceWithAttributionCallback:attributionCallback
                                                    eventSuccessCallback:eventSuccessCallback
@@ -156,6 +158,7 @@ extern "C"
                                                deferredDeeplinkCallback:deferredDeeplinkCallback
                                                   remoteTriggerCallback:remoteTriggerCallback
                                                     skanUpdatedCallback:skanUpdatedCallback
+                               thirdPartySharingSettingsChangedCallback:thirdPartySharingSettingsChangedCallback
                                            shouldLaunchDeferredDeeplink:isDeferredDeeplinkOpeningEnabled]];
         }
 

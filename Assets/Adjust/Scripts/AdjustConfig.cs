@@ -31,6 +31,7 @@ namespace AdjustSdk
         public Action<string> DeferredDeeplinkDelegate { get; set; }
         public Action<AdjustRemoteTrigger> RemoteTriggerDelegate { get; set; }
         public Action<Dictionary<string, string>> SkanUpdatedDelegate { get; set; }
+        public Action<AdjustThirdPartySharingResult> ThirdPartySharingSettingsChangedDelegate { get; set; }
 
         // iOS specific
         public bool? IsAdServicesEnabled { get; set; }

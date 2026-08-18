@@ -36,6 +36,7 @@ namespace AdjustSdk
         private static Action<string> appDeferredDeeplinkCallback;
         private static Action<AdjustRemoteTrigger> appRemoteTriggerCallback;
         private static Action<Dictionary<string, string>> appSkanUpdatedCallback;
+        private static Action<AdjustThirdPartySharingResult> appThirdPartySharingSettingsChangedCallback;
 
         // extenral C methods
         private delegate void AdjustDelegateAttributionCallback(string attribution);
@@ -46,6 +47,8 @@ namespace AdjustSdk
         private delegate void AdjustDelegateDeferredDeeplinkCallback(string callback);
         private delegate void AdjustDelegateRemoteTriggerCallback(string callback);
         private delegate void AdjustDelegateSkanUpdatedCallback(string callback);
+        private delegate void AdjustDelegateThirdPartySharingSettingsChangedCallback(string thirdPartySharingSettings);
+
         [DllImport("__Internal")]
         private static extern void _AdjustInitSdk(
             string appToken,
@@ -81,7 +84,8 @@ namespace AdjustSdk
             AdjustDelegateSessionFailureCallback sessionFailureCallback,
             AdjustDelegateDeferredDeeplinkCallback deferredDeeplinkCallback,
             AdjustDelegateRemoteTriggerCallback remoteTriggerCallback,
-            AdjustDelegateSkanUpdatedCallback skanUpdatedCallback);
+            AdjustDelegateSkanUpdatedCallback skanUpdatedCallback,
+            AdjustDelegateThirdPartySharingSettingsChangedCallback thirdPartySharingSettingsChangedCallback);
 
         [DllImport("__Internal")]
         private static extern void _AdjustTrackEvent(
@@ -319,6 +323,7 @@ namespace AdjustSdk
             int shouldUseSubdomains = AdjustUtils.ConvertBool(adjustConfig.ShouldUseSubdomains);
             int isDataResidency = AdjustUtils.ConvertBool(adjustConfig.IsDataResidency);
             appAttributionCallback = adjustConfig.AttributionChangedDelegate;
+            appThirdPartySharingSettingsChangedCallback = adjustConfig.ThirdPartySharingSettingsChangedDelegate;
             appEventSuccessCallback = adjustConfig.EventSuccessDelegate;
             appEventFailureCallback = adjustConfig.EventFailureDelegate;
             appSessionSuccessCallback = adjustConfig.SessionSuccessDelegate;
@@ -361,7 +366,8 @@ namespace AdjustSdk
                 SessionFailureCallbackMonoPInvoke,
                 DeferredDeeplinkCallbackMonoPInvoke,
                 RemoteTriggerCallbackMonoPInvoke,
-                SkanUpdatedCallbackMonoPInvoke);
+                SkanUpdatedCallbackMonoPInvoke,
+                ThirdPartySharingSettingsChangedCallbackMonoPInvoke);
         }
 
         public static void TrackEvent(AdjustEvent adjustEvent)
@@ -1257,6 +1263,29 @@ namespace AdjustSdk
                 if (appSkanUpdatedCallback != null)
                 {
                     appSkanUpdatedCallback.Invoke(AdjustUtils.GetSkanUpdateDataDictionary(skanData));
+                }
+            });
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(AdjustDelegateThirdPartySharingSettingsChangedCallback))]
+        private static void ThirdPartySharingSettingsChangedCallbackMonoPInvoke(string thirdPartySharingSettings)
+        {
+            if (appThirdPartySharingSettingsChangedCallback == null)
+            {
+                return;
+            }
+
+            AdjustThreadDispatcher.RunOnMainThread(() =>
+            {
+                if (appThirdPartySharingSettingsChangedCallback != null)
+                {
+                    // native SDK can deliver null result, so handle it properly
+                    AdjustThirdPartySharingResult adjustThirdPartySharingResult = null;
+                    if (thirdPartySharingSettings != null)
+                    {
+                        adjustThirdPartySharingResult = new AdjustThirdPartySharingResult(thirdPartySharingSettings);
+                    }
+                    appThirdPartySharingSettingsChangedCallback(adjustThirdPartySharingResult);
                 }
             });
         }

@@ -439,6 +439,19 @@ namespace AdjustSdk.Test
                 });
             }
 
+            if (_command.ContainsParameter("thirdPartySharingSettingsChangedCallbackSendAll"))
+            {
+                string localExtraPath = ExtraPath;
+                adjustConfig.ThirdPartySharingSettingsChangedDelegate = (thirdPartySharingResult =>
+                {
+                    if (thirdPartySharingResult != null && thirdPartySharingResult.ThirdPartySharingSettingsJson != null)
+                    {
+                        _testLibrary.AddInfoToSend("third_party_sharing_settings", thirdPartySharingResult.ThirdPartySharingSettingsJson);
+                    }
+                    _testLibrary.SendInfoToServer(localExtraPath);
+                });
+            }
+
             if (_command.ContainsParameter("sessionCallbackSendSuccess"))
             {
                 string localExtraPath = ExtraPath;

@@ -20,6 +20,7 @@ namespace AdjustSdk
         private static SessionTrackingSucceededListener onSessionTrackingSucceededListener;
         private static RemoteTriggerListener onRemoteTriggerListener;
         private static DeeplinkResolutionListener onDeeplinkResolvedListener;
+        private static ThirdPartySharingSettingsChangedListener onThirdPartySharingSettingsChangedListener;
 
         public static void InitSdk(AdjustConfig adjustConfig)
         {
@@ -250,6 +251,14 @@ namespace AdjustSdk
                 {
                     onRemoteTriggerListener = new RemoteTriggerListener(adjustConfig.RemoteTriggerDelegate);
                     ajoAdjustConfig.Call("setOnRemoteTriggerListener", onRemoteTriggerListener);
+                }
+
+                // check third party sharing settings changed delegate
+                if (adjustConfig.ThirdPartySharingSettingsChangedDelegate != null)
+                {
+                    onThirdPartySharingSettingsChangedListener =
+                        new ThirdPartySharingSettingsChangedListener(adjustConfig.ThirdPartySharingSettingsChangedDelegate);
+                    ajoAdjustConfig.Call("setOnThirdPartySharingSettingsChangedListener", onThirdPartySharingSettingsChangedListener);
                 }
 
                 // initialise and start the SDK
@@ -1513,6 +1522,54 @@ namespace AdjustSdk
                     if (callback != null)
                     {
                         callback.Invoke(deeplink);
+                    }
+                });
+            }
+        }
+
+        private class ThirdPartySharingSettingsChangedListener : AndroidJavaProxy
+        {
+            private Action<AdjustThirdPartySharingResult> callback;
+
+            public ThirdPartySharingSettingsChangedListener(Action<AdjustThirdPartySharingResult> pCallback)
+                : base("com.adjust.sdk.OnThirdPartySharingSettingsChangedListener")
+            {
+                this.callback = pCallback;
+            }
+
+            // native method:
+            // void onThirdPartySharingSettingsChanged(AdjustThirdPartySharingResult adjustThirdPartySharingResult);
+            public void onThirdPartySharingSettingsChanged(AndroidJavaObject ajoThirdPartySharingResult)
+            {
+                if (this.callback == null)
+                {
+                    return;
+                }
+
+                AdjustThreadDispatcher.RunOnMainThread(() =>
+                {
+                    try
+                    {
+                        if (ajoThirdPartySharingResult == null)
+                        {
+                            if (callback != null)
+                            {
+                                callback.Invoke(null);
+                            }
+                            return;
+                        }
+
+                        string thirdPartySharingSettingsJson =
+                            ajoThirdPartySharingResult.Call<string>("getThirdPartySharingSettingsJson");
+
+                        if (callback != null)
+                        {
+                            callback.Invoke(new AdjustThirdPartySharingResult(thirdPartySharingSettingsJson));
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // third party sharing settings reading failed
                     }
                 });
             }

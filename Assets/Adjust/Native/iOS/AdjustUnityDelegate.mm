@@ -34,6 +34,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
                 deferredDeeplinkCallback:(AdjustDelegateDeferredDeeplinkCallback)deferredDeeplinkCallback
                    remoteTriggerCallback:(AdjustDelegateRemoteTriggerCallback)remoteTriggerCallback
                      skanUpdatedCallback:(AdjustDelegateSkanUpdatedCallback)skanUpdatedCallback
+thirdPartySharingSettingsChangedCallback:(AdjustDelegateThirdPartySharingSettingsChangedCallback)thirdPartySharingSettingsChangedCallback
             shouldLaunchDeferredDeeplink:(BOOL)shouldLaunchDeferredDeeplink {
     dispatch_once(&onceToken, ^{
         defaultInstance = [[AdjustUnityDelegate alloc] init];
@@ -71,6 +72,10 @@ static AdjustUnityDelegate *defaultInstance = nil;
             [defaultInstance swizzleOriginalSelector:@selector(adjustSkanUpdatedWithConversionData:)
                                         withSelector:@selector(adjustSkanUpdatedWithConversionDataWannabe:)];
         }
+        if (thirdPartySharingSettingsChangedCallback != nil) {
+            [defaultInstance swizzleOriginalSelector:@selector(adjustThirdPartySharingSettingsChanged:)
+                                        withSelector:@selector(adjustThirdPartySharingSettingsChangedWannabe:)];
+        }
 
         [defaultInstance setAttributionCallback:attributionCallback];
         [defaultInstance setEventSuccessCallback:eventSuccessCallback];
@@ -80,6 +85,7 @@ static AdjustUnityDelegate *defaultInstance = nil;
         [defaultInstance setDeferredDeeplinkCallback:deferredDeeplinkCallback];
         [defaultInstance setRemoteTriggerCallback:remoteTriggerCallback];
         [defaultInstance setSkanUpdatedCallback:skanUpdatedCallback];
+        [defaultInstance setThirdPartySharingSettingsChangedCallback:thirdPartySharingSettingsChangedCallback];
         [defaultInstance setShouldLaunchDeferredDeeplink:shouldLaunchDeferredDeeplink];
     });
     
@@ -342,6 +348,22 @@ static AdjustUnityDelegate *defaultInstance = nil;
                                                            encoding:NSUTF8StringEncoding];
     const char* charArrayRemoteTrigger = [stringRemoteTrigger UTF8String];
     _remoteTriggerCallback(charArrayRemoteTrigger);
+}
+
+- (void)adjustThirdPartySharingSettingsChangedWannabe:(ADJThirdPartySharingResult *)thirdPartySharingResult {
+    if (_thirdPartySharingSettingsChangedCallback == nil) {
+        return;
+    }
+
+    if (thirdPartySharingResult == nil || thirdPartySharingResult.thirdPartySharingSettingsJson == nil) {
+        // pass NULL when third party sharing settings are not available - C# callback will handle it
+        _thirdPartySharingSettingsChangedCallback(NULL);
+        return;
+    }
+
+    const char* charArrayThirdPartySharingSettings =
+        [thirdPartySharingResult.thirdPartySharingSettingsJson UTF8String];
+    _thirdPartySharingSettingsChangedCallback(charArrayThirdPartySharingSettings);
 }
 
 - (void)swizzleOriginalSelector:(SEL)originalSelector
