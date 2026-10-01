@@ -11,6 +11,7 @@ namespace AdjustSdk
         SerializedProperty iOSFrameworkAdServices;
         SerializedProperty iOSFrameworkAppTrackingTransparency;
         SerializedProperty iOSFrameworkStoreKit;
+        SerializedProperty iOSGoogleOdmPlugin;
         SerializedProperty androidPermissionInternet;
         SerializedProperty androidPermissionInstallReferrerService;
         SerializedProperty androidPermissionAdId;
@@ -30,6 +31,7 @@ namespace AdjustSdk
             iOSFrameworkAdServices = serializedObject.FindProperty("_iOSFrameworkAdServices");
             iOSFrameworkAppTrackingTransparency = serializedObject.FindProperty("_iOSFrameworkAppTrackingTransparency");
             iOSFrameworkStoreKit = serializedObject.FindProperty("_iOSFrameworkStoreKit");
+            iOSGoogleOdmPlugin = serializedObject.FindProperty("_iOSGoogleOdmPlugin");
             androidPermissionInternet = serializedObject.FindProperty("_androidPermissionInternet");
             androidPermissionInstallReferrerService = serializedObject.FindProperty("_androidPermissionInstallReferrerService");
             androidPermissionAdId = serializedObject.FindProperty("_androidPermissionAdId");
@@ -110,6 +112,15 @@ namespace AdjustSdk
             EditorGUILayout.PropertyField(iOSFrameworkStoreKit,
                 new GUIContent("StoreKit.framework",
                     "iOS framework needed to use SKAdNetwork capabilities"),
+                true);
+            EditorGUI.indentLevel -= 1;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("iOS Plugins", EditorStyles.boldLabel);
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(iOSGoogleOdmPlugin,
+                new GUIContent("Google ODM Plugin",
+                    "Adds Adjust Google On-Device Measurement plugin (Adjust/AdjustGoogleOdmPlugin pod) to your iOS app"),
                 true);
             EditorGUI.indentLevel -= 1;
             
