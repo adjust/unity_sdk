@@ -1,3 +1,16 @@
+### Version 5.8.1 (5th October 2026)
+#### Added
+- Added `Google ODM Plugin` option to Adjust Settings for adding the Adjust Google On-Device Measurement plugin to your iOS app (https://github.com/adjust/unity_sdk/issues/358).
+
+#### Changed
+- Changed internal `AdjustUtils` string keys from `static` fields to `const` for compatibility with Unity's Fast Enter Play Mode (disabled domain reload).
+
+#### Native SDKs
+- [iOS@v5.8.0][ios_sdk_v5.8.0]
+- [Android@v5.8.0][android_sdk_v5.8.0]
+
+---
+
 ### Version 5.8.0 (18th August 2026)
 #### Added
 - Added `GetThirdPartySharingSettingsWithTimeout` to the `Adjust` API and `ThirdPartySharingSettingsChangedDelegate` to `AdjustConfig` for reading current third-party-sharing settings from the Adjust backend.
