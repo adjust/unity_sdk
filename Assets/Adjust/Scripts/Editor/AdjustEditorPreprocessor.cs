@@ -39,6 +39,37 @@ namespace AdjustSdk
                 RunPostProcessTasksAndroid();
 #endif
             }
+            else if (target == BuildTarget.iOS)
+            {
+                HandleGoogleOdmDependencies();
+            }
+        }
+
+        private static void HandleGoogleOdmDependencies()
+        {
+            var odmDependenciesPath = "Assets/Adjust/Editor/AdjustGoogleOdmDependencies.xml";
+            if (AdjustSettings.iOSGoogleOdmPlugin)
+            {
+                var guids = AssetDatabase.FindAssets("AdjustEditorPreprocessor t:script");
+                var dependenciesPath = AssetDatabase.GUIDToAssetPath(guids[0]).Replace("Scripts/Editor/AdjustEditorPreprocessor.cs", "Native/Editor/Dependencies.xml");
+                var dependencies = new XmlDocument();
+                dependencies.LoadXml(AssetDatabase.LoadAssetAtPath<TextAsset>(dependenciesPath).text);
+                var iosSdkVersion = dependencies.SelectSingleNode("//iosPod[@name='Adjust']").Attributes["version"].Value;
+
+                Directory.CreateDirectory(Path.GetDirectoryName(odmDependenciesPath));
+                File.WriteAllText(odmDependenciesPath,
+                    "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                    "<dependencies>\n" +
+                    "    <iosPods>\n" +
+                    "        <iosPod name=\"Adjust/AdjustGoogleOdmPlugin\" version=\"" + iosSdkVersion + "\" minTargetSdk=\"12.0\"/>\n" +
+                    "    </iosPods>\n" +
+                    "</dependencies>\n");
+                AssetDatabase.ImportAsset(odmDependenciesPath);
+            }
+            else
+            {
+                AssetDatabase.DeleteAsset(odmDependenciesPath);
+            }
         }
 
 #if UNITY_ANDROID

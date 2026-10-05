@@ -19,6 +19,8 @@ namespace AdjustSdk
     public class AdjustEditor : AssetPostprocessor
     {
         private const int AdjustEditorPostProcesssBuildPriority = 90;
+        private const int AdjustEditorRemoveGoogleOdmPodPriority = 39; // right before edm4u generates podfile (40)
+        private const string GoogleOdmPluginPodName = "'Adjust/AdjustGoogleOdmPlugin'";
         private const string TargetUnityIphonePodfileLine = "target 'Unity-iPhone' do";
         private const string UseFrameworksPodfileLine = "use_frameworks!";
         private const string UseFrameworksDynamicPodfileLine = "use_frameworks! :linkage => :dynamic";
@@ -28,6 +30,27 @@ namespace AdjustSdk
         public static void OnPostprocessBuild(BuildTarget target, string projectPath)
         {
             RunPostBuildScript(target: target, projectPath: projectPath);
+        }
+
+        [PostProcessBuild(AdjustEditorRemoveGoogleOdmPodPriority)]
+        public static void OnPostprocessBuildRemoveGoogleOdmPod(BuildTarget target, string projectPath)
+        {
+            if (target != BuildTarget.iOS || AdjustSettings.iOSGoogleOdmPlugin)
+            {
+                return;
+            }
+
+            var podfilePath = Path.Combine(projectPath, "Podfile");
+            if (!File.Exists(podfilePath))
+            {
+                return;
+            }
+
+            var lines = File.ReadAllLines(podfilePath);
+            if (lines.Any(line => line.Contains(GoogleOdmPluginPodName)))
+            {
+                File.WriteAllLines(podfilePath, lines.Where(line => !line.Contains(GoogleOdmPluginPodName)).ToArray());
+            }
         }
 
         private static void RunPostBuildScript(BuildTarget target, string projectPath = "")
