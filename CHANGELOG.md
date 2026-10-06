@@ -1,3 +1,21 @@
+### Version 5.8.2 (6th October 2026)
+#### Added
+- Added `Link Frameworks To` option to Adjust Settings for linking iOS frameworks to the `UnityFramework` target instead of the `Unity-iPhone` target (https://github.com/adjust/unity_sdk/issues/334).
+
+#### Changed
+- Removed copying of the default `AdjustAndroidManifest.xml` into apps which don't have their own `AndroidManifest.xml`. Needed changes are now applied to the Unity generated manifest instead (https://github.com/adjust/unity_sdk/issues/349).
+- Moved `AdjustSettings.asset` from the `Adjust/Resources` to the `Adjust/Editor` directory so that it's no longer included in app builds. Existing `AdjustSettings.asset` is moved automatically (https://github.com/adjust/unity_sdk/issues/341).
+
+#### Fixed
+- Fixed Android build failure when SDK is added via UPM and the app doesn't have its own `AndroidManifest.xml` (https://github.com/adjust/unity_sdk/issues/336).
+- Fixed null reference exception during Android build when upgrading from older SDK versions without re-saving `AdjustSettings.asset` (https://github.com/adjust/unity_sdk/pull/344).
+
+#### Native SDKs
+- [iOS@v5.8.0][ios_sdk_v5.8.0]
+- [Android@v5.8.0][android_sdk_v5.8.0]
+
+---
+
 ### Version 5.8.1 (5th October 2026)
 #### Added
 - Added `Google ODM Plugin` option to Adjust Settings for adding the Adjust Google On-Device Measurement plugin to your iOS app (https://github.com/adjust/unity_sdk/issues/358).
