@@ -97,7 +97,7 @@ namespace AdjustSdk
                 EditorGUI.indentLevel -= 1;
             }
 
-            if (settingsEditor == null)
+            if (settingsEditor == null || settingsEditor.target == null)
             {
                 settingsEditor = CreateEditor(AdjustSettings.Instance);
             }
