@@ -23,6 +23,8 @@ namespace AdjustSdk
         [SerializeField]
         private bool _iOSGoogleOdmPlugin = false;
         [SerializeField]
+        private bool _iOSFrameworksLinkToUnityFramework = false;
+        [SerializeField]
         private bool _androidPermissionInternet = true;
         [SerializeField]
         private bool _androidPermissionInstallReferrerService = true;
@@ -141,6 +143,12 @@ namespace AdjustSdk
         {
             get { return Instance._iOSGoogleOdmPlugin; }
             set { Instance._iOSGoogleOdmPlugin = value; }
+        }
+
+        public static bool iOSFrameworksLinkToUnityFramework
+        {
+            get { return Instance._iOSFrameworksLinkToUnityFramework; }
+            set { Instance._iOSFrameworksLinkToUnityFramework = value; }
         }
 
         public static bool androidPermissionInternet

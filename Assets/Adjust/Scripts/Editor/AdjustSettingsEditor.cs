@@ -12,6 +12,7 @@ namespace AdjustSdk
         SerializedProperty iOSFrameworkAppTrackingTransparency;
         SerializedProperty iOSFrameworkStoreKit;
         SerializedProperty iOSGoogleOdmPlugin;
+        SerializedProperty iOSFrameworksLinkToUnityFramework;
         SerializedProperty androidPermissionInternet;
         SerializedProperty androidPermissionInstallReferrerService;
         SerializedProperty androidPermissionAdId;
@@ -32,6 +33,7 @@ namespace AdjustSdk
             iOSFrameworkAppTrackingTransparency = serializedObject.FindProperty("_iOSFrameworkAppTrackingTransparency");
             iOSFrameworkStoreKit = serializedObject.FindProperty("_iOSFrameworkStoreKit");
             iOSGoogleOdmPlugin = serializedObject.FindProperty("_iOSGoogleOdmPlugin");
+            iOSFrameworksLinkToUnityFramework = serializedObject.FindProperty("_iOSFrameworksLinkToUnityFramework");
             androidPermissionInternet = serializedObject.FindProperty("_androidPermissionInternet");
             androidPermissionInstallReferrerService = serializedObject.FindProperty("_androidPermissionInstallReferrerService");
             androidPermissionAdId = serializedObject.FindProperty("_androidPermissionAdId");
@@ -50,7 +52,11 @@ namespace AdjustSdk
             GUIStyle darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
             darkerCyanTextFieldStyles.normal.textColor = new Color(0f/255f, 190f/255f, 190f/255f);
 
+#if UNITY_2023_1_OR_NEWER
+            var adjust = FindAnyObjectByType<Adjust>();
+#else
             var adjust = FindObjectOfType<Adjust>();
+#endif
             bool isStartManually = adjust != null && adjust.startManually;
             
             EditorGUILayout.Space();
@@ -113,6 +119,12 @@ namespace AdjustSdk
                 new GUIContent("StoreKit.framework",
                     "iOS framework needed to use SKAdNetwork capabilities"),
                 true);
+            EditorGUILayout.Space();
+            iOSFrameworksLinkToUnityFramework.boolValue = EditorGUILayout.Popup(
+                new GUIContent("Link Frameworks To",
+                    "Xcode target to which frameworks above are linked (UnityFramework requires Unity 2019.3 or newer)"),
+                iOSFrameworksLinkToUnityFramework.boolValue ? 1 : 0,
+                new[] { new GUIContent("Unity-iPhone"), new GUIContent("UnityFramework") }) == 1;
             EditorGUI.indentLevel -= 1;
 
             EditorGUILayout.Space();

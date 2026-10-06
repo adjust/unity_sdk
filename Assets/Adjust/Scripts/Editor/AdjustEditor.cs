@@ -70,6 +70,13 @@ namespace AdjustSdk
     #else
                 string xcodeTarget = xcodeProject.TargetGuidByName("Unity-iPhone");
     #endif
+                string xcodeFrameworksTarget = xcodeTarget;
+    #if UNITY_2019_3_OR_NEWER
+                if (AdjustSettings.iOSFrameworksLinkToUnityFramework)
+                {
+                    xcodeFrameworksTarget = xcodeProject.GetUnityFrameworkTargetGuid();
+                }
+    #endif
                 HandlePlistIosChanges(projectPath);
 
                 if (AdjustSettings.iOSUniversalLinksDomains.Length > 0)
@@ -87,7 +94,7 @@ namespace AdjustSdk
                 if (AdjustSettings.iOSFrameworkAdSupport)
                 {
                     Debug.Log("[Adjust]: Adding AdSupport.framework to Xcode project.");
-                    xcodeProject.AddFrameworkToProject(xcodeTarget, "AdSupport.framework", true);
+                    xcodeProject.AddFrameworkToProject(xcodeFrameworksTarget, "AdSupport.framework", true);
                     Debug.Log("[Adjust]: AdSupport.framework added successfully.");
                 }
                 else
@@ -97,7 +104,7 @@ namespace AdjustSdk
                 if (AdjustSettings.iOSFrameworkAdServices)
                 {
                     Debug.Log("[Adjust]: Adding AdServices.framework to Xcode project.");
-                    xcodeProject.AddFrameworkToProject(xcodeTarget, "AdServices.framework", true);
+                    xcodeProject.AddFrameworkToProject(xcodeFrameworksTarget, "AdServices.framework", true);
                     Debug.Log("[Adjust]: AdServices.framework added successfully.");
                 }
                 else
@@ -107,7 +114,7 @@ namespace AdjustSdk
                 if (AdjustSettings.iOSFrameworkStoreKit)
                 {
                     Debug.Log("[Adjust]: Adding StoreKit.framework to Xcode project.");
-                    xcodeProject.AddFrameworkToProject(xcodeTarget, "StoreKit.framework", true);
+                    xcodeProject.AddFrameworkToProject(xcodeFrameworksTarget, "StoreKit.framework", true);
                     Debug.Log("[Adjust]: StoreKit.framework added successfully.");
                 }
                 else
@@ -117,7 +124,7 @@ namespace AdjustSdk
                 if (AdjustSettings.iOSFrameworkAppTrackingTransparency)
                 {
                     Debug.Log("[Adjust]: Adding AppTrackingTransparency.framework to Xcode project.");
-                    xcodeProject.AddFrameworkToProject(xcodeTarget, "AppTrackingTransparency.framework", true);
+                    xcodeProject.AddFrameworkToProject(xcodeFrameworksTarget, "AppTrackingTransparency.framework", true);
                     Debug.Log("[Adjust]: AppTrackingTransparency.framework added successfully.");
                 }
                 else
