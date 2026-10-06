@@ -182,7 +182,7 @@ namespace AdjustSdk
 
             // Check if user has defined a custom Android activity name.
             string androidActivityName = "com.unity3d.player.UnityPlayerActivity";
-            if (AdjustSettings.AndroidCustomActivityName.Length != 0)
+            if (!string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
             {
                 androidActivityName = AdjustSettings.AndroidCustomActivityName;
             }
