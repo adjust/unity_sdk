@@ -3,8 +3,9 @@
 - Added `Link Frameworks To` option to Adjust Settings for linking iOS frameworks to the `UnityFramework` target instead of the `Unity-iPhone` target (https://github.com/adjust/unity_sdk/issues/334).
 
 #### Changed
-- Removed copying of the default `AdjustAndroidManifest.xml` into apps which don't have their own `AndroidManifest.xml`. Needed changes are now applied to the Unity generated manifest instead (https://github.com/adjust/unity_sdk/issues/349).
+- Changed Android build to use Unity generated manifest instead of copying `AdjustAndroidManifest.xml` (https://github.com/adjust/unity_sdk/issues/349).
 - Moved `AdjustSettings.asset` from the `Adjust/Resources` to the `Adjust/Editor` directory so that it's no longer included in app builds. Existing `AdjustSettings.asset` is moved automatically (https://github.com/adjust/unity_sdk/issues/341).
+- Marked SDK types with static members with `NoAutoStaticsCleanup` attribute for compatibility with Unity's Lifecycle Management API (Unity 6.5 or newer).
 
 #### Fixed
 - Fixed Android build failure when SDK is added via UPM and the app doesn't have its own `AndroidManifest.xml` (https://github.com/adjust/unity_sdk/issues/336).
