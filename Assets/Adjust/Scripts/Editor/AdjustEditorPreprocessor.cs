@@ -133,6 +133,18 @@ namespace AdjustSdk
 
             var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='"
                 + androidActivityName + "']", GetNamespaceManager(manifest));
+            if (intentRoot == null && string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
+            {
+                intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[meta-data[@android:name='unityplayer.UnityActivity' and @android:value='true']]",
+                    GetNamespaceManager(manifest));
+            }
+            if (intentRoot == null)
+            {
+                Debug.LogError("[Adjust]: Could not find activity with name: " + androidActivityName);
+                Debug.LogError("[Adjust]: Unable to add URI schemes to AndroidManifest.xml.");
+                return false;
+            }
+
             var usedIntentFiltersChanged = false;
             foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
             {
@@ -189,6 +201,11 @@ namespace AdjustSdk
 
             var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='"
                 + androidActivityName + "']", GetNamespaceManager(manifest));
+            if (intentRoot == null && string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
+            {
+                intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[meta-data[@android:name='unityplayer.UnityActivity' and @android:value='true']]",
+                    GetNamespaceManager(manifest));
+            }
             if (intentRoot == null)
             {
                 Debug.LogError("[Adjust]: Could not find activity with name: " + androidActivityName);
