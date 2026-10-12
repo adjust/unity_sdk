@@ -1,7 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 
+#if UNITY_6000_5_OR_NEWER
+[NoAutoStaticsCleanup]
+#endif
 public class AdjustThreadDispatcher : MonoBehaviour
 {
     private static readonly Queue<Action> executionQueue = new Queue<Action>();

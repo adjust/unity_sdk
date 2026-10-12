@@ -2,10 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 
 namespace AdjustSdk
 {
 #if UNITY_IOS
+#if UNITY_6000_5_OR_NEWER
+    [NoAutoStaticsCleanup]
+#endif
     public class AdjustiOS
     {
         private const string sdkPrefix = "unity5.8.2";
