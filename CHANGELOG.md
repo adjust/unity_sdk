@@ -4,6 +4,7 @@
 
 #### Changed
 - Updated the Adjust Signature library version to 5.8.0.
+- Changed minimum supported Unity version to 2022.3.
 - Changed Android build to use Unity generated manifest instead of copying `AdjustAndroidManifest.xml` (https://github.com/adjust/unity_sdk/issues/349).
 - Moved `AdjustSettings.asset` from the `Adjust/Resources` to the `Adjust/Editor` directory so that it's no longer included in app builds. Existing `AdjustSettings.asset` is moved automatically (https://github.com/adjust/unity_sdk/issues/341).
 - Marked SDK types with static members with `NoAutoStaticsCleanup` attribute for compatibility with Unity's Lifecycle Management API (Unity 6.5 or newer).
