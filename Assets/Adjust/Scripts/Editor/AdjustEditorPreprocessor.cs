@@ -36,7 +36,11 @@ namespace AdjustSdk
             if (target == BuildTarget.Android)
             {
 #if UNITY_ANDROID
-                RunPostProcessTasksAndroid();
+                var appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
+                if (File.Exists(appManifestPath))
+                {
+                    RunPostProcessTasksAndroid(appManifestPath);
+                }
 #endif
             }
             else if (target == BuildTarget.iOS)
@@ -73,63 +77,21 @@ namespace AdjustSdk
         }
 
 #if UNITY_ANDROID
-        private static void RunPostProcessTasksAndroid()
+        internal static void RunPostProcessTasksAndroid(string appManifestPath)
         {
-            var isAdjustManifestUsed = false;
-            var androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
-            var adjustManifestPath = Path.Combine(Application.dataPath, "Adjust/Native/Android/AdjustAndroidManifest.xml");
-            var appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
-
-            // Check if user has already created AndroidManifest.xml file in its location.
-            // If not, use already predefined AdjustAndroidManifest.xml as default one.
-            if (!File.Exists(appManifestPath))
-            {
-                if (!Directory.Exists(androidPluginsPath))
-                {
-                    Directory.CreateDirectory(androidPluginsPath);
-                }
-
-                isAdjustManifestUsed = true;
-                File.Copy(adjustManifestPath, appManifestPath);
-
-                Debug.Log("[Adjust]: User defined AndroidManifest.xml file not found in Plugins/Android folder.");
-                Debug.Log("[Adjust]: Creating default app's AndroidManifest.xml from AdjustAndroidManifest.xml file.");
-            }
-            else
-            {
-                Debug.Log("[Adjust]: User defined AndroidManifest.xml file located in Plugins/Android folder.");
-            }
-
             // Let's open the app's AndroidManifest.xml file.
             var manifestFile = new XmlDocument();
             manifestFile.Load(appManifestPath);
 
             var manifestHasChanged = false;
 
-            // If Adjust manifest is used, we have already set up everything in it so that 
-            // our native Android SDK can be used properly.
-            if (!isAdjustManifestUsed)
-            {
-                // However, if you already had your own AndroidManifest.xml, we'll now run
-                // some checks on it and tweak it a bit if needed to add some stuff which
-                // our native Android SDK needs so that it can run properly.
+            // Add needed permissions if they are missing.
+            manifestHasChanged |= AddPermissions(manifestFile);
 
-                // Add needed permissions if they are missing.
-                manifestHasChanged |= AddPermissions(manifestFile);
-
-                // Add intent filter to main activity if it is missing and user wants to use Adjust broadcast receiver.
-                if (AdjustSettings.AndroidUseAdjustBroadcastReceiver)
-                {
-                    manifestHasChanged |= AddBroadcastReceiver(manifestFile);
-                }
-            }
-            else
+            // Add intent filter to main activity if it is missing and user wants to use Adjust broadcast receiver.
+            if (AdjustSettings.AndroidUseAdjustBroadcastReceiver)
             {
-                // Adjust manifest is used - check if we need to remove the broadcast receiver
-                if (!AdjustSettings.AndroidUseAdjustBroadcastReceiver)
-                {
-                    manifestHasChanged |= RemoveBroadcastReceiver(manifestFile);
-                }
+                manifestHasChanged |= AddBroadcastReceiver(manifestFile);
             }
 
             // Add intent filter to URL schemes for deeplinking
@@ -156,7 +118,7 @@ namespace AdjustSdk
 
         private static bool AddURISchemes(XmlDocument manifest)
         {
-            if (AdjustSettings.AndroidUriSchemes.Length == 0)
+            if (AdjustSettings.AndroidUriSchemes == null || AdjustSettings.AndroidUriSchemes.Length == 0)
             {
                 return false;
             }
@@ -164,13 +126,25 @@ namespace AdjustSdk
 
             // Check if user has defined a custom Android activity name.
             string androidActivityName = "com.unity3d.player.UnityPlayerActivity";
-            if (AdjustSettings.AndroidCustomActivityName.Length != 0)
+            if (!string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
             {
                 androidActivityName = AdjustSettings.AndroidCustomActivityName;
             }
 
             var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='"
                 + androidActivityName + "']", GetNamespaceManager(manifest));
+            if (intentRoot == null && string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
+            {
+                intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[meta-data[@android:name='unityplayer.UnityActivity' and @android:value='true']]",
+                    GetNamespaceManager(manifest));
+            }
+            if (intentRoot == null)
+            {
+                Debug.LogError("[Adjust]: Could not find activity with name: " + androidActivityName);
+                Debug.LogError("[Adjust]: Unable to add URI schemes to AndroidManifest.xml.");
+                return false;
+            }
+
             var usedIntentFiltersChanged = false;
             foreach (var uriScheme in AdjustSettings.AndroidUriSchemes)
             {
@@ -220,13 +194,18 @@ namespace AdjustSdk
 
             // Check if user has defined a custom Android activity name.
             string androidActivityName = "com.unity3d.player.UnityPlayerActivity";
-            if (AdjustSettings.AndroidCustomActivityName.Length != 0)
+            if (!string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
             {
                 androidActivityName = AdjustSettings.AndroidCustomActivityName;
             }
 
             var intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[@android:name='"
                 + androidActivityName + "']", GetNamespaceManager(manifest));
+            if (intentRoot == null && string.IsNullOrEmpty(AdjustSettings.AndroidCustomActivityName))
+            {
+                intentRoot = manifest.DocumentElement.SelectSingleNode("/manifest/application/activity[meta-data[@android:name='unityplayer.UnityActivity' and @android:value='true']]",
+                    GetNamespaceManager(manifest));
+            }
             if (intentRoot == null)
             {
                 Debug.LogError("[Adjust]: Could not find activity with name: " + androidActivityName);
@@ -538,33 +517,6 @@ namespace AdjustSdk
             return new List<XmlNode>(manifest.DocumentElement.SelectNodes(xpath, GetNamespaceManager(manifest)).OfType<XmlNode>());
         }
 
-        private static bool RemoveBroadcastReceiver(XmlDocument manifest)
-        {
-            Debug.Log("[Adjust]: Removing AdjustBroadcastReceiver from AndroidManifest.xml as per user settings.");
-
-            // Find the application node
-            var applicationNodeXpath = "/manifest/application";
-            var applicationNode = manifest.DocumentElement.SelectSingleNode(applicationNodeXpath);
-
-            if (applicationNode == null)
-            {
-                return false;
-            }
-
-            // Find and remove Adjust broadcast receiver
-            var xpath = "/manifest/application/receiver[@android:name='com.adjust.sdk.AdjustReferrerReceiver']";
-            var receiverNode = manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest));
-
-            if (receiverNode != null)
-            {
-                applicationNode.RemoveChild(receiverNode);
-                Debug.Log("[Adjust]: AdjustBroadcastReceiver successfully removed from AndroidManifest.xml.");
-                return true;
-            }
-
-            return false;
-        }
-
         private static void AddAndroidNamespaceAttribute(XmlDocument manifest, string key, string value, XmlElement node)
         {
             var androidSchemeAttribute = manifest.CreateAttribute("android", key, "http://schemas.android.com/apk/res/android");
@@ -580,4 +532,28 @@ namespace AdjustSdk
         }
 #endif
     }
+
+#if UNITY_ANDROID
+    public class AdjustEditorGradlePostprocessor : UnityEditor.Android.IPostGenerateGradleAndroidProject
+    {
+        public int callbackOrder
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+        public void OnPostGenerateGradleAndroidProject(string path)
+        {
+            // Apps with their own AndroidManifest.xml are handled in OnPreprocessBuild.
+            if (File.Exists(Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml")))
+            {
+                return;
+            }
+
+            AdjustEditorPreprocessor.RunPostProcessTasksAndroid(Path.Combine(path, "src/main/AndroidManifest.xml"));
+        }
+    }
+#endif
 }

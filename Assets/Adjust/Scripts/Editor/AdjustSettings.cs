@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace AdjustSdk
     public class AdjustSettings : ScriptableObject
     {
         private static AdjustSettings instance;
-        public const string AdjustSettingsExportPath = "Adjust/Resources/AdjustSettings.asset";
+        public const string AdjustSettingsExportPath = "Adjust/Editor/AdjustSettings.asset";
 
         [SerializeField]
         private bool _iOSFrameworkAdSupport = true;
@@ -22,6 +23,8 @@ namespace AdjustSdk
         private bool _iOSFrameworkStoreKit = false;
         [SerializeField]
         private bool _iOSGoogleOdmPlugin = false;
+        [SerializeField]
+        private bool _iOSFrameworksLinkToUnityFramework = false;
         [SerializeField]
         private bool _androidPermissionInternet = true;
         [SerializeField]
@@ -64,25 +67,25 @@ namespace AdjustSdk
                     }
 
                     var assetPath = AssetDatabase.GUIDToAssetPath(guids[0]).Replace("AdjustSettings.cs", "AdjustSettings.asset");
-                    // AdjustSettings.asset will be stored inside of the Adjust/Resources directory
+                    // AdjustSettings.asset will be stored inside of the Adjust/Editor directory
                     if (assetPath.StartsWith("Assets"))
                     {
                         // plugin located in Assets directory
                         string rootDir = assetPath.Replace("/Adjust/Scripts/Editor/AdjustSettings.asset", "");
-                        string adjustResourcesPath = Path.Combine(rootDir, "Adjust/Resources");
-                        if (!Directory.Exists(adjustResourcesPath))
+                        string adjustEditorPath = Path.Combine(rootDir, "Adjust/Editor");
+                        if (!Directory.Exists(adjustEditorPath))
                         {
-                            Directory.CreateDirectory(adjustResourcesPath);
+                            Directory.CreateDirectory(adjustEditorPath);
                         }
                         assetPath = Path.Combine(rootDir, AdjustSettingsExportPath);
                     }
                     else
                     {
                         // plugin located in Packages folder
-                        string adjustResourcesPath = Path.Combine("Assets", "Adjust/Resources");
-                        if (!Directory.Exists(adjustResourcesPath))
+                        string adjustEditorPath = Path.Combine("Assets", "Adjust/Editor");
+                        if (!Directory.Exists(adjustEditorPath))
                         {
-                            Directory.CreateDirectory(adjustResourcesPath);
+                            Directory.CreateDirectory(adjustEditorPath);
                         }
                         assetPath = Path.Combine("Assets", AdjustSettingsExportPath);
                     }
@@ -92,6 +95,45 @@ namespace AdjustSdk
 
                 return instance;
             }
+        }
+
+        [InitializeOnLoadMethod]
+        private static void MoveSettingsOutOfResources()
+        {
+            // AdjustSettings.asset used to be stored inside of the Adjust/Resources directory which made it part of app builds.
+            EditorApplication.delayCall += () =>
+            {
+                var settings = NullableInstance;
+                if (settings == null)
+                {
+                    return;
+                }
+
+                var assetPath = AssetDatabase.GetAssetPath(settings);
+                if (!assetPath.EndsWith("/Resources/AdjustSettings.asset"))
+                {
+                    return;
+                }
+
+                var resourcesPath = assetPath.Substring(0, assetPath.Length - "/AdjustSettings.asset".Length);
+                var parentPath = resourcesPath.Substring(0, resourcesPath.Length - "/Resources".Length);
+                if (!AssetDatabase.IsValidFolder(parentPath + "/Editor"))
+                {
+                    AssetDatabase.CreateFolder(parentPath, "Editor");
+                }
+
+                var error = AssetDatabase.MoveAsset(assetPath, parentPath + "/Editor/AdjustSettings.asset");
+                if (!string.IsNullOrEmpty(error))
+                {
+                    Debug.LogWarning("[Adjust]: Unable to move AdjustSettings.asset out of Resources directory: " + error);
+                    return;
+                }
+
+                if (!Directory.GetFileSystemEntries(resourcesPath).Any(entry => !Path.GetFileName(entry).StartsWith(".")))
+                {
+                    AssetDatabase.DeleteAsset(resourcesPath);
+                }
+            };
         }
 
         public static AdjustSettings NullableInstance
@@ -141,6 +183,12 @@ namespace AdjustSdk
         {
             get { return Instance._iOSGoogleOdmPlugin; }
             set { Instance._iOSGoogleOdmPlugin = value; }
+        }
+
+        public static bool iOSFrameworksLinkToUnityFramework
+        {
+            get { return Instance._iOSFrameworksLinkToUnityFramework; }
+            set { Instance._iOSFrameworksLinkToUnityFramework = value; }
         }
 
         public static bool androidPermissionInternet

@@ -1,3 +1,25 @@
+### Version 5.8.2 (4th November 2026)
+#### Added
+- Added `Link Frameworks To` option to Adjust Settings for linking iOS frameworks to the `UnityFramework` target instead of the `Unity-iPhone` target (https://github.com/adjust/unity_sdk/issues/334).
+
+#### Changed
+- Updated the Adjust Signature library version to 5.8.0.
+- Changed minimum supported Unity version to 2022.3.
+- Changed Android build to use Unity generated manifest instead of copying `AdjustAndroidManifest.xml` (https://github.com/adjust/unity_sdk/issues/349).
+- Moved `AdjustSettings.asset` from the `Adjust/Resources` to the `Adjust/Editor` directory so that it's no longer included in app builds. Existing `AdjustSettings.asset` is moved automatically (https://github.com/adjust/unity_sdk/issues/341).
+- Marked SDK types with static members with `NoAutoStaticsCleanup` attribute for compatibility with Unity's Lifecycle Management API (Unity 6.5 or newer).
+
+#### Fixed
+- Fixed Android build failure when SDK is added via UPM and the app doesn't have its own `AndroidManifest.xml` (https://github.com/adjust/unity_sdk/issues/336).
+- Fixed null reference exception during Android build when upgrading from older SDK versions without re-saving `AdjustSettings.asset` (https://github.com/adjust/unity_sdk/pull/344).
+- Fixed deep link URI schemes not being added to `AndroidManifest.xml` when the app uses `UnityPlayerGameActivity` (https://github.com/adjust/unity_sdk/issues/349).
+
+#### Native SDKs
+- [iOS@v5.8.1][ios_sdk_v5.8.1]
+- [Android@v5.8.1][android_sdk_v5.8.1]
+
+---
+
 ### Version 5.8.1 (5th October 2026)
 #### Added
 - Added `Google ODM Plugin` option to Adjust Settings for adding the Adjust Google On-Device Measurement plugin to your iOS app (https://github.com/adjust/unity_sdk/issues/358).
@@ -1576,6 +1598,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.5.2]: https://github.com/adjust/ios_sdk/tree/v5.5.2
 [ios_sdk_v5.6.2]: https://github.com/adjust/ios_sdk/tree/v5.6.2
 [ios_sdk_v5.8.0]: https://github.com/adjust/ios_sdk/tree/v5.8.0
+[ios_sdk_v5.8.1]: https://github.com/adjust/ios_sdk/tree/v5.8.1
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
@@ -1642,6 +1665,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [android_sdk_v5.5.0]: https://github.com/adjust/android_sdk/tree/v5.5.0
 [android_sdk_v5.6.1]: https://github.com/adjust/android_sdk/tree/v5.6.1
 [android_sdk_v5.8.0]: https://github.com/adjust/android_sdk/tree/v5.8.0
+[android_sdk_v5.8.1]: https://github.com/adjust/android_sdk/tree/v5.8.1
 
 [windows_sdk_v4.12.0]: https://github.com/adjust/windows_sdk/tree/v4.12.0
 [windows_sdk_v4.13.0]: https://github.com/adjust/windows_sdk/tree/v4.13.0

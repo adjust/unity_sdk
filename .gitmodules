@@ -4,3 +4,6 @@
 [submodule "ext/android/sdk"]
 	path = ext/android/sdk
 	url = https://github.com/adjust/android_sdk.git
+[submodule "ext/scripts"]
+	path = ext/scripts
+	url = https://github.com/adjust/sdk_scripts.git
