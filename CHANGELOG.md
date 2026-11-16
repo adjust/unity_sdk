@@ -1,3 +1,19 @@
+### Version 5.8.3 (17th November 2026)
+#### Added
+- Added support for Swift Package Manager.
+    - If you are using EDM4U `1.2.187` (or newer) or Unity's External Dependency Manager, the Adjust iOS SDK is now added to your app as a Swift package by default.
+    - To keep using CocoaPods, disable the `Swift Package Manager Integration` option in the iOS Resolver settings.
+    - After switching between CocoaPods and Swift Package Manager, or after disabling the `Google ODM Plugin` option, rebuild your Xcode project from scratch (choose `Replace` instead of `Append` when building from Unity).
+    - If you are using an older EDM4U version, CocoaPods is still used and nothing changes for you.
+    - The `-ObjC` linker flag is now added to the `UnityFramework` target when the `Google ODM Plugin` option is enabled.
+    - In case you have added the Adjust iOS SDK Swift package or the `Adjust/AdjustGoogleOdm` pod to your app on your own, remove them when upgrading and use the `Google ODM Plugin` option in Adjust Settings instead.
+
+#### Native SDKs
+- [iOS@v5.8.2][ios_sdk_v5.8.2]
+- [Android@v5.8.1][android_sdk_v5.8.1]
+
+---
+
 ### Version 5.8.2 (4th November 2026)
 #### Added
 - Added `Link Frameworks To` option to Adjust Settings for linking iOS frameworks to the `UnityFramework` target instead of the `Unity-iPhone` target (https://github.com/adjust/unity_sdk/issues/334).
@@ -1599,6 +1615,7 @@ Kudos to [Ivan](https://github.com/MatkovIvan) and [Evgeny](https://github.com/e
 [ios_sdk_v5.6.2]: https://github.com/adjust/ios_sdk/tree/v5.6.2
 [ios_sdk_v5.8.0]: https://github.com/adjust/ios_sdk/tree/v5.8.0
 [ios_sdk_v5.8.1]: https://github.com/adjust/ios_sdk/tree/v5.8.1
+[ios_sdk_v5.8.2]: https://github.com/adjust/ios_sdk/tree/v5.8.2
 
 [android_sdk_v3.5.0]: https://github.com/adjust/android_sdk/tree/v3.5.0
 [android_sdk_v4.1.0]: https://github.com/adjust/android_sdk/tree/v4.1.0
