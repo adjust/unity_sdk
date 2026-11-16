@@ -14,7 +14,7 @@ namespace AdjustSdk
 #endif
     public class AdjustAndroid
     {
-        private const string sdkPrefix = "unity5.8.2";
+        private const string sdkPrefix = "unity5.8.3";
         private static bool isDeferredDeeplinkOpeningEnabled = true;
         private static AndroidJavaClass ajcAdjust = new AndroidJavaClass("com.adjust.sdk.Adjust");
         private static AndroidJavaObject ajoCurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
