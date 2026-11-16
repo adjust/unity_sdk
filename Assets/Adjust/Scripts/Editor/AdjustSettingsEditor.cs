@@ -132,7 +132,7 @@ namespace AdjustSdk
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(iOSGoogleOdmPlugin,
                 new GUIContent("Google ODM Plugin",
-                    "Adds Adjust Google On-Device Measurement plugin (Adjust/AdjustGoogleOdmPlugin pod) to your iOS app"),
+                    "Adds Adjust Google On-Device Measurement plugin (AdjustGoogleOdmPlugin) to your iOS app"),
                 true);
             EditorGUI.indentLevel -= 1;
             
