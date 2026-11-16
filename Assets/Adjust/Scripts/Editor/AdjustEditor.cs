@@ -148,6 +148,13 @@ namespace AdjustSdk
                 // potential AdjustSigSdk.xcframework embedding
                 Debug.Log("[Adjust]: Checking whether AdjustSigSdk.xcframework needs to be embedded or not...");
                 EmbedAdjustSignatureIfNeeded(projectPath, xcodeProject, xcodeTarget);
+                EmbedAdjustSwiftPackageProductsIfNeeded(xcodeProject, xcodeTarget);
+
+                // Google ODM classes are looked up by name at runtime, so the linker drops them unless -ObjC is set.
+                if (AdjustSettings.iOSGoogleOdmPlugin && !string.IsNullOrEmpty(xcodeTargetUnityFramework))
+                {
+                    xcodeProject.AddBuildProperty(xcodeTargetUnityFramework, "OTHER_LDFLAGS", "-ObjC");
+                }
 
                 // Save the changes to Xcode project file.
                 xcodeProject.WriteToFile(xcodeProjectPath);
@@ -191,6 +198,39 @@ namespace AdjustSdk
             project.SetBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", runpathSearchPaths);
 #endif
             Debug.Log("[Adjust]: Embedding process completed.");
+        }
+
+        // When the Adjust SDK is added as Swift package, it gets linked to UnityFramework only.
+        // Xcode then leaves AdjustSigSdk.framework and the SDK privacy manifest bundle out of the app.
+        private static void EmbedAdjustSwiftPackageProductsIfNeeded(PBXProject project, string targetGuid)
+        {
+            if (!project.WriteToString().Contains("productName = AdjustSdk;"))
+            {
+                return;
+            }
+
+            Debug.Log("[Adjust]: Adjust SDK is added as Swift package. Embedding AdjustSigSdk.framework and privacy manifest bundle...");
+
+            // An earlier CocoaPods build that this build is appended to embeds AdjustSigSdk.xcframework from the Pods directory, which is gone now.
+            var podsFrameworkGuid = project.FindFileGuidByProjectPath("Pods/AdjustSignature/AdjustSigSdk.xcframework");
+            if (podsFrameworkGuid != null)
+            {
+                project.RemoveFile(podsFrameworkGuid);
+            }
+
+            var frameworkGuid = project.FindFileGuidByProjectPath("Frameworks/AdjustSigSdk.framework");
+            if (frameworkGuid == null)
+            {
+                frameworkGuid = project.AddFile("AdjustSigSdk.framework", "Frameworks/AdjustSigSdk.framework", PBXSourceTree.Build);
+            }
+            project.AddFileToEmbedFrameworks(targetGuid, frameworkGuid);
+
+            var bundleGuid = project.FindFileGuidByProjectPath("AdjustSdk_AdjustSdk.bundle");
+            if (bundleGuid == null)
+            {
+                bundleGuid = project.AddFile("AdjustSdk_AdjustSdk.bundle", "AdjustSdk_AdjustSdk.bundle", PBXSourceTree.Build);
+            }
+            project.AddFileToBuild(targetGuid, bundleGuid);
         }
 
         private static bool ShouldEmbedDynamicLibraries(string buildPath)

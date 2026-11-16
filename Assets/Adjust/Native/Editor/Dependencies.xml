@@ -9,4 +9,7 @@
     <iosPods>
         <iosPod name="Adjust" version="5.8.1" minTargetSdk="12.0"/>
     </iosPods>
+    <remoteSwiftPackage url="https://github.com/adjust/ios_sdk.git" version="5.8.1">
+        <swiftPackage name="AdjustSdk" replacesPod="Adjust"/>
+    </remoteSwiftPackage>
 </dependencies>
