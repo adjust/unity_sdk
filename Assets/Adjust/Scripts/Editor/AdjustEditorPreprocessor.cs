@@ -59,6 +59,7 @@ namespace AdjustSdk
                 var dependencies = new XmlDocument();
                 dependencies.LoadXml(AssetDatabase.LoadAssetAtPath<TextAsset>(dependenciesPath).text);
                 var iosSdkVersion = dependencies.SelectSingleNode("//iosPod[@name='Adjust']").Attributes["version"].Value;
+                var iosSdkPackage = dependencies.SelectSingleNode("//remoteSwiftPackage[swiftPackage/@name='AdjustSdk']");
 
                 Directory.CreateDirectory(Path.GetDirectoryName(odmDependenciesPath));
                 File.WriteAllText(odmDependenciesPath,
@@ -67,6 +68,9 @@ namespace AdjustSdk
                     "    <iosPods>\n" +
                     "        <iosPod name=\"Adjust/AdjustGoogleOdmPlugin\" version=\"" + iosSdkVersion + "\" minTargetSdk=\"12.0\"/>\n" +
                     "    </iosPods>\n" +
+                    "    <remoteSwiftPackage url=\"" + iosSdkPackage.Attributes["url"].Value + "\" version=\"" + iosSdkPackage.Attributes["version"].Value + "\">\n" +
+                    "        <swiftPackage name=\"AdjustGoogleOdmPlugin\" replacesPod=\"Adjust/AdjustGoogleOdmPlugin\"/>\n" +
+                    "    </remoteSwiftPackage>\n" +
                     "</dependencies>\n");
                 AssetDatabase.ImportAsset(odmDependenciesPath);
             }
